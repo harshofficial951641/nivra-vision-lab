@@ -1,0 +1,227 @@
+.conflict-panel {
+  padding: 22px 20px;
+  color: var(--night-ink);
+  background: var(--white);
+  border-bottom: 1px solid var(--hairline);
+  min-width: 0;
+}
+
+.conflict-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.conflict-heading h2 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 660;
+  letter-spacing: -.01em;
+}
+
+.conflict-heading p {
+  margin: 6px 0 0;
+  color: var(--muted-ink);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.conflict-toggle {
+  flex-shrink: 0;
+  gap: 6px;
+  padding-top: 1px;
+  font-size: 10px;
+}
+
+.conflict-toggle > span:last-child {
+  min-width: 17px;
+}
+
+.conflict-simulated {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 4px 6px;
+  background: #f0f3fa;
+  border-radius: 4px;
+  color: #54647d;
+  font-size: 10px;
+}
+
+.conflict-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 19px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.conflict-state strong {
+  font-weight: 610;
+}
+
+.conflict-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8b97a7;
+  flex-shrink: 0;
+}
+
+.conflict-is-clear .conflict-dot,
+.conflict-is-observing .conflict-dot {
+  background: var(--nivra-blue);
+}
+
+.conflict-is-alert .conflict-dot {
+  background: var(--intervention-coral);
+}
+
+.conflict-is-alert .conflict-state {
+  color: var(--intervention-coral);
+}
+
+.conflict-explanation {
+  margin: 8px 0 0;
+  color: var(--muted-ink);
+  font-size: 11px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
+
+.conflict-confirmation {
+  margin-top: 16px;
+}
+
+.pose-coverage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 12px;
+  margin: 19px 0 0;
+}
+
+.pose-coverage dt {
+  color: var(--muted-ink);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.pose-coverage dd {
+  margin: 3px 0 0;
+  font-size: 17px;
+  font-weight: 580;
+  font-variant-numeric: tabular-nums;
+}
+
+.partial-body-note {
+  margin: 14px 0 0;
+  color: #435574;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.conflict-progress-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--muted-ink);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.conflict-progress-label > span:last-child {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.conflict-progress {
+  display: block;
+  width: 100%;
+  height: 4px;
+  margin-top: 8px;
+  appearance: none;
+  border: 0;
+  border-radius: 3px;
+  background: #e8edf6;
+  accent-color: var(--nivra-blue);
+  overflow: hidden;
+}
+
+.conflict-progress::-webkit-progress-bar {
+  background: #e8edf6;
+  border-radius: 3px;
+}
+
+.conflict-progress::-webkit-progress-value {
+  background: var(--nivra-blue);
+  border-radius: 3px;
+}
+
+.conflict-progress::-moz-progress-bar {
+  background: var(--nivra-blue);
+  border-radius: 3px;
+}
+
+.conflict-is-alert .conflict-progress {
+  accent-color: var(--intervention-coral);
+}
+
+.conflict-is-alert .conflict-progress::-webkit-progress-value {
+  background: var(--intervention-coral);
+}
+
+.conflict-is-alert .conflict-progress::-moz-progress-bar {
+  background: var(--intervention-coral);
+}
+
+.conflict-signals {
+  display: grid;
+  gap: 7px;
+  list-style: none;
+  padding: 0;
+  margin: 15px 0 0;
+}
+
+.conflict-signals li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  color: #435574;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.conflict-signals li > span {
+  width: 4px;
+  height: 4px;
+  border: 1px solid #6e83b5;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.conflict-framing {
+  margin: 17px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--hairline);
+  color: var(--muted-ink);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.conflict-review-note {
+  margin: 9px 0 0;
+  font-size: 11px;
+  color: #a43126;
+  line-height: 1.5;
+}
+
+@media (max-width: 1100px) {
+  .conflict-panel { padding: 20px 16px; }
+}
+
+@media (max-width: 820px) {
+  .conflict-panel { grid-column: 1 / -1; }
+}

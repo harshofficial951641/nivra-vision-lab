@@ -1,0 +1,5 @@
+# Publish the application, not local planning notes or handoff documents.
+/*
+!/.gitignore
+!/README.md
+!/nivra-vision-lab/
