@@ -58,14 +58,15 @@ function run(engine: ConflictEngine, end: number, frames: (timestamp: number) =>
 }
 
 describe('ConflictEngine', () => {
-  it('requires repeated directed extension/retraction pulses before an alert', () => {
+  it('alerts on the first qualifying hit without a repetition delay', () => {
     const engine = new ConflictEngine()
     const frames = (time: number) => [person(.35, extensionAt(time)), person(.65)]
-    const first = run(engine, 800, frames)
-    expect(first.status).toBe('observing')
-    expect(first.progress).toBeCloseTo(1 / 3)
-    expect(first.events).toHaveLength(0)
-    const result = run(engine, 2_200, frames, 100, 900)
+    const first = run(engine, 700, frames)
+    expect(first.status).toBe('alert')
+    expect(first.progress).toBe(1)
+    expect(first.events).toHaveLength(1)
+    expect(first.events[0].occurredAtMs).toBe(700)
+    const result = run(engine, 2_200, frames, 100, 800)
     expect(result.status).toBe('alert')
     expect(result.progress).toBe(1)
     expect(result.events).toHaveLength(1)
@@ -173,19 +174,20 @@ describe('ConflictEngine', () => {
     expect(result.progress).toBe(0)
   })
 
-  it('requires three completed fast bent-arm approaches and withdrawals', () => {
+  it('alerts after one completed fast bent-arm approach and withdrawal', () => {
     const engine = new ConflictEngine()
     const frames = (time: number) => [bentArmPerson(extensionAt(time)), person(.65)]
     const approach = run(engine, 800, frames)
     expect(approach.progress).toBe(0)
-    const two = run(engine, 2_000, frames, 100, 900)
-    expect(two.progress).toBeCloseTo(2 / 3)
-    expect(two.events).toHaveLength(0)
-    const three = run(engine, 3_000, frames, 100, 2_100)
-    expect(three.events).toHaveLength(1)
+    const first = run(engine, 900, frames, 100, 900)
+    expect(first.progress).toBe(1)
+    expect(first.events).toHaveLength(1)
+    expect(first.events[0].occurredAtMs).toBe(900)
+    const continued = run(engine, 3_000, frames, 100, 1_000)
+    expect(continued.events).toHaveLength(1)
   })
 
-  it('offers early human review after two completed bent-arm cycles, while standard still needs three', () => {
+  it('alerts after one completed bent-arm cycle in both sensitivity modes', () => {
     const frames = (time: number) => {
       const extension = time >= 700 && (time - 700) % 1_000 < 200 ? 1 : 0
       return [bentArmPerson(extension), person(.65)]
@@ -193,19 +195,19 @@ describe('ConflictEngine', () => {
     const early = new ConflictEngine()
     early.configureSensitivity('early')
     const first = run(early, 1_300, frames)
-    expect(first.events).toHaveLength(0)
-    expect(first.progress).toBe(.5)
+    expect(first.events).toHaveLength(1)
+    expect(first.progress).toBe(1)
     const second = run(early, 2_100, frames, 100, 1_400)
     expect(second.events).toHaveLength(1)
-    expect(second.events[0].detail).toContain('2 distinct')
+    expect(second.events[0].detail).toContain('A fast arm-motion episode')
     expect(second.events[0].detail).toContain('person must review')
-    expect(second.diagnostics.requiredPulses).toBe(2)
+    expect(second.diagnostics.requiredPulses).toBe(1)
     const standard = run(new ConflictEngine(), 2_100, frames)
-    expect(standard.events).toHaveLength(0)
-    expect(standard.diagnostics.requiredPulses).toBe(3)
+    expect(standard.events).toHaveLength(1)
+    expect(standard.diagnostics.requiredPulses).toBe(1)
   })
 
-  it('keeps four-pulse confirmation for wrist-only observations in early mode', () => {
+  it('alerts on the first qualifying wrist-only hit in early mode', () => {
     const engine = new ConflictEngine()
     engine.configureSensitivity('early')
     const frames = (time: number) => {
@@ -213,12 +215,13 @@ describe('ConflictEngine', () => {
       actor[14].visibility = .1
       return [actor, croppedUpperBody(person(.65))]
     }
-    const three = run(engine, 2_300, frames)
-    expect(three.events).toHaveLength(0)
-    expect(three.diagnostics.requiredPulses).toBe(4)
-    const four = run(engine, 3_000, frames, 100, 2_400)
-    expect(four.events).toHaveLength(1)
-    expect(four.events[0].detail).toContain('4 distinct')
+    const first = run(engine, 700, frames)
+    expect(first.events).toHaveLength(1)
+    expect(first.events[0].occurredAtMs).toBe(700)
+    expect(first.diagnostics.requiredPulses).toBe(1)
+    const continued = run(engine, 3_000, frames, 100, 800)
+    expect(continued.events).toHaveLength(1)
+    expect(continued.events[0].detail).toContain('A fast arm-motion episode')
   })
 
   it('keeps guard adjustments, slow hugs, high fives, waving and jitter quiet in early mode', () => {
@@ -252,20 +255,20 @@ describe('ConflictEngine', () => {
     engine.configureSensitivity('early')
     const frames = (time: number) => [person(.35, time >= 1_600 && (time - 1_600) % 1_000 < 200 ? 1 : 0), person(.65)]
     const oneFresh = run(engine, 2_000, frames, 100, 900)
-    expect(oneFresh.events).toHaveLength(0)
-    expect(oneFresh.progress).toBe(.5)
+    expect(oneFresh.events).toHaveLength(1)
+    expect(oneFresh.progress).toBe(1)
     engine.configureSensitivity('early')
     const second = run(engine, 2_700, frames, 100, 2_100)
     expect(second.events).toHaveLength(1)
     engine.configureSensitivity('standard')
     const reset = engine.snapshot(2_800)
     expect(reset.events[0].id).toBe('conflict-1')
-    expect(reset.diagnostics.requiredPulses).toBe(3)
+    expect(reset.diagnostics.requiredPulses).toBe(1)
     expect(reset.progress).toBe(0)
     const next = run(engine, 14_400, time => [person(.35, extensionAt(time - 12_000)), person(.65)], 100, 12_000)
     expect(next.events).toHaveLength(2)
     expect(next.events[0].id).toBe('conflict-2')
-    expect(next.events[0].detail).toContain('3 distinct')
+    expect(next.events[0].detail).toContain('A fast arm-motion episode')
   })
 
   it('measures a bent-arm withdrawal from the later peak, not the first qualifying approach', () => {
@@ -281,22 +284,22 @@ describe('ConflictEngine', () => {
       return [actor, person(.62)]
     }
     const withdrawn = run(new ConflictEngine(), 1_800, time => frames(time, true), 40)
-    expect(withdrawn.progress).toBeCloseTo(1 / 3)
-    expect(withdrawn.events).toHaveLength(0)
+    expect(withdrawn.progress).toBe(1)
+    expect(withdrawn.events).toHaveLength(1)
     const held = run(new ConflictEngine(), 1_800, time => frames(time, false), 40)
     expect(held.progress).toBe(0)
     expect(held.events).toHaveLength(0)
   })
 
-  it('does not count a held bent-arm reach or framewise flicker as repeated episodes', () => {
+  it('ignores a held bent arm and emits only one review for a brief completed cycle', () => {
     const held = run(new ConflictEngine(), 3_000, time => [bentArmPerson(time >= 700 ? 1 : 0), person(.65)])
     expect(held.progress).toBe(0)
     expect(held.events).toHaveLength(0)
     const oneEpisode = run(new ConflictEngine(), 2_000, time => [
       bentArmPerson(time >= 700 && time < 1_100 && time % 200 ? 1 : 0), person(.65),
     ])
-    expect(oneEpisode.progress).toBeCloseTo(1 / 3)
-    expect(oneEpisode.events).toHaveLength(0)
+    expect(oneEpisode.progress).toBe(1)
+    expect(oneEpisode.events).toHaveLength(1)
   })
 
   it('ignores slow hugging reaches, above-head high fives, and small guard adjustments', () => {
@@ -321,14 +324,14 @@ describe('ConflictEngine', () => {
     const engine = new ConflictEngine()
     run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
     const result = engine.update(1_700, [person(.35), person(.65), person(.05)])
-    expect(result.status).toBe('observing')
-    expect(result.progress).toBeCloseTo(2 / 3)
+    expect(result.status).toBe('alert')
+    expect(result.progress).toBe(1)
     expect(result.diagnostics.reason).toBe('ready')
   })
 
   it('reports the selected pair wrist occlusion even when another pair has visible arms', () => {
     const engine = new ConflictEngine()
-    run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
+    run(engine, 1_600, () => [person(.35), person(.65)])
     const hiddenPair = [person(.35), person(.65)].map(pose => {
       pose[15].visibility = .1
       pose[16].visibility = .1
@@ -348,9 +351,10 @@ describe('ConflictEngine', () => {
     }
   })
 
-  it('does not alert for a single reach toward another person', () => {
+  it('records a single fast directed reach even without further hits', () => {
     const result = run(new ConflictEngine(), 6_000, time => [person(.35, time >= 700 && time < 1_000 ? 1 : 0), person(.65)])
-    expect(result.events).toHaveLength(0)
+    expect(result.events).toHaveLength(1)
+    expect(result.events[0].occurredAtMs).toBe(700)
     expect(result.progress).toBe(0)
   })
 
@@ -479,29 +483,30 @@ describe('ConflictEngine', () => {
     expect(result.diagnostics.usableArms).toBe(3)
   })
 
-  it('requires four stronger pulses when the striking elbow is hidden', () => {
+  it('alerts on one stronger pulse when the striking elbow is hidden', () => {
     const engine = new ConflictEngine()
     const frames = (time: number) => {
       const actor = croppedUpperBody(person(.35, extensionAt(time)))
       actor[14].visibility = .1
       return [actor, croppedUpperBody(person(.65))]
     }
-    const threePulses = run(engine, 2_300, frames)
-    expect(threePulses.events).toHaveLength(0)
-    expect(threePulses.progress).toBe(.75)
-    expect(threePulses.diagnostics).toMatchObject({ visibleArms: 3, usableArms: 4, requiredPulses: 4 })
-    const fourPulses = run(engine, 3_000, frames, 100, 2_400)
-    expect(fourPulses.events).toHaveLength(1)
+    const firstPulse = run(engine, 700, frames)
+    expect(firstPulse.events).toHaveLength(1)
+    expect(firstPulse.events[0].occurredAtMs).toBe(700)
+    expect(firstPulse.progress).toBe(1)
+    expect(firstPulse.diagnostics).toMatchObject({ visibleArms: 3, usableArms: 4, requiredPulses: 1 })
+    const laterPulses = run(engine, 3_000, frames, 100, 800)
+    expect(laterPulses.events).toHaveLength(1)
   })
 
-  it('does not convert upper-body waving or a single reach into an alert', () => {
+  it('distinguishes upper-body waving from one qualifying wrist-only reach', () => {
     for (const waving of [true, false]) {
       const result = run(new ConflictEngine(), 5_000, time => {
         const actor = person(.35, waving ? 0 : time >= 700 && time < 1_000 ? 1 : 0, waving ? extensionAt(time) : 0)
         actor[14].visibility = .1
         return [croppedUpperBody(actor), croppedUpperBody(person(.65))]
       })
-      expect(result.events).toHaveLength(0)
+      expect(result.events).toHaveLength(waving ? 0 : 1)
     }
   })
 
@@ -557,7 +562,7 @@ describe('ConflictEngine', () => {
     expect(engine.snapshot(2_400).events[0].id).toBe('conflict-1')
     const oneNewPulse = run(engine, 3_100, time => frames(time - 2_400), 100, 2_400)
     expect(oneNewPulse.events).toHaveLength(1)
-    expect(oneNewPulse.progress).toBeCloseTo(1 / 3)
+    expect(oneNewPulse.progress).toBe(1)
     engine.resetMotion()
     const nextEpisode = run(engine, 13_000, time => frames(time - 10_500), 100, 10_500)
     expect(nextEpisode.events).toHaveLength(2)
@@ -573,12 +578,12 @@ describe('ConflictEngine', () => {
     expect(result.events).toHaveLength(0)
   })
 
-  it('does not combine pulses across a stalled stream', () => {
+  it('retains the first review but respects cooldown across a stalled stream', () => {
     const engine = new ConflictEngine()
     run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
     expect(engine.snapshot(3_000).status).toBe('limited')
     const result = run(engine, 4_600, time => [person(.35, extensionAt(time - 3_000)), person(.65)], 100, 3_000)
-    expect(result.events).toHaveLength(0)
+    expect(result.events).toHaveLength(1)
   })
 
   it('keeps confirmed evidence through a short unambiguous full-torso occlusion', () => {
@@ -587,10 +592,10 @@ describe('ConflictEngine', () => {
     const absent = run(engine, 2_900, () => [person(.65)], 100, 1_700)
     expect(absent.people).toBe(1)
     expect(absent.regions).toHaveLength(0)
-    expect(absent.events).toHaveLength(0)
+    expect(absent.events).toHaveLength(1)
     const rejoined = engine.update(3_000, [person(.35), person(.65)])
-    expect(rejoined.status).toBe('warming')
-    expect(rejoined.progress).toBeCloseTo(2 / 3)
+    expect(rejoined.status).toBe('alert')
+    expect(rejoined.progress).toBe(1)
     run(engine, 3_400, () => [person(.35), person(.65)], 100, 3_100)
     const third = engine.update(3_500, [person(.35, 1), person(.65)])
     expect(third.events).toHaveLength(1)
@@ -598,10 +603,10 @@ describe('ConflictEngine', () => {
 
   it('does not count an arm position jump across the missing interval', () => {
     const engine = new ConflictEngine()
-    run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
+    run(engine, 1_600, () => [person(.35), person(.65)])
     run(engine, 2_900, () => [person(.65)], 100, 1_700)
     const rejoined = run(engine, 3_700, () => [person(.35, 1), person(.65)], 100, 3_000)
-    expect(rejoined.progress).toBeCloseTo(2 / 3)
+    expect(rejoined.progress).toBe(0)
     expect(rejoined.events).toHaveLength(0)
   })
 
@@ -610,9 +615,10 @@ describe('ConflictEngine', () => {
     run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
     run(engine, 3_900, () => [person(.65)], 100, 1_700)
     run(engine, 4_500, () => [person(.35), person(.65)], 100, 4_000)
+    expect(engine.snapshot(4500).progress).toBe(0)
     const result = engine.update(4_600, [person(.35, 1), person(.65)])
-    expect(result.events).toHaveLength(0)
-    expect(result.progress).toBeCloseTo(1 / 3)
+    expect(result.events).toHaveLength(1)
+    expect(result.progress).toBeCloseTo(1)
   })
 
   it('does not transfer confirmed history to a differently placed new entrant', () => {
@@ -620,9 +626,10 @@ describe('ConflictEngine', () => {
     run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
     run(engine, 2_900, () => [person(.65)], 100, 1_700)
     run(engine, 3_400, () => [person(.45), person(.65)], 100, 3_000)
+    expect(engine.snapshot(3400).progress).toBe(0)
     const result = engine.update(3_500, [person(.45, 1), person(.65)])
-    expect(result.events).toHaveLength(0)
-    expect(result.progress).toBeCloseTo(1 / 3)
+    expect(result.events).toHaveLength(1)
+    expect(result.progress).toBeCloseTo(1)
   })
 
   it('discards history when two people are plausible matches for one returning torso', () => {
@@ -631,10 +638,11 @@ describe('ConflictEngine', () => {
     run(engine, 2_900, () => [person(.65)], 100, 1_700)
     const crowd = (extension = 0) => [person(.30, extension), person(.40), person(.65)]
     run(engine, 3_400, () => crowd(), 100, 3_000)
+    expect(engine.snapshot(3400).progress).toBe(0)
     const result = engine.update(3_500, crowd(1))
     expect(result.people).toBe(3)
-    expect(result.events).toHaveLength(0)
-    expect(result.progress).toBeLessThanOrEqual(1 / 3)
+    expect(result.events).toHaveLength(1)
+    expect(result.progress).toBeLessThanOrEqual(1)
   })
 
   it('cannot reconnect an occluded person using only extrapolated torso size', () => {
@@ -642,12 +650,13 @@ describe('ConflictEngine', () => {
     run(engine, 1_600, time => [person(.35, extensionAt(time)), person(.65)])
     run(engine, 2_900, () => [person(.65)], 100, 1_700)
     run(engine, 3_600, () => [croppedUpperBody(person(.35)), person(.65)], 100, 3_000)
+    expect(engine.snapshot(3600).progress).toBe(0)
     const result = engine.update(3_700, [croppedUpperBody(person(.35, 1)), person(.65)])
-    expect(result.events).toHaveLength(0)
-    expect(result.progress).toBeLessThanOrEqual(1 / 3)
+    expect(result.events).toHaveLength(1)
+    expect(result.progress).toBeLessThanOrEqual(1)
   })
 
-  it('uses a five-second evidence window without needing three rapid repetitions', () => {
+  it('avoids duplicate reviews for widely spaced hits inside cooldown', () => {
     const result = run(new ConflictEngine(), 5_000, time => {
       const extension = [700, 2_500, 4_600].some(start => time >= start && time < start + 200) ? 1 : 0
       return [person(.35, extension), person(.65)]

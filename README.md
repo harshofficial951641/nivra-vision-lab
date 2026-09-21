@@ -19,8 +19,8 @@ Physical-conflict analysis starts enabled. Object analysis starts off to leave m
 
 1. Wait for `Waiting for camera`, then click **Start camera** and allow access, or open a local **Video file**.
 2. Keep both people's shoulders and hands in view. Hips and legs may be cropped out. The **Physical conflict** panel shows detected skeletons, usable upper bodies, usable arms, and nearby pairs, with a specific reason when it cannot assess the interaction.
-3. NIVRA compares fresh poses across time. It looks for repeated fast arm extensions and retractions directed toward the other person's upper body. It checks body-relative motion so a camera pan or walking movement alone is not evidence.
-4. Cameras use **Standard** sensitivity: three distinct motion pulses within five seconds can create **Possible physical conflict**, a visible review banner, and a local tone. Video files default to **Early review**, which accepts two clear arm-motion episodes and a slightly wider approach direction for bent arms. A bent-arm approach also needs an observed withdrawal. If an elbow is hidden, wrist-only evidence needs stricter motion checks and four pulses in either mode. Check the scene and **Acknowledge** the event.
+3. NIVRA compares fresh poses across time. It looks for a fast arm extension or a bent-arm approach and withdrawal directed toward the other person's upper body. It checks body-relative motion so a camera pan or walking movement alone is not evidence.
+4. One qualifying arm-motion episode creates **Possible physical conflict**, a visible review banner, and a local tone. Cameras use **Standard** direction checks; video files default to **Early review**, with a slightly wider approach direction for bent arms. A bent-arm approach still needs an observed withdrawal. If an elbow is hidden, wrist-only evidence keeps stricter motion checks but also alerts after one qualifying episode. Check the scene and **Acknowledge** the event.
 
 Use prerecorded or safely staged non-contact footage for a demo. Do not strike anyone to test it. A single-person air punch does not satisfy the two-person rule.
 
@@ -56,7 +56,7 @@ Review scans use the CPU reference runtime. The supplied sparring clip produced 
 
 Choose **Real-time playback** under **Detection settings → Video analysis** to watch at normal speed and skip frames while analysis is busy. Stop an active clip before changing mode. Live camera processing always stays real-time. Faster playback is less reliable for brief actions when the model cannot keep up.
 
-**Video review sensitivity** starts on **Early** to bring short striking-like sequences to a human's attention. It can flag martial-arts practice, sparring, or play. Choose **Standard** for the original three-episode rule. Neither setting identifies crime or intent, and neither is a calibrated probability. Visibility, implausible-jump rejection, the five-second window, minimum episode spacing, and alert cooldowns still apply.
+**Video review sensitivity** starts on **Early** to bring short striking-like sequences to a human's attention. It can flag martial-arts practice, sparring, or play. Both settings alert after one qualifying episode; **Standard** uses a narrower bent-arm approach direction. Neither setting identifies crime or intent, and neither is a calibrated probability. Visibility, implausible-jump rejection, the five-second window, minimum episode spacing, and alert cooldowns still apply.
 
 Use **Pause**, **Resume**, **Replay**, and **Stop**. Paused time never counts toward an alert. Replaying a completed scan starts a fresh observation window; Stop or a source change cancels pending analysis and clears the session. The final sampled result is processed before a scan is marked complete.
 
@@ -117,7 +117,7 @@ Add `NIVRA_EXPECT_REVIEW=1` when that clip is expected to produce a physical-con
 - Two instances of `vision.worker.ts` isolate the MediaPipe runtimes. Real-time pose analysis uses GPU when available; Review scans use CPU. Object detection uses a lower-frequency CPU worker so the two graphs do not contend for WebGL.
 - `VisionWorkerClient` gives each task independent backpressure, publishes object observations without waiting for another pose result, and drops stale frames instead of accumulating latency. Cached overlays expire when their worker stops returning results.
 - `SceneEngine` maintains temporary tracks, a selected-item watch, and rules that require observations across frames.
-- `ConflictEngine` associates upper-body poses across frames and checks body-scale-normalized arm velocity, swept movement paths, extension, retraction, repeated pulses, visibility, sampling gaps, and alert cooldowns. Its evidence progress is not a probability of violence. Pending motion resets when model settings change; existing reviews remain.
+- `ConflictEngine` associates upper-body poses across frames and checks body-scale-normalized arm velocity, swept movement paths, extension, retraction, qualifying pulses, visibility, sampling gaps, and alert cooldowns. Its evidence progress is not a probability of violence. Pending motion resets when model settings change; existing reviews remain.
 - `ReviewTonePlayer` generates tones with Web Audio. It handles blocked audio, cancels pending playback, and releases completed audio nodes.
 - The video element displays the source once. Canvas draws the aligned skeletons, object boxes, and watch position.
 

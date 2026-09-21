@@ -64,7 +64,7 @@ export function ObservationRail({ scene, active, simulated, acknowledged, onAckn
           <div className="event-empty">
             <div className="empty-rings" aria-hidden="true"><span /><span /></div>
             <strong>{active ? 'No changes to review' : 'Your review queue is clear'}</strong>
-            <p>{active ? showObjects ? 'Watch an item to receive an alert when it moves or leaves the view.' : 'Repeated directed arm movements between two nearby people can create a review.' : 'Start a camera, open a video, or try the test scenario.'}</p>
+            <p>{active ? showObjects ? 'Watch an item to receive an alert when it moves or leaves the view.' : 'One directed arm movement between two nearby people can create a review.' : 'Start a camera, open a video, or try the test scenario.'}</p>
           </div>
         )}
       </section>
@@ -117,7 +117,7 @@ export function ObservationRail({ scene, active, simulated, acknowledged, onAckn
 
       <div className="rail-note">
         <strong>What triggers an alert?</strong>
-        <p>Conflict analysis looks for repeated fast arm extensions toward another person's upper body. It does not establish contact or intent.</p>
+        <p>Conflict analysis looks for a fast arm extension toward another person's upper body. It does not establish contact or intent.</p>
         {showObjects ? <p>Object alerts cover a watched item moving or leaving view, an unattended bag, or a repeated restricted-object observation.</p> : null}
         <p>Sports, play, and occlusion can cause mistakes. Every alert needs a person to check the scene.</p>
       </div>

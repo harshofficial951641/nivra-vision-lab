@@ -31,7 +31,7 @@ export interface ConflictDiagnostics {
 
 const EMPTY_DIAGNOSTICS: ConflictDiagnostics = {
   detectedPoses: 0, usablePeople: 0, upperBodyOnlyPeople: 0, visibleArms: 0,
-  usableArms: 0, nearbyPairs: 0, requiredPulses: 3, reason: 'no-poses',
+  usableArms: 0, nearbyPairs: 0, requiredPulses: 1, reason: 'no-poses',
 }
 
 export interface ConflictSnapshot {
@@ -104,7 +104,6 @@ interface PairState {
   lastEventMs: number
   alerted: boolean
   regions: NormalizedBox[]
-  lastWristOnlyPulseMs: number
   requiredPulses: number
   warmed: boolean
   usableArms: boolean
@@ -244,7 +243,7 @@ export class ConflictEngine {
     this.resetMotion()
   }
 
-  private completePulseCount(): number { return this.sensitivity === 'early' ? 2 : 3 }
+  private completePulseCount(): number { return 1 }
 
   update(timestampMs: number, poses: PoseLandmarks[], aspectRatio = 16 / 9): ConflictSnapshot {
     if (!Number.isFinite(timestampMs) || timestampMs <= this.lastUpdateMs) return this.snapshot(this.lastUpdateMs)
@@ -278,7 +277,7 @@ export class ConflictEngine {
         if (!pair) {
           pair = { ids: [a.id, b.id], arms: new Map(), pulses: [], lastPulseMs: Number.NEGATIVE_INFINITY,
             lastSeenMs: timestampMs, lastEventMs: Number.NEGATIVE_INFINITY, alerted: false, regions: [],
-            lastWristOnlyPulseMs: Number.NEGATIVE_INFINITY, requiredPulses: this.completePulseCount(), warmed: false, usableArms: false }
+            requiredPulses: this.completePulseCount(), warmed: false, usableArms: false }
           this.pairs.set(key, pair)
         }
         pair.lastSeenMs = timestampMs
@@ -287,7 +286,6 @@ export class ConflictEngine {
         if (pair.alerted && timestampMs - pair.lastPulseMs > QUIET_REARM_MS) {
           pair.alerted = false
           pair.pulses = []
-          pair.lastWristOnlyPulseMs = Number.NEGATIVE_INFINITY
         }
         nearestPair ??= pair
         const pairWarm = [a, b].every(track => track.samples >= 3 && timestampMs - track.firstSeenMs >=
@@ -301,20 +299,18 @@ export class ConflictEngine {
         if (pulsed && timestampMs - pair.lastPulseMs >= MIN_PULSE_INTERVAL_MS) {
           pair.pulses.push(timestampMs)
           pair.lastPulseMs = timestampMs
-          if (firstPulse !== 1 && secondPulse !== 1) pair.lastWristOnlyPulseMs = timestampMs
         }
-        pair.requiredPulses = timestampMs - pair.lastWristOnlyPulseMs <= PULSE_WINDOW_MS ? 4 : this.completePulseCount()
+        pair.requiredPulses = this.completePulseCount()
         if (!strongest || pair.pulses.length > strongest.pulses.length) strongest = pair
-        const repeated = pair.pulses.length >= pair.requiredPulses && timestampMs - pair.pulses[0] >=
-          (pair.requiredPulses === 4 ? 1_200 : 800)
-        if (repeated && pairWarm && pair.lastPulseMs === timestampMs && !pair.alerted && timestampMs - pair.lastEventMs >= EVENT_COOLDOWN_MS &&
+        const detected = pair.pulses.length >= pair.requiredPulses
+        if (detected && pairWarm && pair.lastPulseMs === timestampMs && !pair.alerted && timestampMs - pair.lastEventMs >= EVENT_COOLDOWN_MS &&
           timestampMs - this.lastAlertAtMs >= EVENT_COOLDOWN_MS) {
           pair.alerted = true
           pair.lastEventMs = timestampMs
           this.lastAlertAtMs = timestampMs
           const event: ReviewEvent = { id: `conflict-${++this.eventSequence}`, type: 'physical-conflict',
             title: 'Possible physical conflict', objectName: 'Two-person interaction', occurredAtMs: timestampMs,
-            detail: `${pair.requiredPulses} distinct fast arm-motion episodes toward another person's upper body were observed. A person must review the interaction before responding.`,
+            detail: "A fast arm-motion episode toward another person's upper body was observed. A person must review the interaction before responding.",
           }
           this.events = [event, ...this.events].slice(0, 6)
         }
@@ -340,7 +336,7 @@ export class ConflictEngine {
       usableArms: allArms.length, nearbyPairs, requiredPulses, reason: 'ready',
     }
     let status: ConflictStatus = 'clear'
-    let explanation = 'No repeated directed arm motion observed.'
+    let explanation = 'No directed arm motion observed.'
     let signals: string[] = []
     if (people < 2) {
       status = 'limited'
@@ -366,8 +362,8 @@ export class ConflictEngine {
     }
     else if (recentAlert) {
       status = 'alert'
-      explanation = 'Repeated directed arm motion needs a person to review the scene.'
-      signals = ['Two nearby people', 'Repeated directed arm thrusts', 'Extension and retraction observed']
+      explanation = 'Directed arm motion needs a person to review the scene.'
+      signals = ['Two nearby people', 'Directed arm motion observed']
     } else if (!selected.usableArms) {
       status = 'limited'
       diagnostics.reason = 'arms-hidden'
@@ -379,11 +375,11 @@ export class ConflictEngine {
       explanation = 'Establishing upper-body motion over several frames.'
     } else if (pulses > 0) {
       status = 'observing'
-      explanation = 'A directed arm movement was seen. Waiting for repeated motion.'
+      explanation = 'A directed arm movement was seen. Alert cooldown is active.'
       signals = ['Two nearby people', `${Math.min(requiredPulses, pulses)} of ${requiredPulses} directed motion pulses`]
-    } else signals = ['Two nearby people', 'No repeated directed arm motion']
+    } else signals = ['Two nearby people', 'No directed arm motion']
     if (upperBodyOnlyPeople && people >= 2) signals.push('Upper-body framing supported')
-    if (diagnostics.usableArms > diagnostics.visibleArms) signals.push('Some elbows are hidden; wrist-only motion needs extra confirmation')
+    if (diagnostics.usableArms > diagnostics.visibleArms) signals.push('Some elbows are hidden; wrist-only motion uses stricter checks')
     this.current = { status, people, progress: recentAlert ? 1 : Math.min(1, pulses / requiredPulses), signals, explanation,
       events: [...this.events], regions: selected?.regions ?? [], diagnostics }
     return this.snapshot(timestampMs)

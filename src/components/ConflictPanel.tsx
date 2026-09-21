@@ -86,7 +86,7 @@ export function ConflictPanel({ snapshot, enabled, active, simulated, onToggle }
             aria-valuetext={state === 'alert'
               ? 'Motion pattern sustained across frames'
               : state === 'observing'
-                ? 'Gathering repeated motion evidence'
+                ? 'Directed motion observed'
                 : 'No motion pattern awaiting confirmation'}
             data-testid="conflict-progress"
           />

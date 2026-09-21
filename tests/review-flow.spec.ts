@@ -52,9 +52,13 @@ test('a watched-item scenario sounds, acknowledges, and alerts again after repla
   await page.getByTestId('stop-camera').click()
   await expect(page.getByTestId('review-alert')).toBeHidden()
   await expect(page.locator('.demo-canvas')).toBeHidden()
+  expect(browserErrors).toEqual([])
 })
 
 test('scripted waving stays quiet and repeated striking produces a review with optional sound', async ({ page }) => {
+  const browserErrors: string[] = []
+  page.on('pageerror', error => browserErrors.push(error.message))
+  page.on('console', message => { if (message.type() === 'error') browserErrors.push(message.text()) })
   await countScheduledTones(page)
   await page.goto('/')
   await page.getByRole('button', { name: 'Test scenario', exact: true }).click()
@@ -92,6 +96,7 @@ test('scripted waving stays quiet and repeated striking produces a review with o
   await page.getByTestId('stop-camera').click()
   await expect(page.getByTestId('review-alert')).toBeHidden()
   await expect(page.locator('.demo-canvas')).toBeHidden()
+  expect(browserErrors).toEqual([])
 })
 
 test('camera permission denial gives an actionable recovery message', async ({ page }) => {
