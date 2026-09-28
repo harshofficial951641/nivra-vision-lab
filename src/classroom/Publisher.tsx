@@ -6,6 +6,7 @@ import {
   ShieldCheck,
 } from '@phosphor-icons/react'
 import { api, framePacket, socketUrl, type CameraLocation } from './contracts'
+import { FrameWindow } from './frameWindow'
 import './classroom.css'
 
 // Module-scoped initial exchange is shared across React's StrictMode effect replay.
@@ -88,20 +89,19 @@ export default function Publisher() {
       const peer = new WebSocket(socketUrl('/camera/stream'))
       socket.current = peer
       const canvas = document.createElement('canvas')
-      let inFlight = false,
-        acknowledgedAt = performance.now()
+      const flow = new FrameWindow()
+      let sending = false
       const send = async () => {
         if (current !== generation.current) return
-        if (inFlight && performance.now() - acknowledgedAt > 10000) {
+        const startedAt = performance.now()
+        if (flow.timedOut(startedAt)) {
           peer.close()
           return
         }
-        if (!inFlight && peer.readyState === WebSocket.OPEN && video.current) {
-          inFlight = true
-          acknowledgedAt = performance.now()
+        if (flow.canSend(startedAt, peer.bufferedAmount) && peer.readyState === WebSocket.OPEN && video.current) {
           let packet: ArrayBuffer | null
           try {
-            packet = await framePacket(video.current, canvas, performance.now())
+            packet = await framePacket(video.current, canvas, startedAt)
           } catch {
             peer.close()
             return
@@ -109,22 +109,25 @@ export default function Publisher() {
           if (
             packet &&
             current === generation.current &&
-            peer.readyState === WebSocket.OPEN
-          )
+            peer.readyState === WebSocket.OPEN &&
+            flow.canSend(performance.now(), peer.bufferedAmount, packet.byteLength)
+          ) {
             peer.send(packet)
-          else inFlight = false
+            flow.sent(startedAt, performance.now(), packet.byteLength)
+          }
         }
-        timeout.current = window.setTimeout(() => void send(), 84)
+        if (current === generation.current)
+          timeout.current = window.setTimeout(() => void send(), Math.max(0, 84 - (performance.now() - startedAt)))
       }
       peer.onmessage = (event) => {
         if (current !== generation.current) return
-        const data = JSON.parse(event.data) as { type: string }
-        if (data.type === 'ready') {
+        const data = JSON.parse(event.data) as { type: string; timestampMs?: number }
+        if (data.type === 'ready' && !sending) {
+          sending = true
           setStatus('live')
           void send()
         }
-        if (data.type === 'accepted') {
-          inFlight = false
+        if (data.type === 'accepted' && typeof data.timestampMs === 'number' && flow.acknowledge(data.timestampMs)) {
           setSent((count) => count + 1)
         }
       }

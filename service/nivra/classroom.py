@@ -17,6 +17,7 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException, Request, Response, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from .classroom_store import Store
+from .preview_relay import PreviewRelay
 
 ADMIN_COOKIE = 'nivra_operator'
 CAMERA_COOKIE = 'nivra_publisher'
@@ -72,6 +73,7 @@ class Classroom:
         self.operator_invites, self.operator_sessions = {}, {}
         self.pairs, self.credentials, self.attempts = {}, {}, {}
         self.live, self.pending, self.viewers = {}, {}, set()
+        self.relays = {}
         self.order = deque()
         self.wake = asyncio.Event()
         self.task = None
@@ -81,6 +83,8 @@ class Classroom:
     async def start(self): self.task = asyncio.create_task(self.work())
 
     async def stop(self):
+        for relay in tuple(self.relays.values()): await relay.close()
+        self.relays.clear()
         if self.task:
             self.task.cancel()
             try: await self.task
@@ -130,15 +134,15 @@ class Classroom:
                 'publicOrigin': self.public or None, 'retention':'event-records-only',
                 'experimental':True, 'maxCameras':4, 'activeViewers':len(self.viewers), 'maxViewers':8}
 
-    async def broadcast(self, value, binary=False):
-        async def send(socket):
-            try:
-                await asyncio.wait_for(socket.send_bytes(value) if binary else socket.send_json(value), .5)
-            except Exception:
-                self.viewers.discard(socket)
-                try: await socket.close(code=1013)
-                except Exception: pass
-        await asyncio.gather(*(send(socket) for socket in tuple(self.viewers)))
+    async def broadcast(self, value, binary=False, camera_id=None):
+        # Never await a viewer on the camera capture or GPU scheduling path.
+        for socket in tuple(self.viewers):
+            relay = self.relays.get(socket)
+            if relay:
+                if not binary:
+                    for camera in value['cameras']:
+                        if camera['feed'] != 'live': relay.discard(camera['id'])
+                relay.offer(camera_id if binary else 'snapshot', value, binary)
 
     def enqueue(self, camera_id, value):
         if camera_id in self.pending: self.live[camera_id]['replaced'] += 1
@@ -319,8 +323,10 @@ class Classroom:
                 return
             await socket.accept()
             self.viewers.add(socket)
+            relay = PreviewRelay(socket, lambda: self.viewers.discard(socket))
+            self.relays[socket] = relay
             try:
-                await socket.send_json(self.snapshot())
+                relay.offer('snapshot', self.snapshot())
                 while True:
                     if not self.valid_operator(socket):
                         await socket.close(code=1008)
@@ -329,9 +335,12 @@ class Classroom:
                         message = await asyncio.wait_for(socket.receive(),2)
                         if message['type']=='websocket.disconnect': break
                         if message.get('text') != 'ping': break
-                    except asyncio.TimeoutError: await socket.send_json(self.snapshot())
+                    except asyncio.TimeoutError: relay.offer('snapshot', self.snapshot())
             except (WebSocketDisconnect,RuntimeError): pass
-            finally: self.viewers.discard(socket)
+            finally:
+                self.viewers.discard(socket)
+                self.relays.pop(socket, None)
+                await relay.close()
 
         @router.websocket('/camera/stream')
         async def camera_stream(socket: WebSocket):
@@ -344,7 +353,7 @@ class Classroom:
             generation = secrets.token_hex(12)
             live = dict(socket=socket,generation=generation,received=-1e10,frames=0,replaced=0,pipeline=None,video=deque(maxlen=64))
             self.live[camera_id] = live
-            last_timestamp, last_preview = -1, -1e10
+            last_timestamp = -1
             recent_frames = deque()
             try:
                 await socket.send_json({'type':'ready','cameraId':camera_id,'generation':generation,'maxFps':12})
@@ -352,7 +361,9 @@ class Classroom:
                     packet = await asyncio.wait_for(socket.receive_bytes(),15)
                     received_at = time.monotonic()
                     while recent_frames and received_at-recent_frames[0] > 1: recent_frames.popleft()
-                    if len(recent_frames) >= 15: raise ValueError('Frame rate exceeded')
+                    # Public networks can deliver several paced frames together.
+                    # Permit one bounded eight-frame transport window as burst headroom.
+                    if len(recent_frames) >= 24: raise ValueError('Frame rate exceeded')
                     recent_frames.append(received_at)
                     header, frame = self.unpack_frame(packet)
                     if header.timestampMs <= last_timestamp: raise ValueError('Source timestamps must increase')
@@ -364,12 +375,10 @@ class Classroom:
                     live['video'].append((header.timestampMs,frame))
                     while live['video'] and header.timestampMs-live['video'][0][0] > 4500: live['video'].popleft()
                     self.enqueue(camera_id,(generation,header,frame,now))
-                    if now-last_preview >= .24:
-                        length = struct.unpack('<I',packet[:4])[0]
-                        metadata = json.dumps({'cameraId':camera_id,'generation':generation,'timestampMs':header.timestampMs,'width':frame.shape[1],'height':frame.shape[0]}).encode()
-                        await self.broadcast(struct.pack('<I',len(metadata))+metadata+packet[4+length:],binary=True)
-                        last_preview = now
                     await socket.send_json({'type':'accepted','timestampMs':header.timestampMs})
+                    length = struct.unpack('<I',packet[:4])[0]
+                    metadata = json.dumps({'cameraId':camera_id,'generation':generation,'timestampMs':header.timestampMs,'width':frame.shape[1],'height':frame.shape[0]}).encode()
+                    await self.broadcast(struct.pack('<I',len(metadata))+metadata+packet[4+length:],binary=True,camera_id=camera_id)
             except (WebSocketDisconnect,RuntimeError): pass
             except (ValueError,asyncio.TimeoutError):
                 try: await socket.close(code=1008,reason='Invalid frame or camera timed out')
