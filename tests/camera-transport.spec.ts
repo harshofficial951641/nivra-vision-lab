@@ -42,9 +42,13 @@ test('phone sends smoothly with delayed acknowledgements, stops, reconnects and 
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/camera')
   await expect(page.getByRole('heading', { name: 'Transport QA' })).toBeVisible()
+  await page.getByLabel('Analyze area', { exact: true }).selectOption('center')
+  await expect(page.getByText('Analyzed area only', { exact: true })).toBeVisible()
+  await expect(page.getByLabel('Processing', { exact: true })).toHaveValue('balanced')
   await page.getByRole('button', { name: 'Start camera' }).focus()
   await page.keyboard.press('Enter')
   await expect(page.getByText('Sending live frames', { exact: true })).toBeVisible()
+  await expect(page.getByLabel('Analyze area', { exact: true })).toBeDisabled()
   // A stop-and-wait sender can manage at most ~12 frames in five seconds here.
   await expect.poll(() => received, { timeout: 5000 }).toBeGreaterThan(35)
   await expect.poll(() => deviceResults, { timeout: 20000 }).toBeGreaterThan(2)
@@ -54,6 +58,8 @@ test('phone sends smoothly with delayed acknowledgements, stops, reconnects and 
   await page.getByRole('button', { name: 'Stop camera' }).click()
   const stoppedAt = received
   await expect(page.locator('video')).toHaveJSProperty('srcObject', null)
+  await page.getByLabel('Analyze area', { exact: true }).selectOption('full')
+  await expect(page.getByText('Analyzed area only', { exact: true })).toHaveCount(0)
   await page.waitForTimeout(500)
   expect(received).toBe(stoppedAt)
   await page.getByRole('button', { name: 'Reconnect camera' }).click()

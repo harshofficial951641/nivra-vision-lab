@@ -45,9 +45,9 @@ class DeviceResult(Message):
     delegate: Literal['GPU', 'CPU']
     timestampMs: float = Field(ge=0)
     inferenceMs: float = Field(ge=0, le=30000)
-    observedPeople: int = Field(ge=0, le=4)
-    usablePeople: int = Field(ge=0, le=4)
-    tracks: list[Track] = Field(max_length=4)
+    observedPeople: int = Field(ge=0, le=10)
+    usablePeople: int = Field(ge=0, le=10)
+    tracks: list[Track] = Field(max_length=10)
     conflict: Conflict
     events: list[Event] = Field(max_length=2)
 
@@ -69,6 +69,6 @@ def result_payload(report):
         # This detector does not measure whole-classroom visibility.
         coverage=dict(observedPeople=report.observedPeople, analyzedPeople=report.usablePeople,
             excludedPeople=report.observedPeople-report.usablePeople, status='limited',
-            actionPeople=report.usablePeople, maxPeople=4),
+            actionPeople=report.usablePeople, maxPeople=10),
         tracks=[dict(id=t.id, box=t.box, observed=True, ambiguous=True) for t in report.tracks],
         conflict=report.conflict.model_dump())

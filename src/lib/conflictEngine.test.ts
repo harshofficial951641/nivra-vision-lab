@@ -58,6 +58,14 @@ function run(engine: ConflictEngine, end: number, frames: (timestamp: number) =>
 }
 
 describe('ConflictEngine', () => {
+  it('keeps overlapping torsos distinct when reliable limb observations differ', () => {
+    const engine = new ConflictEngine()
+    const front = person(.5), behind = person(.512)
+    behind[15].x -= .10
+    behind[16].x += .10
+    expect(engine.update(0, [front, behind], ASPECT).people).toBe(2)
+    expect(new ConflictEngine().update(0, [front, translate(front, .008, .004)], ASPECT).people).toBe(1)
+  })
   it('alerts on the first qualifying hit without a repetition delay', () => {
     const engine = new ConflictEngine()
     const frames = (time: number) => [person(.35, extensionAt(time)), person(.65)]

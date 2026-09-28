@@ -95,12 +95,14 @@ export async function framePacket(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
   timestamp: number,
+  longestSide = 960,
 ): Promise<ArrayBuffer | null> {
   if (!video.videoWidth || video.readyState < 2) return null
-  const scale = Math.min(1, 960 / Math.max(video.videoWidth, video.videoHeight))
-  canvas.width = Math.round(video.videoWidth * scale)
-  canvas.height = Math.round(video.videoHeight * scale)
-  const context = canvas.getContext('2d')
+  const scale = Math.min(1, longestSide / Math.max(video.videoWidth, video.videoHeight))
+  const width = Math.round(video.videoWidth * scale), height = Math.round(video.videoHeight * scale)
+  if (canvas.width !== width) canvas.width = width
+  if (canvas.height !== height) canvas.height = height
+  const context = canvas.getContext('2d', { alpha: false })
   if (!context) return null
   context.drawImage(video, 0, 0, canvas.width, canvas.height)
   const jpeg = await new Promise<Blob | null>((resolve) =>
@@ -112,7 +114,7 @@ export async function framePacket(
       version: 1,
       timestampMs: timestamp,
       streamId: 0,
-      maxPeople: 4,
+      maxPeople: 10,
     }),
   )
   const packet = new Uint8Array(4 + header.length + jpeg.size)

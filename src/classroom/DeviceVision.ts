@@ -1,6 +1,7 @@
 import { inferenceSize } from '../lib/inferenceSize'
 import type { VisionDelegate, VisionWorkerResponse } from '../types/vision'
 import { DeviceAnalysis, DEVICE_PEOPLE_LIMIT, type DeviceResult, type DeviceStatus } from './deviceAnalysis'
+import { analysisRegion, DeviceBudget, type AnalysisArea, type DeviceProfile } from './deviceBudget'
 
 /** One pose worker and one outstanding bitmap; models live on this camera device. */
 export class DeviceVision {
@@ -14,13 +15,18 @@ export class DeviceVision {
   private pending: { timestamp: number; aspect: number } | null = null
   private timer: ReturnType<typeof setTimeout> | null = null
   private delegate: VisionDelegate = 'GPU'
+  readonly budget = new DeviceBudget()
+  private area: AnalysisArea
+  private profile: DeviceProfile
 
   private onStatus: (status: DeviceStatus) => void
   private onResult: (result: DeviceResult) => void
 
-  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void) {
+  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile = 'balanced') {
     this.onStatus = onStatus
     this.onResult = onResult
+    this.area = area
+    this.profile = profile
   }
 
   start(preferred: VisionDelegate = 'GPU') {
@@ -62,7 +68,8 @@ export class DeviceVision {
           const aspect = this.pending.aspect
           this.pending = null
           this.busy = false
-          this.onResult(this.analysis.update(data.timestampMs, data.inferenceMs, data.poses, aspect, this.delegate))
+          this.budget.observe(data.inferenceMs)
+          this.onResult(this.analysis.update(data.timestampMs, data.inferenceMs, data.poses, aspect, this.delegate, this.area))
         }
       }
       worker.postMessage({
@@ -75,16 +82,19 @@ export class DeviceVision {
   }
 
   async capture(video: HTMLVideoElement, timestamp: number) {
-    if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < 100 || video.readyState < 2 || !video.videoWidth) return
+    if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < this.budget.analysisInterval || video.readyState < 2 || !video.videoWidth) return
     this.busy = true
     this.lastCapture = timestamp
     const generation = this.generation
     let bitmap: ImageBitmap | null = null
     try {
-      const size = inferenceSize({ width: video.videoWidth, height: video.videoHeight }, 640)
-      bitmap = await createImageBitmap(video, { resizeWidth: size.width, resizeHeight: size.height, resizeQuality: 'medium' })
+      const region = analysisRegion(this.area)
+      const width = Math.round(video.videoWidth * region.width), height = Math.round(video.videoHeight * region.height)
+      const size = inferenceSize({ width, height }, this.profile === 'detail' ? 960 : 640)
+      bitmap = await createImageBitmap(video, Math.round(video.videoWidth * region.x), Math.round(video.videoHeight * region.y), width, height,
+        { resizeWidth: size.width, resizeHeight: size.height, resizeQuality: 'low' })
       if (this.disposed || generation !== this.generation) { bitmap.close(); return }
-      this.pending = { timestamp, aspect: video.videoWidth / video.videoHeight }
+      this.pending = { timestamp, aspect: width / height }
       this.timer = setTimeout(() => {
         if (this.delegate === 'GPU') this.start('CPU')
         else {

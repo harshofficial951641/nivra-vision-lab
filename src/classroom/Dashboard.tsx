@@ -728,7 +728,7 @@ export default function Dashboard() {
                         {demo
                           ? 'Generated image · not analyzed'
                           : camera.compute === 'device'
-                            ? `Device ${camera.deviceStatus?.delegate || 'analysis'} · up to 4 people · limited coverage`
+                            ? `Device ${camera.deviceStatus?.delegate || 'analysis'} · up to 10 pose candidates · limited coverage`
                           : camera.result?.coverage
                             ? `${camera.result.coverage.observedPeople} people tracked · ${camera.result.coverage.actionPeople} in latest action view`
                             : 'Waiting for analysis'}
@@ -994,7 +994,7 @@ export default function Dashboard() {
               <dd>{data?.runtime?.fightModel || 'Unavailable'}</dd>
               {data?.runtime?.compute === 'camera-device' && <>
                 <dt>Device coverage</dt>
-                <dd>Original Nivra motion rules · up to 4 people per frame. GPU preferred; explicit CPU fallback. Whole-classroom accuracy is unverified.</dd>
+                <dd>Original Nivra motion rules · up to 10 pose candidates per frame. GPU preferred; explicit CPU fallback. Whole-classroom accuracy is unverified.</dd>
               </>}
               <dt>Remote phone access</dt>
               <dd>

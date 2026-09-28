@@ -62,6 +62,7 @@ interface Arm {
 }
 
 interface Body {
+  signature: Array<Point | null>
   center: Point
   upper: Point
   scale: number
@@ -126,7 +127,7 @@ function visible(point: PoseLandmark | undefined): point is PoseLandmark {
     (point.visibility ?? 1) >= VISIBILITY && (point.presence ?? 1) >= VISIBILITY
 }
 
-function extractBody(pose: PoseLandmarks, aspect: number): Body | null {
+function extractBody(pose: PoseLandmarks, aspect: number, minBodyScale: number, minShoulderWidth: number): Body | null {
   if (![11, 12].every(index => visible(pose[index]))) return null
   const point = (index: number): Point => ({ x: pose[index].x * aspect, y: pose[index].y })
   const shoulder = midpoint(point(11), point(12))
@@ -134,7 +135,7 @@ function extractBody(pose: PoseLandmarks, aspect: number): Body | null {
   const inferredTorso = ![23, 24].every(index => visible(pose[index]) && inFrame(pose[index], 0))
   // Profile shoulders can overlap in the image. A visible torso still provides
   // body size; projected shoulder width is needed only when the hips are hidden.
-  if (shoulderWidth > 0.8 || (inferredTorso && shoulderWidth < 0.055)) return null
+  if (shoulderWidth > 0.8 || (inferredTorso && shoulderWidth < minShoulderWidth)) return null
   const shoulderAxis = subtract(point(12), point(11))
   const directionSign = shoulderAxis.x < 0 ? -1 : 1
   const inferredDirection = { x: -shoulderAxis.y / Math.max(shoulderWidth, 1e-6) * directionSign,
@@ -146,7 +147,7 @@ function extractBody(pose: PoseLandmarks, aspect: number): Body | null {
     ? { x: shoulder.x + inferredDirection.x * estimatedScale, y: shoulder.y + inferredDirection.y * estimatedScale }
     : midpoint(point(23), point(24))
   const scale = Math.max(distance(shoulder, hip), shoulderWidth * 0.8)
-  if (scale < 0.07 || scale > 1) return null
+  if (scale < minBodyScale || scale > 1) return null
   const torsoAxis = subtract(hip, shoulder)
   const torsoLength = length(torsoAxis)
   const torsoDirection = { x: torsoAxis.x / Math.max(torsoLength, 1e-6), y: torsoAxis.y / Math.max(torsoLength, 1e-6) }
@@ -179,6 +180,7 @@ function extractBody(pose: PoseLandmarks, aspect: number): Body | null {
   const right = clamp(Math.max(...points.map(p => p.x)))
   const bottom = clamp(Math.max(...points.map(p => p.y)))
   return {
+    signature: [0, 11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28].map(index => visible(pose[index]) ? point(index) : null),
     center: midpoint(shoulder, hip),
     upper: { x: shoulder.x * 0.78 + hip.x * 0.22, y: shoulder.y * 0.78 + hip.y * 0.22 },
     scale, arms, box: { x: left, y: top, width: right - left, height: bottom - top },
@@ -207,7 +209,12 @@ function deduplicateBodies(bodies: Body[]): Body[] {
       const scale = (body.scale + other.scale) / 2
       const sizeRatio = !body.inferredTorso && !other.inferredTorso
         ? body.scale / other.scale : body.shoulderWidth / other.shoulderWidth
-      return distance(body.shoulder, other.shoulder) < scale * 0.35 &&
+      const distances = body.signature.flatMap((point, index) => point && other.signature[index]
+        ? [distance(point, other.signature[index]!)/scale] : [])
+      // Similar shoulders alone can belong to two overlapping people. A duplicate
+      // must agree across the reliable skeleton, including limbs and hips.
+      return distances.length >= 4 && distances.every(value => value < .12) &&
+        distance(body.shoulder, other.shoulder) < scale * 0.12 &&
         Math.abs(sizeRatio - 1) < 0.25 &&
         body.torso.every((point, index) => distance(point, other.torso[index]) < scale * 0.25)
     })
@@ -225,6 +232,12 @@ function shoulderCalibration(body: Body): number | null {
 
 /** Observable 2D arm-motion rules. This is not a trained fight classifier. */
 export class ConflictEngine {
+  private minBodyScale: number
+  private minShoulderWidth: number
+  constructor(options: { minBodyScale?: number; minShoulderWidth?: number } = {}) {
+    this.minBodyScale = options.minBodyScale ?? .07
+    this.minShoulderWidth = options.minShoulderWidth ?? .055
+  }
   private tracks = new Map<number, BodyTrack>()
   private pairs = new Map<string, PairState>()
   private sequence = 0
@@ -262,7 +275,7 @@ export class ConflictEngine {
     }
     this.lastUpdateMs = timestampMs
     this.lastAspect = aspect
-    const bodies = deduplicateBodies(poses.map(pose => extractBody(pose, aspect)).filter((body): body is Body => body !== null))
+    const bodies = deduplicateBodies(poses.map(pose => extractBody(pose, aspect, this.minBodyScale, this.minShoulderWidth)).filter((body): body is Body => body !== null))
     this.matchBodies(bodies, timestampMs)
     const available = [...this.tracks.values()].filter(track => track.seen)
     let nearestPair: PairState | null = null

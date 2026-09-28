@@ -27,7 +27,28 @@ export function useClassroom(enabled: boolean) {
       timer = 0,
       attempts = 0
     const urls = new Map<string, string>()
+    type Preview = { cameraId: string; generation: string; timestampMs: number; width: number; height: number }
+    const pending = new Map<string, { meta: Preview; bytes: ArrayBuffer; offset: number; received: number }>()
+    let paintTimer = 0
+    const flushFrames = () => {
+      paintTimer = 0
+      if (stopped) return
+      const batch: typeof previews = {}
+      for (const [id, frame] of pending) {
+        if (!latest.current?.cameras.some(camera => camera.id === id && camera.feed === 'live' && camera.generation === frame.meta.generation)) continue
+        const url = URL.createObjectURL(new Blob([frame.bytes.slice(frame.offset)], { type: 'image/jpeg' }))
+        const previous = urls.get(id)
+        urls.set(id, url)
+        batch[id] = { ...frame.meta, url, received: frame.received }
+        if (previous) URL.revokeObjectURL(previous)
+      }
+      pending.clear()
+      if (Object.keys(batch).length) setPreviews(old => ({ ...old, ...batch }))
+    }
     const clearFrames = () => {
+      clearTimeout(paintTimer)
+      paintTimer = 0
+      pending.clear()
       urls.forEach((url) => URL.revokeObjectURL(url))
       urls.clear()
       setPreviews({})
@@ -67,6 +88,7 @@ export function useClassroom(enabled: boolean) {
                 if (!active.has(id)) {
                   URL.revokeObjectURL(url)
                   urls.delete(id)
+                  pending.delete(id)
                 }
               })
               setPreviews((old) =>
@@ -89,16 +111,10 @@ export function useClassroom(enabled: boolean) {
               }
               if (!latest.current?.cameras.some((c) => c.id === meta.cameraId))
                 return
-              const url = URL.createObjectURL(
-                  new Blob([bytes.slice(4 + size)], { type: 'image/jpeg' }),
-                ),
-                previous = urls.get(meta.cameraId)
-              urls.set(meta.cameraId, url)
-              setPreviews((old) => ({
-                ...old,
-                [meta.cameraId]: { ...meta, url, received: Date.now() },
-              }))
-              if (previous) URL.revokeObjectURL(previous)
+              // Coalesce cameras into one paint and decode only the newest
+              // frame per camera when network packets arrive in a burst.
+              pending.set(meta.cameraId, { meta, bytes, offset: 4 + size, received: Date.now() })
+              if (!paintTimer) paintTimer = window.setTimeout(flushFrames, 80)
             }
           } catch {
             setError('Invalid service response. Reconnect the service.')
@@ -136,6 +152,8 @@ export function useClassroom(enabled: boolean) {
     return () => {
       stopped = true
       clearTimeout(timer)
+      clearTimeout(paintTimer)
+      pending.clear()
       socket?.close()
       urls.forEach((url) => URL.revokeObjectURL(url))
     }

@@ -1,4 +1,5 @@
 import copy
+import asyncio
 import pytest
 from fastapi.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
@@ -8,12 +9,39 @@ from test_classroom import operator, camera, pair, ORIGIN
 from test_server import packet
 
 
+def test_camera_reports_share_one_pending_dashboard_update(tmp_path):
+    async def run():
+        service=create_app(database=tmp_path/'db.sqlite',relay_only=True).state.classroom
+        sent=[]
+        async def broadcast(value): sent.append(value)
+        service.broadcast=broadcast
+        for _ in range(40): service.schedule_snapshot()
+        pending=service.snapshot_task
+        assert sent==[]
+        await pending
+        assert len(sent)==1
+        service.schedule_snapshot()
+        assert service.snapshot_task is not pending
+        await service.stop()
+        assert service.snapshot_task.cancelled()
+    asyncio.run(run())
+
+
 def report(t=100):
     return dict(type='device-result',model='nivra-browser-motion-v1',delegate='GPU',timestampMs=t,
         inferenceMs=25,observedPeople=2,usablePeople=2,
         tracks=[dict(id=1,box=[.1,.1,.4,.8])],
         conflict=dict(status='alert',explanation='Directed motion'),
         events=[dict(id='run-conflict-1',occurredAtMs=100,detail='Review the scene')])
+
+
+def test_ten_people_allowed_but_not_eleven():
+    data=report()
+    data.update(observedPeople=10,usablePeople=10,
+        tracks=[dict(id=i,box=[.01,.01,.2,.4]) for i in range(10)])
+    assert len(DeviceResult.model_validate(data).tracks)==10
+    data['observedPeople']=11
+    with pytest.raises(ValueError): DeviceResult.model_validate(data)
 
 
 def test_relay_only_does_not_load_models_or_queue_pc_inference_and_deduplicates_events(tmp_path):

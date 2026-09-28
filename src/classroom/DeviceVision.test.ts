@@ -20,13 +20,29 @@ beforeEach(() => {
 afterEach(() => { vi.useRealTimers(); vi.unstubAllGlobals() })
 
 describe('device worker lifecycle', () => {
+  it('crops the source before resizing and paces expensive inference without a queue', async () => {
+    vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue({ close: vi.fn() }))
+    const device = new DeviceVision(vi.fn(), vi.fn(), 'right', 'balanced')
+    device.start()
+    const worker = WorkerStub.all[0]
+    worker.emit({ type: 'ready', delegate: 'CPU' })
+    await device.capture(video, 100)
+    expect(createImageBitmap).toHaveBeenCalledWith(video, 640, 0, 640, 720, expect.objectContaining({ resizeHeight: 640 }))
+    worker.emit({ type: 'pose-result', timestampMs: 100, poses: [], inferenceMs: 300 })
+    await device.capture(video, 400)
+    expect(createImageBitmap).toHaveBeenCalledTimes(1)
+    await device.capture(video, 470)
+    expect(createImageBitmap).toHaveBeenCalledTimes(2)
+    expect(device.budget.previewSide).toBe(640)
+    device.dispose()
+  })
   it('uses one GPU pose worker, bounds inference and ignores stale results', async () => {
     const bitmap = { close: vi.fn() }
     vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue(bitmap))
     const status = vi.fn(), result = vi.fn(), device = new DeviceVision(status, result)
     device.start()
     const worker = WorkerStub.all[0]
-    expect(worker.postMessage).toHaveBeenCalledWith(expect.objectContaining({ task: 'pose', poseDelegate: 'GPU', maxPoses: 4 }))
+    expect(worker.postMessage).toHaveBeenCalledWith(expect.objectContaining({ task: 'pose', poseDelegate: 'GPU', maxPoses: 10 }))
     worker.emit({ type: 'ready', delegate: 'GPU' })
     await device.capture(video, 100)
     await device.capture(video, 250)

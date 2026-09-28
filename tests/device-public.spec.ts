@@ -39,7 +39,7 @@ test('real browser model reports through the public relay without PC inference',
     const card = dashboard.getByRole('article', { name, exact: true })
     await expect(card.getByRole('img', { name: `Live view of ${name}` })).toBeVisible()
     await expect(card.getByText('Limited coverage', { exact: true })).toBeVisible()
-    await expect(card.getByText(/Device (GPU|CPU) · up to 4 people/)).toBeVisible()
+    await expect(card.getByText(/Device (GPU|CPU) · up to 10 pose candidates/)).toBeVisible()
     await page.setViewportSize({ width: 390, height: 844 })
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
     await page.screenshot({ path: 'test-results/device-public-mobile.png', fullPage: true })

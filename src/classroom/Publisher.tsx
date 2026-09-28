@@ -9,6 +9,7 @@ import { api, framePacket, socketUrl, type CameraLocation } from './contracts'
 import { FrameWindow } from './frameWindow'
 import { DeviceVision } from './DeviceVision'
 import type { DeviceResult, DeviceStatus } from './deviceAnalysis'
+import { analysisRegion, type AnalysisArea, type DeviceProfile } from './deviceBudget'
 import './classroom.css'
 
 // Module-scoped initial exchange is shared across React's StrictMode effect replay.
@@ -27,6 +28,9 @@ export default function Publisher() {
   const [camera, setCamera] = useState<CameraLocation | null>(null),
     [error, setError] = useState('')
   const [lens, setLens] = useState('environment')
+  const [area, setArea] = useState<AnalysisArea>('full')
+  const [profile, setProfile] = useState<DeviceProfile>('balanced')
+  const [aspect, setAspect] = useState(16 / 9)
   const [analysis, setAnalysis] = useState<DeviceStatus | null>(null)
   const [observation, setObservation] = useState<DeviceResult | null>(null)
   const detector = useRef<DeviceVision | null>(null)
@@ -102,6 +106,7 @@ export default function Publisher() {
       let sending = false
       let latestResult: DeviceResult | null = null
       let shownAt = -Infinity
+      let acknowledged = 0, countShownAt = -Infinity
       const send = async () => {
         if (current !== generation.current) return
         const startedAt = performance.now()
@@ -113,7 +118,7 @@ export default function Publisher() {
         if (flow.canSend(startedAt, peer.bufferedAmount) && peer.readyState === WebSocket.OPEN && video.current) {
           let packet: ArrayBuffer | null
           try {
-            packet = await framePacket(video.current, canvas, startedAt)
+            packet = await framePacket(video.current, canvas, startedAt, detector.current?.budget.previewSide)
           } catch {
             peer.close()
             return
@@ -133,7 +138,7 @@ export default function Publisher() {
           latestResult = null
         }
         if (current === generation.current)
-          timeout.current = window.setTimeout(() => void send(), Math.max(0, 84 - (performance.now() - startedAt)))
+          timeout.current = window.setTimeout(() => void send(), Math.max(0, (detector.current?.budget.previewInterval ?? 84) - (performance.now() - startedAt)))
       }
       peer.onmessage = (event) => {
         if (current !== generation.current) return
@@ -157,13 +162,18 @@ export default function Publisher() {
                 setObservation(result)
               }
             },
+            area, profile,
           )
           detector.current = client
           client.start()
           void send()
         }
         if (data.type === 'accepted' && typeof data.timestampMs === 'number' && flow.acknowledge(data.timestampMs)) {
-          setSent((count) => count + 1)
+          acknowledged++
+          if (performance.now() - countShownAt >= 500) {
+            countShownAt = performance.now()
+            setSent(acknowledged)
+          }
         }
       }
       peer.onclose = () => {
@@ -217,8 +227,26 @@ export default function Publisher() {
             <option value="user">Front camera</option>
           </select>
         </label>
-        <div className="nv-publisher-video">
-          <video ref={video} muted playsInline autoPlay />
+        <div className="nv-camera-options">
+          <label className="nv-lens-select">Processing
+            <select aria-label="Processing" value={profile} disabled={status === 'live' || status === 'starting'} onChange={event => setProfile(event.target.value as DeviceProfile)}>
+              <option value="balanced">Balanced · laptops and phones</option>
+              <option value="detail">More input detail · higher device load</option>
+            </select>
+          </label>
+          <label className="nv-lens-select">Analyze area
+            <select aria-label="Analyze area" value={area} disabled={status === 'live' || status === 'starting'} onChange={event => setArea(event.target.value as AnalysisArea)}>
+              <option value="full">Whole frame</option>
+              <option value="left">Left half · focus distant people</option>
+              <option value="center">Center half · focus distant people</option>
+              <option value="right">Right half · focus distant people</option>
+            </select>
+          </label>
+        </div>
+        <p className="nv-muted">A focused area gives distant people more of the model input. People outside that area are not analyzed. Stop the camera to change these settings.</p>
+        <div className="nv-publisher-video" style={{ aspectRatio: aspect }}>
+          <video ref={video} muted playsInline autoPlay onResize={event => { const node = event.currentTarget; if (node.videoHeight) setAspect(node.videoWidth / node.videoHeight) }} />
+          {area !== 'full' && <div className="nv-analysis-region" style={{ left: `${analysisRegion(area).x * 100}%` }}><span>Analyzed area only</span></div>}
           <span className="nv-video-label">
             {status === 'live' ? 'Sending live frames' : 'Camera stopped'}
           </span>
@@ -265,7 +293,8 @@ export default function Publisher() {
               {observation.conflict.explanation} · {Math.round(observation.inferenceMs)} ms per pose result
             </p>
           )}
-          <p>Original Nivra pose and motion rules · up to 4 people per frame. Experimental; not validated for a 30–50 person classroom. Hidden shoulders and overlapping people can prevent detection.</p>
+          {observation && observation.inferenceMs > 400 && status === 'live' && <p className="nv-warning">Slow analysis: quick hits may be missed. Use Balanced processing, close other camera tabs, or narrow the analyzed area.</p>}
+          <p>Original Nivra pose and motion rules · up to 10 pose candidates per frame. This is a processing limit, not verified ten-person accuracy. Small, hidden or overlapping people may still be missed.</p>
         </section>
         <section className="nv-privacy">
           <ShieldCheck size={24} />

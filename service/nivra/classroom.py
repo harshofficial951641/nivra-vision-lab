@@ -78,12 +78,17 @@ class Classroom:
         self.order = deque()
         self.wake = asyncio.Event()
         self.task = None
+        self.snapshot_task = None
         self.router = APIRouter(prefix='/api/v2')
         self.routes()
 
     async def start(self): self.task = asyncio.create_task(self.work())
 
     async def stop(self):
+        if self.snapshot_task:
+            self.snapshot_task.cancel()
+            try: await self.snapshot_task
+            except asyncio.CancelledError: pass
         for relay in tuple(self.relays.values()): await relay.close()
         self.relays.clear()
         if self.task:
@@ -133,7 +138,7 @@ class Classroom:
                 'error': live.get('error') if live else None})
         return {'type':'snapshot', 'version':2, 'cameras':cameras, 'events':self.store.events(),
                 'analytics':self.store.analytics(), 'service': 'error' if self.state['error'] else 'ready' if self.state['models'] or self.state.get('relayOnly') else 'loading',
-                'runtime': self.state['models'].runtime if self.state['models'] else dict(compute='camera-device', personModel='MediaPipe Pose Lite', fightModel=DEVICE_MODEL, maxPeople=4) if self.state.get('relayOnly') else None,
+                'runtime': self.state['models'].runtime if self.state['models'] else dict(compute='camera-device', personModel='MediaPipe Pose Lite', fightModel=DEVICE_MODEL, maxPeople=10) if self.state.get('relayOnly') else None,
                 'publicOrigin': self.public or None, 'retention':'event-records-only',
                 'experimental':True, 'maxCameras':4, 'activeViewers':len(self.viewers), 'maxViewers':8}
 
@@ -146,6 +151,15 @@ class Classroom:
                     for camera in value['cameras']:
                         if camera['feed'] != 'live': relay.discard(camera['id'])
                 relay.offer(camera_id if binary else 'snapshot', value, binary)
+
+    def schedule_snapshot(self):
+        # Four cameras share one bounded update, rather than rebuilding the
+        # complete event history and React dashboard on every pose result.
+        if self.snapshot_task is None or self.snapshot_task.done():
+            async def publish():
+                await asyncio.sleep(.2)
+                await self.broadcast(self.snapshot())
+            self.snapshot_task = asyncio.create_task(publish())
 
     def enqueue(self, camera_id, value):
         if camera_id in self.pending: self.live[camera_id]['replaced'] += 1
@@ -391,11 +405,15 @@ class Classroom:
                             live['lastDeviceTimestamp'] = report.timestampMs
                             live['analyzed'], live['analyzedCount'] = now, live.get('analyzedCount',0)+1
                             live['result'] = result_payload(report)
+                            new_event = False
                             for event in report.events:
                                 if event.occurredAtMs-live['lastDeviceEvent'] < 8000: continue
                                 payload = dict(id=event.id,occurredAtMs=event.occurredAtMs,evidenceTimestampMs=event.occurredAtMs,detail=event.detail,evidenceModel=DEVICE_MODEL)
-                                if self.store.record(camera_id,generation,payload): live['lastDeviceEvent'] = event.occurredAtMs
-                            await self.broadcast(self.snapshot())
+                                if self.store.record(camera_id,generation,payload):
+                                    live['lastDeviceEvent'] = event.occurredAtMs
+                                    new_event = True
+                            if new_event: await self.broadcast(self.snapshot())
+                            else: self.schedule_snapshot()
                         else: raise ValueError('Unknown device message')
                         continue
                     packet = message.get('bytes', b'')

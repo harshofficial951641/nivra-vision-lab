@@ -2483,6 +2483,10 @@
   font-size: 11px;
   color: #71717a;
 }
+.nv-camera-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.nv-analysis-region { position: absolute; top: 0; bottom: 0; width: 50%; border: 2px dashed white; box-sizing: border-box; pointer-events: none; }
+.nv-analysis-region span { position: absolute; bottom: 8px; left: 8px; padding: 4px 7px; font-size: 11px; background: #18181bd9; color: white; }
+@media (max-width: 480px) { .nv-camera-options { grid-template-columns: 1fr; gap: 0; } }
 .nv-app .nv-lens-select select {
   max-width: 100%;
   width: 100%;
