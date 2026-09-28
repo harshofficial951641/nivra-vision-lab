@@ -128,7 +128,7 @@ class Classroom:
                 'analytics':self.store.analytics(), 'service': 'error' if self.state['error'] else 'ready' if self.state['models'] else 'loading',
                 'runtime': self.state['models'].runtime if self.state['models'] else None,
                 'publicOrigin': self.public or None, 'retention':'event-records-only',
-                'experimental':True, 'maxCameras':4}
+                'experimental':True, 'maxCameras':4, 'activeViewers':len(self.viewers), 'maxViewers':8}
 
     async def broadcast(self, value, binary=False):
         async def send(socket):
@@ -310,8 +310,12 @@ class Classroom:
 
         @router.websocket('/operator')
         async def operator(socket: WebSocket):
-            if not self.authorized(socket) or len(self.viewers)>=3:
+            if not self.authorized(socket):
                 await socket.close(code=1008)
+                return
+            if len(self.viewers)>=8:
+                await socket.accept()
+                await socket.close(code=1013, reason='Close another dashboard tab, then retry.')
                 return
             await socket.accept()
             self.viewers.add(socket)

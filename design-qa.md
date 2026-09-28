@@ -102,7 +102,11 @@ concept gate. Lead: design-preflight-orchestrator; support: Sites hosting.
 Added locally rendered expiring QR codes, camera-only links, a private operator
 gate and eight-hour remote sessions. Verification: 216 frontend tests, 37 Python
 tests and two Worker boundary tests. Physical-phone scanning remains unverified.
-Public browser and relay verification will be recorded after deployment.
+Public protocol verification passed against Sites: anonymous rejection, single-use
+operator redemption, operator WebSocket, camera-scoped authorization, synthetic
+JPEG upload, CUDA processing, preview delivery, logout and unchanged event records.
+QR dialog inspected at desktop and 390px width without horizontal overflow. Viewer
+capacity increased to eight after concurrent test/operator tabs hit the old limit.
 
 ## Follow-up polish and explicit limits
 
@@ -115,3 +119,5 @@ Public browser and relay verification will be recorded after deployment.
   exercised within the requested flows.
 - Accuracy and performance release gates remain experimental/failed as documented
   in `service/evaluation/RESULTS.md` and `CAPACITY.md`. UI QA does not override them.
+
+final result: passed

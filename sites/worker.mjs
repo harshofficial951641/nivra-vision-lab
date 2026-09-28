@@ -3,7 +3,13 @@ const PUBLIC_ORIGIN = 'https://nivra-vision-lab.topperly.chatgpt.site'
 export default {
   async fetch(request, env) {
     const url = new URL(request.url)
-    const error = (detail, status) => Response.json({ detail }, { status, headers: { 'Cache-Control': 'no-store' } })
+    const error = (detail, status) => {
+      if (status === 503 && ['/', '/camera'].includes(url.pathname)) return new Response(
+        '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nivra · Analysis PC offline</title><style>body{font:16px/1.6 system-ui;background:#f6f7f8;color:#18181b;display:grid;place-items:center;min-height:90vh;margin:24px}main{max-width:480px;padding:32px;background:white;border:1px solid #ddd;border-radius:12px}a{color:inherit}</style><main><strong>NIVRA</strong><h1>Analysis PC offline</h1><p>Keep the Nivra analysis service and public bridge running on your PC. Live cameras and review records will reconnect when it is back online.</p><a href="/">Try connecting again</a></main></html>',
+        {status,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})
+      return Response.json({ detail }, { status, headers: { 'Cache-Control': 'no-store' } })
+    }
+    if (url.pathname === '/favicon.ico') return new Response(null, {status:204})
     const api = url.pathname.startsWith('/api/v2/')
     const allowed = api && url.pathname !== '/api/v2/operator/invite' || request.method === 'GET' && (
       ['/', '/camera', '/lab', '/favicon.svg'].includes(url.pathname) ||

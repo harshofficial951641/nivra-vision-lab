@@ -99,7 +99,7 @@ test('real service: pair camera, stream, stop, restart, revoke and disconnect', 
   await page.getByRole('button', { name: 'Save location', exact: true }).click()
   await expect(page.getByRole('dialog')).toHaveCount(0)
   const card = page.getByRole('article', { name: room, exact: true })
-  await card.getByRole('button', { name: 'Connect device' }).click()
+  await card.getByRole('button', { name: 'Connect phone / QR' }).click()
   await expect(
     page.getByText('This link works on this computer only.', { exact: false }),
   ).toBeVisible()

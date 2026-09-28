@@ -693,7 +693,7 @@ export default function Dashboard() {
                             className="nv-feed-connect"
                             onClick={() => pair(camera)}
                           >
-                            Connect device <ArrowUpRight />
+                            Connect phone / QR <ArrowUpRight />
                           </button>
                         )}
                       </div>
@@ -776,9 +776,9 @@ export default function Dashboard() {
                   <Plus />
                   Add your first camera
                 </button>
-                <a href="/?demo=1">
+                {isLocalDashboard && <a href="/?demo=1">
                   Explore the sample workspace <ArrowUpRight />
-                </a>
+                </a>}
               </section>
             )}
           </div>
@@ -816,7 +816,7 @@ export default function Dashboard() {
                   disabled={!camera.enabled || !connected || busy}
                   onClick={() => pair(camera)}
                 >
-                  Pair device
+                  Pair phone / QR
                 </button>
               </div>
             ))}
@@ -1016,10 +1016,10 @@ export default function Dashboard() {
             <a className="nv-secondary" href="/lab">
               Open single-camera / browser lab <ArrowUpRight />
             </a>
-            <a className="nv-text-button" href={demo ? '/' : '/?demo=1'}>
+            {isLocalDashboard && <a className="nv-text-button" href={demo ? '/' : '/?demo=1'}>
               {demo ? 'Return to live dashboard' : 'Explore sample workspace'}{' '}
               <ArrowUpRight />
-            </a>
+            </a>}
           </section>
         )}
       </main>
@@ -1221,7 +1221,7 @@ export default function Dashboard() {
       )}
       {modal?.type === 'operator' && <ModalFrame title="Your private dashboard link" close={() => setModal(null)}>
         <p>This link unlocks camera feeds and incident records. Keep it private. It works once within five minutes.</p>
-        <a className="nv-primary" href={modal.url} target="_blank" rel="noreferrer">Open public dashboard <ArrowUpRight /></a>
+        <a className="nv-primary" href={modal.url} rel="noreferrer">Open public dashboard <ArrowUpRight /></a>
       </ModalFrame>}
       {modal?.type === 'pair' && (
         <ModalFrame
@@ -1311,7 +1311,7 @@ export default function Dashboard() {
               disabled={!connected || !modal.camera.enabled || busy}
               onClick={() => pair(modal.camera)}
             >
-              Pair device
+              Pair phone / QR
             </button>
             <button
               className="nv-secondary"

@@ -13,7 +13,7 @@ Updated 28 September 2026. **Local experimental implementation; not a verified c
 ## Implemented core journey
 
 1. Open the local dashboard and add a classroom/building/floor. Maximum four saved camera locations in this pilot; edit/reuse or pause them as needed.
-2. Create a single-use pairing link. Open it on a camera browser, grant video permission and press Start camera. The default link is local to this PC; real remote phones need the unprovisioned HTTPS setup described in `remote-camera-setup.md`.
+2. Create a single-use QR pairing invitation. Scan it with the phone Camera app, open the link, grant video permission and press Start camera. The public Sites relay is described in `remote-camera-setup.md`.
 3. Each device can publish only its assigned camera. It cannot inspect other rooms or the event desk. Re-pairing or pausing revokes its credential.
 4. The stable camera grid shows classroom location, live/offline state, analysis readiness and limited coverage. Focus layout, floor filter, camera search and observed-track overlay are functional.
 5. Candidate physical conflicts create persistent, idempotent event records with camera/location snapshots and source/evidence timestamps. Open candidates highlight their camera without reordering the grid.
@@ -36,7 +36,7 @@ The budget of 50 tracks is not proof that all 50 people are visible or reliably 
 
 - **Accuracy release gate failed:** the tiny diagnostic original-footage set improves from browser 0/3 events and earlier local 1/3 to 2/3, but the new candidate still has one unmatched alert versus browser zero. No representative 30–50-person classroom holdout exists.
 - The natural-overlap grapple is detected, but at 4.24 seconds after a clip that starts mid-event. A synthetic crop is detected at 7.52 seconds. Neither establishes the requested live p95 delay or natural partial-body accuracy.
-- Physical iPhone/Android foreground/interruption/network tests and actual cross-network transport remain unverified. Public HTTPS configuration requires a concrete authorized endpoint.
+- The Sites relay passed an external protocol test including synthetic frame delivery to the GPU and preview return. Physical iPhone/Android foreground/interruption/mobile-data tests remain unverified.
 - One-minute cloned two-person stream tests establish scheduler behavior only. They do not establish four crowded-classroom capacity. See `service/evaluation/RESULTS.md` for measured rates.
 - No responder assignment app, team accounts, push delivery, real floor-plan geometry, outcome labelling workflow, operating schedules, zones or trained threshold presets are implemented. These were later product concepts, not demonstrated runtime capabilities. No fabricated map or generic accuracy KPI is shown.
 - Training/fine-tuning requires independent labelled training/calibration data and a new untouched evaluation split. Every transform of an original must stay in the original's split. The already inspected holdout is diagnostic only.

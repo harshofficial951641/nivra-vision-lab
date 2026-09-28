@@ -105,7 +105,8 @@ export function useClassroom(enabled: boolean) {
             socket?.close()
           }
         }
-        socket.onclose = () => {
+        socket.onclose = (event) => {
+          if (event.code === 1013 && event.reason) setError(event.reason)
           if (!stopped) retry()
         }
         socket.onerror = () => {
