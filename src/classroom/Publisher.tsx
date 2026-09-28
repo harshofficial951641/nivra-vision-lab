@@ -7,6 +7,8 @@ import {
 } from '@phosphor-icons/react'
 import { api, framePacket, socketUrl, type CameraLocation } from './contracts'
 import { FrameWindow } from './frameWindow'
+import { DeviceVision } from './DeviceVision'
+import type { DeviceResult, DeviceStatus } from './deviceAnalysis'
 import './classroom.css'
 
 // Module-scoped initial exchange is shared across React's StrictMode effect replay.
@@ -25,6 +27,9 @@ export default function Publisher() {
   const [camera, setCamera] = useState<CameraLocation | null>(null),
     [error, setError] = useState('')
   const [lens, setLens] = useState('environment')
+  const [analysis, setAnalysis] = useState<DeviceStatus | null>(null)
+  const [observation, setObservation] = useState<DeviceResult | null>(null)
+  const detector = useRef<DeviceVision | null>(null)
   const [status, setStatus] = useState<
       'idle' | 'starting' | 'live' | 'stopped'
     >('idle'),
@@ -37,6 +42,8 @@ export default function Publisher() {
   const stop = () => {
     generation.current++
     clearTimeout(timeout.current)
+    detector.current?.dispose()
+    detector.current = null
     const peer = socket.current
     socket.current = null
     peer?.close()
@@ -64,6 +71,8 @@ export default function Publisher() {
     setError('')
     setStatus('starting')
     setSent(0)
+    setAnalysis(null)
+    setObservation(null)
     try {
       if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia)
         throw new Error(
@@ -91,9 +100,12 @@ export default function Publisher() {
       const canvas = document.createElement('canvas')
       const flow = new FrameWindow()
       let sending = false
+      let latestResult: DeviceResult | null = null
+      let shownAt = -Infinity
       const send = async () => {
         if (current !== generation.current) return
         const startedAt = performance.now()
+        if (video.current) void detector.current?.capture(video.current, startedAt)
         if (flow.timedOut(startedAt)) {
           peer.close()
           return
@@ -116,6 +128,10 @@ export default function Publisher() {
             flow.sent(startedAt, performance.now(), packet.byteLength)
           }
         }
+        if (latestResult && peer.readyState === WebSocket.OPEN && peer.bufferedAmount < 128 * 1024) {
+          peer.send(JSON.stringify(latestResult))
+          latestResult = null
+        }
         if (current === generation.current)
           timeout.current = window.setTimeout(() => void send(), Math.max(0, 84 - (performance.now() - startedAt)))
       }
@@ -125,6 +141,25 @@ export default function Publisher() {
         if (data.type === 'ready' && !sending) {
           sending = true
           setStatus('live')
+          const client = new DeviceVision(
+            (next) => {
+              if (current !== generation.current || peer.readyState !== WebSocket.OPEN) return
+              setAnalysis(next)
+              latestResult = null
+              if (next.state !== 'ready') setObservation(null)
+              peer.send(JSON.stringify({ type: 'device-status', ...next }))
+            },
+            (result) => {
+              if (current !== generation.current) return
+              latestResult = result
+              if (performance.now() - shownAt > 500 || result.conflict.status === 'alert') {
+                shownAt = performance.now()
+                setObservation(result)
+              }
+            },
+          )
+          detector.current = client
+          client.start()
           void send()
         }
         if (data.type === 'accepted' && typeof data.timestampMs === 'number' && flow.acknowledge(data.timestampMs)) {
@@ -221,13 +256,25 @@ export default function Publisher() {
           {sent > 0 ? `${sent} frames sent this session. ` : ''}Keep this page
           in the foreground and this device powered.
         </p>
+        <section className="nv-notice" aria-label="Device fight detection">
+          <strong>Fight review · on this device</strong>
+          <p role="status">{status === 'live' ? analysis?.detail || 'Starting device analysis…' : 'Detection starts with the camera.'}</p>
+          {status === 'live' && observation && (
+            <p role={observation.conflict.status === 'alert' ? 'alert' : 'status'}>
+              {observation.conflict.status === 'alert' ? 'Possible physical conflict — review the scene. ' : ''}
+              {observation.conflict.explanation} · {Math.round(observation.inferenceMs)} ms per pose result
+            </p>
+          )}
+          <p>Original Nivra pose and motion rules · up to 4 people per frame. Experimental; not validated for a 30–50 person classroom. Hidden shoulders and overlapping people can prevent detection.</p>
+        </section>
         <section className="nv-privacy">
           <ShieldCheck size={24} />
           <div>
             <strong>Live video. No recordings.</strong>
             <p>
-              Video frames travel to your operator’s computer for experimental
-              analysis. Only event records are saved. Microphone is off.
+              Detection runs on this camera device, using its GPU when available
+              and its CPU otherwise. Live previews and review results travel to
+              the dashboard relay. Only event records are saved. Microphone is off.
             </p>
           </div>
         </section>

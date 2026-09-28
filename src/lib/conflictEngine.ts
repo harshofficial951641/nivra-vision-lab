@@ -245,6 +245,12 @@ export class ConflictEngine {
 
   private completePulseCount(): number { return 1 }
 
+  observedTracks() {
+    return [...this.tracks.values()].filter(track => track.seen).map(track => ({
+      id: track.id, box: { ...track.body.box },
+    }))
+  }
+
   update(timestampMs: number, poses: PoseLandmarks[], aspectRatio = 16 / 9): ConflictSnapshot {
     if (!Number.isFinite(timestampMs) || timestampMs <= this.lastUpdateMs) return this.snapshot(this.lastUpdateMs)
     const aspect = Number.isFinite(aspectRatio) && aspectRatio > 0 ? aspectRatio : 16 / 9

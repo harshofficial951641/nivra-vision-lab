@@ -120,4 +120,27 @@ capacity increased to eight after concurrent test/operator tabs hit the old limi
 - Accuracy and performance release gates remain experimental/failed as documented
   in `service/evaluation/RESULTS.md` and `CAPACITY.md`. UI QA does not override them.
 
+## Camera-device inference — 2026-09-28
+
+Universal design router → design preflight; direct extension of the already
+approved monochrome camera page and dashboard. No new concept selection needed.
+Publisher now identifies device GPU/CPU fallback, model loading/failure, original
+fight-review observations and the four-person limit. Dashboard coverage and
+settings identify camera-device reports rather than PC inference.
+
+Verification: 225 frontend tests, 46 service tests; live public Chromium
+fake-camera/model integration plus transport and existing dashboard browser tests.
+Actual MediaPipe inference ran on browser CPU fallback, delivered results to the
+public relay and dashboard, and survived stop/reconnect. Mobile 390px layout and
+rendered screenshot inspected; keyboard controls and error states exercised.
+No unexpected page/console errors; MediaPipe emits its known XNNPACK INFO message
+through console.error, which is distinguished from application failures.
+Relay-only construction verified that torch, onnxruntime and nivra.models are not
+imported. No inference queue or RGB temporal buffer is filled for device sources.
+Event validation, authorization, deduplication and stale/error states are tested.
+
+Unverified: physical iPhone/Android/low-end hardware, thermal endurance, hardware
+GPU performance and real-world fight recall. Prior PC model/capacity evaluations
+do not apply to this browser detector. The original pose-rule limitations remain.
+
 final result: passed

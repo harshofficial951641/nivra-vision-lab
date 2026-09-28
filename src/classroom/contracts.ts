@@ -11,8 +11,12 @@ export interface CameraLocation {
   framesReceived: number
   framesAnalyzed: number
   framesReplaced: number
+  compute?: 'device' | 'pc' | null
+  deviceStatus?: { state: 'loading' | 'ready' | 'error'; delegate: 'GPU' | 'CPU' | null; detail: string } | null
   error?: string | null
   result?: {
+    backend?: 'camera-device' | 'local-ai'
+    delegate?: 'GPU' | 'CPU'
     timestampMs: number
     inferenceMs: number
     evidenceTimestampMs: number
@@ -57,6 +61,7 @@ export interface Snapshot {
   retention: 'event-records-only'
   experimental: true
   runtime: {
+    compute?: 'camera-device'
     personModel?: string
     fightModel?: string
     maxPeople?: number

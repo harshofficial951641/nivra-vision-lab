@@ -727,6 +727,8 @@ export default function Dashboard() {
                       <span className="nv-image-caption">
                         {demo
                           ? 'Generated image · not analyzed'
+                          : camera.compute === 'device'
+                            ? `Device ${camera.deviceStatus?.delegate || 'analysis'} · up to 4 people · limited coverage`
                           : camera.result?.coverage
                             ? `${camera.result.coverage.observedPeople} people tracked · ${camera.result.coverage.actionPeople} in latest action view`
                             : 'Waiting for analysis'}
@@ -985,11 +987,15 @@ export default function Dashboard() {
             <h2>Analysis & connection</h2>
             <dl>
               <dt>Backend</dt>
-              <dd>Local experimental AI · {data?.service || 'unavailable'}</dd>
+              <dd>{data?.runtime?.compute === 'camera-device' ? 'Camera-device detection · PC relay only' : 'Local experimental AI'} · {data?.service || 'unavailable'}</dd>
               <dt>Person model</dt>
               <dd>{data?.runtime?.personModel || 'Unavailable'}</dd>
               <dt>Fight candidate</dt>
               <dd>{data?.runtime?.fightModel || 'Unavailable'}</dd>
+              {data?.runtime?.compute === 'camera-device' && <>
+                <dt>Device coverage</dt>
+                <dd>Original Nivra motion rules · up to 4 people per frame. GPU preferred; explicit CPU fallback. Whole-classroom accuracy is unverified.</dd>
+              </>}
               <dt>Remote phone access</dt>
               <dd>
                 {data?.publicOrigin
@@ -1168,7 +1174,7 @@ export default function Dashboard() {
           No video recorded
         </span>
         <span className="nv-statusbar-right">
-          {demo ? 'DEMONSTRATION ONLY' : 'LOCAL ANALYSIS · EXPERIMENTAL'}
+          {demo ? 'DEMONSTRATION ONLY' : data?.runtime?.compute === 'camera-device' ? 'DEVICE ANALYSIS · EXPERIMENTAL' : 'LOCAL ANALYSIS · EXPERIMENTAL'}
         </span>
       </footer>
       {modal?.type === 'camera' && (

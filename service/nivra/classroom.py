@@ -18,6 +18,7 @@ from fastapi import APIRouter, HTTPException, Request, Response, WebSocket, WebS
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 from .classroom_store import Store
 from .preview_relay import PreviewRelay
+from .device_analysis import DeviceStatus, DeviceResult, result_payload, MODEL as DEVICE_MODEL
 
 ADMIN_COOKIE = 'nivra_operator'
 CAMERA_COOKIE = 'nivra_publisher'
@@ -121,7 +122,9 @@ class Classroom:
             analysis_fresh = bool(fresh and live.get('analyzed') and now-live['analyzed'] < 5)
             cameras.append({**camera, 'enabled': bool(camera['enabled']),
                 'feed': 'paused' if not camera['enabled'] else 'live' if fresh else 'waiting' if live else 'offline',
-                'analysis': 'paused' if not camera['enabled'] else 'current' if analysis_fresh else 'waiting' if fresh and self.state['models'] else 'unavailable',
+                'analysis': 'paused' if not camera['enabled'] else 'current' if analysis_fresh else 'waiting' if fresh and (self.state['models'] or live.get('deviceStatus',{}).get('state') in ('loading','ready')) else 'unavailable',
+                'compute': live.get('compute','pc') if live else None,
+                'deviceStatus': live.get('deviceStatus') if live else None,
                 'generation': live['generation'] if live else None,
                 'result': live.get('result') if analysis_fresh else None,
                 'framesReceived': live['frames'] if live else 0,
@@ -129,8 +132,8 @@ class Classroom:
                 'framesReplaced': live['replaced'] if live else 0,
                 'error': live.get('error') if live else None})
         return {'type':'snapshot', 'version':2, 'cameras':cameras, 'events':self.store.events(),
-                'analytics':self.store.analytics(), 'service': 'error' if self.state['error'] else 'ready' if self.state['models'] else 'loading',
-                'runtime': self.state['models'].runtime if self.state['models'] else None,
+                'analytics':self.store.analytics(), 'service': 'error' if self.state['error'] else 'ready' if self.state['models'] or self.state.get('relayOnly') else 'loading',
+                'runtime': self.state['models'].runtime if self.state['models'] else dict(compute='camera-device', personModel='MediaPipe Pose Lite', fightModel=DEVICE_MODEL, maxPeople=4) if self.state.get('relayOnly') else None,
                 'publicOrigin': self.public or None, 'retention':'event-records-only',
                 'experimental':True, 'maxCameras':4, 'activeViewers':len(self.viewers), 'maxViewers':8}
 
@@ -351,14 +354,51 @@ class Classroom:
                 return
             await socket.accept()
             generation = secrets.token_hex(12)
-            live = dict(socket=socket,generation=generation,received=-1e10,frames=0,replaced=0,pipeline=None,video=deque(maxlen=64))
+            live = dict(socket=socket,generation=generation,received=-1e10,frames=0,replaced=0,pipeline=None,video=deque(maxlen=64),compute='device' if self.state.get('relayOnly') else 'pc',lastDeviceTimestamp=-1,lastDeviceEvent=-1e10)
             self.live[camera_id] = live
             last_timestamp = -1
             recent_frames = deque()
+            recent_reports = deque()
             try:
                 await socket.send_json({'type':'ready','cameraId':camera_id,'generation':generation,'maxFps':12})
                 while True:
-                    packet = await asyncio.wait_for(socket.receive_bytes(),15)
+                    message = await asyncio.wait_for(socket.receive(),15)
+                    if message['type'] == 'websocket.disconnect': break
+                    if message.get('text') is not None:
+                        text = message['text']
+                        now = time.monotonic()
+                        while recent_reports and now-recent_reports[0] > 1: recent_reports.popleft()
+                        if len(text) > 16384 or len(recent_reports) >= 24: raise ValueError('Invalid device report rate or size')
+                        recent_reports.append(now)
+                        data = json.loads(text)
+                        if data.get('type') == 'device-status':
+                            status = DeviceStatus.model_validate(data)
+                            if live['frames'] and live['compute'] != 'device': raise ValueError('Reconnect to change compute device')
+                            live['compute'] = 'device'
+                            live['deviceStatus'] = status.model_dump(exclude={'type'})
+                            if status.state != 'ready':
+                                live['analyzed'], live['result'] = None, None
+                            live['error'] = status.detail if status.state == 'error' else None
+                            await self.broadcast(self.snapshot())
+                        elif data.get('type') == 'device-result':
+                            if live['compute'] != 'device' or live.get('deviceStatus',{}).get('state') != 'ready': raise ValueError('Device analysis not ready')
+                            report = DeviceResult.model_validate(data)
+                            if report.delegate != live['deviceStatus']['delegate']: raise ValueError('Unexpected compute delegate')
+                            # Source clocks are device-local; compare only to this stream.
+                            if report.timestampMs <= live['lastDeviceTimestamp']: raise ValueError('Device timestamps must increase')
+                            if not live['frames'] or now-live['received'] > 6 or not -2000 <= last_timestamp-report.timestampMs <= 2000:
+                                continue
+                            live['lastDeviceTimestamp'] = report.timestampMs
+                            live['analyzed'], live['analyzedCount'] = now, live.get('analyzedCount',0)+1
+                            live['result'] = result_payload(report)
+                            for event in report.events:
+                                if event.occurredAtMs-live['lastDeviceEvent'] < 8000: continue
+                                payload = dict(id=event.id,occurredAtMs=event.occurredAtMs,evidenceTimestampMs=event.occurredAtMs,detail=event.detail,evidenceModel=DEVICE_MODEL)
+                                if self.store.record(camera_id,generation,payload): live['lastDeviceEvent'] = event.occurredAtMs
+                            await self.broadcast(self.snapshot())
+                        else: raise ValueError('Unknown device message')
+                        continue
+                    packet = message.get('bytes', b'')
                     received_at = time.monotonic()
                     while recent_frames and received_at-recent_frames[0] > 1: recent_frames.popleft()
                     # Public networks can deliver several paced frames together.
@@ -372,9 +412,10 @@ class Classroom:
                     last_timestamp = header.timestampMs
                     now = time.monotonic()
                     live['received'], live['frames'] = now, live['frames']+1
-                    live['video'].append((header.timestampMs,frame))
-                    while live['video'] and header.timestampMs-live['video'][0][0] > 4500: live['video'].popleft()
-                    self.enqueue(camera_id,(generation,header,frame,now))
+                    if live['compute'] == 'pc':
+                        live['video'].append((header.timestampMs,frame))
+                        while live['video'] and header.timestampMs-live['video'][0][0] > 4500: live['video'].popleft()
+                        self.enqueue(camera_id,(generation,header,frame,now))
                     await socket.send_json({'type':'accepted','timestampMs':header.timestampMs})
                     length = struct.unpack('<I',packet[:4])[0]
                     metadata = json.dumps({'cameraId':camera_id,'generation':generation,'timestampMs':header.timestampMs,'width':frame.shape[1],'height':frame.shape[0]}).encode()

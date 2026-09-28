@@ -1,12 +1,24 @@
 # Public camera pilot — updated 2026-09-28
 
 Harsh authorized live frames through an encrypted Cloudflare/Sites relay without
-saving video. AI and event records stay on the PC. Physical iPhone/Android use over
-mobile data remains unverified. The older configuration notes below are historical.
+saving video. The current public publisher runs the original Nivra detector on
+the camera device: MediaPipe Pose Lite on GPU where available, an explicit device
+CPU fallback otherwise, and the existing single-hit motion rules. Event records
+stay on the PC. `run_public.py` starts a relay-only app and does not load PC AI
+models. The PC still uses ordinary CPU/RAM for the relay, previews and metadata.
+Physical iPhone/Android use over mobile data remains unverified. The older
+configuration notes below are historical.
+
+This is a four-person experimental browser detector, not a trained video-action
+fight classifier or validated 30–50-person classroom system. Original shoulder,
+overlap and motion-rule limitations still apply. The phone shows its actual
+GPU/CPU delegate and any inference failure; there is no silent fallback to PC AI.
+The phone OS/browser controls its GPU memory allocation; phone memory is not
+pooled with the PC. Keep the camera page foregrounded and powered.
 
 ## Current public journey
 
-1. Keep the analysis PC, public Python service and tunnel running.
+1. Keep the dashboard/relay PC, public Python service and tunnel running.
 2. On the local dashboard choose Settings → Open public dashboard. The private
    invitation works once within five minutes and creates an eight-hour session.
 3. Add/select a camera, choose Connect device, and scan its QR with the phone's

@@ -6,12 +6,13 @@ test('phone sends smoothly with delayed acknowledgements, stops, reconnects and 
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text())
+    if (message.type() === 'error' && message.text() !== 'INFO: Created TensorFlow Lite XNNPACK delegate for CPU.') errors.push(message.text())
   })
   await page.route('**/api/v2/camera/session', (route) => route.fulfill({
     json: { id: 'qa', name: 'Transport QA', building: 'Test', floor: '1' },
   }))
   let received = 0
+  let deviceResults = 0
   const timers = new Set<ReturnType<typeof setTimeout>>()
   let fail = () => {}
   await page.routeWebSocket('**/api/v2/camera/stream', (socket) => {
@@ -19,6 +20,10 @@ test('phone sends smoothly with delayed acknowledgements, stops, reconnects and 
     timers.add(ready)
     fail = () => socket.close({ code: 1013, reason: 'Service unavailable' })
     socket.onMessage((message) => {
+      if (typeof message === 'string') {
+        if (JSON.parse(message).type === 'device-result') deviceResults++
+        return
+      }
       const packet = Buffer.from(message)
       const size = packet.readUInt32LE(0)
       const header = JSON.parse(packet.subarray(4, 4 + size).toString())
@@ -42,6 +47,8 @@ test('phone sends smoothly with delayed acknowledgements, stops, reconnects and 
   await expect(page.getByText('Sending live frames', { exact: true })).toBeVisible()
   // A stop-and-wait sender can manage at most ~12 frames in five seconds here.
   await expect.poll(() => received, { timeout: 5000 }).toBeGreaterThan(35)
+  await expect.poll(() => deviceResults, { timeout: 20000 }).toBeGreaterThan(2)
+  await expect(page.getByText(/Device (GPU|CPU fallback) ·/)).toBeVisible()
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.screenshot({ path: 'test-results/transport-publisher-mobile.png', fullPage: true })
   await page.getByRole('button', { name: 'Stop camera' }).click()

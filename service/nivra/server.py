@@ -50,15 +50,15 @@ def unpack_frame(packet):
     return header, frame
 
 
-def create_app(model_factory=None, pipeline_factory=None, database=None):
-    if model_factory is None:
+def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False):
+    if model_factory is None and not relay_only:
         from .models import Models
         model_factory = Models
-    if pipeline_factory is None:
+    if pipeline_factory is None and not relay_only:
         from .pipeline import Pipeline
         pipeline_factory = Pipeline
     token = secrets.token_urlsafe(32)
-    state = {'models': None, 'error': None, 'busy': False}
+    state = {'models': None, 'error': None, 'busy': False, 'relayOnly': relay_only}
     inference_lock = asyncio.Lock()
     from .classroom import Classroom
     classroom = Classroom(state, pipeline_factory, unpack_frame, inference_lock, database)
@@ -70,11 +70,11 @@ def create_app(model_factory=None, pipeline_factory=None, database=None):
                 state['models'] = await asyncio.to_thread(model_factory)
             except Exception as error:
                 state['error'] = str(error)
-        task = asyncio.create_task(load())
+        task = None if relay_only else asyncio.create_task(load())
         await classroom.start()
         yield
         await classroom.stop()
-        await task
+        if task: await task
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     from urllib.parse import urlsplit
@@ -96,7 +96,7 @@ def create_app(model_factory=None, pipeline_factory=None, database=None):
 
     @app.get('/api/v1/health')
     async def health():
-        return {'version': 1, 'backend': 'local-ai', 'status': 'error' if state['error'] else 'ready' if state['models'] else 'loading',
+        return {'version': 1, 'backend': 'relay-only' if relay_only else 'local-ai', 'status': 'disabled' if relay_only else 'error' if state['error'] else 'ready' if state['models'] else 'loading',
                 'error': state['error'], 'experimental': True,
                 'runtime': state['models'].runtime if state['models'] else None}
 
