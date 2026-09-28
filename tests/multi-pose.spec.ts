@@ -61,7 +61,7 @@ test('Full model produces two real skeletons and survives a quality switch', asy
       return stream
     }
   })
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera', { timeout: 30_000 })
   await page.getByTestId('start-camera').click()
   await expect(page.getByTestId('camera-status')).toHaveText('Camera live')

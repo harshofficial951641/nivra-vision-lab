@@ -1,0 +1,126 @@
+[
+  {
+    "id": "boxing",
+    "source": "https://commons.wikimedia.org/wiki/File:Boxing_training.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Boxing_training.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "Evworo",
+    "license": "CC-BY-SA-3.0",
+    "path": "media/boxing.webm",
+    "split": "calibration",
+    "sourceGroup": "boxing",
+    "events": [],
+    "annotationStatus": "reviewed",
+    "sha256": "2dd4c6269c120978630b1a1e1fd3819b53d75b02dd1b9a6e34a5e9e9de966430",
+    "annotationMethod": "Manual sequential frame inspection; approximate episode intervals, not individual contact labels",
+    "conditions": [
+      "shadowboxing-negative",
+      "multiple-people"
+    ],
+    "durationMs": 9986
+  },
+  {
+    "id": "grappling",
+    "source": "https://commons.wikimedia.org/wiki/File:Lutte_Africaine_Francophonie_2017.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Lutte_Africaine_Francophonie_2017.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "Kod B",
+    "license": "CC-BY-SA-4.0",
+    "path": "media/grappling.webm",
+    "split": "calibration",
+    "sourceGroup": "grappling",
+    "events": [
+      {
+        "startMs": 0,
+        "endMs": 11200,
+        "label": "grappling",
+        "startsInProgress": true
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "sha256": "1004027ef030303bef37144da30363aff7bdacda585d76d58b837d6db0272064",
+    "annotationMethod": "Manual sequential frame inspection; approximate episode intervals, not individual contact labels",
+    "conditions": [
+      "overlap",
+      "grappling"
+    ],
+    "durationMs": 11560
+  },
+  {
+    "id": "kick",
+    "source": "https://commons.wikimedia.org/wiki/File:Seth_Rollins_Avada_Kedavra.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/65/Seth_Rollins_Avada_Kedavra.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "HHH Pedrigree",
+    "license": "CC-BY-SA-3.0",
+    "path": "media/kick.webm",
+    "split": "holdout",
+    "sourceGroup": "kick",
+    "events": [
+      {
+        "startMs": 300,
+        "endMs": 1200,
+        "label": "takedown"
+      },
+      {
+        "startMs": 3100,
+        "endMs": 3800,
+        "label": "kick"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "sha256": "752181dd7417113744baf0337a0682fd10813575cb8d327057957a164246455f",
+    "annotationMethod": "Manual sequential frame inspection; approximate episode intervals, not individual contact labels",
+    "conditions": [
+      "kick",
+      "full-body"
+    ],
+    "durationMs": 4675
+  },
+  {
+    "id": "squats",
+    "sourceGroup": "squats",
+    "split": "holdout",
+    "path": "../../tests/fixtures/pose-squats.mp4",
+    "sha256": "ea9151e447b301985d5d65666551ef863b369a2e0f3a71ddd58abef2e722f96a",
+    "durationMs": 13000.0,
+    "source": "https://www.pexels.com/video/woman-doing-squats-4838220/",
+    "license": "Pexels",
+    "author": "See tests/fixtures/README.md",
+    "events": [],
+    "conditions": [
+      "exercise-negative"
+    ],
+    "annotationStatus": "reviewed",
+    "annotationMethod": "Existing exercise smoke fixture"
+  },
+  {
+    "id": "grappling-cropped",
+    "source": "https://commons.wikimedia.org/wiki/File:Lutte_Africaine_Francophonie_2017.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Lutte_Africaine_Francophonie_2017.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "Kod B",
+    "license": "CC-BY-SA-4.0",
+    "path": "media/grappling.webm",
+    "split": "calibration",
+    "sourceGroup": "grappling",
+    "events": [
+      {
+        "startMs": 0,
+        "endMs": 11200,
+        "label": "grappling",
+        "startsInProgress": true
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "sha256": "1004027ef030303bef37144da30363aff7bdacda585d76d58b837d6db0272064",
+    "annotationMethod": "Manual sequential frame inspection; approximate episode intervals, not individual contact labels",
+    "conditions": [
+      "synthetic-partial-body",
+      "overlap"
+    ],
+    "durationMs": 11560,
+    "crop": [
+      0,
+      0,
+      1,
+      0.7
+    ]
+  }
+]

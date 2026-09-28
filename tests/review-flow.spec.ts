@@ -22,9 +22,11 @@ const scheduledToneCount = (page: Page) => page.evaluate(() =>
 )
 
 test('a watched-item scenario sounds, acknowledges, and alerts again after replay', async ({ page }) => {
+  const browserErrors: string[] = []
+  page.on('pageerror', error => browserErrors.push(error.message))
   await countScheduledTones(page)
 
-  await page.goto('/')
+  await page.goto('/lab')
   await page.getByRole('button', { name: 'Test scenario', exact: true }).click()
   await page.getByLabel('Scenario', { exact: true }).selectOption('watched')
   await expect(page.getByTestId('review-alert')).toContainText('Watched item moved', { timeout: 15_000 })
@@ -60,7 +62,7 @@ test('scripted waving stays quiet and repeated striking produces a review with o
   page.on('pageerror', error => browserErrors.push(error.message))
   page.on('console', message => { if (message.type() === 'error') browserErrors.push(message.text()) })
   await countScheduledTones(page)
-  await page.goto('/')
+  await page.goto('/lab')
   await page.getByRole('button', { name: 'Test scenario', exact: true }).click()
   await page.getByTestId('demo-scenario').selectOption('calm')
 
@@ -106,7 +108,7 @@ test('camera permission denial gives an actionable recovery message', async ({ p
       value: async () => { throw new DOMException('Permission denied', 'NotAllowedError') },
     })
   })
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera', { timeout: 20_000 })
   await page.getByTestId('start-camera').click()
   await expect(page.getByText(/Camera access is blocked\. Allow camera permission/)).toBeVisible()
@@ -116,7 +118,7 @@ test('camera permission denial gives an actionable recovery message', async ({ p
 
 test('a missing model shows an error and can be retried without reloading the page', async ({ page }) => {
   await page.route('**/models/pose_landmarker_full.task', route => route.fulfill({ status: 503, body: 'Fixture unavailable' }))
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByText(/Local model load failed \(503\)/)).toBeVisible({ timeout: 20_000 })
   await page.unroute('**/models/pose_landmarker_full.task')
   await page.getByRole('button', { name: /retry analysis/i }).click()

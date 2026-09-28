@@ -1,0 +1,38 @@
+[
+  {
+    "id": "boxing",
+    "source": "https://commons.wikimedia.org/wiki/File:Boxing_training.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Boxing_training.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "Evworo",
+    "license": "CC-BY-SA-3.0",
+    "path": "media/boxing.webm",
+    "split": "calibration",
+    "sourceGroup": "boxing",
+    "events": [],
+    "annotationStatus": "pending-visual-review"
+  },
+  {
+    "id": "grappling",
+    "source": "https://commons.wikimedia.org/wiki/File:Lutte_Africaine_Francophonie_2017.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Lutte_Africaine_Francophonie_2017.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "Kod B",
+    "license": "CC-BY-SA-4.0",
+    "path": "media/grappling.webm",
+    "split": "calibration",
+    "sourceGroup": "grappling",
+    "events": [],
+    "annotationStatus": "pending-visual-review"
+  },
+  {
+    "id": "kick",
+    "source": "https://commons.wikimedia.org/wiki/File:Seth_Rollins_Avada_Kedavra.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/65/Seth_Rollins_Avada_Kedavra.webm?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original",
+    "author": "HHH Pedrigree",
+    "license": "CC-BY-SA-3.0",
+    "path": "media/kick.webm",
+    "split": "calibration",
+    "sourceGroup": "kick",
+    "events": [],
+    "annotationStatus": "pending-visual-review"
+  }
+]

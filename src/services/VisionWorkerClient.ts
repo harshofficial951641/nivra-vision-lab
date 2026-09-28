@@ -21,6 +21,8 @@ interface PendingFrame {
 }
 
 export interface VisionResult {
+  backend?: 'browser' | 'local-ai'
+  conflict?: import('../lib/conflictEngine').ConflictSnapshot
   timestampMs: number
   inferenceMs: number
   poseInferenceMs: number

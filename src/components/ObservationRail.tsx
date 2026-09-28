@@ -117,7 +117,7 @@ export function ObservationRail({ scene, active, simulated, acknowledged, onAckn
 
       <div className="rail-note">
         <strong>What triggers an alert?</strong>
-        <p>Conflict analysis looks for a fast arm extension toward another person's upper body. It does not establish contact or intent.</p>
+        <p>Conflict analysis uses the selected engine's motion or video-action evidence. It does not establish contact or intent.</p>
         {showObjects ? <p>Object alerts cover a watched item moving or leaving view, an unattended bag, or a repeated restricted-object observation.</p> : null}
         <p>Sports, play, and occlusion can cause mistakes. Every alert needs a person to check the scene.</p>
       </div>

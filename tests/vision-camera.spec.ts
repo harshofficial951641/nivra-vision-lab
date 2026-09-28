@@ -15,7 +15,7 @@ test('opens a synthetic camera and releases it when stopped', async ({ page }) =
     await route.abort('internetdisconnected')
   })
 
-  await page.goto('/')
+  await page.goto('/lab')
 
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera', {
     timeout: 20_000,

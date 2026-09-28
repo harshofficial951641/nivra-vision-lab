@@ -125,7 +125,7 @@ async function mediaTime(page: Page) {
 
 async function openReviewClip(page: Page) {
   await installWorkerFixture(page)
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera')
   await page.getByText('Detection settings', { exact: true }).click()
   await expect(page.getByLabel(/^Video analysis/)).toHaveValue('review')
@@ -242,7 +242,7 @@ test('mocked delayed review results stay canceled after stop and camera remains 
 
 test('mocked lifecycle can select real-time video only while no clip is active', async ({ page }) => {
   await installWorkerFixture(page)
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera')
   await page.getByText('Detection settings', { exact: true }).click()
   const mode = page.getByLabel(/^Video analysis/)
@@ -281,7 +281,7 @@ test('clip settings stay locked while metadata loads and unlock after Stop', asy
       },
     })
   })
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera')
   await page.getByText('Detection settings', { exact: true }).click()
   const mode = page.getByLabel('Video analysis', { exact: true })

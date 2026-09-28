@@ -4,6 +4,7 @@ import {
   type VisionResult,
 } from '../services/VisionWorkerClient'
 import type { PoseQuality, VisionDelegate, VisionDelegates } from '../types/vision'
+import { LocalVisionClient } from '../services/LocalVisionClient'
 
 export type ModelStatus = 'loading' | 'ready' | 'error'
 export type PosePolicy = 'review' | 'realtime'
@@ -23,6 +24,9 @@ interface UseVisionWorkerOptions {
 }
 
 export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
+  const [backend, setBackend] = useState<'browser' | 'local-ai'>(location.port === '8765' ? 'local-ai' : 'browser')
+  const [peopleCapacity, setPeopleCapacity] = useState(8)
+  const localRef = useRef<LocalVisionClient | null>(null)
   const clientRef = useRef<VisionWorkerClient | null>(null)
   const resultCallbackRef = useRef(onResult)
   const settingsRef = useRef({ maxPoses: 4, poseConfidence: 0.5, objectConfidence: 0.35 })
@@ -50,6 +54,23 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
     setStatus('loading')
     setDelegates(null)
     setError(null)
+
+    if (backend === 'local-ai') {
+      setNotice('Local AI service · experimental. Accuracy is not yet validated. Frames stay on this machine.')
+      const local = new LocalVisionClient({
+        ready: runtime => { if (active) {
+          setStatus('ready'); setDelegates(null)
+          setPeopleCapacity(runtime?.personModel === 'rtmo' ? 50 : 8)
+          if (runtime?.fightModel === 'x3d') setNotice('Classroom AI candidate · RTMO + SlowFast + X3D. Crowd accuracy and alert-delay gates have not passed. No video is recorded.')
+        } },
+        result: result => { if (active) resultCallbackRef.current(result) },
+        error: message => { if (active) { setStatus('error'); setError(message) } },
+      })
+      local.configure(settingsRef.current.maxPoses)
+      localRef.current = local
+      void local.connect()
+      return () => { active = false; local.dispose(); if (localRef.current === local) localRef.current = null }
+    }
 
     try {
       poseWorker = new Worker(new URL('../workers/vision.worker.ts', import.meta.url), {
@@ -121,7 +142,7 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
       client?.dispose()
       if (clientRef.current === client) clientRef.current = null
     }
-  }, [restartVersion, quality])
+  }, [restartVersion, quality, backend])
 
   const submitFrame = useCallback(
     (
@@ -129,6 +150,7 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
       objectBitmap: ImageBitmap | null,
       timestampMs: number,
     ) => {
+      if (localRef.current) return localRef.current.submitFrame(poseBitmap, objectBitmap, timestampMs)
       if (clientRef.current) return clientRef.current.submitFrame(poseBitmap, objectBitmap, timestampMs)
       poseBitmap.close()
       objectBitmap?.close()
@@ -140,6 +162,7 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
   const configure = useCallback(
     (maxPoses: number, poseConfidence: number, objectConfidence: number) => {
       settingsRef.current = { maxPoses, poseConfidence, objectConfidence }
+      localRef.current?.configure(maxPoses)
       clientRef.current?.configure(maxPoses, poseConfidence, objectConfidence)
     },
     [],
@@ -151,8 +174,10 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
     return false
   }, [])
 
-  const resetStream = useCallback(() => clientRef.current?.resetStream(), [])
+  const resetStream = useCallback(() => { clientRef.current?.resetStream(); localRef.current?.resetStream() }, [])
   const restart = useCallback(() => {
+    localRef.current?.dispose()
+    localRef.current = null
     clientRef.current?.dispose()
     clientRef.current = null
     setStatus('loading')
@@ -162,6 +187,7 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
   }, [])
 
   const setPosePolicy = useCallback((nextPolicy: PosePolicy) => {
+    if (localRef.current) return
     posePolicy.current = nextPolicy
     const nextDelegate: VisionDelegate = nextPolicy === 'review' || gpuFailure.current ? 'CPU' : 'GPU'
     setNotice(runtimeNotice(nextPolicy, gpuFailure.current))
@@ -189,13 +215,16 @@ export function useVisionWorker({ onResult }: UseVisionWorkerOptions) {
     setRestartVersion(version => version + 1)
   }, [])
 
-  const isBusy = useCallback(() => clientRef.current?.isBusy ?? false, [])
+  const isBusy = useCallback(() => localRef.current?.isBusy ?? clientRef.current?.isBusy ?? false, [])
   const needsObjectFrame = useCallback(
     (timestampMs: number) => clientRef.current?.needsObjectFrame(timestampMs) ?? false,
     [],
   )
 
   return {
+    backend,
+    peopleCapacity: backend === 'local-ai' ? peopleCapacity : 8,
+    setBackend,
     quality,
     setQuality,
     setPosePolicy,

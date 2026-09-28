@@ -22,3 +22,12 @@ The worker-based integration follows architectural patterns from Google's offici
 Copyright 2026 The MediaPipe Authors. Licensed under the Apache License, Version 2.0.
 
 Model versions and SHA-256 checksums are pinned in `scripts/prepare-models.mjs`.
+
+New UI dependency: `@phosphor-icons/react` 2.1.10, MIT. Used for standard interface
+icons; actual installed version is pinned by package-lock.json. The sample
+classroom image in `public/demo/` was generated for this local demonstration and
+is explicitly labelled. It is not a recording or an accuracy dataset.
+
+QR generation uses qrcode.react 4.2.0 (ISC), https://github.com/zpao/qrcode.react.
+The optional local tunnel uses official cloudflared 2026.9.3 (Apache-2.0); its
+checksum and operating limits are documented in docs/remote-camera-setup.md.

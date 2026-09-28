@@ -1,4 +1,30 @@
-# NIVRA Vision Lab
+# NIVRA Classroom Command + Vision Lab
+
+An optional **local AI service (experimental)** adds person detection, tracking, and
+video action analysis for cropped/overlapping bodies. See [setup and measured limits](service/README.md).
+The documentation below describes the original Browser engine unless stated otherwise.
+
+The **2–4 camera pilot** now includes the approved monochrome camera wall, scoped
+phone/laptop pairing, independent camera tracking, local event records, review
+acknowledgement/resolution, location filters, metadata export and coverage counts.
+Crowded-classroom accuracy remains **unvalidated**. See the [implementation status](docs/classroom-product-plan.md)
+and [measured before/after results](service/evaluation/RESULTS.md).
+
+After the Python/model setup in [service/README.md](service/README.md), run on Windows:
+
+```powershell
+npm run dev:classroom-ai
+```
+
+- Dashboard: `http://127.0.0.1:8765/`
+- Clearly labelled generated sample workspace: `http://127.0.0.1:8765/?demo=1`
+- Camera publisher: `/camera` (open a pairing link from Cameras)
+- Original browser/local-AI single-camera lab: `/lab`
+
+Phone frames travel to this PC for analysis; they are retained only in bounded RAM
+windows. SQLite saves camera locations and event metadata, never footage. Remote
+phones on mobile data need an explicitly configured HTTPS gateway; none has been
+provisioned. The service remains bound to loopback. See [remote setup boundaries](docs/remote-camera-setup.md).
 
 A local camera and video workspace with body skeletons, temporal interaction analysis, and audible review alerts. MediaPipe runs inside the browser. Frames are not uploaded or recorded.
 
@@ -11,7 +37,7 @@ npm ci
 npm run dev -- --host 127.0.0.1
 ```
 
-Open the URL printed by Vite, normally `http://127.0.0.1:5173`. Keep the server running. Do not open `index.html` directly.
+Open `/lab` at the URL printed by Vite, normally `http://127.0.0.1:5173/lab`, for the browser-only engine. The multi-camera dashboard requires the Python launcher on 8765. Keep the server running. Do not open `index.html` directly.
 
 ## Check a two-person interaction
 

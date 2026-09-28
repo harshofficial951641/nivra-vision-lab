@@ -113,15 +113,19 @@ export function useVisionSession() {
       : engine.current.snapshot(result.timestampMs)
     if (conflictEnabled) {
       const video = videoRef.current
-      publishConflict(result.posesFresh
+      const localConflict = result.conflict ? { ...result.conflict,
+        events: [...new Map([...result.conflict.events, ...latestConflict.current.events].map(event => [event.id, event])).values()]
+          .sort((a, b) => b.occurredAtMs - a.occurredAtMs).slice(0, 6),
+      } : undefined
+      publishConflict(localConflict ?? (result.posesFresh
         ? conflictEngine.current.update(result.timestampMs, result.poses, video?.videoHeight ? video.videoWidth / video.videoHeight : 16 / 9)
-        : conflictEngine.current.snapshot(result.timestampMs))
+        : conflictEngine.current.snapshot(result.timestampMs)))
     }
     publishScene(next)
     resultTimes.current = resultTimes.current.filter(t => now - t < 1000)
     if (result.posesFresh !== false) resultTimes.current.push(now)
     setMetrics({
-      poses: Math.max(result.poses.length, result.objects.filter(o => o.role === 'person').length),
+      poses: result.conflict?.people ?? Math.max(result.poses.length, result.objects.filter(o => o.role === 'person').length),
       objects: next.objects.length, fps: resultTimes.current.length,
       poseMs: result.poseInferenceMs, objectMs: result.objectInferenceMs,
     })
@@ -130,7 +134,19 @@ export function useVisionSession() {
   }, [conflictEnabled, draw, objectAnalysisEnabled, publishConflict, publishScene])
 
   const vision = useVisionWorker({ onResult })
-  const { resetStream, configure, restart, isBusy, needsObjectFrame, submitFrame, submitObjectFrame, setPosePolicy } = vision
+  useEffect(() => {
+    setMaxPoses(vision.peopleCapacity === 50 ? 50 : 4)
+  }, [vision.backend, vision.peopleCapacity])
+  const { resetStream, configure, restart, isBusy, needsObjectFrame, submitFrame, submitObjectFrame, setPosePolicy, setBackend: changeBackend } = vision
+
+  const resetMotionEvidence = useCallback(() => {
+    conflictEngine.current.resetMotion()
+    publishConflict(vision.backend === 'local-ai' && inputKind.current !== 'demo'
+      ? { ...EMPTY_CONFLICT, events: latestConflict.current.events }
+      : conflictEngine.current.snapshot(analysisNow()))
+  }, [analysisNow, publishConflict, vision.backend])
+
+  useEffect(() => { if (vision.backend === 'local-ai') setObjectAnalysisEnabled(false) }, [vision.backend])
 
   const clearScene = useCallback(() => {
     engine.current.reset()
@@ -302,8 +318,9 @@ export function useVisionSession() {
 
   useEffect(() => {
     conflictEngine.current.reset()
+    resetStream()
     publishConflict(EMPTY_CONFLICT)
-  }, [conflictEnabled, publishConflict])
+  }, [conflictEnabled, publishConflict, resetStream])
 
   useEffect(() => {
     if (!objectAnalysisEnabled && inputKind.current !== 'demo') {
@@ -320,9 +337,8 @@ export function useVisionSession() {
     configure(maxPoses, poseConfidence, confidence)
     appliedModelSettings.current = { maxPoses, poseConfidence, confidence }
     // A different pose graph must build fresh motion evidence. Keep review history.
-    conflictEngine.current.resetMotion()
-    publishConflict(conflictEngine.current.snapshot(analysisNow()))
-  }, [analysisNow, vision.status, maxPoses, poseConfidence, confidence, configure, publishConflict, resetStream])
+    resetMotionEvidence()
+  }, [vision.status, maxPoses, poseConfidence, confidence, configure, resetMotionEvidence, resetStream])
 
   useEffect(() => {
     engine.current.configure({ unattendedSeconds })
@@ -330,13 +346,12 @@ export function useVisionSession() {
 
   useEffect(() => {
     if (vision.status === 'ready' || inputKind.current === 'demo') return
-    conflictEngine.current.resetMotion()
-    publishConflict(conflictEngine.current.snapshot(analysisNow()))
+    resetMotionEvidence()
     latestPoses.current = []
     resultTimes.current = []
     setMetrics(EMPTY_METRICS)
     if (canvasRef.current) clearVisionOverlay(canvasRef.current)
-  }, [analysisNow, vision.status, publishConflict])
+  }, [vision.status, resetMotionEvidence])
 
   useEffect(() => {
     if (kind !== 'clip' || clipMode !== 'review' || camera.status !== 'live' || vision.status !== 'ready' || !playing) return
@@ -458,13 +473,15 @@ export function useVisionSession() {
       if (stale) {
         latestPoses.current = []
         publishScene(engine.current.snapshot(analysisNow()))
-        publishConflict(conflictEngine.current.snapshot(analysisNow()))
+        publishConflict(vision.backend === 'local-ai' ? { ...latestConflict.current, status: 'limited', progress: 0,
+          signals: [], regions: [], explanation: 'Local AI results are stale. Restart analysis.',
+          diagnostics: { ...EMPTY_CONFLICT.diagnostics, reason: 'stale' } } : conflictEngine.current.snapshot(analysisNow()))
         if (canvasRef.current) clearVisionOverlay(canvasRef.current)
         setMetrics(old => ({ ...old, fps: 0, poses: 0, objects: 0 }))
       }
     }, 1000)
     return () => clearInterval(timer)
-  }, [analysisNow, camera.status, kind, playing, publishConflict, publishScene])
+  }, [analysisNow, camera.status, kind, playing, publishConflict, publishScene, vision.backend])
 
   useEffect(() => {
     const stage = stageRef.current
@@ -523,11 +540,10 @@ export function useVisionSession() {
       video.pause()
       resetStream()
       publishScene(engine.current.pause(analysisNow()))
-      conflictEngine.current.resetMotion()
-      publishConflict(conflictEngine.current.snapshot(analysisNow()))
+      resetMotionEvidence()
       setPlaying(false)
     }
-  }, [analysisNow, clearScene, clipMode, kind, playing, publishConflict, publishScan, publishScene, resetStream, vision.status])
+  }, [analysisNow, clearScene, clipMode, kind, playing, publishScan, publishScene, resetMotionEvidence, resetStream, vision.status])
 
   useEffect(() => {
     const video = videoRef.current
@@ -552,6 +568,11 @@ export function useVisionSession() {
     restart()
   }, [clearScene, restart])
 
+  const setBackend = useCallback((backend: 'browser' | 'local-ai') => {
+    stop()
+    changeBackend(backend)
+  }, [stop, changeBackend])
+
   return {
     videoRef, canvasRef, demoCanvasRef, stageRef, camera, kind, sessionId, sourceName,
     devices, deviceId, setDeviceId, scene, metrics, mirrored, setMirrored,
@@ -560,5 +581,6 @@ export function useVisionSession() {
     scenario, playing, setPlaying, stalled, fileError, vision, clipMode, setClipMode, scanProgress, clipSensitivity, setClipSensitivity,
     conflict, conflictEnabled, setConflictEnabled, objectAnalysisEnabled, setObjectAnalysisEnabled,
     startCamera, stop, openClip, startDemo, watch, clearWatch, togglePlayback, retryAnalysis,
+    setBackend,
   }
 }

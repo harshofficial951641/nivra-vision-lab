@@ -3,6 +3,7 @@ import type { ConflictSnapshot } from '../lib/conflictEngine'
 import './ConflictPanel.css'
 
 interface ConflictPanelProps {
+  backend?: 'browser' | 'local-ai'
   snapshot: ConflictSnapshot
   enabled: boolean
   active: boolean
@@ -18,7 +19,7 @@ const STATUS_LABELS: Record<ConflictSnapshot['status'], string> = {
   limited: 'View too limited',
 }
 
-export function ConflictPanel({ snapshot, enabled, active, simulated, onToggle }: ConflictPanelProps) {
+export function ConflictPanel({ snapshot, enabled, active, simulated, onToggle, backend = 'browser' }: ConflictPanelProps) {
   const headingId = useId()
   const explanationId = useId()
   const state = !enabled ? 'off' : !active ? 'waiting' : snapshot.status
@@ -36,7 +37,7 @@ export function ConflictPanel({ snapshot, enabled, active, simulated, onToggle }
       <div className="conflict-heading">
         <div>
           <h2 id={headingId}>Physical conflict</h2>
-          <p>Motion analysis · experimental</p>
+          <p>{backend === 'local-ai' && !simulated ? 'Local video AI · experimental' : 'Motion analysis · experimental'}</p>
         </div>
         <label className="toggle-control conflict-toggle">
           <input
@@ -61,8 +62,8 @@ export function ConflictPanel({ snapshot, enabled, active, simulated, onToggle }
 
       {enabled && active ? (
         <dl className="pose-coverage" aria-label="Pose coverage">
-          <div><dt>Skeletons detected</dt><dd data-testid="coverage-detected">{snapshot.diagnostics.detectedPoses}</dd></div>
-          <div><dt>Usable upper bodies</dt><dd data-testid="coverage-usable">{snapshot.diagnostics.usablePeople}</dd></div>
+          <div><dt>{backend === 'local-ai' ? 'People tracked' : 'Skeletons detected'}</dt><dd data-testid="coverage-detected">{snapshot.diagnostics.detectedPoses}</dd></div>
+          <div><dt>{backend === 'local-ai' ? 'Unambiguous tracks' : 'Usable upper bodies'}</dt><dd data-testid="coverage-usable">{snapshot.diagnostics.usablePeople}</dd></div>
           <div><dt>Usable arms</dt><dd data-testid="coverage-arms">{snapshot.diagnostics.usableArms}</dd></div>
           <div><dt>Nearby pairs</dt><dd data-testid="coverage-pairs">{snapshot.diagnostics.nearbyPairs}</dd></div>
         </dl>
@@ -99,7 +100,7 @@ export function ConflictPanel({ snapshot, enabled, active, simulated, onToggle }
         </ul>
       ) : null}
 
-      <p className="conflict-framing">Keep both people’s shoulders and hands visible. Stand side-on to the camera so arm extension is visible. One person alone will not trigger a conflict alert.</p>
+      <p className="conflict-framing">{backend === 'local-ai' && !simulated ? 'Video evidence can be assessed with partial bodies. Hidden joints are not treated as visible motion. Completely obscured actions cannot be assessed.' : 'Keep both people’s shoulders and hands visible. Stand side-on to the camera so arm extension is visible. One person alone will not trigger a conflict alert.'}</p>
       {state === 'alert' ? <p className="conflict-review-note">Review the interaction before responding.</p> : null}
     </section>
   )

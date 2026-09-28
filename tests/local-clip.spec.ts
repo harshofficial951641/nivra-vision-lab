@@ -65,7 +65,7 @@ test('inspect a supplied local clip with the real pose model', async ({ page }, 
   })
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1'
     ? route.continue() : route.abort('internetdisconnected'))
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera', { timeout: 25_000 })
   await page.getByText('Detection settings', { exact: true }).click()
   await expect(page.getByLabel('Video analysis', { exact: true })).toHaveValue('review')

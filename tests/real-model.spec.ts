@@ -59,7 +59,7 @@ test('actual local models detect a person in a local video clip', async ({ page 
     const url = new URL(route.request().url())
     return url.hostname === '127.0.0.1' ? route.continue() : route.abort('internetdisconnected')
   })
-  await page.goto('/')
+  await page.goto('/lab')
   await expect(page.getByTestId('model-status')).toHaveText('Waiting for camera', { timeout: 20_000 })
   await page.getByText('Detection settings', { exact: true }).click()
   await page.getByRole('checkbox', { name: 'Object analysis', exact: true }).focus()

@@ -1,0 +1,12 @@
+fastapi==0.115.12
+uvicorn==0.34.2
+websockets==15.0.1
+numpy==1.26.4
+opencv-python==4.11.0.86
+onnxruntime-gpu==1.21.1
+supervision==0.25.1
+pytorchvideo==0.1.5
+torch==2.5.1
+torchvision==0.20.1
+pytest==8.3.5
+httpx==0.28.1
