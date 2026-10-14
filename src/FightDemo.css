@@ -1,0 +1,44 @@
+.fight-page { max-width: 1480px; margin: auto; padding: 0 32px 24px; color: #18181b; }
+.fight-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 80px; border-bottom: 1px solid #dfe2e5; }
+.fight-brand { display: flex; align-items: center; gap: 12px; }
+.fight-brand strong { letter-spacing: .2em; font-size: 17px; }
+.fight-brand span, .fight-health { color: #62666c; font-size: 12px; }
+.fight-brand span { padding-left: 16px; border-left: 1px solid #dfe2e5; }
+.fight-health.ready::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 8px; border-radius: 50%; background: #40816a; }
+.fight-heading { padding: 30px 0 26px; max-width: 820px; }
+.fight-heading p, .fight-eyebrow { font-size: 10px; color: #656970; letter-spacing: .16em; }
+.fight-heading h1 { margin: 10px 0; font-size: clamp(27px, 3vw, 36px); letter-spacing: -.035em; font-weight: 650; }
+.fight-heading > span { font-size: 13px; line-height: 1.7; color: #61656c; }
+.fight-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start; }
+.fight-view, .fight-panel { border: 1px solid #d9dde2; border-radius: 10px; background: white; min-width: 0; overflow: hidden; }
+.fight-source { display: flex; justify-content: space-between; gap: 16px; padding: 15px; font-size: 12px; }
+.fight-source strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 550; }
+.fight-source span { color: #696d73; flex-shrink: 0; }
+.fight-stage { position: relative; width: 100%; aspect-ratio: 16/10; max-height: 46dvh; background: #111519; }
+.fight-stage video { width: 100%; height: 100%; object-fit: contain; }
+.fight-stage-label { position: absolute; top: 16px; left: 16px; right: 16px; width: fit-content; max-width: calc(100% - 32px); background: #111519e8; color: white; padding: 9px 12px; border: 1px solid #ffffff35; border-radius: 5px; font-size: 12px; }
+.fight-controls { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px; }
+.fight-page button { min-height: 42px; border: 1px solid #d9dde2; border-radius: 6px; padding: 10px 14px; background: #fff; color: #27272a; font-size: 12px; cursor: pointer; }
+.fight-controls button:first-child { background: #202126; border-color: #202126; color: white; }
+.fight-page button:hover:not(:disabled) { background: #e9ebee; color: #18181b; }
+.fight-page button:disabled { opacity: .45; cursor: not-allowed; }
+.fight-page :focus-visible { outline: 3px solid #3157f6; outline-offset: 3px; }
+.fight-panel { padding: 22px; }
+.fight-panel h2 { margin: 14px 0 22px; font-size: 21px; line-height: 1.35; font-weight: 600; letter-spacing: -.02em; }
+.fight-panel dl { margin: 0; }
+.fight-panel dl div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eceef0; font-size: 12px; }
+.fight-panel dt { color: #656970; }
+.fight-panel dd { margin: 0; font-variant-numeric: tabular-nums; }
+.fight-note { color: #656970; font-size: 11px; line-height: 1.7; margin: 18px 0; }
+.fight-file { display: block; font-size: 12px; font-weight: 550; }
+.fight-file input { display: block; max-width: 100%; margin-top: 10px; font-size: 11px; }
+.fight-filename { font-size: 11px; overflow-wrap: anywhere; color: #656970; }
+.fight-panel > button { display: block; width: 100%; margin-top: 9px; }
+.fight-progress { font-size: 12px; color: #656970; margin: 18px 0; }
+.fight-error { padding: 12px 16px; border: 1px solid #e2b5b1; background: #fff1ef; color: #9c3029; border-radius: 6px; font-size: 13px; }
+.fight-footer { border-top: 1px solid #dfe2e5; padding-top: 18px; font-size: 11px; color: #656970; line-height: 1.7; }
+.fight-footer a { color: inherit; margin-left: 10px; }
+.fight-footer details { margin-top: 10px; }
+.fight-footer summary { cursor: pointer; }
+@media (max-width: 900px) { .fight-grid { grid-template-columns: 1fr; } .fight-panel { max-width: none; } .fight-stage { aspect-ratio: 16/9; } }
+@media (max-width: 560px) { .fight-page { padding: 0 16px 20px; } .fight-header { align-items: flex-start; flex-direction: column; justify-content: center; padding: 16px 0; gap: 10px; } .fight-heading { padding-top: 22px; } .fight-controls button { flex: 1 1 140px; } .fight-stage { aspect-ratio: 4/3; } .fight-brand span { font-size: 10px; } }

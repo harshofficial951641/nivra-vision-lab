@@ -50,7 +50,9 @@ def unpack_frame(packet):
     return header, frame
 
 
-def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False):
+def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False, enable_fight_demo=False):
+    if enable_fight_demo and not relay_only:
+        raise ValueError('The public fight demo requires the relay-only host.')
     if model_factory is None and not relay_only:
         from .models import Models
         model_factory = Models
@@ -62,6 +64,10 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     inference_lock = asyncio.Lock()
     from .classroom import Classroom
     classroom = Classroom(state, pipeline_factory, unpack_frame, inference_lock, database)
+    fight_demo = None
+    if enable_fight_demo:
+        from .fight_demo import FightDemo
+        fight_demo = FightDemo(unpack_frame, allowed_origins=ORIGINS | ({classroom.public} if classroom.public else set()))
 
     @asynccontextmanager
     async def lifespan(app):
@@ -71,9 +77,11 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
             except Exception as error:
                 state['error'] = str(error)
         task = None if relay_only else asyncio.create_task(load())
+        if fight_demo: await fight_demo.start()
         await classroom.start()
         yield
         await classroom.stop()
+        if fight_demo: await fight_demo.stop()
         if task: await task
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
@@ -81,6 +89,9 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     hosts = ['127.0.0.1', 'localhost'] + ([urlsplit(classroom.public).hostname] if classroom.public else [])
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
     app.include_router(classroom.router)
+    if fight_demo:
+        app.include_router(fight_demo.router)
+        app.state.fight_demo = fight_demo
     app.state.classroom = classroom
 
     @app.middleware('http')
@@ -164,8 +175,16 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
 
     @app.get('/camera')
     @app.get('/lab')
+    @app.get('/fight')
     async def application_route():
         return FileResponse(ROOT / 'dist' / 'index.html',headers={'Cache-Control':'no-store'})
+
+    @app.get('/fight-samples/{name}')
+    async def fight_sample(name: str):
+        if name not in ('grappling.webm', 'boxing.webm'):
+            return JSONResponse({'detail': 'Unknown sample'}, status_code=404)
+        return FileResponse(ROOT / 'service' / 'evaluation' / 'media' / name,
+                            media_type='video/webm', headers={'Cache-Control': 'public, max-age=3600'})
 
     app.mount('/', StaticFiles(directory=str(ROOT / 'dist'), html=True, check_dir=False), name='app')
     return app

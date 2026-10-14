@@ -4,7 +4,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url)
     const error = (detail, status) => {
-      if (status === 503 && ['/', '/camera'].includes(url.pathname)) return new Response(
+      if (status === 503 && ['/', '/camera', '/lab', '/fight'].includes(url.pathname)) return new Response(
         '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nivra · Analysis PC offline</title><style>body{font:16px/1.6 system-ui;background:#f6f7f8;color:#18181b;display:grid;place-items:center;min-height:90vh;margin:24px}main{max-width:480px;padding:32px;background:white;border:1px solid #ddd;border-radius:12px}a{color:inherit}</style><main><strong>NIVRA</strong><h1>Analysis PC offline</h1><p>Keep the Nivra analysis service and public bridge running on your PC. Live cameras and review records will reconnect when it is back online.</p><a href="/">Try connecting again</a></main></html>',
         {status,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store','Referrer-Policy':'no-referrer'}})
       return Response.json({ detail }, { status, headers: { 'Cache-Control': 'no-store' } })
@@ -12,8 +12,8 @@ export default {
     if (url.pathname === '/favicon.ico') return new Response(null, {status:204})
     const api = url.pathname.startsWith('/api/v2/')
     const allowed = api && url.pathname !== '/api/v2/operator/invite' || request.method === 'GET' && (
-      ['/', '/camera', '/lab', '/favicon.svg'].includes(url.pathname) ||
-      ['/assets/', '/brand/', '/models/', '/mediapipe/'].some(p => url.pathname.startsWith(p)))
+      ['/', '/camera', '/lab', '/fight', '/favicon.svg'].includes(url.pathname) ||
+      ['/assets/', '/brand/', '/models/', '/mediapipe/', '/fight-samples/'].some(p => url.pathname.startsWith(p)))
     if (!allowed) return error('This route is unavailable on the public site.', 404)
     if (url.search) return error('Query parameters are not supported.', 400)
     if (api && (!['GET', 'POST', 'PATCH'].includes(request.method) ||
@@ -34,7 +34,7 @@ export default {
       if (value) headers.set(name, value)
     }
     const cookies = (request.headers.get('Cookie') || '').split(';').map(v => v.trim())
-      .filter(v => /^(nivra_operator|nivra_publisher)=[A-Za-z0-9_-]+$/.test(v)).join('; ')
+      .filter(v => /^(nivra_operator|nivra_publisher|nivra_fight_session)=[A-Za-z0-9_-]+$/.test(v)).join('; ')
     if (cookies) headers.set('Cookie', cookies)
     headers.set('X-Nivra-Relay', env.NIVRA_RELAY_SECRET)
     let body

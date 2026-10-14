@@ -10,9 +10,9 @@ async def run(config):
     os.environ['NIVRA_PUBLIC_ORIGIN'] = config['origin']
     from nivra.server import create_app, MAX_FRAME_BYTES
     from nivra.public_gateway import PublicGateway
-    # The public camera pages run the original browser detector on their own device.
-    # Do not import or allocate PC inference models in this relay process.
-    app = create_app(relay_only=True)
+    # Existing camera pages keep their browser detector. The explicit /fight demo
+    # loads only X3D-M on the PC; it never shares operator data or saves footage.
+    app = create_app(relay_only=True, enable_fight_demo=bool(config.get('fightDemo')))
     options = dict(host='127.0.0.1', access_log=False, log_level='warning', ws_max_size=MAX_FRAME_BYTES, ws_max_queue=1, proxy_headers=False)
     local = uvicorn.Server(uvicorn.Config(app, port=8765, **options))
     gateway = uvicorn.Server(uvicorn.Config(PublicGateway(app, config['secret']), port=8766, lifespan='off', **options))

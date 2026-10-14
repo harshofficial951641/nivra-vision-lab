@@ -23,7 +23,10 @@ Francophonie 2017: Kod B, CC BY-SA 4.0. Seth Rollins Avada Kedavra: HHH Pedrigre
 CC BY-SA 3.0. The exercise fixture's existing Pexels provenance remains in
 `../tests/fixtures/README.md`. Cropped variants are runtime transformations, marked
 as synthetic. If distributed, derivatives must retain attribution and applicable
-share-alike terms. The clips are excluded from the app and Git.
+share-alike terms. Clips remain excluded from Git. The explicit public `/fight`
+demo serves the unchanged boxing and grappling clips from the PC; visible credits
+and license/source links are provided on that page. Other evaluation footage is
+not exposed through the sample endpoint.
 
 - RTMO-M Body7: official OpenMMLab SDK export dated 2023-12-11, Apache-2.0
   upstream MMPose. Body7 includes crowd datasets; this checkpoint is not described
@@ -35,3 +38,15 @@ share-alike terms. The clips are excluded from the app and Git.
   No training dataset is redistributed. Loading verifies SHA-256, uses
   `weights_only=True`, and allowlists only the checkpoint's known NumPy numeric
   metadata constructors; no publisher remote code is executed.
+
+- Offline MC3-18 diagnostic candidate: MohamedSebaie/
+  Fight_Detection_From_Surveillance_Cameras-PyTorch_Project, revision
+  `a27adffec6651c10639b5b453e0df8564b9be298`,
+  `Models/model_16_m3_0.8888.pth`, SHA-256
+  `8268694ade4c0e79a1c5fa41a4f3c21129082d75fac9eb7c25e5a0eabad49bfa`.
+  Upstream repository declares MIT. Architecture uses torchvision MC3-18.
+  The benchmark independently implements documented RGB resize/center-crop,
+  normalization and class order; it does not execute upstream utility code.
+  Loading uses `weights_only=True` and strict state-dict validation. Weights are
+  local and ignored by Git; training-data rights and the correspondence between
+  this checkpoint and the README's best accuracy claim have not been established.

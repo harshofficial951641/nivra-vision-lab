@@ -8,6 +8,24 @@ grappling and can mistake sports/background action for an incident. See
 
 ## Setup and launch
 
+### Installed standalone fight model
+
+On this checkout, X3D-M weights and the Python environment are already installed.
+Run a verified sample from `nivra-vision-lab`:
+
+```powershell
+service/.venv/Scripts/python.exe service/run_fight_model.py --video service/evaluation/media/grappling.webm
+```
+
+Use `--video "C:/path/to/your-video.mp4"` for another local video, or `--camera 0`
+to explicitly open the first webcam. Ctrl+C releases the camera and stops.
+Console JSON contains source timestamps, raw classifier scores and review signals.
+It saves no footage and uses no network during inference. Four seconds of
+continuous history are required. Overlapping positive windows are not separate
+incidents. This standalone scene classifier does not enforce the app's two-person,
+tracking or alert-confirmation safeguards; use the integrated app for that workflow.
+Its scores are uncalibrated, and it remains experimental.
+
 From the `nivra-vision-lab` directory, with Python 3.11 and `uv` installed:
 
 ```powershell

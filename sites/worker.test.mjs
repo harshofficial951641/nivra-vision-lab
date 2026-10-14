@@ -26,3 +26,23 @@ test('relay uses server-held secret and strips attacker headers, without forward
     assert.equal(captured.options.redirect,'manual')
   } finally { globalThis.fetch = original }
 })
+
+test('fight demo forwards its scoped cookie and reports an offline PC clearly', async () => {
+  const offline = await worker.fetch(new Request(origin+'/fight'), {})
+  assert.equal(offline.status, 503)
+  assert.match(await offline.text(), /Analysis PC offline/)
+  const original = globalThis.fetch
+  let captured
+  globalThis.fetch = async (url, options) => {
+    captured = options
+    return new Response('{}', {headers:{'Content-Type':'application/json'}})
+  }
+  try {
+    const response = await worker.fetch(new Request(origin+'/api/v2/fight/health', {
+      headers:{Cookie:'nivra_fight_session=demo-token; unrelated=do-not-forward'},
+    }), env)
+    assert.equal(response.status, 200)
+    assert.equal(captured.headers.get('Cookie'), 'nivra_fight_session=demo-token')
+    assert.equal((await worker.fetch(new Request(origin+'/fight-samples/grappling.webm'), env)).status,200)
+  } finally { globalThis.fetch = original }
+})

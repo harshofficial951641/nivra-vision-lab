@@ -1,5 +1,20 @@
 # Public camera pilot — updated 2026-09-28
 
+## Public GPU model demo — 14 October 2026
+
+`/fight` is a separate public X3D-M scene-classifier demo. The public relay is
+launched with hidden JSON `fightDemo: true` to load this one model on the PC GPU.
+It does not enable PC AI for existing camera publishers or expose operator data.
+The PC service and temporary Cloudflare bridge must remain running.
+
+The demo accepts a local video or explicit webcam; it sends bounded JPEG frames
+over WSS, one outstanding frame at a time, and maintains four seconds of RAM
+history. It saves no footage or demo events. Public visitors receive only a
+short-lived fight-demo cookie, scoped to `/api/v2/fight`. One stream can own the
+model at a time. This is a classifier demo, not the full tracked/two-person
+incident pipeline. Scores are uncalibrated and no actor/contact/intent claim is
+made. The two recorded samples are licensed public footage with visible credits.
+
 Harsh authorized live frames through an encrypted Cloudflare/Sites relay without
 saving video. The current public publisher runs the original Nivra detector on
 the camera device: MediaPipe Pose Lite on GPU where available, an explicit device
