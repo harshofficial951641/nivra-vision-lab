@@ -10,6 +10,7 @@ from .device_analysis import Message, Track, Skeleton
 
 FIGHT_MODEL = 'nivra-x3d-rwf2000-v1'
 MAX_VIDEO_BYTES = 3_000_000
+SOURCE_TIME_EPSILON_MS = 0.001
 
 
 class NativePeople(Message):
@@ -45,7 +46,8 @@ class NativeFight(Message):
 
     @model_validator(mode='after')
     def window(self):
-        if not 3800 <= self.windowEndMs-self.windowStartMs <= 4500 or self.windowEndMs != self.timestampMs:
+        duration = self.windowEndMs-self.windowStartMs
+        if not 3800-SOURCE_TIME_EPSILON_MS <= duration <= 4500+SOURCE_TIME_EPSILON_MS or self.windowEndMs != self.timestampMs:
             raise ValueError('A real four-second source window is required')
         return self
 

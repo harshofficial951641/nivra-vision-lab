@@ -1,0 +1,112 @@
+{
+  "createdAt": "2026-10-22T16:45:22.376Z",
+  "model": "MediaPipe Pose Landmarker Full",
+  "delegate": "GPU",
+  "numPoses": 4,
+  "input": "entire source frame, longest dimension960; decoded via same AVFoundation reader, JPEG quality0.95 intermediate",
+  "poseConfidence": 0.5,
+  "protocols": [
+    "200ms admission matches native clip evaluator source cadence",
+    "50ms minimum replays unique source frames (~15Hz for both clips); offline, not a phone speed guarantee"
+  ],
+  "engines": [
+    "original new ConflictEngine()",
+    "current new DeviceAnalysis()"
+  ],
+  "sourceSHA256": {
+    "F07": "3cf60aa35177daf3e899178457c9b885cec88e59b26ae16a45b745c827d44429",
+    "C01": "ca4d27849d790127e1fe14bac2ea44a88b7172d73f4859dbf6d41d6ee93949f3"
+  },
+  "taskSHA256": "5134a3aad27a58b93da0088d431f366da362b44e3ccfbe3462b3827a839011b1",
+  "tasksVisionVersion": "1.0.1",
+  "scope": "isolated Full VIDEO pose + original ConflictEngine and current DeviceAnalysis; not whole original app; no EfficientDet/ROI/crowd Lite/transport/server alert routing",
+  "runs": [
+    {
+      "clip": "F07",
+      "minimumSourceIntervalMs": 200,
+      "uniqueFrames": 25,
+      "firstSourceMs": 0,
+      "lastSourceMs": 4800,
+      "delegate": "GPU",
+      "poseCountHistogram": {
+        "0": 15,
+        "1": 10
+      },
+      "originalDiagnosticReasons": {
+        "no-poses": 15,
+        "single-person": 10
+      },
+      "maxUsablePeople": 1,
+      "meanInferenceMs": 69.34039999991656,
+      "originalEvents": 0,
+      "deviceEvents": 0
+    },
+    {
+      "clip": "C01",
+      "minimumSourceIntervalMs": 200,
+      "uniqueFrames": 25,
+      "firstSourceMs": 0,
+      "lastSourceMs": 4866,
+      "delegate": "GPU",
+      "poseCountHistogram": {
+        "0": 4,
+        "1": 19,
+        "2": 2
+      },
+      "originalDiagnosticReasons": {
+        "no-poses": 4,
+        "single-person": 19,
+        "too-far": 2
+      },
+      "maxUsablePeople": 2,
+      "meanInferenceMs": 64.91040000021458,
+      "originalEvents": 0,
+      "deviceEvents": 0
+    },
+    {
+      "clip": "F07",
+      "minimumSourceIntervalMs": 50,
+      "uniqueFrames": 75,
+      "firstSourceMs": 0,
+      "lastSourceMs": 4933.333333333334,
+      "delegate": "GPU",
+      "poseCountHistogram": {
+        "0": 49,
+        "1": 25,
+        "2": 1
+      },
+      "originalDiagnosticReasons": {
+        "no-poses": 49,
+        "single-person": 24,
+        "shoulders-hidden": 1,
+        "warming": 1
+      },
+      "maxUsablePeople": 2,
+      "meanInferenceMs": 39.57273333330949,
+      "originalEvents": 0,
+      "deviceEvents": 0
+    },
+    {
+      "clip": "C01",
+      "minimumSourceIntervalMs": 50,
+      "uniqueFrames": 75,
+      "firstSourceMs": 0,
+      "lastSourceMs": 4932.666666666667,
+      "delegate": "GPU",
+      "poseCountHistogram": {
+        "0": 12,
+        "1": 53,
+        "2": 10
+      },
+      "originalDiagnosticReasons": {
+        "no-poses": 12,
+        "single-person": 55,
+        "too-far": 8
+      },
+      "maxUsablePeople": 2,
+      "meanInferenceMs": 46.65300000011921,
+      "originalEvents": 0,
+      "deviceEvents": 0
+    }
+  ]
+}

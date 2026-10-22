@@ -185,3 +185,39 @@ final class LocalMacPairingFailureTests: XCTestCase {
         XCTAssertEqual(LocalMacPairingFailure.classify(LocalMacPairingFailure.expiredInvite), .expiredInvite)
     }
 }
+
+
+final class NativeCaptureIntentTests: XCTestCase {
+    func testTemporaryBackgroundPauseResumesSameCaptureIntent() {
+        var intent = NativeCaptureIntent()
+        XCTAssertFalse(intent.shouldCapture)
+        intent.requested = true
+        XCTAssertTrue(intent.shouldCapture)
+        intent.foreground = false; intent.paused = true
+        XCTAssertFalse(intent.shouldCapture)
+        XCTAssertFalse(intent.mayResume)
+        XCTAssertTrue(intent.requested)
+        intent.foreground = true
+        XCTAssertTrue(intent.mayResume)
+        XCTAssertFalse(intent.shouldCapture)
+        intent.paused = false
+        XCTAssertTrue(intent.shouldCapture)
+    }
+    func testInterruptionEndingInBackgroundCannotStartCamera() {
+        var intent = NativeCaptureIntent(requested: true)
+        intent.interrupted = true
+        XCTAssertFalse(intent.shouldCapture)
+        intent.foreground = false
+        intent.interrupted = false
+        XCTAssertFalse(intent.shouldCapture)
+        intent.foreground = true
+        XCTAssertTrue(intent.shouldCapture)
+    }
+    func testExplicitStopDuringPauseCannotBeUndoneByForegroundOrInterruptionEnd() {
+        var intent = NativeCaptureIntent(requested: true, foreground: false, interrupted: true)
+        intent.requested = false
+        intent.foreground = true
+        intent.interrupted = false
+        XCTAssertFalse(intent.shouldCapture)
+    }
+}

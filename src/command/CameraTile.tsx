@@ -5,7 +5,7 @@ import { PushPin, VideoCameraSlash } from '@phosphor-icons/react'
 import type { Incident } from '../classroom/contracts'
 import { validGPS } from '../location/gps'
 import { TrackingOverlay } from './TrackingOverlay'
-import { nativeOverlayAligned } from './nativeTracking'
+import { NativePoseHistory, nativeOverlayAligned } from './nativeTracking'
 import { observedTracks, wallDetection, wallTracking } from './tracking'
 import { alertLevel, cameraPlace, formatClock, formatElapsed, needsDecision, type WallCamera } from './model'
 
@@ -30,11 +30,15 @@ const statusText = {
 export function CameraTile({ camera, events, now, pinned, selected, size = 'tile', onOpen, nativeVideo }: Props) {
   const [nativePlaying, setNativePlaying] = useState(false)
   const [nativeFrame, setNativeFrame] = useState<NativeRenderedFrame|null>(null)
+  const [poseHistory] = useState(() => new NativePoseHistory())
+  if(nativeVideo && size !== 'thumb')poseHistory.add(camera,Date.now());else poseHistory.clear()
+  const nativeResult=nativeFrame ? poseHistory.select(camera,nativeFrame,Date.now()) : null
+  const nativeCamera={...camera,result:nativeResult}
   const level = alertLevel(camera.id, events)
   const flagged = events.find((e) => e.camera_id === camera.id && needsDecision(e))
   const title = `${camera.label} ${camera.name}`
   const tracking = wallTracking(camera, now)
-  const detection = wallDetection(nativePlaying && nativeFrame ? { ...camera, preview: { timestampMs:nativeFrame.timestampMs, received:nativeFrame.renderedAt, width:nativeFrame.width, height:nativeFrame.height, generation:nativeFrame.generation } } : camera, now)
+  const detection = wallDetection(nativePlaying && nativeFrame ? { ...nativeCamera, preview: { timestampMs:nativeFrame.timestampMs, received:nativeFrame.renderedAt, width:nativeFrame.width, height:nativeFrame.height, generation:nativeFrame.generation } } : camera, now)
   const detectionLabel = camera.sample ? 'Sample footage' : `${detection.people ? `${detection.people} ${detection.people === 1 ? 'person' : 'people'} · ` : ''}${detection.label}`
   const body = (
     <>
@@ -71,8 +75,8 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
         ) : (
           <img src={camera.image} alt="" draggable={false} />
         )}
-        {size !== 'thumb' && nativeVideo && camera.generation && camera.status === 'live' && !camera.preview?.analysisFrame && <NativeVideo bus={nativeVideo} cameraId={camera.id} generation={camera.generation} onPlaying={setNativePlaying} onFrame={setNativeFrame} overlayMatches={frame => nativeOverlayAligned(camera,frame,nativeFrame,Date.now())}>
-          {nativeFrame && camera.result && <TrackingOverlay tracks={observedTracks(camera.result.tracks)} poses={camera.result.poses} width={nativeFrame.width} height={nativeFrame.height} />}
+        {size !== 'thumb' && nativeVideo && camera.generation && camera.status === 'live' && !camera.preview?.analysisFrame && <NativeVideo bus={nativeVideo} cameraId={camera.id} generation={camera.generation} onPlaying={setNativePlaying} onFrame={setNativeFrame} overlayMatches={frame => nativeOverlayAligned(nativeCamera,frame,nativeFrame,Date.now())}>
+          {nativeFrame && nativeResult && <TrackingOverlay tracks={observedTracks(nativeResult.tracks)} poses={nativeResult.poses} width={nativeFrame.width} height={nativeFrame.height} />}
         </NativeVideo>}
         {!nativePlaying && (tracking.tracks.length > 0 || tracking.poses.length > 0) && camera.preview?.width && camera.preview?.height && <TrackingOverlay tracks={tracking.tracks} poses={tracking.poses} width={camera.preview.width} height={camera.preview.height} />}
         {size !== 'thumb' && <span className="cm-ai-state" title={tracking.detail || detection.action}>{detectionLabel}{camera.preview?.analysisFrame && <small>Earlier frame · {Math.max(0, (now - (camera.preview.received ?? now)) / 1000).toFixed(1)}s ago</small>}{!camera.sample && detection.state === 'limited' && <small>{detection.action}</small>}{!nativePlaying && tracking.label === 'AI delayed · boxes hidden' && <small>Video is ahead. Markings paused.</small>}</span>}

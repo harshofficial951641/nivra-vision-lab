@@ -37,6 +37,29 @@ final class NativeFightVisionTests: XCTestCase {
         XCTAssertNil(NativeFightVision.window([frames.first!,frames.last!]))
     }
 
+    func testC01FractionalTimestampsRetainBoundaryFrameAndCadence() throws {
+        let rgb = [UInt8](repeating: 127, count: 224*224*3)
+        // Actual AVFoundation C01 source times. Binary rounding formerly dropped
+        // the first frame and skipped a prediction only fractions of a ns early.
+        let first = 532.6666666666666
+        let end = 4532.666666666667
+        let frames = (0...20).map { NativeFightFrame(timestampMs: first+Double($0)*200, rgb: rgb) }
+        let selected = try XCTUnwrap(NativeFightVision.window(frames))
+        XCTAssertEqual(selected.first?.timestampMs, first)
+        XCTAssertEqual(selected.last?.timestampMs, end)
+        XCTAssertTrue(NativeFightVision.intervalElapsed(4799.333333333333, since: 4399.333333333334, minimum: 400))
+        XCTAssertTrue(NativeFightVision.intervalElapsed(799.3333333333333, since: 599.3333333333334, minimum: 200))
+        XCTAssertTrue(NativeFightVision.intervalElapsed(4332.666666666666, since: first, minimum: 3800))
+        XCTAssertFalse(NativeFightVision.intervalElapsed(399.99, since: 0, minimum: 400))
+        XCTAssertFalse(NativeFightVision.intervalElapsed(199.99, since: 0, minimum: 200))
+        XCTAssertFalse(NativeFightVision.intervalElapsed(3799.99, since: 0, minimum: 3800))
+        // 0.01ms beyond retention is still excluded, so stale input cannot use
+        // the tolerance to extend the actual four-second evidence window.
+        let stale = NativeFightFrame(timestampMs: -0.01+first, rgb: rgb)
+        let bounded = try XCTUnwrap(NativeFightVision.window([stale]+frames))
+        XCTAssertEqual(bounded.first?.timestampMs, first)
+    }
+
     func testRGBOrderAndNCTHWTensorMatchOriginalModelInput() throws {
         let image = try XCTUnwrap(CMSampleBufferGetImageBuffer(sample(1000)))
         let rgb = try NativeFightVision.rgb224(image)

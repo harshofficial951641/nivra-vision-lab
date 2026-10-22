@@ -86,6 +86,12 @@ struct USBCameraView: View {
                             .buttonStyle(.bordered).frame(minHeight: 44)
                         Button("Stop camera") { camera.stop(); onPairingConsumed?(); copied = false }.buttonStyle(.borderedProminent).tint(.white).foregroundStyle(.black).frame(minHeight: 44)
                     }
+                } else if camera.paused {
+                    Text(camera.message).font(.callout).multilineTextAlignment(.center)
+                    HStack(spacing: 14) {
+                        Button("Resume camera") { camera.setForeground(true) }.buttonStyle(.borderedProminent).tint(.white).foregroundStyle(.black)
+                        Button("Stop camera") { camera.stop(); onPairingConsumed?() }.buttonStyle(.bordered)
+                    }.frame(minHeight: 44)
                 } else {
                     Text(camera.message).font(.callout).multilineTextAlignment(.center)
                     if !camera.starting {
@@ -108,18 +114,20 @@ struct USBCameraView: View {
             // must not restart a camera the user has stopped.
             guard autoStart, !didInitialStart else { return }
             didInitialStart = true
+            camera.setForeground(phase != .background)
             camera.onPairingConsumed = onPairingConsumed
             camera.start(name: name, pairing: pairing)
         }
         .onDisappear { camera.stop() }
         .onChange(of: pairing) { _, next in
             if let next {
-                if camera.running || camera.starting { camera.pair(with: next) }
+                if camera.running || camera.starting || camera.paused { camera.pair(with: next) }
                 else { camera.start(name: name, pairing: next) }
             }
         }
         .onChange(of: phase) { _, next in
-            if next == .background { camera.stop(message: "Camera paused. Tap Start camera to resume."); onPairingConsumed?() }
+            if next == .background { camera.setForeground(false) }
+            else if next == .active { camera.setForeground(true) }
         }
     }
 }

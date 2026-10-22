@@ -4,6 +4,9 @@ export type NativeRenderedFrame = { timestampMs:number; width:number; height:num
 export type NativeFrame = { sequence:number; timestampMs:number; keyframe:boolean; data:Uint8Array }
 export type NativePacket = { cameraId:string; generation:string; videoGeneration:string; width:number; height:number; codec:string; description:Uint8Array; frames:NativeFrame[] }
 const MAX_BYTES = 2 * 1024 * 1024
+export const NATIVE_PLAYBACK_DELAY_MS = 750
+export const NATIVE_MAX_DECODED_FRAMES = 40
+const MAX_ENCODED_FRAMES = 90
 const integer = (n:unknown, min:number, max:number):n is number => typeof n === 'number' && Number.isSafeInteger(n) && n >= min && n <= max
 export function nativeVideoPacket(bytes:ArrayBuffer):NativePacket | null {
   try {
@@ -70,6 +73,8 @@ export class NativeVideoBus {
   clear() { this.listeners.forEach(listeners=>listeners.forEach(listener=>listener(null)));this.active.clear();this.last.clear() }
 }
 
+type VideoCanvas = HTMLCanvasElement & { __nivraVideoMetrics?: () => Record<string,number|boolean> }
+
 /** One bounded decoder per visible tile; dropped/gapped streams resume at an IDR. */
 export class NativeVideoDecoder {
   private decoder:VideoDecoder|null=null
@@ -80,41 +85,44 @@ export class NativeVideoDecoder {
   private frames:{frame:VideoFrame;due:number}[]=[]
   private timer:ReturnType<typeof setTimeout>|undefined
   private latestInputTimestamp=-1
-  private primed=false
   private baseSource=0
   private baseWall=0
   private disposed=false
   private failed=false
   private failures=0
   private epoch=0
+  private metrics={inputs:0,decoded:0,drawn:0,sequenceGaps:0,backlogResets:0,decodeErrors:0,oldOutputs:0,lateOutputs:0,displayDrops:0,clockRebases:0,lastDrawnSourceMs:-1}
+  private readMetrics=()=>({...this.metrics,bufferedFrames:this.frames.length,decodeQueue:this.decoder?.decodeQueueSize ?? 0,waitingKey:this.waitingKey,failed:this.failed})
   private canvas:HTMLCanvasElement
   private drawn:(timestampMs:number)=>void
-  constructor(canvas:HTMLCanvasElement,drawn:(timestampMs:number)=>void) {this.canvas=canvas;this.drawn=drawn}
+  constructor(canvas:HTMLCanvasElement,drawn:(timestampMs:number)=>void) {this.canvas=canvas;this.drawn=drawn;(canvas as VideoCanvas).__nivraVideoMetrics=this.readMetrics}
   push(packet:NativePacket) {
     if(this.disposed || typeof VideoDecoder==='undefined' || typeof EncodedVideoChunk==='undefined') return
     const config=`${packet.videoGeneration}:${packet.codec}:${Array.from(packet.description).join(',')}:${packet.width}x${packet.height}`
     if(this.config!==config) {this.reset();this.config=config;this.lastSequence=-1;this.lastTimestamp=-1;this.failures=0;this.failed=false}
     if(this.failed)return
+    this.metrics.inputs+=packet.frames.length
     this.latestInputTimestamp=packet.frames.at(-1)!.timestampMs
     let start=0
     if(this.waitingKey) for(let i=packet.frames.length-1;i>=0;i--) if(packet.frames[i].keyframe){start=i;break}
     for(const frame of packet.frames.slice(start)) {
       if(frame.sequence<=this.lastSequence) continue
-      if((this.lastSequence>=0 && frame.sequence!==this.lastSequence+1) || frame.timestampMs<=this.lastTimestamp) this.reset()
+      if((this.lastSequence>=0 && frame.sequence!==this.lastSequence+1) || frame.timestampMs<=this.lastTimestamp) {this.metrics.sequenceGaps++;this.reset()}
       this.lastSequence=frame.sequence;this.lastTimestamp=frame.timestampMs
       if(this.waitingKey && !frame.keyframe) continue
-      if((this.decoder?.decodeQueueSize ?? 0)>=(this.primed?12:90)) {this.reset();if(!frame.keyframe)continue}
+      if((this.decoder?.decodeQueueSize ?? 0)>=MAX_ENCODED_FRAMES) {this.metrics.backlogResets++;this.reset();if(!frame.keyframe)continue}
       try {
         if(!this.decoder) {
           const epoch=++this.epoch
-          this.baseSource=this.latestInputTimestamp;this.baseWall=performance.now()+150
+          this.baseSource=this.latestInputTimestamp;this.baseWall=performance.now()+NATIVE_PLAYBACK_DELAY_MS
           this.decoder=new VideoDecoder({output:decoded=>{
+            this.metrics.decoded++
             if(this.disposed || epoch!==this.epoch) {decoded.close();return}
             const timestamp=decoded.timestamp/1000
-            if(timestamp<this.latestInputTimestamp-150){decoded.close();return}
-            const due=this.baseWall+timestamp-this.baseSource
-            if(due<performance.now()-150){decoded.close();return}
-            if(this.frames.length>=8){this.frames.shift()!.frame.close();clearTimeout(this.timer);this.timer=undefined}
+            if(timestamp<this.latestInputTimestamp-NATIVE_PLAYBACK_DELAY_MS){this.metrics.oldOutputs++;decoded.close();return}
+            let due=this.baseWall+timestamp-this.baseSource
+            if(due<performance.now()-150){this.metrics.lateOutputs++;this.rebaseClock();due=this.baseWall+timestamp-this.baseSource}
+            if(this.frames.length>=NATIVE_MAX_DECODED_FRAMES){this.metrics.displayDrops++;this.frames.shift()!.frame.close();clearTimeout(this.timer);this.timer=undefined}
             this.frames.push({frame:decoded,due});this.schedule()
           },error:()=>{if(epoch===this.epoch)this.decodeFailed()}})
           this.decoder.configure({codec:packet.codec,description:packet.description as Uint8Array<ArrayBuffer>,hardwareAcceleration:'prefer-hardware',optimizeForLatency:true})
@@ -123,6 +131,16 @@ export class NativeVideoDecoder {
         this.decoder.decode(new EncodedVideoChunk({type:frame.keyframe?'key':'delta',timestamp:Math.round(frame.timestampMs*1000),data:frame.data as Uint8Array<ArrayBuffer>}))
       } catch {this.decodeFailed();return}
     }
+  }
+  private rebaseClock() {
+    this.metrics.clockRebases++
+    this.baseSource=this.latestInputTimestamp;this.baseWall=performance.now()+NATIVE_PLAYBACK_DELAY_MS
+    clearTimeout(this.timer);this.timer=undefined
+    this.frames=this.frames.filter(item=>{
+      const source=item.frame.timestamp/1000
+      if(source<this.latestInputTimestamp-NATIVE_PLAYBACK_DELAY_MS){item.frame.close();return false}
+      item.due=this.baseWall+source-this.baseSource;return true
+    })
   }
   private schedule() {
     if(this.timer!==undefined || !this.frames.length) return
@@ -134,18 +152,18 @@ export class NativeVideoDecoder {
         if(this.canvas.width!==next.frame.displayWidth)this.canvas.width=next.frame.displayWidth
         if(this.canvas.height!==next.frame.displayHeight)this.canvas.height=next.frame.displayHeight
         const context=this.canvas.getContext('2d')
-        if(context){context.drawImage(next.frame,0,0);this.primed=true;this.failures=0;this.drawn(next.frame.timestamp/1000)}
+        if(context){context.drawImage(next.frame,0,0);this.metrics.drawn++;this.metrics.lastDrawnSourceMs=next.frame.timestamp/1000;this.failures=0;this.drawn(next.frame.timestamp/1000)}
       } catch {this.decodeFailed()} finally {next.frame.close()}
       this.schedule()
     },Math.max(0,this.frames[0].due-performance.now()))
   }
-  private decodeFailed(){this.reset();this.failures++;this.failed=this.failures>=3}
+  private decodeFailed(){this.metrics.decodeErrors++;this.reset();this.failures++;this.failed=this.failures>=3}
   reset() {
     this.epoch++;clearTimeout(this.timer);this.timer=undefined
     for(const item of this.frames)item.frame.close()
-    this.frames=[];this.baseWall=0;this.primed=false;this.waitingKey=true
+    this.frames=[];this.baseWall=0;this.waitingKey=true
     try {this.decoder?.close()} catch { /* Decoder can already be closed after an error. */ }
     this.decoder=null
   }
-  dispose(){this.disposed=true;this.reset()}
+  dispose(){this.disposed=true;this.reset();if((this.canvas as VideoCanvas).__nivraVideoMetrics===this.readMetrics)delete (this.canvas as VideoCanvas).__nivraVideoMetrics}
 }

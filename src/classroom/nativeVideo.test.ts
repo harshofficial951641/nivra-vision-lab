@@ -69,14 +69,14 @@ function decoderHarness() {
   vi.stubGlobal('VideoDecoder',FakeDecoder);vi.stubGlobal('EncodedVideoChunk',Chunk)
   const drawImage=vi.fn(),canvas={width:0,height:0,getContext:()=>({drawImage})} as unknown as HTMLCanvasElement
   const drawn=vi.fn(),decoder=new NativeVideoDecoder(canvas,drawn)
-  return {decoder,decoders,outputs,drawImage,drawn}
+  return {decoder,decoders,outputs,drawImage,drawn,canvas}
 }
 describe('bounded native playback',()=>{
-  it('draws real decoded frames after150ms and closes each frame, without interpolation',async()=>{
+  it('draws real decoded frames after the bounded playout delay and closes each frame, without interpolation',async()=>{
     vi.useFakeTimers()
     const h=decoderHarness();h.decoder.push(packet(3))
     expect(h.drawImage).not.toHaveBeenCalled()
-    await vi.advanceTimersByTimeAsync(99);expect(h.drawImage).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(699);expect(h.drawImage).not.toHaveBeenCalled()
     await vi.advanceTimersByTimeAsync(52)
     expect(h.drawImage).toHaveBeenCalledTimes(3)
     expect(h.drawn.mock.calls.map(call=>call[0])).toEqual([100,125,150])
@@ -100,8 +100,8 @@ describe('bounded native playback',()=>{
     vi.useFakeTimers()
     const h=decoderHarness();h.decoder.push(packet(90))
     expect(h.decoders[0].decode).toHaveBeenCalledTimes(90)
-    expect(h.outputs.filter(frame=>frame.close.mock.calls.length===0).length).toBeLessThanOrEqual(8)
-    await vi.advanceTimersByTimeAsync(151)
+    expect(h.outputs.filter(frame=>frame.close.mock.calls.length===0).length).toBeLessThanOrEqual(40)
+    await vi.advanceTimersByTimeAsync(751)
     expect(h.drawn).toHaveBeenLastCalledWith(2325)
     expect(h.drawn.mock.calls.length).toBeGreaterThan(0)
     h.decoder.dispose()
@@ -111,8 +111,8 @@ describe('bounded native playback',()=>{
   it('bounds sustained decode backlog after playback starts and recovers only on a new keyframe',async()=>{
     vi.useFakeTimers()
     const h=decoderHarness();h.decoder.push(packet())
-    await vi.advanceTimersByTimeAsync(151)
-    h.decoders[0].decodeQueueSize=12
+    await vi.advanceTimersByTimeAsync(751)
+    h.decoders[0].decodeQueueSize=90
     const frame=packet().frames[0]
     h.decoder.push({...packet(),frames:[{...frame,sequence:1,timestampMs:125,keyframe:false}]})
     expect(h.decoders[0].close).toHaveBeenCalledOnce()
@@ -135,6 +135,42 @@ describe('bounded native playback',()=>{
     expect(h.decoders).toHaveLength(3)
     h.decoder.push({...base,videoGeneration:'fresh-encoder'})
     expect(h.decoders).toHaveLength(4)
+    h.decoder.dispose()
+    expect(h.outputs.every(frame=>frame.close.mock.calls.length===1)).toBe(true)
+  })
+
+  it('plays40fps source observations through600ms network bursts without decoder starvation',async()=>{
+    vi.useFakeTimers()
+    const h=decoderHarness(),base=packet(),source=base.frames[0]
+    const send=(from:number,to:number)=>h.decoder.push({...base,frames:Array.from({length:to-from},(_,i)=>{const sequence=from+i;return {...source,sequence,timestampMs:100+sequence*25,keyframe:sequence%40===0}})})
+    send(0,1)
+    let elapsed=0,sequence=1
+    for(const interval of [100,100,600,100,300,600,100,100,600,100,300,600]){
+      elapsed+=interval
+      await vi.advanceTimersByTimeAsync(interval)
+      const next=Math.floor(elapsed/25)+1
+      send(sequence,next);sequence=next
+    }
+    await vi.advanceTimersByTimeAsync(751)
+    expect(h.decoders).toHaveLength(1)
+    expect(h.drawn).toHaveBeenCalledTimes(sequence)
+    expect(h.drawn.mock.calls.map(call=>call[0])).toEqual(Array.from({length:sequence},(_,i)=>100+i*25))
+    h.decoder.dispose()
+    expect(h.outputs.every(frame=>frame.close.mock.calls.length===1)).toBe(true)
+  })
+
+  it('re-anchors presentation after a persistent network delay shift without losing the valid codec chain',async()=>{
+    vi.useFakeTimers()
+    const h=decoderHarness();h.decoder.push(packet())
+    await vi.advanceTimersByTimeAsync(751)
+    await vi.advanceTimersByTimeAsync(1500)
+    const delayed=packet(62)
+    h.decoder.push({...delayed,frames:delayed.frames.slice(1)})
+    await vi.advanceTimersByTimeAsync(751)
+    expect(h.decoders).toHaveLength(1)
+    expect(h.drawn).toHaveBeenLastCalledWith(1625)
+    const read=(h.canvas as HTMLCanvasElement & {__nivraVideoMetrics:()=>Record<string,number>}).__nivraVideoMetrics
+    expect(read().clockRebases).toBe(1)
     h.decoder.dispose()
     expect(h.outputs.every(frame=>frame.close.mock.calls.length===1)).toBe(true)
   })

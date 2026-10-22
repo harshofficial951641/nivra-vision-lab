@@ -3,9 +3,21 @@ import AVFoundation
 import CoreImage
 import ImageIO
 
+/// Capture intent survives temporary interruptions, but never an explicit stop.
+struct NativeCaptureIntent {
+    var requested = false
+    var foreground = true
+    var interrupted = false
+    var workGeneration = UUID()
+    var paused = false
+    var mayResume: Bool { requested && foreground && !interrupted }
+    var shouldCapture: Bool { mayResume && !paused }
+}
+
 final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutputSampleBufferDelegate {
     @Published private(set) var running = false
     @Published private(set) var starting = false
+    @Published private(set) var paused = false
     @Published private(set) var code = ""
     @Published private(set) var message = "Join the same Wi-Fi router as your Mac. Internet is not needed for video."
     @Published private(set) var lastMacPull: Date?
@@ -34,23 +46,41 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
     private var captureKey = "" // Accessed only on the capture queue.
     private var generation = UUID() // Accessed only on the main queue.
     private var interrupted: NSObjectProtocol?
+    private var interruptionEnded: NSObjectProtocol?
+    private let intentLock = NSLock()
+    private var intent = NativeCaptureIntent()
+    private var resumeQueued = false
+    private func currentIntent() -> NativeCaptureIntent { intentLock.lock(); defer { intentLock.unlock() }; return intent }
+    private func updateIntent(_ change: (inout NativeCaptureIntent) -> Void) { intentLock.lock(); change(&intent); intentLock.unlock() }
 
     override init() {
         super.init()
         interrupted = NotificationCenter.default.addObserver(forName: .AVCaptureSessionWasInterrupted, object: capture, queue: .main) { [weak self] _ in
-            guard let self, self.running || self.starting else { return }
-            self.stop(message: "Camera paused. Tap Start camera to resume.")
+            guard let self, self.currentIntent().requested else { return }
+            self.updateIntent { $0.interrupted = true }
+            self.pauseCapture(message: "Camera interrupted. It will resume when available.")
+        }
+        interruptionEnded = NotificationCenter.default.addObserver(forName: .AVCaptureSessionInterruptionEnded, object: capture, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            self.updateIntent { $0.interrupted = false }
+            self.resumeIfAllowed()
         }
     }
     func start(name: String, pairing: LocalMacPairing? = nil) {
         guard !running, !starting else { return }
+        if currentIntent().requested, !code.isEmpty {
+            if let pairing { macPairing = pairing }
+            resumeIfAllowed()
+            return
+        }
+        updateIntent { $0.requested = true; $0.paused = false; $0.workGeneration = UUID() }
         generation = UUID(); let generation = generation
         macPairing = pairing; macConnection = pairing == nil ? "" : "Connecting to Mac…"
         macConnectionFailed = false; macNeedsSettings = false
-        starting = true; message = "Starting camera…"
+        starting = true; paused = false; message = "Starting camera…"
         AVCaptureDevice.requestAccess(for: .video) { [weak self] allowed in
             DispatchQueue.main.async {
-                guard let self, self.generation == generation, self.starting else { return }
+                guard let self, self.generation == generation, self.currentIntent().requested else { return }
                 guard allowed else { self.stop(message: "Allow camera access in Settings, then tap Start camera."); return }
                 do {
                     let clean = String(name.components(separatedBy: .controlCharacters).joined().prefix(60))
@@ -58,8 +88,9 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
                     self.code = key; self.lastMacPull = nil
                     self.server.onReady = { [weak self] in
                         DispatchQueue.main.async {
-                            guard let self, self.generation == generation, self.store.active(key) else { return }
-                            self.starting = false; self.running = true
+                            guard let self, self.generation == generation, self.store.active(key), self.currentIntent().shouldCapture, self.capture.isRunning else { return }
+                            self.resumeQueued = false
+                            self.starting = false; self.running = true; self.paused = false
                             self.message = "Waiting for your Mac"
                             UIApplication.shared.isIdleTimerDisabled = true
                             if self.macPairing != nil { self.connectToMac() }
@@ -67,8 +98,8 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
                     }
                     self.server.onFailure = { [weak self] in
                         DispatchQueue.main.async {
-                            guard let self, self.generation == generation else { return }
-                            self.stop(message: "Local connection could not start. Tap Start camera to retry.")
+                            guard let self, self.generation == generation, self.currentIntent().requested else { return }
+                            self.pauseCapture(message: "Local connection paused. Tap Resume camera to reconnect.")
                         }
                     }
                     self.server.onPull = { [weak self] date in
@@ -77,34 +108,78 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
                             self.lastMacPull = date
                         }
                     }
-                    self.queue.async { [weak self] in
-                        guard let self, self.store.active(key) else { return }
-                        do {
-                            try self.configure()
-                            guard self.store.active(key) else { return }
-                            self.captureKey = key; self.pacing = LocalFramePacer(fps: 5)
-                            self.lastPeopleTimestamp = -Double.infinity
-                            self.encoder.reset(session: key)
-                            self.analysisStore.reset(session: key)
-                            self.peopleVision?.dispose()
-                            self.peopleVision = NativePeopleVision(callbackQueue: self.queue)
-                            self.fightVision?.stop()
-                            self.fightVision = NativeFightVision(callbackQueue: self.queue,
-                                onReport: { [weak self] report in self?.analysisStore.put(report, session: key) },
-                                onStatus: { [weak self] status in self?.analysisStore.status(status, session: key) })
-                            self.fightVision?.start(session: key)
-                            self.capture.startRunning()
-                            guard self.capture.isRunning else { throw NSError(domain: "NIVRAUSB", code: 2) }
-                            self.server.start(session: key)
-                        } catch {
-                            DispatchQueue.main.async {
-                                guard self.generation == generation else { return }
-                                self.stop(message: "Camera could not start. Tap Start camera to retry.")
-                            }
-                        }
-                    }
+                    self.resumeIfAllowed()
                 } catch { self.stop(message: "Could not create a connection code. Tap Start camera to retry.") }
             }
+        }
+    }
+    func setForeground(_ active: Bool) {
+        updateIntent { $0.foreground = active }
+        if active {
+            if !capture.isInterrupted { updateIntent { $0.interrupted = false } }
+            resumeIfAllowed()
+        } else if currentIntent().requested {
+            pauseCapture(message: "Camera paused. Return to NIVRA to resume.")
+        }
+    }
+    func resumeIfAllowed() {
+        guard currentIntent().mayResume, !code.isEmpty, !running, !resumeQueued else { return }
+        resumeQueued = true
+        updateIntent { $0.paused = false; $0.workGeneration = UUID() }
+        let revision = currentIntent().workGeneration
+        let key = code, generation = generation
+        starting = true; paused = false; message = "Resuming camera…"
+        queue.async { [weak self] in
+            guard let self, self.store.active(key), self.currentIntent().shouldCapture, self.currentIntent().workGeneration == revision else { return }
+            do {
+                try self.configure()
+                guard self.store.active(key), self.currentIntent().shouldCapture else { return }
+                self.captureKey = key; self.pacing = LocalFramePacer(fps: 5)
+                self.lastPeopleTimestamp = -Double.infinity
+                self.encoder.reset(session: key)
+                self.analysisStore.reset(session: key)
+                self.peopleVision?.dispose()
+                self.peopleVision = NativePeopleVision(callbackQueue: self.queue)
+                self.fightVision?.stop()
+                self.fightVision = NativeFightVision(callbackQueue: self.queue,
+                    onReport: { [weak self] report in
+                        guard let self, self.currentIntent().shouldCapture, self.currentIntent().workGeneration == revision else { return }
+                        self.analysisStore.put(report, session: key)
+                    },
+                    onStatus: { [weak self] status in
+                        guard let self, self.currentIntent().shouldCapture, self.currentIntent().workGeneration == revision else { return }
+                        self.analysisStore.status(status, session: key)
+                    })
+                self.fightVision?.start(session: key)
+                guard self.currentIntent().shouldCapture, self.currentIntent().workGeneration == revision else { return }
+                if !self.capture.isRunning { self.capture.startRunning() }
+                guard self.capture.isRunning else { throw NSError(domain: "NIVRAUSB", code: 2) }
+                self.server.start(session: key)
+            } catch {
+                DispatchQueue.main.async {
+                    guard self.generation == generation, self.currentIntent().requested else { return }
+                    self.pauseCapture(message: "Camera paused. Tap Resume camera to try again.")
+                }
+            }
+        }
+    }
+    private func pauseCapture(message: String) {
+        updateIntent { $0.paused = true; $0.workGeneration = UUID() }
+        resumeQueued = false
+        pairingTask?.cancel(); pairingTask = nil
+        running = false; starting = false; paused = true; self.message = message; lastMacPull = nil
+        UIApplication.shared.isIdleTimerDisabled = false
+        let key = code
+        // Keep listener, code, and session in RAM. Clear completed detections now.
+        if !key.isEmpty { analysisStore.reset(session: key) }
+        queue.async { [weak self] in
+            guard let self, self.store.active(key) else { return }
+            self.captureKey = ""
+            self.encoder.reset(session: key)
+            self.fightVision?.stop(); self.peopleVision?.dispose()
+            self.analysisStore.reset(session: key)
+            self.peopleVision = nil
+            if self.capture.isRunning { self.capture.stopRunning() }
         }
     }
     private func configure() throws {
@@ -158,15 +233,17 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
     }
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         let now = ProcessInfo.processInfo.systemUptime
-        guard store.active(captureKey), let buffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        guard currentIntent().shouldCapture, store.active(captureKey), let buffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         let pts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000
         guard pts.isFinite, pts >= 0 else { return }
         let session = captureKey
+        let revision = currentIntent().workGeneration
         encoder.append(sampleBuffer, session: session)
         fightVision?.append(sampleBuffer, session: session)
         if pts-lastPeopleTimestamp >= 200, let peopleVision,
            peopleVision.submit(buffer, timestampMs: pts, completion: { [weak self] result in
-               if case .success(let report) = result { self?.analysisStore.put(report, session: session) }
+               guard let self, self.currentIntent().shouldCapture, self.currentIntent().workGeneration == revision else { return }
+               if case .success(let report) = result { self.analysisStore.put(report, session: session) }
            }) { lastPeopleTimestamp = pts }
         // JPEGs remain a low-rate review and browser-compatibility fallback.
         guard pacing.admit(now) else { return }
@@ -207,10 +284,12 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
         }
     }
     func stop(message: String = "Camera stopped. Tap Start camera when you are ready.") {
+        updateIntent { $0.requested = false; $0.workGeneration = UUID() }
+        resumeQueued = false
         generation = UUID(); pairingTask?.cancel(); pairingTask = nil; macPairing = nil
         macConnection = ""; macConnectionFailed = false; macNeedsSettings = false
         store.stop(); server.stop(); analysisStore.stop(); videoStore.stop()
-        running = false; starting = false; code = ""; lastMacPull = nil; self.message = message
+        running = false; starting = false; paused = false; code = ""; lastMacPull = nil; self.message = message
         UIApplication.shared.isIdleTimerDisabled = false
         queue.async { [weak self] in
             guard let self else { return }
@@ -220,5 +299,5 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
             if self.capture.isRunning { self.capture.stopRunning() }
         }
     }
-    deinit { pairingTask?.cancel(); if let interrupted { NotificationCenter.default.removeObserver(interrupted) }; server.stop(); store.stop() }
+    deinit { pairingTask?.cancel(); if let interrupted { NotificationCenter.default.removeObserver(interrupted) }; if let interruptionEnded { NotificationCenter.default.removeObserver(interruptionEnded) }; server.stop(); store.stop() }
 }

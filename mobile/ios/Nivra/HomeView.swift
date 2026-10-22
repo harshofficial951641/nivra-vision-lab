@@ -100,7 +100,7 @@ struct HomeView: View {
         .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { if let url = $0.webpageURL { accept(url.absoluteString) } }
         .onChange(of: phase) { _, next in
             if next == .background { UIApplication.shared.isIdleTimerDisabled = false; session.pause() }
-            if next == .active { UIApplication.shared.isIdleTimerDisabled = role != nil; session.resume() }
+            if next == .active { UIApplication.shared.isIdleTimerDisabled = role != nil || usbCamera; session.resume() }
         }
     }
     private func accept(_ text: String) {

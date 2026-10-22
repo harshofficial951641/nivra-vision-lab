@@ -32,6 +32,12 @@ struct NativeFightFrame {
 /// The same trained X3D candidate as the Mac, without decisions or fabricated actors.
 /// One worker retains at most one incoming pixel buffer. Capture never waits for inference.
 final class NativeFightVision {
+    // Source timestamps are floating-point milliseconds. Tolerate only rounding
+    // at cadence/window boundaries, never a meaningfully shorter video window.
+    static let timestampToleranceMs = 0.001
+    static func intervalElapsed(_ timestamp: Double, since previous: Double, minimum: Double) -> Bool {
+        timestamp - previous + timestampToleranceMs >= minimum
+    }
     private static let colorContext = CIContext(options: [.cacheIntermediates: false])
     typealias Scores = (modelScore: Double, publisherScore: Double)
     typealias Predictor = (MLMultiArray) throws -> Scores
@@ -104,7 +110,7 @@ final class NativeFightVision {
         guard timestamp.isFinite, timestamp >= 0 else { return false }
         lock.lock()
         guard self.session == session, ready, !busy, timestamp > lastAdmitted,
-              timestamp-lastAdmitted >= 200 else { lock.unlock(); return false }
+              Self.intervalElapsed(timestamp, since: lastAdmitted, minimum: 200) else { lock.unlock(); return false }
         let epoch = generation
         busy = true; lastAdmitted = timestamp
         lock.unlock()
@@ -119,10 +125,10 @@ final class NativeFightVision {
             do {
                 try autoreleasepool {
                     let rgb = try Self.rgb224(buffer)
-                    self.frames.removeAll { timestamp-$0.timestampMs > 4500 }
+                    self.frames.removeAll { timestamp-$0.timestampMs > 4500 + Self.timestampToleranceMs }
                     self.frames.append(NativeFightFrame(timestampMs: timestamp, rgb: rgb))
                     if self.frames.count > 24 { self.frames.removeFirst(self.frames.count-24) }
-                    guard timestamp-self.lastPrediction >= 400,
+                    guard Self.intervalElapsed(timestamp, since: self.lastPrediction, minimum: 400),
                           let window = Self.window(self.frames), let predict = self.predictor else { return }
                     self.lastPrediction = timestamp
                     let input = try Self.tensor(window.map(\.rgb))
@@ -184,8 +190,8 @@ final class NativeFightVision {
     /// Source-time nearest sampling matches the Mac's 16-frame temporal input.
     static func window(_ source: [NativeFightFrame]) -> [NativeFightFrame]? {
         guard let end = source.last?.timestampMs else { return nil }
-        let values = source.filter { $0.timestampMs.isFinite && $0.timestampMs >= 0 && end-$0.timestampMs <= 4000 && end >= $0.timestampMs }
-        guard let first = values.first, values.count >= 8, end-first.timestampMs >= 3800 else { return nil }
+        let values = source.filter { $0.timestampMs.isFinite && $0.timestampMs >= 0 && end-$0.timestampMs <= 4000 + timestampToleranceMs && end >= $0.timestampMs }
+        guard let first = values.first, values.count >= 8, intervalElapsed(end, since: first.timestampMs, minimum: 3800) else { return nil }
         let selected = (0..<16).map { index in
             let target = first.timestampMs+(end-first.timestampMs)*Double(index)/15
             return values.min { abs($0.timestampMs-target) < abs($1.timestampMs-target) }!

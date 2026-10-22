@@ -62,6 +62,20 @@ def test_fight_requires_same_model_real_window_and_bounded_scores(change):
     with pytest.raises(ValueError): NativeAnalysis.model_validate(data)
 
 
+@pytest.mark.parametrize('duration',[3799.999999999999,4500.000000000001])
+def test_fight_window_accepts_source_timestamp_roundoff(duration):
+    data=report()
+    data['fight']['windowStartMs']=data['fight']['windowEndMs']-duration
+    assert NativeAnalysis.model_validate(data).fight is not None
+
+
+@pytest.mark.parametrize('duration',[3799.99,4500.01])
+def test_fight_window_still_rejects_outside_roundoff_tolerance(duration):
+    data=report()
+    data['fight']['windowStartMs']=data['fight']['windowEndMs']-duration
+    with pytest.raises(ValueError): NativeAnalysis.model_validate(data)
+
+
 def test_native_phone_reports_do_not_load_or_call_mac_models_and_deduplicate_alerts(tmp_path):
     def forbidden(*_): raise AssertionError('Native phone must not run Mac models')
     app=create_app(database=tmp_path/'db',model_factory=forbidden,pipeline_factory=forbidden,relay_only=True)
