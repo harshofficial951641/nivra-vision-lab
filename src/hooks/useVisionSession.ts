@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from 'react'
 import { cameraReducer, initialCameraState } from '../lib/cameraState'
-import { ConflictEngine, EMPTY_CONFLICT, type ConflictSensitivity, type ConflictSnapshot } from '../lib/conflictEngine'
+import { ConflictEngine, EMPTY_CONFLICT, type ConflictSensitivity, type ConflictSnapshot } from '../lib/originalConflictEngine'
 import { drawDemoScene, demoFrame, DEMO_SIZE, type DemoScenario } from '../lib/demoScene'
 import { clearVisionOverlay, drawVisionOverlay } from '../lib/drawVision'
 import { inferenceSize } from '../lib/inferenceSize'

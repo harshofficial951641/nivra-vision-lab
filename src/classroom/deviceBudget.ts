@@ -1,5 +1,5 @@
 export type AnalysisArea = 'full' | 'left' | 'center' | 'right'
-export type DeviceProfile = 'balanced' | 'detail'
+export type DeviceProfile = 'original' | 'balanced' | 'detail'
 export const analysisRegion = (area: AnalysisArea) => area === 'full'
   ? { x: 0, y: 0, width: 1, height: 1 }
   : { x: area === 'left' ? 0 : area === 'center' ? .25 : .5, y: 0, width: .5, height: 1 }

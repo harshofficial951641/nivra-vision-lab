@@ -255,7 +255,7 @@ export default function Publisher() {
                   setObservation(result)
                 }
               },
-              area, 'balanced',
+              area, 'original',
               (result) => {
                 if (current !== generation.current || socket.current !== peer) return
                 motionQueue.push(result)
@@ -383,8 +383,8 @@ export default function Publisher() {
         <details className="nv-camera-details">
           <summary>Detection details</summary>
           <section aria-label="Device fight detection">
-            <p>{analysis?.detail || 'Detection starts with the camera.'}</p>
-            <p>{motionStatus?.detail || 'Fast motion check starts automatically.'}</p>
+            <p>{analysis?.detail || 'Skeleton detection starts with the camera. Up to 4 skeletons per view.'}</p>
+            <p>Shows up to 4 skeletons per view. Keep people and their arms visible.</p>
             {observation && <p>{observation.conflict.explanation} · {Math.round(observation.inferenceMs)} ms</p>}
             {motion && <p>{motion.conflict.explanation} · {Math.round(motion.inferenceMs)} ms</p>}
             <p>{sent} preview frames sent. Motion checks flag possible conflicts for a person to review. Hidden people and fast movements can be missed.</p>

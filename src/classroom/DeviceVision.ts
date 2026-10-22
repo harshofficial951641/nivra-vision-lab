@@ -1,3 +1,4 @@
+import { ConflictEngine as OriginalConflictEngine } from '../lib/originalConflictEngine'
 import { inferenceSize } from '../lib/inferenceSize'
 import type { PoseLandmarks, VisionDelegate, VisionWorkerResponse } from '../types/vision'
 import { DeviceAnalysis, DEVICE_POSE_LIMIT, type DeviceResult, type DeviceMotion, type DeviceStatus } from './deviceAnalysis'
@@ -9,6 +10,7 @@ const RETRY_DELAYS = [500, 1500, 3000] as const
 /** Fresh pose frames use bounded proposal refreshes without queuing camera frames. */
 export class DeviceVision {
   private motion: OriginalMotion | null = null
+  private originalOnly = false
   private worker: Worker | null = null
   private people: PeopleVision | null = null
   private analysis = new DeviceAnalysis()
@@ -34,8 +36,13 @@ export class DeviceVision {
     this.onStatus = onStatus
     this.onResult = onResult
     this.area = area
-    if (onMotion) this.motion = new OriginalMotion(onMotion, area, onMotionStatus)
-    void profile // Both profiles retain source detail for small person proposals.
+    this.originalOnly = profile === 'original'
+    if (this.originalOnly) {
+      this.motion = new OriginalMotion(result => {
+        this.budget.observe(result.inferenceMs)
+        this.onResult({ ...result, type: 'device-result' })
+      }, area, onStatus)
+    } else if (onMotion) this.motion = new OriginalMotion(onMotion, area, onMotionStatus)
   }
 
   start(preferred: VisionDelegate = 'GPU') {
@@ -44,7 +51,7 @@ export class DeviceVision {
     if (this.retryTimer) clearTimeout(this.retryTimer)
     this.retryTimer = null
     if (this.motion) { this.motion.start(preferred); preferred = 'CPU' }
-    this.initialize(preferred)
+    if (!this.originalOnly) this.initialize(preferred)
   }
 
   private initialize(preferred: VisionDelegate) {
@@ -144,6 +151,7 @@ export class DeviceVision {
 
   async capture(video: HTMLVideoElement, timestamp: number) {
     void this.motion?.capture(video, timestamp)
+    if (this.originalOnly) return
     if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < 50 || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return
     this.busy = true
     this.lastCapture = timestamp
@@ -240,8 +248,9 @@ class OriginalMotion {
   private disposed = false
   private epoch = 0
   private lastCapture = -Infinity
+  private lastMediaTime = -Infinity
   private delegate: VisionDelegate = 'GPU'
-  private analysis = new DeviceAnalysis()
+  private analysis = new DeviceAnalysis(new OriginalConflictEngine())
   private pending: { timestamp: number; aspect: number; startedAt: number } | null = null
   private timer: ReturnType<typeof setTimeout> | null = null
   private retryTimer: ReturnType<typeof setTimeout> | null = null
@@ -267,7 +276,8 @@ class OriginalMotion {
     this.worker?.terminate()
     if (this.timer) clearTimeout(this.timer)
     this.ready = false; this.busy = false; this.pending = null
-    this.analysis = new DeviceAnalysis()
+    this.lastMediaTime = -Infinity
+    this.analysis = new DeviceAnalysis(new OriginalConflictEngine())
     const fail = () => {
       if (this.disposed || epoch !== this.epoch) return
       if (preferred === 'GPU') this.initialize('CPU')
@@ -305,6 +315,8 @@ class OriginalMotion {
 
   async capture(video: HTMLVideoElement, timestamp: number) {
     if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < 50 || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return
+    if (Number.isFinite(video.currentTime) && video.currentTime === this.lastMediaTime) return
+    this.lastMediaTime = video.currentTime
     this.busy = true; this.lastCapture = timestamp
     const epoch = this.epoch, startedAt = performance.now(), region = analysisRegion(this.area)
     const width = Math.max(1, Math.round(video.videoWidth * region.width))

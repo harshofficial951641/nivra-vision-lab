@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DeviceVision } from './DeviceVision'
+import { demoFrame } from '../lib/demoScene'
 
 class WorkerStub {
   static all: WorkerStub[] = []
@@ -264,5 +265,50 @@ describe('bounded model recovery', () => {
     expect(WorkerStub.all).toHaveLength(3)
     expect(status).toHaveBeenCalledTimes(calls)
     expect(motionStatus).toHaveBeenCalledTimes(motionCalls)
+  })
+})
+
+
+describe('published browser skeleton profile', () => {
+  it('starts one Full VIDEO worker and emits the observed skeletons without waiting for another detector', async () => {
+    vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue(bitmap()))
+    const result = vi.fn(), status = vi.fn()
+    const device = new DeviceVision(status, result, 'full', 'original')
+    device.start()
+    expect(WorkerStub.all).toHaveLength(1)
+    expect(WorkerStub.all[0].postMessage).toHaveBeenCalledWith(expect.objectContaining({
+      modelPath: expect.stringContaining('pose_landmarker_full.task'),
+      maxPoses: 4, poseConfidence: .5, personProposalPose: false, portraitMultiPerson: false,
+    }))
+    WorkerStub.all[0].emit({ type: 'ready', delegate: 'GPU' })
+    const source = { ...video, currentTime: 1 } as HTMLVideoElement
+    await device.capture(source, 100)
+    WorkerStub.all[0].emit({ type: 'pose-result', timestampMs: 100, poses: demoFrame(0, 'conflict').poses, inferenceMs: 20 })
+    expect(result).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({
+      type: 'device-result', observedPeople: 2, usablePeople: 2,
+      poses: expect.arrayContaining([expect.arrayContaining([expect.any(Array)])]),
+      events: [],
+    }))
+    expect(result.mock.calls[0][0].poses[0]).toHaveLength(33)
+    await device.capture(source, 200)
+    expect(WorkerStub.all[0].postMessage).toHaveBeenCalledTimes(2)
+    source.currentTime = 2
+    await device.capture(source, 300)
+    expect(WorkerStub.all[0].postMessage).toHaveBeenCalledTimes(3)
+    device.dispose()
+    expect(WorkerStub.all[0].terminate).toHaveBeenCalledOnce()
+  })
+
+  it('falls back to one CPU worker when the original GPU pipeline stalls', async () => {
+    vi.stubGlobal('createImageBitmap', vi.fn().mockResolvedValue(bitmap()))
+    const device = new DeviceVision(vi.fn(), vi.fn(), 'full', 'original')
+    device.start()
+    WorkerStub.all[0].emit({ type: 'ready', delegate: 'GPU' })
+    await device.capture(video, 100)
+    await vi.advanceTimersByTimeAsync(5001)
+    expect(WorkerStub.all).toHaveLength(2)
+    expect(WorkerStub.all[0].terminate).toHaveBeenCalledOnce()
+    expect(WorkerStub.all[1].postMessage).toHaveBeenCalledWith(expect.objectContaining({ poseDelegate: 'CPU', maxPoses: 4, personProposalPose: false }))
+    device.dispose()
   })
 })

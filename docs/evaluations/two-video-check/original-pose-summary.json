@@ -1,0 +1,131 @@
+{
+  "method": "Fresh MediaPipe Full VIDEO CPU, max4, confidence0.5, full-frame JPEG up to960px, >=50ms unique source admission; identical actual landmark arrays into both engines",
+  "engines": {
+    "original": "src/lib/originalConflictEngine.ts; published baseline + read-only observedTracks adapter; default standard sensitivity",
+    "current": "src/lib/conflictEngine.ts; default constructor, not DeviceAnalysis custom parameters"
+  },
+  "sourceHashes": {
+    "src/lib/originalConflictEngine.ts": "f9e6fe3ab3ba55c8de401118d0f66c392cee7f6ffbf2cc1b6e301f6ac4b863d7",
+    "src/lib/conflictEngine.ts": "4ba27b74988c9455946522c127c36f0649664a1e2094b74e2d3b8b7378789d2a",
+    "src/workers/vision.worker.ts": "cf293e907f8b0602e3afcf9c8b83a0e118d1846edd2a06b44da114dc939c5381",
+    "public/models/pose_landmarker_full.task": "5134a3aad27a58b93da0088d431f366da362b44e3ccfbe3462b3827a839011b1",
+    "test-results/pose-two-clip/frames.json": "77afa42bca27d76def1ce9f6519d48fd21e9738d53ffb3a8e8577a690279155e"
+  },
+  "runs": [
+    {
+      "clip": "F07",
+      "delegate": "CPU",
+      "uniqueFrames": 75,
+      "sourceStartMs": 0,
+      "sourceEndMs": 4933.333333333334,
+      "minimumSourceIntervalMs": 50,
+      "sourceWidth": 1920,
+      "sourceHeight": 1080,
+      "poseCountDistribution": {
+        "0": 49,
+        "1": 24,
+        "2": 2
+      },
+      "framesWithAtLeastTwoPoses": 2,
+      "inferenceMs": {
+        "mean": 74.27313333332539,
+        "median": 81.06000000238419,
+        "min": 24.929999999701977,
+        "max": 325.3699999973178
+      },
+      "wallElapsedMs": 6754.609999999404,
+      "engines": {
+        "original": {
+          "uniqueAlerts": 0,
+          "firstAlertSourceMs": null,
+          "usablePeopleDistribution": {
+            "0": 49,
+            "1": 24,
+            "2": 2
+          },
+          "diagnosticReasons": {
+            "no-poses": 49,
+            "single-person": 24,
+            "arms-hidden": 2
+          }
+        },
+        "current": {
+          "uniqueAlerts": 0,
+          "firstAlertSourceMs": null,
+          "usablePeopleDistribution": {
+            "0": 49,
+            "1": 24,
+            "2": 2
+          },
+          "diagnosticReasons": {
+            "no-poses": 49,
+            "single-person": 24,
+            "arms-hidden": 2
+          }
+        }
+      },
+      "selectedPrivateFramesAndTimestampsSHA256": "65eb5266b2074a1a8a7cc26852f7355e1ac25aabcd353ccd3789e1d5e8ced233"
+    },
+    {
+      "clip": "C01",
+      "delegate": "CPU",
+      "uniqueFrames": 75,
+      "sourceStartMs": 0,
+      "sourceEndMs": 4932.666666666667,
+      "minimumSourceIntervalMs": 50,
+      "sourceWidth": 900,
+      "sourceHeight": 720,
+      "poseCountDistribution": {
+        "0": 12,
+        "1": 58,
+        "2": 5
+      },
+      "framesWithAtLeastTwoPoses": 5,
+      "inferenceMs": {
+        "mean": 88.21193333347638,
+        "median": 85.29500000178814,
+        "min": 26.92500000447035,
+        "max": 248.51500000059605
+      },
+      "wallElapsedMs": 7759.75,
+      "engines": {
+        "original": {
+          "uniqueAlerts": 0,
+          "firstAlertSourceMs": null,
+          "usablePeopleDistribution": {
+            "0": 12,
+            "1": 59,
+            "2": 4
+          },
+          "diagnosticReasons": {
+            "no-poses": 12,
+            "single-person": 59,
+            "too-far": 4
+          }
+        },
+        "current": {
+          "uniqueAlerts": 0,
+          "firstAlertSourceMs": null,
+          "usablePeopleDistribution": {
+            "0": 12,
+            "1": 59,
+            "2": 4
+          },
+          "diagnosticReasons": {
+            "no-poses": 12,
+            "single-person": 59,
+            "too-far": 4
+          }
+        }
+      },
+      "selectedPrivateFramesAndTimestampsSHA256": "1053128786fc3304c9b97c4c2c13ac7f822945538914763e72dff9f7b96b6d82"
+    }
+  ],
+  "limitations": [
+    "two predeclared clips only, not an accuracy benchmark",
+    "headless CPU offline replay, not live phone or transport",
+    "serial inference does not simulate capture busy drops",
+    "JPEG intermediate; no object model/crowd/ROI path",
+    "raw landmarks and frames remain private ignored local files"
+  ]
+}

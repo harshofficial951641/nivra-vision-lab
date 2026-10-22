@@ -18,6 +18,8 @@ interface Props {
   selected?: boolean
   size?: 'tile' | 'thumb' | 'hero'
   onOpen?: () => void
+  onRemove?: () => void
+  removing?: boolean
 }
 
 const statusText = {
@@ -27,7 +29,7 @@ const statusText = {
   paused: 'Paused',
 } as const
 
-export function CameraTile({ camera, events, now, pinned, selected, size = 'tile', onOpen, nativeVideo }: Props) {
+export function CameraTile({ camera, events, now, pinned, selected, size = 'tile', onOpen, onRemove, removing, nativeVideo }: Props) {
   const [nativePlaying, setNativePlaying] = useState(false)
   const [nativeFrame, setNativeFrame] = useState<NativeRenderedFrame|null>(null)
   const [poseHistory] = useState(() => new NativePoseHistory())
@@ -94,7 +96,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
     </>
   )
   const className = `cm-tile cm-tile--${size} ${selected ? 'is-selected' : ''}`
-  return onOpen ? (
+  const tile = onOpen ? (
     <button
       type="button"
       className={className}
@@ -110,4 +112,8 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
       {body}
     </article>
   )
+  return onRemove && !camera.sample && size !== 'thumb' ? <div className="cm-tile-shell">
+    {tile}
+    <button type="button" className="cm-btn cm-camera-remove" aria-label={`Remove ${camera.name}`} disabled={removing} onClick={onRemove}>{removing ? 'Removing…' : 'Remove'}</button>
+  </div> : tile
 }

@@ -1,8 +1,8 @@
 # Two-video detection check
 
-The requested 90% accuracy target is **not verified**. The current trained detector missed the declared grabbing/pushing incident. The isolated earlier Full pose detector missed it too. Both left the normal corridor clip without an alert.
+The requested 90% accuracy target is **not verified**. The current trained detector missed the declared grabbing/pushing incident. The isolated modified Full pose detector missed it too. A fresh replay of the exact historical browser skeleton rules also missed it. Both left the normal corridor clip without an alert.
 
-| Preselected video | Expected | Native X3D scene logic | Earlier Full pose rules |
+| Preselected video | Expected | Native X3D scene logic | Modified Full pose rules |
 |---|---|---|---|
 | F07, rail employee grabbed/pushed | Review alert | Missed | Missed |
 | C01, normal busy school corridor | No alert | No alert | No alert |
@@ -18,3 +18,5 @@ See the [native protocol and per-window findings](native-report.md) and [pose pr
 The next accuracy check needs separate development and untouched test videos, with declared action intervals and multiple camera angles. Include normal crowd movement, greetings, play, occlusion and camera shake as negative examples. Measure incident recall, false alerts per minute and time to first alert separately. Tune or retrain using development footage, then evaluate the frozen system once on the untouched set.
 
 Playback and pairing fixes passed 529 web tests, 45 backend camera/connection tests and 36 native tests. Those checks establish software behavior, not fight-detection accuracy. One physical iPhone delivered about 40 encoded frames per second to the Mac. After fixing display timer starvation and clock drift, two ten-second samples drew 39.96 fps and 35.82 fps on the actual camera wall. Both stayed on native video; the second sample dropped frames during timing recovery. The [metadata-only playback proof](physical-playback.json) records both windows. This verifies one-phone playback, not crowded-scene detection or four-camera performance.
+
+The [fresh historical browser skeleton replay](original-pose-report.md) used the restored published source, Full VIDEO mode and the CPU delegate. Both engines received identical actual landmarks from 75 unique frames per clip. F07 produced no alert; C01 stayed quiet. This verifies the restored path and records its coverage failure, without an accuracy claim.

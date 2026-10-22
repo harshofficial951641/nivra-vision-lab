@@ -11,7 +11,10 @@ export type ObservedJoint = [number, number, number] | null
 
 /** Camera-device arm-motion rules; review signals are not a trained fight classification. */
 export class DeviceAnalysis {
-  private engine = new ConflictEngine({ minBodyScale: .035, minShoulderWidth: .0275, maxGapMs: 3000 })
+  private engine: Pick<ConflictEngine, 'update' | 'observedTracks'>
+  constructor(engine: Pick<ConflictEngine, 'update' | 'observedTracks'> = new ConflictEngine({ minBodyScale: .035, minShoulderWidth: .0275, maxGapMs: 3000 })) {
+    this.engine = engine
+  }
   private runId = crypto.randomUUID()
   private people = new PersonTracker()
   private lastTimestamp = -Infinity

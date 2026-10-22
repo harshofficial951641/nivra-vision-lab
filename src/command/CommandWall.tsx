@@ -13,7 +13,7 @@ import {
   WarningCircle,
   X,
 } from '@phosphor-icons/react'
-import type { Incident } from '../classroom/contracts'
+import { api, type Incident } from '../classroom/contracts'
 import { AlertPing } from './AlertPing'
 import { CameraTile } from './CameraTile'
 import { Brand } from '../ui/Brand'
@@ -200,7 +200,9 @@ function GuardRoster({ guards, sample, admin, now }: { guards: WallGuard[]; samp
 export default function CommandWall() {
   const sample = new URLSearchParams(location.search).get('demo') === '1'
   const data = useCommand(sample)
-  const { cameras, events, guards, floors } = data
+  const { events, guards, floors } = data
+  const [removed, setRemoved] = useState<Set<string>>(() => new Set())
+  const cameras = useMemo(() => data.cameras.filter(camera => !removed.has(camera.id)), [data.cameras, removed])
   const liveCount = data.connection === 'connected' || sample ? cameras.filter(camera => camera.status === 'live').length : 0
   // Only an explicit unpaired record with no stream history is a saved slot.
   // Keep unknown older snapshots and genuine disconnected feeds on the wall.
@@ -208,6 +210,10 @@ export default function CommandWall() {
   const savedIds = useMemo(() => new Set(savedCameras.map(camera => camera.id)), [savedCameras])
   const session = useOptionalSession()
   const admin = session?.me?.role === 'admin'
+  const canManage = admin && !sample
+  const [removing, setRemoving] = useState<Set<string>>(() => new Set())
+  const deleting = useRef(new Set<string>())
+  const [removeError, setRemoveError] = useState<{camera: WallCamera; message: string} | null>(null)
   const now = useNow()
   const [mode, setMode] = useState<'map' | 'all'>('all')
   const [selected, setSelected] = useState<string | null>(null)
@@ -215,6 +221,24 @@ export default function CommandWall() {
   const [pinned, setPinned] = useState<string[]>(readPins)
   const [reviewing, setReviewing] = useState<string | null>(null)
   const [modal, setModal] = useState<'guards' | { full: string } | null>(null)
+  const removeCamera = async (camera: WallCamera, retry = false) => {
+    if (!canManage || deleting.current.has(camera.id) || removed.has(camera.id)) return
+    if (!retry && !window.confirm(`Remove ${camera.name}? Its phone will disconnect. Previous alerts stay in history.`)) return
+    deleting.current.add(camera.id)
+    setRemoving(previous => new Set(previous).add(camera.id))
+    setRemoveError(null)
+    try {
+      await api(`/cameras/${encodeURIComponent(camera.id)}`, 'DELETE')
+      setRemoved(previous => new Set(previous).add(camera.id))
+      setModal(previous => typeof previous === 'object' && previous?.full === camera.id ? null : previous)
+      setSelected(previous => previous === camera.id ? null : previous)
+    } catch (reason) {
+      setRemoveError({camera, message: reason instanceof Error ? reason.message : 'Could not remove this camera.'})
+    } finally {
+      deleting.current.delete(camera.id)
+      setRemoving(previous => {const next = new Set(previous); next.delete(camera.id); return next})
+    }
+  }
   const [sound, setSound] = useState(false)
   const [fullscreen, setFullscreen] = useState(false)
   const [fullscreenError, setFullscreenError] = useState('')
@@ -351,6 +375,7 @@ export default function CommandWall() {
           <button className="cm-btn" aria-pressed={mode === 'map'} onClick={() => setMode('map')}>Map</button>
         </nav>
         <div className="cm-top-actions">
+          {canManage && <a className="cm-btn" href="/setup#cameras">Add camera</a>}
           {(queue.length > 0 || active.length > 0) && <button className="cm-btn cm-pill--red" onClick={() => openReview((queue[0] ?? active[0]).id)}>{queue.length + active.length} open alert{queue.length + active.length === 1 ? '' : 's'}</button>}
           <details className="cm-more" onClick={event => { if ((event.target as HTMLElement).closest('button, a')) event.currentTarget.open = false }} onKeyDown={event => { if (event.key === 'Escape' && event.currentTarget.open) { event.stopPropagation(); event.preventDefault(); event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus() } }}>
             <summary>More</summary><div className="cm-more-menu">
@@ -411,10 +436,11 @@ export default function CommandWall() {
       )}
       {savedCameras.length > 0 && <details className="cm-banner cm-saved-cameras">
         <summary>{savedCameras.length} saved {savedCameras.length === 1 ? 'camera is' : 'cameras are'} waiting for a phone</summary>
-        <ul>{savedCameras.map(camera => <li key={camera.id}><span>{camera.name} · Waiting for phone</span> <a href="/setup#cameras">Connect phone</a></li>)}</ul>
+        <ul>{savedCameras.map(camera => <li key={camera.id}><span>{camera.name} · Waiting for phone</span> <a href="/setup#cameras">Connect phone</a>{canManage && <button type="button" className="cm-btn" aria-label={`Remove ${camera.name}`} disabled={removing.has(camera.id)} onClick={() => void removeCamera(camera)}>{removing.has(camera.id) ? 'Removing…' : 'Remove'}</button>}</li>)}</ul>
         <a href="/setup#cameras">Manage saved cameras</a>
       </details>}
 
+      {removeError && <p className="cm-banner cm-banner--warn" role="alert">Could not remove {removeError.camera.name}. {removeError.message} <button type="button" className="cm-btn" disabled={removing.has(removeError.camera.id)} onClick={() => void removeCamera(removeError.camera, true)}>Retry removal</button></p>}
       {fullscreenError && <p className="cm-banner cm-banner--warn" role="status">{fullscreenError}</p>}
       <main id="cm-main" className={`cm-main cm-main--${mode}`} inert={reviewEvent ? true : undefined}>
         {mode === 'map' ? (
@@ -449,7 +475,7 @@ export default function CommandWall() {
                       <X aria-hidden />
                     </button>
                   </header>
-                  <CameraTile nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo} camera={selectedCamera} events={events} now={now} size="hero" pinned={pinned.includes(selectedCamera.id)} />
+                  <CameraTile onRemove={canManage ? () => void removeCamera(selectedCamera) : undefined} removing={removing.has(selectedCamera.id)} nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo} camera={selectedCamera} events={events} now={now} size="hero" pinned={pinned.includes(selectedCamera.id)} />
                   <div className="cm-selected-foot">
                     <span className="cm-muted">
                       {cameraPlace(selectedCamera)} · {gpsStatus(selectedCamera.gps, now)}
@@ -490,6 +516,8 @@ export default function CommandWall() {
                       <CameraTile
                         nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo}
                         key={camera.id}
+                        onRemove={canManage ? () => void removeCamera(camera) : undefined}
+                        removing={removing.has(camera.id)}
                         camera={camera}
                         events={events}
                         now={now}
@@ -521,6 +549,8 @@ export default function CommandWall() {
                 <CameraTile
                   nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo}
                   key={camera.id}
+                  onRemove={canManage ? () => void removeCamera(camera) : undefined}
+                  removing={removing.has(camera.id)}
                   camera={camera}
                   events={events}
                   now={now}

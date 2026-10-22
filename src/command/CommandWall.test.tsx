@@ -5,9 +5,10 @@ import type { CommandData } from './useCommand'
 import type { Incident } from '../classroom/contracts'
 import type { WallCamera } from './model'
 
-const { state, ping } = vi.hoisted(() => ({ state:{data:null as unknown as CommandData}, ping:{prime:vi.fn(),play:vi.fn(),stop:vi.fn(),dispose:vi.fn()} }))
+const { state, ping, apiMock } = vi.hoisted(() => ({ apiMock:vi.fn(), state:{data:null as unknown as CommandData,session:null as null | {me:{role:string}}}, ping:{prime:vi.fn(),play:vi.fn(),stop:vi.fn(),dispose:vi.fn()} }))
 vi.mock('./useCommand',()=>({useCommand:()=>state.data}))
-vi.mock('../auth/context',()=>({useOptionalSession:()=>null}))
+vi.mock('../auth/context',()=>({useOptionalSession:()=>state.session}))
+vi.mock('../classroom/contracts',async original=>({...await original<typeof import('../classroom/contracts')>(),api:apiMock}))
 vi.mock('./AlertPing',()=>({AlertPing:class {prime=ping.prime;play=ping.play;stop=ping.stop;dispose=ping.dispose}}))
 vi.mock('./ReviewWindow',()=>({ReviewWindow:({event,close}:{event:Incident;close:()=>void})=><div role="dialog" aria-label={`Review ${event.id}`}><button onClick={close}>Close review</button></div>}))
 vi.mock('../location/GoogleMap',()=>({GoogleMap:()=>null}))
@@ -26,10 +27,10 @@ afterAll(()=>{
   if(originalClose) Object.defineProperty(HTMLDialogElement.prototype,'close',originalClose);else Reflect.deleteProperty(HTMLDialogElement.prototype,'close')
 })
 beforeEach(()=>{
-  history.replaceState(null,'','/wall');localStorage.clear();vi.clearAllMocks();ping.prime.mockResolvedValue(true)
+  history.replaceState(null,'','/wall');localStorage.clear();vi.clearAllMocks();ping.prime.mockResolvedValue(true);state.session=null;apiMock.mockReset().mockResolvedValue(null);vi.spyOn(window,'confirm').mockReturnValue(true)
   state.data={sample:false,connection:'connected',error:'',service:'ready',runtime:null,siteName:'Workshop',floors:[],cameras,guards:[],events:[],clips:null,review:vi.fn(),runSample:vi.fn(),resetSample:vi.fn()}
 })
-afterEach(cleanup)
+afterEach(()=>{cleanup();vi.restoreAllMocks()})
 
 describe('calm wall alerts',()=>{
   it('keeps arriving alerts on their camera without moving tiles, opening review, or taking focus',()=>{
@@ -121,5 +122,64 @@ describe('truthful camera availability',()=>{
     expect(cameraButtons()).toHaveLength(2)
     expect(screen.getByRole('status')).toHaveTextContent('0 live cameras')
     expect(cameraButtons()[1]).toHaveAttribute('data-alert','review')
+  })
+})
+
+
+describe('direct owner camera removal',()=>{
+  beforeEach(()=>{state.session={me:{role:'admin'}}})
+  it('removes paired offline cameras through a sibling control, without opening footage and despite stale snapshots',async()=>{
+    state.data={...state.data,cameras:cameras.map(camera=>({...camera,paired:true}))}
+    const view=render(<CommandWall />)
+    const remove=screen.getByRole('button',{name:'Remove Entrance'})
+    expect(remove.closest('button.cm-tile')).toBeNull()
+    await act(async()=>fireEvent.click(remove))
+    expect(apiMock).toHaveBeenCalledExactlyOnceWith('/cameras/c1','DELETE')
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('Previous alerts stay in history'))
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(cameraButtons()).toHaveLength(1)
+    view.rerender(<CommandWall />)
+    expect(cameraButtons()).toHaveLength(1)
+    expect(screen.queryByRole('button',{name:'Remove Entrance'})).not.toBeInTheDocument()
+  })
+  it('leaves a cancelled removal intact',()=>{
+    vi.mocked(window.confirm).mockReturnValue(false)
+    render(<CommandWall />)
+    fireEvent.click(screen.getByRole('button',{name:'Remove Entrance'}))
+    expect(apiMock).not.toHaveBeenCalled()
+    expect(cameraButtons()).toHaveLength(2)
+  })
+  it('prevents duplicate deletes while pending and exposes a retry after failure',async()=>{
+    let reject!:(error:Error)=>void
+    apiMock.mockImplementationOnce(()=>new Promise((_,fail)=>{reject=fail}))
+    render(<CommandWall />)
+    const remove=screen.getByRole('button',{name:'Remove Entrance'})
+    fireEvent.click(remove);fireEvent.click(remove)
+    expect(remove).toBeDisabled()
+    expect(apiMock).toHaveBeenCalledOnce()
+    await act(async()=>reject(new Error('Connection lost')))
+    expect(screen.getByRole('alert')).toHaveTextContent('Could not remove Entrance. Connection lost')
+    expect(cameraButtons()).toHaveLength(2)
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Retry removal'})))
+    expect(apiMock).toHaveBeenCalledTimes(2)
+    expect(window.confirm).toHaveBeenCalledOnce()
+    expect(cameraButtons()).toHaveLength(1)
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+  })
+  it('removes a saved unpaired entry from its disclosed row',async()=>{
+    state.data={...state.data,cameras:[{...cameras[0],paired:false}]}
+    render(<CommandWall />)
+    fireEvent.click(screen.getByText('1 saved camera is waiting for a phone'))
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Remove Entrance'})))
+    expect(apiMock).toHaveBeenCalledExactlyOnceWith('/cameras/c1','DELETE')
+    expect(screen.queryByText('1 saved camera is waiting for a phone')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading',{name:'No cameras connected'})).toBeVisible()
+  })
+  it.each(['reviewer','sample'])('does not expose deletion to %s mode',mode=>{
+    if(mode==='reviewer')state.session={me:{role:'reviewer'}}
+    else history.replaceState(null,'','/wall?demo=1')
+    render(<CommandWall />)
+    expect(screen.queryByRole('button',{name:/^Remove /})).not.toBeInTheDocument()
+    expect(apiMock).not.toHaveBeenCalled()
   })
 })
