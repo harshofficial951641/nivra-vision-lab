@@ -335,17 +335,17 @@ export default function GuardApp() {
   return (
     <main className={`gd-app gd-dark gd-idle${started ? '' : ' gd-before-shift'}`}>
       <div className="gd-brand"><Brand compact /><span>Guard</span></div>
-      <time className="gd-time">
+      {started && <time className="gd-time">
         {new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-      </time>
-      <p className="gd-who">
+      </time>}
+      {started ? <p className="gd-who">
         {view?.callsign} · {view?.name}
-      </p>
+      </p> : <><h1 className="gd-welcome">Hi, {view?.name}.</h1>{view?.floorName && <p className="gd-welcome-place">{view.floorName}</p>}</>}
       <p className="gd-muted" role="status">
         <span className={`gd-dot ${connection === 'connected' ? 'is-on' : ''}`} />
         {connection === 'connected' ? 'Connected to your team' : connection === 'connecting' ? 'Connecting…' : 'Connection lost · retrying'}
       </p>
-      {ownLocation}
+      {started && ownLocation}
       {!started ? (
         <>
           <section className="gd-phone-setup" aria-label="Guard phone setup"><p>Start your shift to receive alerts.</p></section>

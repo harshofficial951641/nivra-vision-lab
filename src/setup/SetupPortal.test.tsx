@@ -218,7 +218,7 @@ describe('simple device management', () => {
     history.replaceState(null, '', '/setup#guards')
     render(<SetupPortal />)
     const record = screen.getByRole('heading', { name: guard.name }).closest('article')!
-    expect(within(record).getByText('Floor 2 · Off shift')).toBeVisible()
+    expect(within(record).getByText('Floor 2 · Phone offline')).toBeVisible()
     for (const input of record.querySelectorAll('input')) expect(input.closest('details:not([open])')).not.toBeNull()
     expect(api).not.toHaveBeenCalled()
     fireEvent.click(within(record).getByText('Details', { selector: 'summary' }))
@@ -261,7 +261,7 @@ describe('simple device management', () => {
     expect(floor).not.toBeRequired()
     expect(floor.closest('details')).not.toHaveAttribute('open')
     fill('Guard name', 'Ravi')
-    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Connect phone' })))
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Show phone QR' })))
     expect(api).toHaveBeenCalledWith('/guards', 'POST', { callsign: 'G2', name: 'Ravi', floorName: null })
     expect(api).toHaveBeenCalledWith('/guards/G2/pair', 'POST')
     expect(screen.getByTitle('Pairing code for Ravi')).toBeInTheDocument()
@@ -278,6 +278,41 @@ describe('simple device management', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Could not remove guard')
     expect(screen.getByRole('heading', { name: 'Asha' })).toBeVisible()
     expect(screen.getByRole('button', { name: 'Remove Asha' })).toBeEnabled()
+  })
+
+  it('opens guard setup directly without expanding site settings', () => {
+    render(<SetupPortal />)
+    fireEvent.click(screen.getByRole('button', { name: 'Guards' }))
+    expect(screen.getByRole('heading', { level: 1, name: 'Guards' })).toBeVisible()
+    expect(screen.getByText('More options', { selector: 'summary' }).closest('details')).not.toHaveAttribute('open')
+    expect(api).not.toHaveBeenCalled()
+  })
+
+  it('does not create a replacement QR when viewing a connected guard phone', async () => {
+    history.replaceState(null, '', '/setup#guards')
+    liveState.snapshot={...snapshot(),guards:[{...guard,shift:'on_shift',presence:{online:true,lastSeen:Date.now()}}]}
+    render(<SetupPortal />)
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'View phone'})))
+    expect(screen.getByRole('heading',{name:'Phone connected'})).toBeVisible()
+    expect(screen.getByText('Asha is on shift and ready for alerts.')).toBeVisible()
+    expect(api).not.toHaveBeenCalled()
+    expect(screen.queryByTitle('Pairing code for Asha')).not.toBeInTheDocument()
+  })
+
+  it('distinguishes connecting a guard phone from starting its shift', async () => {
+    history.replaceState(null, '', '/setup#guards')
+    const view=render(<SetupPortal />)
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Connect phone'})))
+    expect(screen.getByTitle('Pairing code for Asha')).toBeInTheDocument()
+    liveState.snapshot={...snapshot(),guards:[{...guard,presence:{online:true,lastSeen:Date.now()}}]}
+    view.rerender(<SetupPortal />)
+    expect(screen.getByRole('heading',{name:'Phone connected'})).toBeVisible()
+    expect(screen.getByText('On the guard’s phone, start or resume the shift to receive alerts.')).toBeVisible()
+    expect(screen.queryByText('Asha is on shift and ready for alerts.')).not.toBeInTheDocument()
+    liveState.snapshot={...snapshot(),guards:[{...guard,shift:'on_shift',presence:{online:true,lastSeen:Date.now()}}]}
+    view.rerender(<SetupPortal />)
+    expect(screen.getByText('Asha is on shift and ready for alerts.')).toBeVisible()
+    expect(api).toHaveBeenCalledExactlyOnceWith('/guards/G1/pair','POST')
   })
 
 })

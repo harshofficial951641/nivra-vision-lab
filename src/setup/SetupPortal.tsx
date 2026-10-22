@@ -17,7 +17,7 @@ type StepId = 'site' | 'cameras' | 'guards' | 'test'
 const STEPS: { id: StepId; title: string; lead: string }[] = [
   { id: 'site', title: 'Site', lead: 'Name the place NIVRA protects.' },
   { id: 'cameras', title: 'Cameras', lead: 'Add a camera, then scan its QR with your phone.' },
-  { id: 'guards', title: 'Guards', lead: 'Add your team now, or do it later.' },
+  { id: 'guards', title: 'Guards', lead: 'Name your guard. Scan with their phone. Start their shift.' },
   { id: 'test', title: 'Test alert', lead: 'Check that an alert reaches a guard.' },
 ]
 interface Member {
@@ -105,7 +105,8 @@ export default function SetupPortal() {
       <div className="st-body">
         <nav className="st-rail" aria-label="Setup steps">
           <button type="button" className={step === 'cameras' ? 'is-current' : ''} aria-current={step === 'cameras' ? 'page' : undefined} onClick={() => go('cameras')}>Cameras</button>
-          <details className="st-more-sections" open={step !== 'cameras' || undefined}><summary>More options</summary><ol>{STEPS.filter(s => s.id !== 'cameras').map(s => <li key={s.id}><button type="button" className={s.id === step ? 'is-current' : ''} aria-current={s.id === step ? 'page' : undefined} onClick={() => go(s.id)}>{s.id === 'guards' ? 'Guards (optional)' : s.title}</button></li>)}</ol></details>
+          <button type="button" className={step === 'guards' ? 'is-current' : ''} aria-current={step === 'guards' ? 'page' : undefined} onClick={() => go('guards')}>Guards</button>
+          <details className="st-more-sections" open={step === 'site' || step === 'test' || undefined}><summary>More options</summary><ol>{STEPS.filter(s => s.id === 'site' || s.id === 'test').map(s => <li key={s.id}><button type="button" className={s.id === step ? 'is-current' : ''} aria-current={s.id === step ? 'page' : undefined} onClick={() => go(s.id)}>{s.title}</button></li>)}</ol></details>
         </nav>
 
         <main id="st-main" className="st-main">
@@ -308,7 +309,7 @@ function GuardsStep({ records, ok, fail }: Notify & { records: GuardRecord[] }) 
   const [created, setCreated] = useState<GuardRecord | null>(null)
   const [removed, setRemoved] = useState<Set<string>>(() => new Set())
   const [busy, setBusy] = useState(false)
-  const [form, setForm] = useState({ name: '', email: '', callsign: '', floorName: '' })
+  const [form, setForm] = useState({ name: '', email: '', floorName: '' })
   const [invite, setInvite] = useState({ email: '', role: 'reviewer' as Role })
   const listed = records.filter(record => !removed.has(record.id))
   if (created && !removed.has(created.id) && !listed.some(record => record.id === created.id)) listed.push(created)
@@ -322,14 +323,14 @@ function GuardsStep({ records, ok, fail }: Notify & { records: GuardRecord[] }) 
     setBusy(true)
     try {
       const result = await api<GuardRecord>('/guards', 'POST', {
-        callsign: (form.callsign.trim() || nextCallsign).toUpperCase(),
+        callsign: nextCallsign,
         name: form.name.trim(), floorName: form.floorName.trim() || null,
         ...(form.email.trim() ? { email: form.email.trim().toLowerCase() } : {}),
       })
       setCreated(result)
       setPairing(result)
       setAdding(false)
-      setForm({ name: '', email: '', callsign: '', floorName: '' })
+      setForm({ name: '', email: '', floorName: '' })
     } catch (reason) { fail(reason) } finally { setBusy(false) }
   }
   const removeGuard = async (record: GuardRecord) => {
@@ -360,27 +361,29 @@ function GuardsStep({ records, ok, fail }: Notify & { records: GuardRecord[] }) 
       <form className="st-form" onSubmit={event => void sendInvite(event)}><label><span>Invite by email</span><input type="email" required value={invite.email} onChange={event => setInvite({ ...invite, email: event.target.value })} /></label><label><span>Access</span><select value={invite.role} onChange={event => setInvite({ ...invite, role: event.target.value as Role })}><option value="reviewer">Watch and review</option><option value="admin">Manage this place</option></select></label><button className="cm-btn" disabled={busy}>Send invite</button></form>
     </details>
   )
-  if (pairing) return <section className="st-connect-view" aria-label="Connect guard phone">{pairing.floorName && <p className="st-device-place">{pairing.floorName}</p>}<PairingPanel key={pairing.id} endpoint={`/guards/${pairing.callsign}/pair`} label={pairing.name} kind="guard" connected={!pairing.presence?.online && records.some(record => record.id === pairing.id && record.presence?.online)} onClose={() => setPairing(null)} fail={fail} /></section>
+  if (pairing) {
+    const current = listed.find(record => record.id === pairing.id) ?? pairing
+    return <section className="st-connect-view" aria-label="Connect guard phone">{current.floorName && <p className="st-device-place">{current.floorName}</p>}<PairingPanel key={pairing.id} endpoint={`/guards/${pairing.callsign}/pair`} label={current.name} kind="guard" connected={!!current.presence?.online} guardReady={current.shift === 'on_shift'} onClose={() => setPairing(null)} fail={fail} /><a className="cm-btn cm-btn--dark st-pair-done" href="/wall">{current.presence?.online && current.shift === 'on_shift' ? 'Done, watch cameras' : 'Back to cameras'} <ArrowRight aria-hidden /></a></section>
+  }
   if (adding || !listed.length) return <section className="st-add-device" aria-label="Add a guard">
-    <span className="st-device-icon"><ShieldCheck aria-hidden size={30} /></span><h2>{listed.length ? 'Add a guard' : 'Connect your team.'}</h2><p className="cm-muted">Enter their name, then scan the QR with their phone.</p>
+    <span className="st-device-icon"><ShieldCheck aria-hidden size={30} /></span><h2>Who is joining?</h2><p className="cm-muted">We’ll show a QR for their phone.</p>
     <form className="st-form" onSubmit={event => void addGuard(event)} onInvalidCapture={event => { const details = (event.target as HTMLElement).closest('details'); if (details) details.open = true }}>
       <label><span>Guard name</span><input value={form.name} maxLength={60} required onChange={event => setForm({ ...form, name: event.target.value })} autoComplete="name" /></label>
       {mode === 'clerk' && <label><span>Guard email</span><input type="email" required value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} /></label>}
-      <details className="st-building"><summary>More details</summary>
+      <details className="st-building"><summary>{mode === 'clerk' ? 'Add a floor (optional)' : 'Add a floor or email (optional)'}</summary>
         <label><span>Floor / area (optional)</span><input value={form.floorName} maxLength={60} onChange={event => setForm({ ...form, floorName: event.target.value })} placeholder="e.g. Ground floor" /></label>
         {mode === 'dev' && <label><span>Email (optional)</span><input type="email" value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} /></label>}
-        <label><span>Guard reference</span><input value={form.callsign} placeholder={nextCallsign} pattern="[Gg][0-9]{1,2}" maxLength={3} onChange={event => setForm({ ...form, callsign: event.target.value })} /></label>
       </details>
-      <button className="cm-btn cm-btn--dark" disabled={busy || !nextCallsign || !form.name.trim() || (mode === 'clerk' && !form.email.trim())}>{busy ? 'Getting ready…' : 'Connect phone'}<ArrowRight aria-hidden /></button>
+      <button className="cm-btn cm-btn--dark" disabled={busy || !nextCallsign || !form.name.trim() || (mode === 'clerk' && !form.email.trim())}>{busy ? 'Getting ready…' : 'Show phone QR'}<ArrowRight aria-hidden /></button>
       {listed.length > 0 && <button type="button" className="cm-btn" onClick={() => setAdding(false)}>Cancel</button>}
     </form>
-    <p className="st-quiet-note">Adding guards is optional. You can continue and do this later.</p>
+    <a className="cm-link st-guard-skip" href="/wall">Skip for now</a>
     {teamAccess}
   </section>
   return <section className="st-devices" aria-label="Your guards">
     <button type="button" className="cm-btn cm-btn--dark st-add-trigger" onClick={() => setAdding(true)}><Plus aria-hidden /> Add guard</button>
     <div className="st-device-list">{listed.map(record => <article key={record.id} className="st-device-row">
-      <div className="st-device-heading"><span className="st-device-icon"><ShieldCheck aria-hidden size={24} /></span><div><h2>{record.name}</h2><p>{record.floorName || 'Floor not set'} · {record.presence?.online && record.shift === 'on_shift' ? 'On shift' : record.shift === 'break' ? 'On break' : 'Off shift'}</p></div><button type="button" className="cm-btn" disabled={busy} onClick={() => setPairing(record)}>Connect phone</button><button type="button" className="cm-btn st-remove-camera" disabled={busy} aria-label={`Remove ${record.name}`} onClick={() => void removeGuard(record)}>Remove</button></div>
+      <div className="st-device-heading"><span className="st-device-icon"><ShieldCheck aria-hidden size={24} /></span><div><h2>{record.name}</h2><p>{record.floorName || 'Floor not set'} · {record.presence?.online && record.shift === 'on_shift' ? 'On shift' : record.presence?.online && record.shift === 'break' ? 'On break' : record.presence?.online ? 'Phone connected · Shift not started' : 'Phone offline'}</p></div><button type="button" className="cm-btn" disabled={busy} onClick={() => setPairing(record)}>{record.presence?.online ? 'View phone' : 'Connect phone'}</button><button type="button" className="cm-btn st-remove-camera" disabled={busy} aria-label={`Remove ${record.name}`} onClick={() => void removeGuard(record)}>Remove</button></div>
       <details className="st-device-details"><summary>Details</summary>
         <form key={`${record.id}-${record.name}-${record.floorName}`} className="st-form" onSubmit={event => {
           event.preventDefault()

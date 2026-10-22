@@ -68,6 +68,20 @@ describe('private phone pairing', () => {
     expect(screen.getByText('Phone connected')).toBeVisible()
     expect(api).not.toHaveBeenCalled()
   })
+  it('keeps a linked guard phone through a disconnect without showing its consumed QR again', async () => {
+    api.mockResolvedValue({url:'https://nivra.tanishq.work/guard#pair=private',expiresInSeconds:300,remoteReady:true})
+    const props={endpoint:'/guards/G1/pair',label:'Asha',kind:'guard' as const,onClose:vi.fn(),fail:vi.fn()}
+    const view=render(<PairingPanel {...props} />)
+    await act(async()=>{})
+    expect(screen.getByTitle('Pairing code for Asha')).toBeInTheDocument()
+    view.rerender(<PairingPanel {...props} connected />)
+    expect(screen.getByText('Phone connected')).toBeVisible()
+    view.rerender(<PairingPanel {...props} />)
+    expect(screen.getByText('Phone linked')).toBeVisible()
+    expect(screen.getByText('Open NIVRA on the guard’s phone to reconnect.')).toBeVisible()
+    expect(screen.queryByTitle('Pairing code for Asha')).not.toBeInTheDocument()
+    expect(api).toHaveBeenCalledExactlyOnceWith('/guards/G1/pair','POST')
+  })
   it('preserves a linked phone and waits for actual live video without minting a replacement', () => {
     const props={endpoint:'/cameras/c1/pair',label:'Entrance',kind:'camera' as const,onClose:vi.fn(),fail:vi.fn()}
     const view=render(<StrictMode><PairingPanel {...props} paired /></StrictMode>)

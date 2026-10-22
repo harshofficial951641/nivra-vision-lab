@@ -201,6 +201,11 @@ export default function CommandWall() {
   const sample = new URLSearchParams(location.search).get('demo') === '1'
   const data = useCommand(sample)
   const { cameras, events, guards, floors } = data
+  const liveCount = data.connection === 'connected' || sample ? cameras.filter(camera => camera.status === 'live').length : 0
+  // Only an explicit unpaired record with no stream history is a saved slot.
+  // Keep unknown older snapshots and genuine disconnected feeds on the wall.
+  const savedCameras = useMemo(() => cameras.filter(camera => camera.paired === false && !camera.generation && !camera.image && camera.status !== 'live' && !events.some(event => event.camera_id === camera.id && (needsDecision(event) || isActiveResponse(event)))), [cameras, events])
+  const savedIds = useMemo(() => new Set(savedCameras.map(camera => camera.id)), [savedCameras])
   const session = useOptionalSession()
   const admin = session?.me?.role === 'admin'
   const now = useNow()
@@ -288,8 +293,8 @@ export default function CommandWall() {
     cameraOrder.current = cameraOrder.current.filter(id => present.has(id))
     for (const camera of cameras) if (!cameraOrder.current.includes(camera.id)) cameraOrder.current.push(camera.id)
     const positions = new Map(cameraOrder.current.map((id, index) => [id, index]))
-    return [...cameras].sort((a, b) => positions.get(a.id)! - positions.get(b.id)!)
-  }, [cameras])
+    return cameras.filter(camera => !savedIds.has(camera.id)).sort((a, b) => positions.get(a.id)! - positions.get(b.id)!)
+  }, [cameras, savedIds])
   const focus = focusIncident(events, now)
   const selectedCamera = cameras.find((c) => c.id === selected) ?? null
   const mapCamera = selectedCamera ?? cameras.find(c => c.id === focus?.camera_id) ?? cameras.find(c => c.gps) ?? cameras[0]
@@ -321,7 +326,7 @@ export default function CommandWall() {
   const connectionLabel = sample
     ? 'Sample workspace'
     : data.connection === 'connected'
-      ? 'Live'
+      ? `${liveCount} live ${liveCount === 1 ? 'camera' : 'cameras'}`
       : data.connection === 'connecting'
         ? 'Connecting…'
         : 'Disconnected'
@@ -342,7 +347,7 @@ export default function CommandWall() {
           {connectionLabel}
         </span>
         <nav className="cm-view-switch" aria-label="Wall view">
-          <button className="cm-btn" aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Cameras <span>{cameras.length}</span></button>
+          <button className="cm-btn" aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Cameras <span>{liveCount} live</span></button>
           <button className="cm-btn" aria-pressed={mode === 'map'} onClick={() => setMode('map')}>Map</button>
         </nav>
         <div className="cm-top-actions">
@@ -404,11 +409,11 @@ export default function CommandWall() {
           <WarningCircle aria-hidden /> {data.error || 'Reconnecting. Live cameras and alerts will return shortly.'}
         </p>
       )}
-      {!sample && data.connection === 'connected' && !cameras.length && (
-        <p className="cm-banner">
-          No cameras yet. <a href="/setup#cameras">Connect your first camera</a>.
-        </p>
-      )}
+      {savedCameras.length > 0 && <details className="cm-banner cm-saved-cameras">
+        <summary>{savedCameras.length} saved {savedCameras.length === 1 ? 'camera is' : 'cameras are'} waiting for a phone</summary>
+        <ul>{savedCameras.map(camera => <li key={camera.id}><span>{camera.name} · Waiting for phone</span> <a href="/setup#cameras">Connect phone</a></li>)}</ul>
+        <a href="/setup#cameras">Manage saved cameras</a>
+      </details>}
 
       {fullscreenError && <p className="cm-banner cm-banner--warn" role="status">{fullscreenError}</p>}
       <main id="cm-main" className={`cm-main cm-main--${mode}`} inert={reviewEvent ? true : undefined}>
@@ -477,7 +482,7 @@ export default function CommandWall() {
                   <header>
                     <h2 id="wall-heading">Cameras</h2>
                     <button type="button" className="cm-link" onClick={() => setMode('all')}>
-                      {Math.min(4, cameras.length)} of {cameras.length} · Show all
+                      {Math.min(4, ordered.length)} of {ordered.length} · Show all
                     </button>
                   </header>
                   <div className="cm-grid4">
@@ -492,7 +497,7 @@ export default function CommandWall() {
                         onOpen={() => selectCamera(camera.id)}
                       />
                     ))}
-                    {!cameras.length && <p className="cm-muted">Cameras appear here once paired.</p>}
+                    {!ordered.length && <p className="cm-muted">No cameras connected. <a href="/setup#cameras">Add camera</a></p>}
                   </div>
                 </section>
               )}
@@ -523,7 +528,7 @@ export default function CommandWall() {
                   onOpen={() => selectCamera(camera.id)}
                 />
               ))}
-              {!ordered.length && <div className="cm-wall-empty"><h3>Your cameras go here</h3><p>Connect a phone, then watch it here.</p><a className="cm-btn" href="/setup#cameras">Connect a camera</a></div>}
+              {!ordered.length && <div className="cm-wall-empty"><h3>No cameras connected</h3><p>Add a camera, then scan its QR code with your phone.</p><a className="cm-btn" href="/setup#cameras">Add camera</a></div>}
             </div>
           </section>
         )}

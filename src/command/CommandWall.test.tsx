@@ -89,3 +89,37 @@ describe('calm wall alerts',()=>{
     view.unmount();expect(ping.dispose).toHaveBeenCalledOnce()
   })
 })
+
+describe('truthful camera availability',()=>{
+  it('shows saved unpaired records as setup entries rather than phantom offline video feeds',()=>{
+    state.data={...state.data,cameras:cameras.map(camera=>({...camera,paired:false}))}
+    render(<CommandWall />)
+    expect(screen.getByRole('status')).toHaveTextContent('0 live cameras')
+    expect(screen.getByRole('button',{name:'Cameras 0 live'})).toBeVisible()
+    expect(screen.getByRole('heading',{name:'No cameras connected'})).toBeVisible()
+    expect(screen.getByRole('link',{name:'Add camera'})).toHaveAttribute('href','/setup#cameras')
+    expect(within(screen.getByRole('main')).queryAllByRole('button').filter(button=>button.classList.contains('cm-tile'))).toHaveLength(0)
+    expect(screen.getByText('2 saved cameras are waiting for a phone')).toBeVisible()
+    fireEvent.click(screen.getByText('2 saved cameras are waiting for a phone'))
+    expect(screen.getAllByRole('link',{name:'Connect phone'})).toHaveLength(2)
+    expect(screen.getByRole('link',{name:'Manage saved cameras'})).toHaveAttribute('href','/setup#cameras')
+    expect(state.data.review).not.toHaveBeenCalled()
+  })
+
+  it('keeps genuinely linked offline cameras visible and counts only live feeds',()=>{
+    state.data={...state.data,cameras:[{...cameras[0],paired:true,status:'offline'},{...cameras[1],paired:true,status:'live',image:'blob:live'}]}
+    render(<CommandWall />)
+    expect(screen.getByRole('status')).toHaveTextContent('1 live camera')
+    expect(cameraButtons()).toHaveLength(2)
+    expect(within(cameraButtons()[0]).getByText('Camera offline')).toBeVisible()
+    expect(screen.queryByRole('heading',{name:'No cameras connected'})).not.toBeInTheDocument()
+  })
+
+  it('retains stream history and pending incidents even if pairing is now revoked',()=>{
+    state.data={...state.data,cameras:[{...cameras[0],paired:false,generation:'previous-stream'},{...cameras[1],paired:false}],events:[alert()]}
+    render(<CommandWall />)
+    expect(cameraButtons()).toHaveLength(2)
+    expect(screen.getByRole('status')).toHaveTextContent('0 live cameras')
+    expect(cameraButtons()[1]).toHaveAttribute('data-alert','review')
+  })
+})

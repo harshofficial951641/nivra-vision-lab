@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import type { Incident } from '../classroom/contracts'
+import type { CameraLocation, Incident } from '../classroom/contracts'
 import {
   ReviewError,
+  liveCameras,
   alertLevel,
   applyGuardAction,
   applyReview,
@@ -138,5 +139,14 @@ describe('helpers', () => {
     expect(view.y + view.h).toBeLessThanOrEqual(620)
     expect(view.x).toBeLessThan(690)
     expect(view.y).toBeLessThan(316)
+  })
+})
+
+
+describe('camera pairing metadata',()=>{
+  it('preserves explicit unpaired state without guessing from a disconnected feed',()=>{
+    const camera:CameraLocation={id:'saved',name:'Camera 1',building:'Room 1',floor:'',enabled:true,paired:false,feed:'offline',analysis:'unavailable',generation:null,framesReceived:0,framesAnalyzed:0,framesReplaced:0}
+    const result=liveCameras([camera,{...camera,id:'linked',paired:true}],new Map(),{},{})
+    expect(result.map(item=>({paired:item.paired,status:item.status}))).toEqual([{paired:false,status:'offline'},{paired:true,status:'offline'}])
   })
 })

@@ -157,6 +157,7 @@ export function responseSteps(event: Incident, cameraLabel: string): ClockStep[]
 }
 
 export interface WallCamera {
+  paired?: boolean
   compute?: CameraLocation['compute']
   analysis?: CameraLocation['analysis']
   deviceStatus?: CameraLocation['deviceStatus']
@@ -204,6 +205,7 @@ export function liveCameras(
       Number.isFinite(analyzed.timestampMs) && Math.abs(analyzed.timestampMs! - camera.result.timestampMs) <= 180 ? analyzed : undefined
     return {
       id: camera.id,
+      paired: camera.paired,
       compute: camera.compute,
       analysis: camera.analysis,
       deviceStatus: camera.deviceStatus,

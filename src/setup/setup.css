@@ -816,7 +816,7 @@
 }
 
 /* Cameras are the main task; team and site tools stay available on request. */
-.st-simple .st-rail { display:flex; align-items:flex-start; gap:24px; }
+.st-simple .st-rail { display:flex; flex-direction:row; align-items:center; flex-wrap:wrap; gap:12px; }
 .st-simple .st-rail > button { font-weight:650; }
 .st-simple .st-more-sections { margin-left:auto; color:#555; }
 .st-simple .st-more-sections > summary { cursor:pointer; min-height:44px; padding:12px 0; font-size:14px; }
@@ -831,6 +831,10 @@
  .st-simple .st-add-trigger { width:100%; }
  .st-simple .st-device-heading > a.cm-btn { grid-column:2; justify-self:start; }
 }
-.st-simple .st-rail > button { width:auto; flex-shrink:0; padding-inline:24px; }
+.st-simple .st-rail > button { width:auto; flex-shrink:0; padding-inline:18px; }
 .st-simple .st-more-sections { min-width:0; }
 .st-simple .st-more-sections ol { border-radius:16px; }
+.st-simple .st-more-sections[open] { flex-basis:100%; margin-left:0; }
+@media(min-width:700px) {
+ .st-simple .st-pair-body { display:grid; grid-template-columns:244px minmax(0,1fr); align-items:start; text-align:left; }
+}

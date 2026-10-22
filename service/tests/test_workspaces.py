@@ -336,3 +336,56 @@ def test_camera_deletion_is_owner_scoped_and_denied_to_guard_camera_and_other_wo
     assert a.delete(endpoint).status_code==204
     assert b.get('/api/v2/state').json()['cameras'][0]['id']==cb['id']
     assert phone.get('/api/v2/camera/session').status_code==403
+
+
+def test_new_workspace_and_owner_resume_never_seed_camera_records(env):
+    manager, local, client = env
+    owner = client()
+    workspace = create(owner, 'Empty camera setup')
+    for _ in range(3):
+        state = owner.get('/api/v2/state')
+        assert state.status_code == 200
+        assert state.json()['cameras'] == []
+        assert state.json()['events'] == []
+    # Reopening setup/resuming an owner must not create placeholder cameras.
+    assert owner.post('/api/v2/workspaces', json={'name': 'Resume'}).json()['workspace'] == workspace
+    assert manager.apps[workspace['id']].state.classroom.store.cameras() == []
+    local.portal.call(manager.close)
+    restarted = Workspaces(manager.primary, manager.directory)
+    resumed = TestClient(PublicGateway(restarted, SECRET, restarted), base_url=PUBLIC, headers=HEADERS)
+    resumed.portal = local.portal
+    resumed.cookies.update(owner.cookies)
+    try:
+        assert resumed.get('/api/v2/me').json()['workspace'] == workspace
+        assert resumed.get('/api/v2/state').json()['cameras'] == []
+    finally:
+        local.portal.call(restarted.close)
+        resumed.close()
+
+
+def test_explicit_unpaired_and_paired_offline_cameras_are_not_deleted_on_resume(env):
+    manager, local, client = env
+    owner, phone = client(), client()
+    workspace = create(owner, 'Saved camera setup')
+    unpaired = camera(owner, 'Camera 1')
+    paired = camera(owner, 'Camera 2')
+    pair(owner, phone, '/api/v2/cameras/' + paired['id'] + '/pair')
+    store = manager.apps[workspace['id']].state.classroom.store
+    store.record(paired['id'], 'saved-history', {'id': 'review', 'occurredAtMs': 100})
+    history_id = store.events()[0]['id']
+    local.portal.call(manager.close)
+    restarted = Workspaces(manager.primary, manager.directory)
+    resumed = TestClient(PublicGateway(restarted, SECRET, restarted), base_url=PUBLIC, headers=HEADERS)
+    resumed.portal = local.portal
+    resumed.cookies.update(owner.cookies)
+    try:
+        state = resumed.get('/api/v2/state').json()
+        records = {record['id']: record for record in state['cameras']}
+        assert set(records) == {unpaired['id'], paired['id']}
+        assert records[unpaired['id']]['paired'] is False
+        assert records[paired['id']]['paired'] is True
+        assert all(record['feed'] != 'live' for record in records.values())
+        assert state['events'][0]['id'] == history_id
+    finally:
+        local.portal.call(restarted.close)
+        resumed.close()

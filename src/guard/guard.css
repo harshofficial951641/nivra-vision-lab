@@ -439,6 +439,9 @@
 .gd-muted, .gd-location, .gd-foot, .gd-last { color: #dddddd; }
 .gd-time { font-size: clamp(68px,20vw,100px); font-weight: 500; letter-spacing: -.035em; margin-top: 6vh; }
 .gd-before-shift .gd-time { font-size: 68px; margin-top: 3vh; }
+.gd-welcome { margin:48px 0 8px; font-size:clamp(32px,8vw,48px); line-height:1.1; letter-spacing:-.04em; font-weight:600; overflow-wrap:anywhere; }
+.gd-welcome-place { margin:0 0 24px; color:#aaa; font-size:18px; }
+.gd-foot a { display:inline-flex; align-items:center; justify-content:center; min-height:44px; color:inherit; text-underline-offset:4px; }
 .gd-who { font-size: 25px; font-weight: 550; }
 .gd-dot.is-on { background: #ffffff; }
 .gd-app .gd-btn--light { background: #ffffff; color: #000000; border-color: #ffffff; }

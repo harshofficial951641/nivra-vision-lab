@@ -1850,3 +1850,8 @@ button.cm-tile:hover {
 @media(max-width:1180px) {
   .cm-review-body { grid-template-columns:minmax(0,1fr); }
 }
+
+.cm-app .cm-saved-cameras { padding: 10px 14px; }
+.cm-saved-cameras summary { cursor: pointer; }
+.cm-saved-cameras ul { display: grid; gap: 10px; list-style: none; padding: 12px 0; margin: 0; }
+.cm-saved-cameras li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; }

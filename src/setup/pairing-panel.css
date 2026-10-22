@@ -7,6 +7,8 @@
 .pp-corner--bl { bottom:0; left:0; border-bottom-width:2px; border-left-width:2px; }
 .pp-corner--br { bottom:0; right:0; border-bottom-width:2px; border-right-width:2px; }
 .pp-panel .pp-instructions { width:100%; max-width:370px; }
+.pp-guard-title { margin:0 0 16px; font-size:22px; font-weight:600; letter-spacing:-.02em; }
+.pp-steps { display:grid; gap:12px; margin:0 0 18px; padding-left:24px; text-align:left; line-height:1.5; }
 .pp-code-block { display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:20px; }
 .pp-code-block>span { color:#555; font-size:12px; }
 .pp-panel .pp-code { font:600 28px/1.2 ui-monospace,SFMono-Regular,monospace; letter-spacing:.09em; color:var(--pp-ink); white-space:nowrap; user-select:all; }
