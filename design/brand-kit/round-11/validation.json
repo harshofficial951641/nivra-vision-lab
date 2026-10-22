@@ -1,0 +1,29 @@
+[
+  {
+    "concept": "Alert Lynx",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "c88ded4eaa91e4be27240fb6d59465c673ce5440bebed729667715db3891f23f"
+  },
+  {
+    "concept": "Beacon",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "61eb50bd3dd1cae106785a021a8106755e1ceae8f08d54442c86bf47a68950e9"
+  },
+  {
+    "concept": "Mantle",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "8e2b8f493f43cb84152edd28db78277774ae72f78945aed15c2da2d614764e4e"
+  }
+]

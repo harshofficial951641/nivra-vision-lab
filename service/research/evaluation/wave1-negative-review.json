@@ -1,0 +1,2040 @@
+{
+  "schemaVersion": 1,
+  "bundleId": "nivra-online-wave1-hard-normal-v1",
+  "pathBase": "repository root",
+  "sourceTimeBasis": "Acquired media container presentation timestamps (milliseconds), not wall-clock/camera timestamps. Caption clocks are decoder-relative; explicit per-source offset crosswalk saved.",
+  "roleRule": "first byte SHA256('nivra-online-wave1-v1:'+sourceGroup) <128 => development else reserved-audit",
+  "annotationBlinding": "No classifier outputs read; no model, inference, training or CUDA launched. Roles frozen in acquisition plan before review.",
+  "summary": {
+    "acquiredRecordings": 13,
+    "sourceGroups": 13,
+    "roleSourceGroups": {
+      "reserved-audit": 9,
+      "development": 4
+    },
+    "recordingsWithNormalIntervals": 10,
+    "normalSourceGroups": 10,
+    "unknownOnlyRecordings": 3,
+    "totalAcquiredDurationMs": 340801.931,
+    "provisionalNormalDurationMs": 227959.0,
+    "provisionalNormalDurationByRoleMs": {
+      "development": 62983.0,
+      "reserved-audit": 164976.0
+    },
+    "primarySheets": 26,
+    "primarySampledFrames": 680,
+    "supplementalEnlargedSheets": 5,
+    "supplementalSampledFrames": 20,
+    "transferredMediaBytes": 49832758,
+    "downloadCapBytes": 300000000,
+    "originalFilesAcquired": 1,
+    "publishedTranscodesAcquired": 12
+  },
+  "limitations": [
+    "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+    "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+    "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+    "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+    "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+    "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied."
+  ],
+  "recordings": [
+    {
+      "id": "online-normal-01",
+      "sourceGroup": "commons-author:dimitri “diti” torterat",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 236,
+      "source": "https://commons.wikimedia.org/wiki/File:Diti_hugs_Natalie.ogv",
+      "author": "Dimitri “Diti” Torterat",
+      "license": "CC BY 2.0 fr",
+      "licenseUrl": "https://creativecommons.org/licenses/by/2.0/fr/deed.en",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv",
+      "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+      "sizeBytes": 2816816,
+      "durationMs": 10960.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        720,
+        576
+      ],
+      "workingDimensions": [
+        720,
+        576
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 280.0,
+          "endMs": 10760.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 22
+        }
+      ],
+      "events": [
+        {
+          "startMs": 280.0,
+          "endMs": 10760.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 280.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 10760.0,
+          "endMs": 10960.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "embrace and arm extension",
+        "contact": "ordinary embrace visible; not non-contact",
+        "visiblePeopleApproxRange": [
+          5,
+          9
+        ],
+        "illumination": "outdoor daylight",
+        "occlusion": "partial during embrace; background bodies overlap",
+        "sensor": "RGB visible-light; no near-IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 25.0,
+        "compression": {
+          "codec": "theora",
+          "kind": "publisher original encoded file",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          720,
+          576
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg01/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg01/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg01/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg01/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg01/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg01/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied."
+      ],
+      "notes": "Observed approach, arm opening and sustained two-person embrace involving a costumed figure; bilateral upper-body contact is ordinary greeting-like interaction in sampled frames, with stationary bystanders. No directed strikes or rough play apparent. No identity or intent inferred.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1206753875",
+        "sourcePageRevision": {
+          "revid": 1206753875,
+          "parentid": 862979850,
+          "timestamp": "2026-05-01T21:04:01Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg01/rights-source-metadata.json",
+        "metadataSha256": "b9d4108bb916dcb677e35999f5865c86c22d8d18ffec4ef7121ee4f1aab2e984",
+        "wikitextSha256": "06162fc5ae56c27e940b809cf094e12570c243007794f8030f82b17557c05214",
+        "retrievedAtUtc": "2026-10-21T17:02:11.403886+00:00",
+        "credit": "Own work (Youtube version)",
+        "attribution": "File:Diti hugs Natalie.ogv by Dimitri “Diti” Torterat; CC BY 2.0 fr; https://commons.wikimedia.org/w/index.php?oldid=1206753875; https://creativecommons.org/licenses/by/2.0/fr/deed.en",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+        "publisherSha1": "7f12cb37ea0e529d0c367ffbdb1c690524bc868c",
+        "publisherDeclaredBytes": 2816816,
+        "publishedDimensions": [
+          720,
+          576
+        ],
+        "acquired": true,
+        "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+        "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv"
+      },
+      "acquiredSource": {
+        "kind": "original",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+        "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv",
+        "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+        "sizeBytes": 2816816,
+        "sourcePtsStartMs": 0.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 40.000000000000924
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+        "acquisition": "original bytes",
+        "publishedTranscodeMetadata": null,
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 0.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-02",
+      "sourceGroup": "commons-author:biswarup ganguly",
+      "role": "development",
+      "roleHashFirstByte": 58,
+      "source": "https://commons.wikimedia.org/wiki/File:Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm",
+      "author": "Biswarup Ganguly",
+      "license": "CC BY 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/03/Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm/Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg02/published-transcode.webm",
+      "sha256": "84d533dae98b51d0b44a1a1ab8832ee1b4fe12186bdf15a359c1f141f5944049",
+      "sizeBytes": 1502703,
+      "durationMs": 8891.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1920,
+        1080
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "unknown-no-normal-label",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 291.0,
+          "endMs": 8771.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 18
+        }
+      ],
+      "events": [],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 8891.0,
+          "reason": "visually inspected samples insufficient for normal label; keep whole acquired source unknown"
+        }
+      ],
+      "conditions": {
+        "motion": "crowded reaching and hand gestures",
+        "contact": "unclear arm/shoulder contact; not approved normal",
+        "visiblePeopleApproxRange": [
+          8,
+          15
+        ],
+        "illumination": "outdoor daylight",
+        "occlusion": "substantial close overlapping bodies",
+        "sensor": "RGB visible-light; no near-IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 25.0,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg02/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg02/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg02/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg02/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg02/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg02/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg02/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg02/source-page.wikitext",
+        "service/research/cache/eval-wave1/negatives/neg02/uncertainty-enlarged.jpg",
+        "service/research/cache/eval-wave1/negatives/neg02/uncertainty-enlarged.json"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified.",
+        "Publisher restriction flag: personality. The copyright licence does not waive these rights."
+      ],
+      "notes": "Close crowd extends bowls/arms toward a central area. From roughly 3.76s a foreground arm crosses an upper body and some shoulder/arm contact is obscured. Serving context is suggested by visible bowls, but it does not resolve the physical interaction. Retain entire clip as unknown for normal scoring rather than infer nonfight from the source title.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1159285115",
+        "sourcePageRevision": {
+          "revid": 1159285115,
+          "parentid": 986951200,
+          "timestamp": "2026-02-04T09:57:24Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg02/rights-source-metadata.json",
+        "metadataSha256": "ca3491dfd5456429c73d708cb4dfa256954a4837395c781196eb2e705d816a7f",
+        "wikitextSha256": "f4721b29f39fce1d75d73c5777f2704bdd5ec03567f67d5a63862d93e4f4658f",
+        "retrievedAtUtc": "2026-10-21T17:02:11.421155+00:00",
+        "credit": "Own work",
+        "attribution": "File:Helping Needy People - Makar Sankranti Observance - Ramkrishnapur Ghat Area - Howrah 2018-01-14 6977.webm by Biswarup Ganguly; CC BY 3.0; https://commons.wikimedia.org/w/index.php?oldid=1159285115; https://creativecommons.org/licenses/by/3.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/03/Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm",
+        "publisherSha1": "c959342efe9370d83df35518835d6384edc327c5",
+        "publisherDeclaredBytes": 7713489,
+        "publishedDimensions": [
+          1920,
+          1080
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/03/Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm/Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg02/published-transcode.webm",
+        "sha256": "84d533dae98b51d0b44a1a1ab8832ee1b4fe12186bdf15a359c1f141f5944049",
+        "sizeBytes": 1502703,
+        "sourcePtsStartMs": 11.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg02/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 40.000000000000924
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/03/Helping_Needy_People_-_Makar_Sankranti_Observance_-_Ramkrishnapur_Ghat_Area_-_Howrah_2018-01-14_6977.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 11.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-03",
+      "sourceGroup": "commons-author:nicholas gemini",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 131,
+      "source": "https://commons.wikimedia.org/wiki/File:Chinese_man_dancing.webm",
+      "author": "Nicholas Gemini",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Chinese_man_dancing.webm/Chinese_man_dancing.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg03/published-transcode.webm",
+      "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+      "sizeBytes": 4670100,
+      "durationMs": 27722.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1280,
+        720
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 279.0,
+          "endMs": 27288.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 55
+        }
+      ],
+      "events": [
+        {
+          "startMs": 279.0,
+          "endMs": 14285.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        },
+        {
+          "startMs": 16792.0,
+          "endMs": 27288.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 279.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 14285.0,
+          "endMs": 16792.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 27288.0,
+          "endMs": 27722.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "solo fast arm gestures then device handling",
+        "contact": "no person-to-person contact apparent in retained intervals",
+        "visiblePeopleApproxRange": [
+          1,
+          2
+        ],
+        "illumination": "indoor colour under shop lighting",
+        "occlusion": "passer crossing retained as unknown",
+        "sensor": "RGB visible-light; no near-IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 29.916666666666668,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg03/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg03/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg03/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg03/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg03/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg03/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg03/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "One foreground person repeatedly lifts and sweeps arms while holding a small device; no other-person contact is apparent in retained intervals. A passer crosses the camera around 14.77-16.28s, so that intervening portion is unknown. Camera rolls during the first part; preserve the acquired orientation. Later device handling and stationary movement are ordinary non-contact motion.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=856725232",
+        "sourcePageRevision": {
+          "revid": 856725232,
+          "parentid": 469995861,
+          "timestamp": "2024-02-29T03:44:03Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg03/rights-source-metadata.json",
+        "metadataSha256": "07ac508d17107ac89532b5f332df9b221a8a176a22f96727d1bcdf25b33dec9d",
+        "wikitextSha256": "4b1dc140630d4c4d13ac0e37ace1b04b3e860e224f1d3f7830ff9818af02a76b",
+        "retrievedAtUtc": "2026-10-21T17:02:11.436910+00:00",
+        "credit": "Own work",
+        "attribution": "File:Chinese man dancing.webm by Nicholas Gemini; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=856725232; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Chinese_man_dancing.webm",
+        "publisherSha1": "49ff6794e2f58ede97aadbe0e31abe43b40e5b31",
+        "publisherDeclaredBytes": 7943561,
+        "publishedDimensions": [
+          1280,
+          720
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Chinese_man_dancing.webm/Chinese_man_dancing.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg03/published-transcode.webm",
+        "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+        "sizeBytes": 4670100,
+        "sourcePtsStartMs": 12.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 100.00000000000009
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Chinese_man_dancing.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 12.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-04",
+      "sourceGroup": "commons-author:kateregga1",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 234,
+      "source": "https://commons.wikimedia.org/wiki/File:Baganda_traditional_dance_01.webm",
+      "author": "Kateregga1",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/46/Baganda_traditional_dance_01.webm/Baganda_traditional_dance_01.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg04/published-transcode.webm",
+      "sha256": "db6733a820b87c7426fde23107c005bd1962fcb1ff04c55743b8075ed4cf099e",
+      "sizeBytes": 8008360,
+      "durationMs": 59102.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1920,
+        1080
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 282.0,
+          "endMs": 58768.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 118
+        }
+      ],
+      "events": [
+        {
+          "startMs": 282.0,
+          "endMs": 58768.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 282.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 58768.0,
+          "endMs": 59102.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "separated dance, bends and arm lifts; ordinary group",
+        "contact": "no directed person-to-person contact apparent",
+        "visiblePeopleApproxRange": [
+          20,
+          35
+        ],
+        "illumination": "outdoor daylight",
+        "occlusion": "background rows overlap",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured; background people substantially smaller than foreground",
+        "frameRateReported": 29.8875,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg04/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg04/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg04/sheet-02.jpg",
+        "service/research/cache/eval-wave1/negatives/neg04/sheet-03.jpg",
+        "service/research/cache/eval-wave1/negatives/neg04/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg04/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg04/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg04/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg04/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg04/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg04/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "Foreground performers remain spatially separated while stepping, bending, rotating and lifting arms beside drums. Background group stands/steps in rows. All four timestamped sheets inspected through 58.754s; no directed person-to-person contact or rough play apparent. Background occlusion and small figures limit certainty, so this is an ordinary-visible-motion proxy, not proof about hidden interactions. Unseen opening/tail remain unknown.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1028459281",
+        "sourcePageRevision": {
+          "revid": 1028459281,
+          "parentid": 1007574196,
+          "timestamp": "2025-05-05T17:50:01Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg04/rights-source-metadata.json",
+        "metadataSha256": "8a2cda7fef0ad04ff270689c68884842d19e511a5384dbceb861db41e25a53c2",
+        "wikitextSha256": "4b2cf526abba3085686d2990edaf1c0c68827cab657475b2743c01092159c864",
+        "retrievedAtUtc": "2026-10-21T17:02:11.439915+00:00",
+        "credit": "Own work",
+        "attribution": "File:Baganda traditional dance 01.webm by Kateregga1; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=1028459281; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/46/Baganda_traditional_dance_01.webm",
+        "publisherSha1": "fe483f25d0537f76ab7f071764931285a1dbe6d1",
+        "publisherDeclaredBytes": 16779806,
+        "publishedDimensions": [
+          1920,
+          1080
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/46/Baganda_traditional_dance_01.webm/Baganda_traditional_dance_01.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg04/published-transcode.webm",
+        "sha256": "db6733a820b87c7426fde23107c005bd1962fcb1ff04c55743b8075ed4cf099e",
+        "sizeBytes": 8008360,
+        "sourcePtsStartMs": 14.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg04/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 67.00000000000017
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/46/Baganda_traditional_dance_01.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 14.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-05",
+      "sourceGroup": "commons-author:adesolive",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 212,
+      "source": "https://commons.wikimedia.org/wiki/File:Oroko_Traditional_Dancer.webm",
+      "author": "Adesolive",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/1b/Oroko_Traditional_Dancer.webm/Oroko_Traditional_Dancer.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg05/published-transcode.webm",
+      "sha256": "675d399ffacc8e02cc528f7b06572402321d45b19abb59a482aee9fa7f388d58",
+      "sizeBytes": 7411756,
+      "durationMs": 60038.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        480,
+        848
+      ],
+      "workingDimensions": [
+        272,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 264.0,
+          "endMs": 59780.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 120
+        }
+      ],
+      "events": [
+        {
+          "startMs": 264.0,
+          "endMs": 14264.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        },
+        {
+          "startMs": 24264.0,
+          "endMs": 41264.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        },
+        {
+          "startMs": 50264.0,
+          "endMs": 59780.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 264.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 14264.0,
+          "endMs": 24264.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 41264.0,
+          "endMs": 50264.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 59780.0,
+          "endMs": 60038.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "solo dance and deep bends; occasional nearby dancers",
+        "contact": "no person-to-person contact apparent in retained solo intervals; close approaches unknown",
+        "visiblePeopleApproxRange": [
+          15,
+          35
+        ],
+        "illumination": "outdoor daylight with shaded spectators",
+        "occlusion": "substantial background; occasional foreground crossing",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured; distant spectators small",
+        "frameRateReported": 31.0,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          272,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg05/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg05/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg05/sheet-02.jpg",
+        "service/research/cache/eval-wave1/negatives/neg05/sheet-03.jpg",
+        "service/research/cache/eval-wave1/negatives/neg05/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg05/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg05/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg05/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg05/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg05/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg05/source-page.wikitext",
+        "service/research/cache/eval-wave1/negatives/neg05/uncertainty-enlarged.jpg",
+        "service/research/cache/eval-wave1/negatives/neg05/uncertainty-enlarged.json"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "Solo foreground dancer steps, bends and swings arms/legs in an open area before seated spectators. Leave 14.258-24.258s unknown as another person approaches and moves close, and 41.258-50.258s unknown during a foreground crossing and overlapping dancers. Retain only clearer solo-motion subsets. All four sampled sheets inspected; no uninspected tail is normal.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1129511112",
+        "sourcePageRevision": {
+          "revid": 1129511112,
+          "parentid": 1009848409,
+          "timestamp": "2025-12-11T23:40:32Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg05/rights-source-metadata.json",
+        "metadataSha256": "177fd83eb7cf69422d90a42a013cb32132babe1d4766c33b728258b0e32a95b6",
+        "wikitextSha256": "44f7c2e9614155bdf6b0d2bc4426ee4ebd682971df012775833059587821c447",
+        "retrievedAtUtc": "2026-10-21T17:02:11.443436+00:00",
+        "credit": "Own work",
+        "attribution": "File:Oroko Traditional Dancer.webm by Adesolive; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=1129511112; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Oroko_Traditional_Dancer.webm",
+        "publisherSha1": "41d8e11c64b27f319a4f25562a93b1dc977c7b0e",
+        "publisherDeclaredBytes": 14181990,
+        "publishedDimensions": [
+          480,
+          848
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/1b/Oroko_Traditional_Dancer.webm/Oroko_Traditional_Dancer.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg05/published-transcode.webm",
+        "sha256": "675d399ffacc8e02cc528f7b06572402321d45b19abb59a482aee9fa7f388d58",
+        "sizeBytes": 7411756,
+        "sourcePtsStartMs": 6.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg05/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 65.00000000000483
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Oroko_Traditional_Dancer.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 6.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-06",
+      "sourceGroup": "commons-author:elekes andor",
+      "role": "development",
+      "roleHashFirstByte": 117,
+      "source": "https://commons.wikimedia.org/wiki/File:Tajcsi_Magfalv%C3%A1n.ogv",
+      "author": "Elekes Andor",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/10/Tajcsi_Magfalv%C3%A1n.ogv/Tajcsi_Magfalv%C3%A1n.ogv.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg06/published-transcode.webm",
+      "sha256": "b783c9bbcd221e511c7fbd4019ac4c9466ffe74270f98a05b42ab1e2234c97f5",
+      "sizeBytes": 5125362,
+      "durationMs": 37951.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1920,
+        1080
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 267.0,
+          "endMs": 37750.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 76
+        }
+      ],
+      "events": [
+        {
+          "startMs": 267.0,
+          "endMs": 16250.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        },
+        {
+          "startMs": 22771.0,
+          "endMs": 37750.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 267.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 16250.0,
+          "endMs": 22771.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 37750.0,
+          "endMs": 37951.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "coordinated non-contact exercise and ordinary bystanders",
+        "contact": "no directed contact apparent in retained intervals",
+        "visiblePeopleApproxRange": [
+          35,
+          60
+        ],
+        "illumination": "outdoor daylight",
+        "occlusion": "small background figures and foreground crossings",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured; background small",
+        "frameRateReported": 29.90691823899371,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg06/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg06/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg06/sheet-02.jpg",
+        "service/research/cache/eval-wave1/negatives/neg06/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg06/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg06/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg06/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg06/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg06/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg06/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "A dispersed outdoor group performs coordinated arm raises, bends and weight shifts, with some seated bystanders. No directed contact apparent in retained samples. Leave 16.25-22.771s unknown around children/people crossing and crouching in the foreground. Figures in background are small and overlapping. This is ordinary visible group motion, not a verified 50-100-person coverage test.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=898244144",
+        "sourcePageRevision": {
+          "revid": 898244144,
+          "parentid": 734014313,
+          "timestamp": "2024-07-14T00:48:19Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg06/rights-source-metadata.json",
+        "metadataSha256": "ae29af31aac2eabc93aff85e12ed8b7fe9eacf5cbdd5fea861752048d032c161",
+        "wikitextSha256": "8b13ed32d417dcb55809082465235478c879a4b87595c6841dde00e7689aa88e",
+        "retrievedAtUtc": "2026-10-21T17:02:11.447446+00:00",
+        "credit": "Own work",
+        "attribution": "File:Tajcsi Magfalván.ogv by Elekes Andor; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=898244144; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/10/Tajcsi_Magfalv%C3%A1n.ogv",
+        "publisherSha1": "813df9bc23eb8b8afc778dbbd1697059e379028d",
+        "publisherDeclaredBytes": 14194735,
+        "publishedDimensions": [
+          1920,
+          1080
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/10/Tajcsi_Magfalv%C3%A1n.ogv/Tajcsi_Magfalv%C3%A1n.ogv.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg06/published-transcode.webm",
+        "sha256": "b783c9bbcd221e511c7fbd4019ac4c9466ffe74270f98a05b42ab1e2234c97f5",
+        "sizeBytes": 5125362,
+        "sourcePtsStartMs": 0.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg06/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 34.000000000006025
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/10/Tajcsi_Magfalv%C3%A1n.ogv",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 0.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-07",
+      "sourceGroup": "commons-author:sage ross",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 177,
+      "source": "https://commons.wikimedia.org/wiki/File:Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+      "author": "Sage Ross",
+      "license": "CC BY-SA 3.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv/Dog_walking_in_the_Mission_in_San_Francisco.ogv.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg07/published-transcode.webm",
+      "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+      "sizeBytes": 2640195,
+      "durationMs": 16848.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1280,
+        720
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 264.0,
+          "endMs": 16764.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 34
+        }
+      ],
+      "events": [
+        {
+          "startMs": 264.0,
+          "endMs": 16764.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 264.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 16764.0,
+          "endMs": 16848.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "walking, dog motion, camera pan and passing traffic",
+        "contact": "no person-to-person contact apparent",
+        "visiblePeopleApproxRange": [
+          0,
+          3
+        ],
+        "illumination": "outdoor daylight",
+        "occlusion": "person often outside frame while camera follows dog",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 24.0,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg07/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg07/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg07/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg07/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg07/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg07/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg07/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "A person walks a dog on a leash along a pavement; camera follows the dog and later returns to the person. Cars and a distant cyclist pass. No person-to-person interaction is apparent in the sampled interval. Contains a substantial animal-only camera segment, so it is a lower-difficulty ordinary-motion control rather than a pure hard human-interaction negative.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1207923663",
+        "sourcePageRevision": {
+          "revid": 1207923663,
+          "parentid": 724955786,
+          "timestamp": "2026-05-03T20:26:14Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg07/rights-source-metadata.json",
+        "metadataSha256": "90d286f00db32b12ac8737097e399bb2c7ca0b158eda7a657c2637999b2f1878",
+        "wikitextSha256": "4dea9742e772c2f98d6b3bedc2fa39508a9ba1b34671d8b3c3eaac020b66dae4",
+        "retrievedAtUtc": "2026-10-21T17:02:11.450445+00:00",
+        "credit": "Own work",
+        "attribution": "File:Dog walking in the Mission in San Francisco.ogv by Sage Ross; CC BY-SA 3.0; https://commons.wikimedia.org/w/index.php?oldid=1207923663; https://creativecommons.org/licenses/by-sa/3.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+        "publisherSha1": "966fbd7f625d27180e148dd253e36d0700808bbd",
+        "publisherDeclaredBytes": 10899300,
+        "publishedDimensions": [
+          1280,
+          720
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv/Dog_walking_in_the_Mission_in_San_Francisco.ogv.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg07/published-transcode.webm",
+        "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+        "sizeBytes": 2640195,
+        "sourcePtsStartMs": 14.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 42.00000000000159
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 14.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-08",
+      "sourceGroup": "commons-author:melirius",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 192,
+      "source": "https://commons.wikimedia.org/wiki/File:Queue_2_-_Belarus,_Minsk,_Presidential_Voting_2020.webm",
+      "author": "Melirius",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/98/Queue_2_-_Belarus%2C_Minsk%2C_Presidential_Voting_2020.webm/Queue_2_-_Belarus%2C_Minsk%2C_Presidential_Voting_2020.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg08/published-transcode.webm",
+      "sha256": "88b1acdaddcf59d8ee0df61a46486630d6a020240cafda5b9d07d3db6556b3bb",
+      "sizeBytes": 3522472,
+      "durationMs": 13114.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1920,
+        1080
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "unknown-no-normal-label",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 281.0,
+          "endMs": 12781.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 26
+        }
+      ],
+      "events": [],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 13114.0,
+          "reason": "visually inspected samples insufficient for normal label; keep whole acquired source unknown"
+        }
+      ],
+      "conditions": {
+        "motion": "distant standing/walking line behind passing traffic",
+        "contact": "unknown due small people and repeated vehicle occlusion",
+        "visiblePeopleApproxRange": [
+          10,
+          30
+        ],
+        "illumination": "overcast daylight",
+        "occlusion": "severe cars/truck/trees",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured; distant people small",
+        "frameRateReported": 30.0,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg08/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg08/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg08/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg08/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg08/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg08/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg08/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg08/source-page.wikitext",
+        "service/research/cache/eval-wave1/negatives/neg08/uncertainty-enlarged.jpg",
+        "service/research/cache/eval-wave1/negatives/neg08/uncertainty-enlarged.json"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "A distant line/group stands and walks behind repeated passing cars, trees and a large truck. Upper bodies intermittently visible but body/contact coverage is inadequate to approve a full normal interval. All acquired samples inspected; retain unknown rather than infer a clean negative from queue context.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=862192089",
+        "sourcePageRevision": {
+          "revid": 862192089,
+          "parentid": 730918421,
+          "timestamp": "2024-03-21T02:20:19Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg08/rights-source-metadata.json",
+        "metadataSha256": "8b473d948fb74270c70a793db4d0236343d2d78a0ec155b6a306dd20d7412af6",
+        "wikitextSha256": "916634a547d189877f0249be4c98135e84dabdb80b80bbb219a026c2d532289d",
+        "retrievedAtUtc": "2026-10-21T17:02:11.453970+00:00",
+        "credit": "Own work",
+        "attribution": "File:Queue 2 - Belarus, Minsk, Presidential Voting 2020.webm by Melirius; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=862192089; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/9/98/Queue_2_-_Belarus%2C_Minsk%2C_Presidential_Voting_2020.webm",
+        "publisherSha1": "01584207c7f23a8cfffdd28e4b3922c230e84fc1",
+        "publisherDeclaredBytes": 54263090,
+        "publishedDimensions": [
+          1920,
+          1080
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/9/98/Queue_2_-_Belarus%2C_Minsk%2C_Presidential_Voting_2020.webm/Queue_2_-_Belarus%2C_Minsk%2C_Presidential_Voting_2020.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg08/published-transcode.webm",
+        "sha256": "88b1acdaddcf59d8ee0df61a46486630d6a020240cafda5b9d07d3db6556b3bb",
+        "sizeBytes": 3522472,
+        "sourcePtsStartMs": 14.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg08/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 100.0
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/9/98/Queue_2_-_Belarus%2C_Minsk%2C_Presidential_Voting_2020.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 14.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-09",
+      "sourceGroup": "commons-author:rajani gairshail",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 201,
+      "source": "https://commons.wikimedia.org/wiki/File:Queue_for_gas_cylinders_in_Gangtok_(Sikkim)_during_the_2026_West_Asia_conflict.webm",
+      "author": "Rajani Gairshail",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/44/Queue_for_gas_cylinders_in_Gangtok_%28Sikkim%29_during_the_2026_West_Asia_conflict.webm/Queue_for_gas_cylinders_in_Gangtok_%28Sikkim%29_during_the_2026_West_Asia_conflict.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg09/published-transcode.webm",
+      "sha256": "826ffecb645b18a92e773c37677d731ee90be90598649d49a11a872a926d2a6f",
+      "sizeBytes": 1589518,
+      "durationMs": 11567.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1080,
+        1920
+      ],
+      "workingDimensions": [
+        270,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 269.0,
+          "endMs": 11267.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 23
+        }
+      ],
+      "events": [
+        {
+          "startMs": 269.0,
+          "endMs": 4281.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 269.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 4281.0,
+          "endMs": 11567.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "standing/walking, handheld camera roll and pan",
+        "contact": "no directed contact apparent in retained subset; later group unknown",
+        "visiblePeopleApproxRange": [
+          8,
+          25
+        ],
+        "illumination": "bright outdoor daylight",
+        "occlusion": "later vehicles and small crowd",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured; small people",
+        "frameRateReported": 29.916666666666668,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          270,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg09/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg09/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg09/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg09/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg09/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg09/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg09/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg09/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "People stand/walk with space between them along a line of cylinders during the initial camera pan. No directed physical interaction apparent in retained initial samples. Later rotation and passing vehicles make distant groups too unclear, so all later footage is unknown. Only a narrow four-second ordinary-visible-motion subset is retained.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1255446829",
+        "sourcePageRevision": {
+          "revid": 1255446829,
+          "parentid": 1214691011,
+          "timestamp": "2026-08-02T08:40:56Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg09/rights-source-metadata.json",
+        "metadataSha256": "7d337f7d42eebf9193080b8eb1d71ecce99ff727149be92ff4653b834be92f45",
+        "wikitextSha256": "52a05b37a26fb86430c773535fff4b6e0998604543824f64563b830e6a8bcbde",
+        "retrievedAtUtc": "2026-10-21T17:02:11.456980+00:00",
+        "credit": "Own work",
+        "attribution": "File:Queue for gas cylinders in Gangtok (Sikkim) during the 2026 West Asia conflict.webm by Rajani Gairshail; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=1255446829; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/4/44/Queue_for_gas_cylinders_in_Gangtok_%28Sikkim%29_during_the_2026_West_Asia_conflict.webm",
+        "publisherSha1": "85790e7957e3b14d623190838dc30cf88c474e8d",
+        "publisherDeclaredBytes": 25179006,
+        "publishedDimensions": [
+          1080,
+          1920
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/4/44/Queue_for_gas_cylinders_in_Gangtok_%28Sikkim%29_during_the_2026_West_Asia_conflict.webm/Queue_for_gas_cylinders_in_Gangtok_%28Sikkim%29_during_the_2026_West_Asia_conflict.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg09/published-transcode.webm",
+        "sha256": "826ffecb645b18a92e773c37677d731ee90be90598649d49a11a872a926d2a6f",
+        "sizeBytes": 1589518,
+        "sourcePtsStartMs": 2.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg09/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 34.000000000000696
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/4/44/Queue_for_gas_cylinders_in_Gangtok_%28Sikkim%29_during_the_2026_West_Asia_conflict.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 2.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-10",
+      "sourceGroup": "commons-author:meerah dhiman",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 188,
+      "source": "https://commons.wikimedia.org/wiki/File:Shadow_dance,_NIT_Hamirpur.webm",
+      "author": "Meerah Dhiman",
+      "license": "CC0",
+      "licenseUrl": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7e/Shadow_dance%2C_NIT_Hamirpur.webm/Shadow_dance%2C_NIT_Hamirpur.webm.360p.mpeg4.mov",
+      "path": "service/research/cache/eval-wave1/negatives/neg10/published-transcode.mov",
+      "sha256": "d9b798902d767d04d83fede0948af856e606e24c689887c29be8f3ab6d09bdbf",
+      "sizeBytes": 6645520,
+      "durationMs": 47137.931,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        848,
+        478
+      ],
+      "workingDimensions": [
+        638,
+        360
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "unknown-no-normal-label",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 275.862,
+          "endMs": 46758.621,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 94
+        }
+      ],
+      "events": [],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 47137.931,
+          "reason": "visually inspected samples insufficient for normal label; keep whole acquired source unknown"
+        }
+      ],
+      "conditions": {
+        "motion": "staged silhouette action with prop swings and close contact",
+        "contact": "ambiguous staged contact; not approved normal",
+        "visiblePeopleApproxRange": [
+          1,
+          3
+        ],
+        "illumination": "backlit stage silhouettes then darkness; not genuine CCTV night evidence",
+        "occlusion": "silhouettes/props and foreground audience crossings",
+        "sensor": "visible-light stage; no near-IR or thermal evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 29.0,
+        "compression": {
+          "codec": "mpeg4",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          638,
+          360
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg10/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg10/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg10/sheet-02.jpg",
+        "service/research/cache/eval-wave1/negatives/neg10/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg10/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg10/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg10/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg10/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg10/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg10/source-page.wikitext",
+        "service/research/cache/eval-wave1/negatives/neg10/uncertainty-enlarged.jpg",
+        "service/research/cache/eval-wave1/negatives/neg10/uncertainty-enlarged.json"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "Despite dance filename, actual samples show silhouettes carrying curved/trident-like props, staged directed swings, close upper-body contact and a drop to the stage. These cannot be used as a hard-normal unarmed/non-contact example. Entire recording retained unknown/excluded from normal scoring, including later silhouettes and darkness; no positive fight label is inferred from theatre.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1090196342",
+        "sourcePageRevision": {
+          "revid": 1090196342,
+          "parentid": 1089830383,
+          "timestamp": "2025-09-24T03:35:07Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg10/rights-source-metadata.json",
+        "metadataSha256": "f8510b959fb9fe5159c2045baba4cb56d9287a2ac327113a5c8d838f78848f9b",
+        "wikitextSha256": "fcd47bf54c9853808bfd999652bd0e04913361f82355f0d7a20d6399b3fedab8",
+        "retrievedAtUtc": "2026-10-21T17:02:11.460983+00:00",
+        "credit": "Own work",
+        "attribution": "File:Shadow dance, NIT Hamirpur.webm by Meerah Dhiman; CC0; https://commons.wikimedia.org/w/index.php?oldid=1090196342; http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Shadow_dance%2C_NIT_Hamirpur.webm",
+        "publisherSha1": "70a92cc182e7a011400685a50b2e48dd1dec9d68",
+        "publisherDeclaredBytes": 6582477,
+        "publishedDimensions": [
+          848,
+          478
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7e/Shadow_dance%2C_NIT_Hamirpur.webm/Shadow_dance%2C_NIT_Hamirpur.webm.360p.mpeg4.mov",
+        "path": "service/research/cache/eval-wave1/negatives/neg10/published-transcode.mov",
+        "sha256": "d9b798902d767d04d83fede0948af856e606e24c689887c29be8f3ab6d09bdbf",
+        "sizeBytes": 6645520,
+        "sourcePtsStartMs": 0.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg10/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 34.483000000001596
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Shadow_dance%2C_NIT_Hamirpur.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 0.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-11",
+      "sourceGroup": "commons-author:king waltz",
+      "role": "development",
+      "roleHashFirstByte": 31,
+      "source": "https://commons.wikimedia.org/wiki/File:The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm",
+      "author": "King Waltz",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/ec/The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm/The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg11/published-transcode.webm",
+      "sha256": "66902308d446585f9a267ee5e1490d6df5065886b8b246c780ee9f4e17ea1532",
+      "sizeBytes": 1835569,
+      "durationMs": 16140.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        2160,
+        3840
+      ],
+      "workingDimensions": [
+        270,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 269.0,
+          "endMs": 15785.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 32
+        }
+      ],
+      "events": [
+        {
+          "startMs": 269.0,
+          "endMs": 6269.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        },
+        {
+          "startMs": 9269.0,
+          "endMs": 15785.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 269.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 6269.0,
+          "endMs": 9269.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 15785.0,
+          "endMs": 16140.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "standing/walking and arm gestures",
+        "contact": "no person-to-person contact apparent in retained intervals",
+        "objects": "long ceremonial staff/sword-like object visible; function not inferred",
+        "visiblePeopleApproxRange": [
+          10,
+          25
+        ],
+        "illumination": "outdoor covered area, backlit daylight",
+        "occlusion": "foreground crossing omitted",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 31.0,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          270,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg11/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg11/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg11/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg11/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg11/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg11/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg11/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg11/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "Foreground figure walks/stands in an open ceremonial space carrying a long staff/sword-like object while others stand at the edge. No directed person-to-person interaction apparent in retained intervals. Leave 6.258-9.258s unknown during a close foreground crossing. The advertised handshake is not actually observed; do not annotate one from the title. Object presence is recorded and this remains ordinary standing/walking only, not a prop-action positive.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1282473618",
+        "sourcePageRevision": {
+          "revid": 1282473618,
+          "parentid": 1282442988,
+          "timestamp": "2026-10-02T10:51:12Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg11/rights-source-metadata.json",
+        "metadataSha256": "d2c46a77f741ce82a5d0b39245a06c0258b2ef57d89b93fcb39b89dc98d93492",
+        "wikitextSha256": "26d5e21327b6d455803f0da9ff3569fcb951ebc687704d08183c100ee470e1f0",
+        "retrievedAtUtc": "2026-10-21T17:02:11.465825+00:00",
+        "credit": "Own work",
+        "attribution": "File:The Iyase of Issele Uku arriving to receive a royal handshake.webm by King Waltz; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=1282473618; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/e/ec/The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm",
+        "publisherSha1": "3b0869c0f1956ad092107623f9f17d05300be1b5",
+        "publisherDeclaredBytes": 8963149,
+        "publishedDimensions": [
+          2160,
+          3840
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/e/ec/The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm/The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg11/published-transcode.webm",
+        "sha256": "66902308d446585f9a267ee5e1490d6df5065886b8b246c780ee9f4e17ea1532",
+        "sizeBytes": 1835569,
+        "sourcePtsStartMs": 11.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg11/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 33.00000000000125
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ec/The_Iyase_of_Issele_Uku_arriving_to_receive_a_royal_handshake.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 11.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-12",
+      "sourceGroup": "commons-author:envagyokabela",
+      "role": "reserved-audit",
+      "roleHashFirstByte": 147,
+      "source": "https://commons.wikimedia.org/wiki/File:%22Nem_Hagyjuk_Abba!%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm",
+      "author": "Envagyokabela",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b4/%22Nem_Hagyjuk_Abba%21%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm/%22Nem_Hagyjuk_Abba%21%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg12/published-transcode.webm",
+      "sha256": "ad8448955457f2d6b7e79b15cb92c4a34ebf0d9064835e1a56be52f424ea2cb8",
+      "sizeBytes": 1325528,
+      "durationMs": 11246.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        1280,
+        720
+      ],
+      "workingDimensions": [
+        854,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 286.0,
+          "endMs": 10766.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 22
+        }
+      ],
+      "events": [
+        {
+          "startMs": 286.0,
+          "endMs": 10766.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 286.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 10766.0,
+          "endMs": 11246.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "group walking, clapping and arm gestures",
+        "contact": "no directed physical contact apparent",
+        "visiblePeopleApproxRange": [
+          15,
+          35
+        ],
+        "illumination": "outdoor daylight",
+        "occlusion": "people overlap and pass near the camera",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 25.0,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          854,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg12/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg12/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg12/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg12/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg12/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg12/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg12/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg12/source-page.wikitext"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "People walk past the camera in a group, with clapping, raised arms, placards and a wheeled mobility aid visible. No directed physical contact or rough play apparent across the sampled span. No identity or political/intent label is assigned; the retained target is ordinary visible walking/gesturing.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1221882534",
+        "sourcePageRevision": {
+          "revid": 1221882534,
+          "parentid": 1076474094,
+          "timestamp": "2026-05-28T21:51:13Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg12/rights-source-metadata.json",
+        "metadataSha256": "bc53924545e10ceaa47ba757fab6c9f9549976f654c4f5bbb0a2c8dcef4199b5",
+        "wikitextSha256": "9329e2da4f08e12a1e204f51521c142112c345089565aa95bc80dff32a6c97f2",
+        "retrievedAtUtc": "2026-10-21T17:02:11.470824+00:00",
+        "credit": "Own work",
+        "attribution": "File:\"Nem Hagyjuk Abba!\" - tüntetők a Dísz téren.webm by Envagyokabela; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=1221882534; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/b/b4/%22Nem_Hagyjuk_Abba%21%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm",
+        "publisherSha1": "215da9fdd46fe23db6d1255086217177afbbb4b5",
+        "publisherDeclaredBytes": 9730485,
+        "publishedDimensions": [
+          1280,
+          720
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b4/%22Nem_Hagyjuk_Abba%21%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm/%22Nem_Hagyjuk_Abba%21%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg12/published-transcode.webm",
+        "sha256": "ad8448955457f2d6b7e79b15cb92c4a34ebf0d9064835e1a56be52f424ea2cb8",
+        "sizeBytes": 1325528,
+        "sourcePtsStartMs": 6.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg12/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 40.000000000000924
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b4/%22Nem_Hagyjuk_Abba%21%22_-_t%C3%BCntet%C5%91k_a_D%C3%ADsz_t%C3%A9ren.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 6.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    },
+    {
+      "id": "online-normal-13",
+      "sourceGroup": "commons-author:hridoy kundu",
+      "role": "development",
+      "roleHashFirstByte": 50,
+      "source": "https://commons.wikimedia.org/wiki/File:Example_of_team_work.webm",
+      "author": "Hridoy Kundu",
+      "license": "CC BY-SA 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Example_of_team_work.webm/Example_of_team_work.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg13/published-transcode.webm",
+      "sha256": "b0d6c8201ab677fb942799ba304565ecc92a7b68056ee338171c4f98d361365e",
+      "sizeBytes": 2738859,
+      "durationMs": 20085.0,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": [
+        720,
+        1280
+      ],
+      "workingDimensions": [
+        270,
+        480
+      ],
+      "annotationStatus": "provisional-assistant-review",
+      "decision": "retain-normal-subsets",
+      "annotationMethod": "Model-blind inspection via view_image of all saved 2fps timestamped contact sheets; retained first frame at/after 0.25 decoder-relative seconds, then every 0.5s. Enlarged four-frame evidence also inspected where present. Events and reviewedIntervals use source PTS via the saved crosswalk; approximate sampled-evidence intervals only. No audio used.",
+      "reviewedIntervals": [
+        {
+          "startMs": 276.0,
+          "endMs": 19781.0,
+          "coverage": "sampled still-image review; not continuous visual observation",
+          "sampleCount": 40
+        }
+      ],
+      "events": [
+        {
+          "startMs": 276.0,
+          "endMs": 19781.0,
+          "label": "ordinary-motion",
+          "targetLabel": 0,
+          "physicalFightGroundTruth": false,
+          "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 276.0,
+          "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+        },
+        {
+          "startMs": 19781.0,
+          "endMs": 20085.0,
+          "reason": "outside retained normal evidence or uninspected tail; not negative"
+        }
+      ],
+      "conditions": {
+        "motion": "object passing, reaching, bending and crouching",
+        "contact": "object handling; no directed person-to-person contact apparent",
+        "visiblePeopleApproxRange": [
+          5,
+          7
+        ],
+        "illumination": "outdoor daylight with shaded doorway",
+        "occlusion": "doorway and foreground ledge partly hide bodies",
+        "sensor": "RGB visible-light; no IR evidence",
+        "personPixelHeight": "not measured",
+        "frameRateReported": 29.583333333333332,
+        "compression": {
+          "codec": "vp9",
+          "kind": "publisher-generated lossy transcode",
+          "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+        },
+        "nativeCameraResolution": "unknown",
+        "downloadedSourceDimensions": [
+          270,
+          480
+        ]
+      },
+      "evidenceFiles": [
+        "service/research/cache/eval-wave1/negatives/neg13/sheet-00.jpg",
+        "service/research/cache/eval-wave1/negatives/neg13/sheet-01.jpg",
+        "service/research/cache/eval-wave1/negatives/neg13/samples.json",
+        "service/research/cache/eval-wave1/negatives/neg13/pts-crosswalk.json",
+        "service/research/cache/eval-wave1/negatives/neg13/original-sequential-pts.json",
+        "service/research/cache/eval-wave1/negatives/neg13/original-sequential-pts.log",
+        "service/research/cache/eval-wave1/negatives/neg13/media-probe.json",
+        "service/research/cache/eval-wave1/negatives/neg13/rights-source-metadata.json",
+        "service/research/cache/eval-wave1/negatives/neg13/source-page.wikitext",
+        "service/research/cache/eval-wave1/negatives/neg13/uncertainty-enlarged.jpg",
+        "service/research/cache/eval-wave1/negatives/neg13/uncertainty-enlarged.json"
+      ],
+      "limitations": [
+        "Provisional assistant screening of sampled images, not human ground truth, continuous visual playback or complete frame-by-frame inspection. Sequential decoder PTS were checked numerically; visual sampling does not prove continuity between inspected images.",
+        "Only explicit ordinary-motion intervals are proposed as label-0 physical-fight negatives. Visible ordinary contact such as an embrace is not labelled physical-fight contact. No identity, intent, injury, crime or guilt inference.",
+        "Unknown intervals include uninspected opening/tail margins and ambiguous/occluded portions. Unknown is not normal. No positive physical-fight or physical-contact-proxy event is approved in this negative bundle.",
+        "Source-author groups are conservative and roles were frozen before downloads/review and before any model score. Actor/session independence and publisher-pretrain overlap remain unknown; distinct authors do not prove independent actors.",
+        "Copyright licence is uploader-declared on the saved primary own-work page; no independently inspected participant/model releases or unrestricted privacy/personality-rights claim.",
+        "Curated short clips, approximate crowd counts and unmeasured person heights do not establish camera-hour false-alert rates or 50-100-person coverage. No genuine near-IR, thermal or low-light colour CCTV validation is supplied.",
+        "Only the published transcode was acquired; original-file SHA256 and original-camera timing/resolution are unverified. Source-time annotations use actual acquired-transcode PTS, with no trimming/stretching; equivalence to original-frame timestamps was not independently verified."
+      ],
+      "notes": "An elevated camera shows several people at staggered positions passing/handling brick-sized objects, reaching to a stack and repeatedly bending/crouching. Enlarged source frames at 1.251, 6.761, 12.777 and 16.766s support object handling rather than directed person-to-person contact. No rough play apparent in retained samples. Bodies near the doorway and under the foreground edge are partly occluded; no hidden-action guarantee is made.",
+      "rights": {
+        "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1236897377",
+        "sourcePageRevision": {
+          "revid": 1236897377,
+          "parentid": 963899716,
+          "timestamp": "2026-06-23T12:05:32Z"
+        },
+        "metadataPath": "service/research/cache/eval-wave1/negatives/neg13/rights-source-metadata.json",
+        "metadataSha256": "cb04ad8051cd852e1a21e6f5b466a4aa51579c13224597fdb8907f1fd6bee38e",
+        "wikitextSha256": "04500e9fdcef6ac8e9d96ca3ece10d75a6ccc37c2cd49239542a902cd05b1d1a",
+        "retrievedAtUtc": "2026-10-21T17:02:11.474356+00:00",
+        "credit": "Own work",
+        "attribution": "File:Example of team work.webm by Hridoy Kundu; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=1236897377; https://creativecommons.org/licenses/by-sa/4.0",
+        "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+      },
+      "originalMedia": {
+        "url": "https://upload.wikimedia.org/wikipedia/commons/1/18/Example_of_team_work.webm",
+        "publisherSha1": "c12dc15a7c86338000cbc6dcb895f9ebbbb6059c",
+        "publisherDeclaredBytes": 32571103,
+        "publishedDimensions": [
+          720,
+          1280
+        ],
+        "acquired": false,
+        "sha256": null,
+        "path": null
+      },
+      "acquiredSource": {
+        "kind": "published-transcode",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/1/18/Example_of_team_work.webm/Example_of_team_work.webm.480p.vp9.webm",
+        "path": "service/research/cache/eval-wave1/negatives/neg13/published-transcode.webm",
+        "sha256": "b0d6c8201ab677fb942799ba304565ecc92a7b68056ee338171c4f98d361365e",
+        "sizeBytes": 2738859,
+        "sourcePtsStartMs": 6.0,
+        "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg13/original-sequential-pts.json",
+        "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+        "maxPtsGapMs": 67.99999999999999
+      },
+      "transformationLineage": {
+        "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/1/18/Example_of_team_work.webm",
+        "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+        "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+        "workingOperation": "none; working media equals acquired source bytes",
+        "localTimeOffsetMs": 0,
+        "timeScale": 1,
+        "sheetClockToContainerPtsOffsetMs": 6.0,
+        "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+        "cv2Threads": 1,
+        "ffmpegThreads": 2
+      }
+    }
+  ]
+}

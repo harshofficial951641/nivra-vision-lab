@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "Assistant visual screening using local OpenCV with cv2.setNumThreads(1): 24 timestamped RGB frames per clip evenly sampled from 0.1s to duration-0.1s; each full contact sheet actually inspected via view_image. Four clips (73, 76, 79, 100) additionally inspected as 32 evenly spaced source frames retained during sequential decoding. Sequential decoding is not continuous visual review. No dataset-provided code executed. Selection: 24 rounded equally spaced indices across 59 numerically ID-sorted eligible, previously unreviewed publisher-positive clips in requested 71-140 range (selected endpoints 73 and 140).",
+  "limitations": [
+    "Provisional assistant annotations from sampled still images, not human ground truth, continuous playback or frame-by-frame visual inspection. No labels approved solely from publisher categories.",
+    "Temporal spans approximate sampled contact configurations; exact onset/offset, continuity, actual impacts and force remain unverified. Unannotated margins are unknown, not normal.",
+    "Only full four-second windows are eligible: positive coverage must be at least 50%; normal coverage must explicitly cover the entire window. This review approves no normal intervals. Short/unclear contact is left ambiguous.",
+    "Visible stick-like props trigger whole-recording exclusion for this unarmed physical-fight target. No inference about identity, intent, injury or crime.",
+    "All VID footage belongs to one training cohort. Actor/session lineage is unknown; descriptive sceneGroup values do not establish independent actors or sessions. No calibration/holdout independence claim.",
+    "Consent is author-reported and not an independently verified full release; rights evidence remains in DATA-RIGHTS.md and vid-source.json.",
+    "One initial supplemental source frame for v_c_b_76 is black. Primary 24-frame sheet is visible; the black image supports no label."
+  ],
+  "recordings": [
+    {
+      "id": "v_c_b_73",
+      "decision": "ambiguous",
+      "sceneGroup": "computer-lab-perimeter-wood-desks",
+      "events": [],
+      "notes": "Three people; sampled arm/upper-body contact and bending around 1.8-3.4s, followed by separation/repositioning and a late short contact episode. Supplemental 32-frame sheet does not support a conservative two-second contact span without including uncertain transitions. No normal full window approved.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_73.jpg",
+        "review-round2-b/v_c_b_73-samples.json",
+        "review-round2-b/v_c_b_73-sequential32.jpg",
+        "review-round2-b/v_c_b_73-sequential32.json"
+      ],
+      "sha256": "b41de78c30112b7b932998e3a2f4c18acc76016702d5077ea8e0207b7f15fafe",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_73.mp4",
+      "durationSeconds": 5.566666666666666
+    },
+    {
+      "id": "v_c_b_76",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Two people repeatedly extend arms toward the other upper body, with short bends and intervening separations. Supplemental 32-frame sheet still shows intermittent rather than a clearly supported two-second contact span. One supplemental first frame is black; no label is inferred from it. No normal full window approved.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_76.jpg",
+        "review-round2-b/v_c_b_76-samples.json",
+        "review-round2-b/v_c_b_76-sequential32.jpg",
+        "review-round2-b/v_c_b_76-sequential32.json"
+      ],
+      "sha256": "7ceed06322ce35340f8d850f657c162f124717fa5569b087dfe3c196052751c2",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_76.mp4",
+      "durationSeconds": 5.533333333333333
+    },
+    {
+      "id": "v_c_b_79",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-courtyard-dark-shutter-blue-seats",
+      "events": [],
+      "notes": "Three people with repeated arm extensions and brief apparent hand/shoulder contact. The supplemental 32-frame sheet does not resolve directed contact versus gesturing/positioning sufficiently to retain a positive interval. No normal full window approved.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_79.jpg",
+        "review-round2-b/v_c_b_79-samples.json",
+        "review-round2-b/v_c_b_79-sequential32.jpg",
+        "review-round2-b/v_c_b_79-sequential32.json"
+      ],
+      "sha256": "4cb87c205ed23fb052f5f30757d5fe24b89fd294ddb13e3c501c600c71d27a44",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_79.mp4",
+      "durationSeconds": 6.833333333333333
+    },
+    {
+      "id": "v_c_b_82",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Long light-coloured stick-like prop visible during raised-arm movements and approaches. Excluded from unarmed target even where people come close.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_82.jpg",
+        "review-round2-b/v_c_b_82-samples.json"
+      ],
+      "sha256": "4430a06e506f98097c70edb16be8b2705adc70a1242291f624b37719bc563d4f",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_82.mp4",
+      "durationSeconds": 6.8
+    },
+    {
+      "id": "v_c_b_84",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Upper-body grappling and bending occur, but a long light-coloured stick-like prop is visible in hand in early and later samples. Entire prop-bearing scene excluded from this unarmed target.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_84.jpg",
+        "review-round2-b/v_c_b_84-samples.json"
+      ],
+      "sha256": "6744e3c54dcd728a6ccbfc0f82dbcb235956ec7dd7cab8f0a5c21461d9693f63",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_84.mp4",
+      "durationSeconds": 6.2
+    },
+    {
+      "id": "v_c_b_87",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Two people mostly face one another and extend arms; long light-coloured stick-like prop is visible across the interaction. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_87.jpg",
+        "review-round2-b/v_c_b_87-samples.json"
+      ],
+      "sha256": "50d29945b755d151f95572e54bbeb56535ef304afae7aa70a308e68ee592956c",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_87.mp4",
+      "durationSeconds": 8.9
+    },
+    {
+      "id": "v_c_b_90",
+      "decision": "exclude",
+      "sceneGroup": "covered-courtyard-dark-shutter-blue-seats",
+      "events": [],
+      "notes": "Group approaches and intermittent upper-body contact; a long light-coloured stick-like prop is visible especially in later samples. Exclude rather than label the group/prop imagery positive.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_90.jpg",
+        "review-round2-b/v_c_b_90-samples.json"
+      ],
+      "sha256": "68826610c1032b35bdd4f7e8d12b71e809cebdb175cb7739bb77f30dc0a02c2e",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_90.mp4",
+      "durationSeconds": 9.466666666666667
+    },
+    {
+      "id": "v_c_b_93",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Two people with repeated raised-arm movements and a clearly visible long light-coloured stick-like prop. Excluded for unarmed target.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_93.jpg",
+        "review-round2-b/v_c_b_93-samples.json"
+      ],
+      "sha256": "aaaacdf46e2ba7bf466f3404c695d694065d03e5b2228e15a12b5e645e8c47cf",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_93.mp4",
+      "durationSeconds": 7.133333333333334
+    },
+    {
+      "id": "v_c_b_95",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "One person extends/sweeps a long light-coloured stick-like prop toward the other, who repeatedly bends away. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_95.jpg",
+        "review-round2-b/v_c_b_95-samples.json"
+      ],
+      "sha256": "b2d99cf6eb1f72b46b5c996bad0e1e37ded8d40a5b79994cee0640e6d659c253",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_95.mp4",
+      "durationSeconds": 9.3
+    },
+    {
+      "id": "v_c_b_100",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 2.02,
+          "endSeconds": 4.15,
+          "label": 1
+        }
+      ],
+      "notes": "Retained central subset shows close upper-body gripping, turning and paired torso displacement; corroborated by 32 sequentially decoded source-frame samples. Portions around 2.9-3.6s are partly occluded by the nearer body, so precise grip and uninterrupted continuity remain uncertain. Omit initial arm swings and late bend/release; no impact/force inference.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_100.jpg",
+        "review-round2-b/v_c_b_100-samples.json",
+        "review-round2-b/v_c_b_100-sequential32.jpg",
+        "review-round2-b/v_c_b_100-sequential32.json"
+      ],
+      "sha256": "9d6f146b40d5eeeaa0b603814f64c607569130e3287e53cb880ac41434f129f9",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_100.mp4",
+      "durationSeconds": 5.1
+    },
+    {
+      "id": "v_c_b_102",
+      "decision": "ambiguous",
+      "sceneGroup": "exterior-green-wall-brick-walkway",
+      "events": [],
+      "notes": "Three people remain largely separated with repeated raised arms and brief reaches near shoulders. At this distance the sampled images do not establish clear sustained physical contact rather than gestures. No positive or normal interval approved.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_102.jpg",
+        "review-round2-b/v_c_b_102-samples.json"
+      ],
+      "sha256": "90698b5a250da719b815af4f0fb4d6ce765d8d64cfca930eff23f42e7909ada1",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_102.mp4",
+      "durationSeconds": 9.133333333333333
+    },
+    {
+      "id": "v_c_b_105",
+      "decision": "exclude",
+      "sceneGroup": "exterior-green-wall-brick-walkway",
+      "events": [],
+      "notes": "Three people make intermittent arm reaches and bends; a long light-coloured stick-like prop is visible horizontally in early-middle samples. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_105.jpg",
+        "review-round2-b/v_c_b_105-samples.json"
+      ],
+      "sha256": "89ccbdfffc0f5c778fc5f5fc0cb7b93e0d02713cd343db4991c6bae44c5f3593",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_105.mp4",
+      "durationSeconds": 7.966666666666667
+    },
+    {
+      "id": "v_c_b_107",
+      "decision": "exclude",
+      "sceneGroup": "brick-stairwell-blue-seats",
+      "events": [],
+      "notes": "Two people with raised arms and a clearly visible long light-coloured stick-like prop across/between them. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_107.jpg",
+        "review-round2-b/v_c_b_107-samples.json"
+      ],
+      "sha256": "7ca8486b3a9b36d0f0ccd7bed9502e6e656f6e864e0e2c89242ddb10b701bf93",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_107.mp4",
+      "durationSeconds": 4.7
+    },
+    {
+      "id": "v_c_b_111",
+      "decision": "exclude",
+      "sceneGroup": "brick-stairwell-blue-seats",
+      "events": [],
+      "notes": "Four people step and extend arms while long light-coloured stick-like props are visible, including a downward-pointing one around 6.8-7.6s. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_111.jpg",
+        "review-round2-b/v_c_b_111-samples.json"
+      ],
+      "sha256": "8e07651bb97e09465361190b6e7485023df17ac4f58fe96991d90f156920b5f9",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_111.mp4",
+      "durationSeconds": 9.3
+    },
+    {
+      "id": "v_c_b_114",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 1.15,
+          "endSeconds": 3.51,
+          "label": 1
+        }
+      ],
+      "notes": "Retained central samples show a low/kneeling person with two standing people holding/reaching into the upper-body/arm region; the low body is displaced and remains bent while close contact recurs across the interval. Omit initial drop and later repositioning. No props apparent in inspected samples; exact continuity, force and event boundaries remain provisional.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_114.jpg",
+        "review-round2-b/v_c_b_114-samples.json"
+      ],
+      "sha256": "8e142ecd2cb1d8f3447087cce5a22d245945da76fa75e4e7f8d3af2e9c4f35ef",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_114.mp4",
+      "durationSeconds": 6.233333333333333
+    },
+    {
+      "id": "v_c_b_119",
+      "decision": "exclude",
+      "sceneGroup": "brick-stairwell-blue-seats",
+      "events": [],
+      "notes": "Three-person upper-body grapple occurs, but a long light-coloured stick-like prop is clearly present from opening samples onward. Entire scene excluded for unarmed target.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_119.jpg",
+        "review-round2-b/v_c_b_119-samples.json"
+      ],
+      "sha256": "def0630710a37374f9c454c520bc8cfdec520d12f440ed48983f6a5838b8ce6f",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_119.mp4",
+      "durationSeconds": 7.066666666666666
+    },
+    {
+      "id": "v_c_b_121",
+      "decision": "exclude",
+      "sceneGroup": "brick-stairwell-blue-seats",
+      "events": [],
+      "notes": "Three-person upper-body holding/turning with a clearly visible long light-coloured stick-like prop at the lower arm/hip region. Excluded despite visible contact.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_121.jpg",
+        "review-round2-b/v_c_b_121-samples.json"
+      ],
+      "sha256": "39d75b77ba537d83aa30f10ec419a05919c2bb89bd62f3363330ab87b8a47a0b",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_121.mp4",
+      "durationSeconds": 4.266666666666667
+    },
+    {
+      "id": "v_c_b_124",
+      "decision": "exclude",
+      "sceneGroup": "covered-hall-grey-columns",
+      "events": [],
+      "notes": "Repeated arm and leg extensions among standing people; a long light-coloured stick-like prop is visible near the front person hands. Excluded rather than converting gesture imagery to positive.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_124.jpg",
+        "review-round2-b/v_c_b_124-samples.json"
+      ],
+      "sha256": "d669d3969fcabca00f57248acff5a447faffd89ff1a60cb26b714622586a0ca0",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_124.mp4",
+      "durationSeconds": 8.833333333333334
+    },
+    {
+      "id": "v_c_b_126",
+      "decision": "exclude",
+      "sceneGroup": "covered-hall-grey-columns",
+      "events": [],
+      "notes": "Group faces inward and reaches with arms while foreground person holds a long light-coloured stick-like prop. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_126.jpg",
+        "review-round2-b/v_c_b_126-samples.json"
+      ],
+      "sha256": "9692927827810d33f7dcde63b20adbc752bab4e04d4d404daae330143984756b",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_126.mp4",
+      "durationSeconds": 6.533333333333333
+    },
+    {
+      "id": "v_c_b_129",
+      "decision": "exclude",
+      "sceneGroup": "covered-hall-grey-columns",
+      "events": [],
+      "notes": "Group makes leg lifts, raised arms and close approaches; multiple long light-coloured stick-like props are clearly visible in middle/late samples. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_129.jpg",
+        "review-round2-b/v_c_b_129-samples.json"
+      ],
+      "sha256": "182a57c89d7a692114bdf122149ff92f9785d38421ae941a4da020feeaa7c200",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_129.mp4",
+      "durationSeconds": 12.366666666666667
+    },
+    {
+      "id": "v_c_b_131",
+      "decision": "exclude",
+      "sceneGroup": "covered-hall-grey-columns",
+      "events": [],
+      "notes": "Three people with close upper-body reaches; a long light-coloured stick-like prop is visible extending horizontally from the right-side person around 1.85s and in later views. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_131.jpg",
+        "review-round2-b/v_c_b_131-samples.json"
+      ],
+      "sha256": "b5a9a5909103932e9a0d3d7d30c1ca1b87cae82152bc107d6d05787aba1cc54e",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_131.mp4",
+      "durationSeconds": 8.266666666666667
+    },
+    {
+      "id": "v_c_b_135",
+      "decision": "exclude",
+      "sceneGroup": "covered-hall-grey-columns",
+      "events": [],
+      "notes": "Three people with arm extensions, bends and leg lifts; a long light-coloured stick-like prop is visible in opening samples and again across later positions. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_135.jpg",
+        "review-round2-b/v_c_b_135-samples.json"
+      ],
+      "sha256": "8ee20ee3e722290cf1c322208e67a2a05777b0426adb8bd26943cfc42b0d1b6e",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_135.mp4",
+      "durationSeconds": 6.4
+    },
+    {
+      "id": "v_c_b_137",
+      "decision": "exclude",
+      "sceneGroup": "covered-hall-grey-columns",
+      "events": [],
+      "notes": "Three people approach and reach toward shoulders, with a long light-coloured stick-like prop visible extending from the left person toward the others in middle samples. Excluded.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_137.jpg",
+        "review-round2-b/v_c_b_137-samples.json"
+      ],
+      "sha256": "89b382dcb61fd2636e9b9ea513f53543a4241e7f458cca26287cde5ab21e2f31",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_137.mp4",
+      "durationSeconds": 4.833333333333333
+    },
+    {
+      "id": "v_c_b_140",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 0.69,
+          "endSeconds": 3.65,
+          "label": 1
+        }
+      ],
+      "notes": "Retained central subset repeatedly shows two foreground people making upper-body/forearm contact, leaning and pushing/turning together, then one bends low. Other people interact behind them. Omit the opening approach and later separated arm movements/repositioning. No props apparent in inspected samples; continuity and precise boundaries are provisional and no impact/force inference is made.",
+      "evidenceFiles": [
+        "review-round2-b/v_c_b_140.jpg",
+        "review-round2-b/v_c_b_140-samples.json"
+      ],
+      "sha256": "fb05e2ee94b89764c8bdd97d20660353bf162652813e46baf0fecaea9a560a06",
+      "archive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_140.mp4",
+      "durationSeconds": 7.0
+    }
+  ]
+}

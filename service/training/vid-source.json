@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "dataset": "VID: A Comprehensive Dataset for Violence Detection in Various Contexts",
+  "doi": "10.7910/DVN/N4LNZD",
+  "auditDate": "2026-10-21",
+  "eligibility": {
+    "trainingAllowed": true,
+    "decisionScope": "Explicit dataset copyright permission for controlled experimental training, including a commercially compatible future copyright use.",
+    "basis": "The creators' official released dataset deposit declares CC0-1.0, with no additional use/access restrictions in its public metadata.",
+    "completeRightsClearanceClaimed": false,
+    "participantReleaseIndependentlyVerified": false,
+    "productionAccuracyOrDeploymentApprovalClaimed": false
+  },
+  "deposit": {
+    "landingUrl": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/N4LNZD&version=2.0",
+    "pinnedVersionApiUrl": "https://dataverse.harvard.edu/api/datasets/:persistentId/versions/2.0?persistentId=doi:10.7910/DVN/N4LNZD",
+    "latestVersionApiUrl": "https://dataverse.harvard.edu/api/datasets/:persistentId/versions/:latest?persistentId=doi:10.7910/DVN/N4LNZD",
+    "versionNumber": 2,
+    "versionMinorNumber": 0,
+    "versionId": 424271,
+    "versionState": "RELEASED",
+    "releaseTime": "2024-07-15T06:42:37Z",
+    "license": {
+      "name": "CC0 1.0",
+      "rightsIdentifier": "CC0-1.0",
+      "uri": "http://creativecommons.org/publicdomain/zero/1.0"
+    },
+    "additionalTerms": {
+      "termsOfUse": null,
+      "confidentialityDeclaration": null,
+      "restrictions": null,
+      "specialPermissions": null,
+      "citationRequirements": null,
+      "conditions": null,
+      "disclaimer": null,
+      "termsOfAccess": null
+    },
+    "archiveCount": 32,
+    "restrictedArchiveCount": 0,
+    "totalArchiveBytes": 45419510634,
+    "access": "Public metadata and unrestricted files; no account, request form or agreement acceptance was performed for this audit.",
+    "descriptionClipCount": 3000,
+    "evidenceLocators": {
+      "license": "$.data.license",
+      "version": "$.data.id, $.data.versionNumber, $.data.versionMinorNumber, $.data.versionState",
+      "terms": "$.data.termsOfUse, $.data.restrictions, $.data.specialPermissions, $.data.conditions, $.data.termsOfAccess",
+      "access": "$.data.files[*].restricted",
+      "description": "$.data.metadataBlocks.citation.fields[?(@.typeName=='dsDescription')].value[*].dsDescriptionValue.value"
+    }
+  },
+  "paper": {
+    "doi": "10.1016/j.dib.2024.110875",
+    "pmcId": "PMC11951989",
+    "htmlUrl": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11951989/",
+    "workingFullTextXmlUrl": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC11951989/fullTextXML",
+    "articleLicense": "CC-BY-NC-4.0",
+    "articleLicenseUrl": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "articleLicenseIsDatasetLicense": false,
+    "purposeWordingSummary": "The data-access instructions describe academic, research or instructional purposes. This wording does not contain an only qualifier and is not an additional restriction in the released deposit metadata.",
+    "consent": {
+      "reportedVoluntaryParticipationAndInformedConsent": true,
+      "ethicsCommittee": "Research Ethics Committee of the University of Asia Pacific",
+      "ethicsApprovalReference": "UAP/REC/2023/203",
+      "volunteerCount": 72,
+      "faceBlurringReported": true,
+      "signedFormsPublishedOrIndependentlyAudited": false,
+      "commercialUseConsentScopeIndependentlyVerified": false
+    },
+    "reportedClipCounts": {
+      "rawSourceClips": 3020,
+      "poseMaskedDerivatives": 3020,
+      "combinedFiles": 6040,
+      "rawViolent": 1510,
+      "rawNonviolent": 1510,
+      "violentClassroom": 616,
+      "violentDomestic": 320,
+      "violentStreet": 434,
+      "violentOther": 140,
+      "cctvViolent": 10,
+      "cctvNonviolent": 10
+    },
+    "countDiscrepancy": "The deposit description says 3000 source clips; the article says 3020 source clips and 6040 files including derivatives. Neither count has been confirmed by archive inventory in this audit.",
+    "evidenceLocators": {
+      "articleLicense": "//article-meta/permissions/license",
+      "academicPurposeInstructions": "//*[@id='para0003'] (Specifications Table)",
+      "participantsAndCounts": "//*[@id='sec0004']/*[@id='para0013'] (Data Description)",
+      "faceBlurringAndPoseDerivatives": "//sec[title[contains(.,'Experimental Design')]]",
+      "consentAndEthics": "//*[@id='sec0007']/*[@id='para0021'] (Ethics Statement)"
+    }
+  },
+  "archiveInterpretation": {
+    "nvPrefix": "Nonviolent class; infer from names and the paper, verify against archive contents.",
+    "v_cPrefix": "Classroom violence class; infer from names and the paper, verify against archive contents.",
+    "bSuffix": {
+      "interpretation": "Face-blurred RGB source videos",
+      "status": "inferred_pending_archive_and_visual_verification",
+      "archives": 16,
+      "totalBytes": 9969293337
+    },
+    "mSuffix": {
+      "interpretation": "YOLOv7 pose-masked derivatives",
+      "status": "inferred_pending_archive_and_visual_verification",
+      "archives": 16,
+      "totalBytes": 35450217297
+    },
+    "explicitFilenameLegendFound": false,
+    "groupingRule": "An original recording and all transformed, masked, cropped or near-duplicate versions must share a sourceGroup and split. Do not count raw and masked versions as independent recordings.",
+    "sourceGroupingAndActorMappingVerified": false,
+    "mediaReviewedByThisAudit": false,
+    "classificationLabelsIndependentlyReviewed": false,
+    "labelScope": "Publisher scene labels distinguish violence/nonviolence and broad contexts. They do not independently establish contact, intent, injury, identity or event-level timing."
+  },
+  "copyrightLimitations": {
+    "cc0TermsUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "commercialCopyrightUsePermitted": true,
+    "privacyAndPublicityRightsWaivedByCc0": false,
+    "note": "CC0 is explicit copyright permission, not a guarantee that every non-copyright right has been cleared. Preserve the author-reported consent and purpose-wording caveats in provenance."
+  },
+  "excludedAlternatives": [
+    {
+      "dataset": "AIRTLab",
+      "trainingAllowedForThisProductWorkflow": false,
+      "reason": "The official dataset release agreement grants research and educational use, with no verified commercially compatible media grant. The article's CC BY licence does not replace the dataset terms.",
+      "primaryUrl": "https://github.com/airtlab/A-Dataset-for-Automatic-Violence-Detection-in-Videos#dataset-release-agreement"
+    },
+    {
+      "dataset": "RWF-2000",
+      "trainingAllowedForThisProductWorkflow": false,
+      "reason": "The official dataset terms require SMIIP Lab approval for commercial use and for modification/redistribution. No such permission was obtained. Existing checkpoint/code licences do not supply those media rights.",
+      "primaryUrl": "https://github.com/mchengny/RWF2000-Video-Database-for-Violence-Detection#license"
+    },
+    {
+      "dataset": "NTU CCTV-Fights",
+      "trainingAllowedForThisProductWorkflow": false,
+      "reason": "The official source limits access/use to approved academic noncommercial research and restricts commercial use, redistribution and derived datasets without permission. No account, release agreement or approval was obtained.",
+      "primaryUrl": "https://rose1.ntu.edu.sg/dataset/cctvFights/"
+    }
+  ],
+  "auditActions": {
+    "smallPublicMetadataRetrieved": true,
+    "mediaDownloaded": false,
+    "gpuUsed": false,
+    "accountsCreated": false,
+    "agreementsAccepted": false,
+    "authorsContacted": false
+  }
+}

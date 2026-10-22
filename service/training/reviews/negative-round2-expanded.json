@@ -1,0 +1,1426 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "Provisional assistant visual inspection using local OpenCV (cv2.setNumThreads(1)): 16 timestamped RGB samples spanning each of 102 clips (0.1 seconds through duration minus 0.1), read as real contact sheets with view_image. For 20 candidate windows, sequentially decoded the first four seconds and retained 32 evenly spaced timestamped frames from 0 through approximately 4 seconds, visually inspected with view_image; 12 windows retained. No continuous playback or full-frame-by-frame inspection; no audio review. Only explicit 0-4 second source spans are labelled normal; unknown tails remain unannotated.",
+  "limitations": [
+    "Assistant visual screening is provisional, not human ground truth. Brief events between sampled timestamps cannot be excluded, even in the denser 32-frame windows.",
+    "Sequential decoding to obtain samples does not mean all decoded frames were visually inspected. No claim of continuous motion inspection.",
+    "No identity, intent, relationship, injury, crime or audio judgments. Handshake/greeting descriptions concern visible hand-clasp configurations only.",
+    "Settings are descriptive, not proof of actor/session independence. Every accepted clip remains in the single unresolved VID V2 training cohort; no calibration or holdout split is authorized.",
+    "Consent is author-reported; no independently verified participant-release or complete-rights-clearance claim.",
+    "102 of 378 newly imported recordings were screened. The other 276 remain pending, not normal by inference from publisher labels.",
+    "No perimeter-computer-lab match was found among the 102 samples. Courtyard/corridor campus settings match descriptively; the three portrait classroom clips broadly match educational interiors but not the exact lab, camera framing or background.",
+    "Only twelve 4-second normal spans are retained. No label extrapolation to clip tails; vague gesture-only scenes, unresolved physical interaction, prop-centred scenes and unmatched backgrounds were omitted."
+  ],
+  "recordings": [
+    {
+      "id": "nv_b_205",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "People face one another with raised arms and close hand/arm movements. The sampled views do not clearly distinguish all contact configurations. Do not resolve these as normal from the publisher category; no temporal label retained.",
+      "sha256": "ac0f17b949d50d4760706fb6dde4c009f71bcc171eee61437380a07c5f3a13bb",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.933333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-01.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_207",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "People face one another with raised arms and close hand/arm movements. The sampled views do not clearly distinguish all contact configurations. Do not resolve these as normal from the publisher category; no temporal label retained.",
+      "sha256": "251168b978e50b11ab936f0e04c63b727e5c221f21aaf910e7179af7e30221c3",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.2,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-01.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_209",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "People face one another with raised arms and close hand/arm movements. The sampled views do not clearly distinguish all contact configurations. Do not resolve these as normal from the publisher category; no temporal label retained.",
+      "sha256": "1cb22aba44eb354d393e5920fc7f0c187497980775434741dd5c35d743a2724f",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.5,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-01.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_211",
+      "decision": "train-normal",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Three separated people stand near the entrance; the foreground person shifts position and begins walking while the others remain behind. Retain only 0-4 seconds; no strike, shove or grappling is visible in these samples.",
+      "sha256": "74ec813dda03f460d6c238a73b4bd44e0284a80b394d1c01467432788144fe08",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.2,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-01.jpg",
+        "data/vid/review-round2-expanded/nv_b_211-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_213",
+      "decision": "exclude",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "Separated figures make repeated arm and body gestures. Omitted under the conservative brief excluding vague gesture-only scenes; no argument or intent claim is made, and no events are labelled.",
+      "sha256": "13d025192dd2a06c58dd0350c2b6847938169bb944df5ca36e8da8bcc1d23f85",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.166666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-02.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_215",
+      "decision": "exclude",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "Separated figures make repeated arm and body gestures. Omitted under the conservative brief excluding vague gesture-only scenes; no argument or intent claim is made, and no events are labelled.",
+      "sha256": "f2d5f7478e5d5c9baa217a3f3af080ef51a8c4ca9523fd81bf181745ea9d29d8",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.766666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-02.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_217",
+      "decision": "exclude",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "Separated figures make repeated arm and body gestures. Omitted under the conservative brief excluding vague gesture-only scenes; no argument or intent claim is made, and no events are labelled.",
+      "sha256": "88a9b40fd44bb29fb020d4735aee8019608a58bccf2a2d2a79dcfe73512f0fd5",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 4.466666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-02.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_219",
+      "decision": "exclude",
+      "sceneGroup": "indoor-wide-room-windowed-group",
+      "events": [],
+      "notes": "A group moves with repeated arm/leg poses in a wide indoor room. This background is not established as one of the retained fight settings; omit rather than invent a matched scene.",
+      "sha256": "30840e13e209bad94b83e4bb29e9551054580e285480308d048f2b7a1ee87544",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.033333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-02.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_221",
+      "decision": "exclude",
+      "sceneGroup": "indoor-wide-room-windowed-group",
+      "events": [],
+      "notes": "A group moves with repeated arm/leg poses in a wide indoor room. This background is not established as one of the retained fight settings; omit rather than invent a matched scene.",
+      "sha256": "11daab7ffa12837a2827efd7392f64e1611ca500ad8657121031c91b5589d8b6",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 6.133333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-03.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_223",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "b7d0c481168f4aa24c968ecce7ccc982775c8c74c6358d9caa0d822177ecfd7d",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-03.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_225",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "53cf26c141b49bb06d95ed70607cbc15bc17c2cc998b9cb2cbfca584b2770753",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-03.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_227",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "71cf603547d00ca1e362af8e2bc1bec08aad30c3127552bdaa7b33cb3ddeb9ed",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.033333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-03.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_229",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [],
+      "notes": "A seated person holds a stringed instrument in a bedroom. Excluded as a prop-centred domestic scene outside the matched-setting selection.",
+      "sha256": "ef5d86d711e4655e21443f610968c2b3e27bd8836100ff5dda04fe510c95dcb0",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.066666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-04.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_231",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [],
+      "notes": "A seated person holds a stringed instrument in a bedroom. Excluded as a prop-centred domestic scene outside the matched-setting selection.",
+      "sha256": "4c8ecc27cfe1d12d17d717a734029fa7fdd30dbaaad8d0cac4a40d52dc3e4a3a",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.666666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-04.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_233",
+      "decision": "ambiguous",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [],
+      "notes": "Two people remain in prolonged close upper-body/arm contact beside bedroom furniture. Still samples cannot confidently resolve the physical interaction; no normal interval retained.",
+      "sha256": "42123174edfa7c7f496e56c39a92a194d8dbc6d453475a605f80dc71d8f06b30",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.633333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-04.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_235",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [],
+      "notes": "One person sits or makes large body/leg movements on a bed. Excluded because the domestic bedroom is not a matched fight setting in this review.",
+      "sha256": "b1937770911c971cd95a0c0f595e9916460a087a9de5ddc2ade59adb7be2156a",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.666666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-04.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_237",
+      "decision": "exclude",
+      "sceneGroup": "home-dining-room",
+      "events": [],
+      "notes": "A dining table and chairs dominate the view, with empty room or seated eating-like hand movements. Excluded as an unmatched domestic dining setting.",
+      "sha256": "e47b1d974aa6c0c7b3d2af283c2ca54eeb4636483d822a59a3267206f1b5b126",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.4,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-05.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_239",
+      "decision": "exclude",
+      "sceneGroup": "home-dining-room",
+      "events": [],
+      "notes": "A dining table and chairs dominate the view, with empty room or seated eating-like hand movements. Excluded as an unmatched domestic dining setting.",
+      "sha256": "ad47d483910bb2377b57fb8419f7c6139289ac339e5a93d8dd734f9f1924dc6a",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.533333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-05.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_241",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "5887303035c58e73aea1d4b148a27df82b782f8497c31dd8152f729b35398fa7",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.157509157509157,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-05.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_243",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "998fdd3ba78cb06ded6845fb9b648ac8bc669f4b39db99ecf21c1c2d17fbbbcf",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.630789736754415,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-05.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_245",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "People face one another with raised arms and close hand/arm movements. The sampled views do not clearly distinguish all contact configurations. Do not resolve these as normal from the publisher category; no temporal label retained.",
+      "sha256": "1ad46146efd69d8671f64d1ce72ae9adf30edca9f540dbe42a840c58fc880d92",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.866666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-06.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_247",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "People face one another with raised arms and close hand/arm movements. The sampled views do not clearly distinguish all contact configurations. Do not resolve these as normal from the publisher category; no temporal label retained.",
+      "sha256": "a8bcac548cb555bfeafc8198494299d70949aaa64bba2e6bc7ef1cd023d3166f",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.366666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-06.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_249",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen",
+      "events": [],
+      "notes": "A person handles items beside kitchen counters or cookware. Excluded as an unmatched domestic/prop-centred setting.",
+      "sha256": "42f4faae784d53fa60cb5679063983f24650d0bf4d4739c9e71003cd1fdbf8c8",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.376042709376042,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-06.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_251",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen",
+      "events": [],
+      "notes": "A person handles items beside kitchen counters or cookware. Excluded as an unmatched domestic/prop-centred setting.",
+      "sha256": "0384784ab973cbf92e355c786dc93312a3dc2bde795c95c40fee3836c3a0361b",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.930356547817393,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-06.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_253",
+      "decision": "exclude",
+      "sceneGroup": "home-table-writing",
+      "events": [],
+      "notes": "One person leans over paper or small items at a domestic table/bed. Excluded as an unmatched home setting.",
+      "sha256": "57f7660a6665bde248c5249dcb398d8218d7260fc4894a9aa5d467d7cd48ab9f",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 10.166666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-07.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_255",
+      "decision": "exclude",
+      "sceneGroup": "home-table-writing",
+      "events": [],
+      "notes": "One person leans over paper or small items at a domestic table/bed. Excluded as an unmatched home setting.",
+      "sha256": "92be43af46cd4ab8db0e20bb3679bdb9de6d88dade6a7182bf21d7834c0178d9",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.06968989663221,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-07.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_257",
+      "decision": "exclude",
+      "sceneGroup": "home-table-writing",
+      "events": [],
+      "notes": "One person leans over paper or small items at a domestic table/bed. Excluded as an unmatched home setting.",
+      "sha256": "d8875651d39c5d812f0fc5adb2d3f9ebf03b642983a0e5f6982db0d676b79205",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.466666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-07.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_259",
+      "decision": "ambiguous",
+      "sceneGroup": "home-living-room",
+      "events": [],
+      "notes": "Two people maintain close upper-body contact before separating. The sampled contact is insufficient to establish a definitely normal interval for this conservative selection.",
+      "sha256": "05ca68e8e9572c16ccbccdd946ae0182a8b268a5d6622ec8fa988d85d2328c01",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.772515010006671,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-07.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_261",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "6670f53198068bd236c8a0d0e67389eaa0c2c14fbd2b4b71a166c44657cffd2e",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.966666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-08.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_263",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "af60fdf8d66cb0a7cc96b4463ac556fd46652d00052a3d168239c60c829e3071",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.388814913448735,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-08.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_265",
+      "decision": "exclude",
+      "sceneGroup": "home-glass-front-cabinet",
+      "events": [],
+      "notes": "One person handles a glass-front cabinet or its contents. Excluded as an unmatched domestic object-handling scene.",
+      "sha256": "c7533e64883c1c293f9ef23e9c2824b895ee371edc49dc3c7a0df70e05113965",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 10.4736490993996,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-08.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_267",
+      "decision": "exclude",
+      "sceneGroup": "home-glass-front-cabinet",
+      "events": [],
+      "notes": "One person handles a glass-front cabinet or its contents. Excluded as an unmatched domestic object-handling scene.",
+      "sha256": "4b5092df18e114bc8a98eb1503db2e30675f24b5400597e0faf74b7b4c0d93b8",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 9.687083888149134,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-08.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_269",
+      "decision": "ambiguous",
+      "sceneGroup": "indoor-close-portrait-table",
+      "events": [],
+      "notes": "Two closely framed people make hand-to-face movements beside a table. Occlusion and tight portrait framing limit contact interpretation; no normal interval retained.",
+      "sha256": "b7764a06ebb033cc4b1aca7b0cf11b76ab3a9beec01094b73dfa8d9eeddd632a",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.133421400264201,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-09.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_271",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "0e831adef623759932d74933ca6fc9df455c5eaf6e9d8506974d44ac875e3bd5",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.867768595041323,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-09.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_273",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "f9547e628c8986835a61c571fce39a331d426d81c871f708c25f50cb549ccf25",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.845084409136048,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-09.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_275",
+      "decision": "train-normal",
+      "sceneGroup": "classroom-rows-of-desks-portrait-framing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "A seated person leans over paper and small items on a desk and moves a hand toward the face; other seated people are visible behind. No interpersonal contact is visible in the selected window. Classroom context broadly matches the target domain, but this is not the perimeter computer lab and portrait framing differs.",
+      "sha256": "bb71fb5c800b37355724df1adb2ee8d65a0f2fb24f6990a023f75c15b64846c1",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.206611570247934,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-09.jpg",
+        "data/vid/review-round2-expanded/nv_b_275-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_277",
+      "decision": "train-normal",
+      "sceneGroup": "classroom-rows-of-desks-handclasp",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two seated people maintain a right-hand clasp with small alternating hand movements above a desk; both torsos remain seated and upright. The visible configuration resembles handshaking, without visible striking or grappling in 0-4 seconds. Greeting is a visual description, not an inference of relationship or intent. Later release/shoulder movement remains unannotated.",
+      "sha256": "49c5d113b886b8b012237e0317cc15d6747ff20657dc0a55d0ab0453b96ff992",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.133421400264201,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-10.jpg",
+        "data/vid/review-round2-expanded/nv_b_277-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_279",
+      "decision": "train-normal",
+      "sceneGroup": "classroom-rows-of-desks-portrait-framing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "A seated person leans over paper and small items on a desk and moves a hand toward the face; other seated people are visible behind. No interpersonal contact is visible in the selected window. Classroom context broadly matches the target domain, but this is not the perimeter computer lab and portrait framing differs.",
+      "sha256": "5a9367da83b95786296d6d36b7b5d223e7a23880af51376c06edf40581e25319",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.201850016518005,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-10.jpg",
+        "data/vid/review-round2-expanded/nv_b_279-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_281",
+      "decision": "exclude",
+      "sceneGroup": "home-sofa-room",
+      "events": [],
+      "notes": "One person makes repeated leg/arm poses beside a sofa. Excluded as an unmatched home scene.",
+      "sha256": "61c37cf2c39e3419c94426e7d2481863b29ebae4a3b6b46de8df13525738064e",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.981636060100167,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-10.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_283",
+      "decision": "exclude",
+      "sceneGroup": "colour-lit-performance-stage",
+      "events": [],
+      "notes": "People perform changing poses on a coloured-light stage with equipment. Excluded as an unmatched performance/prop setting.",
+      "sha256": "386356027ad86860040e0bd7c3ca7ec77219a9f199f63535e1aa151365675b77",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.966666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-10.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_285",
+      "decision": "exclude",
+      "sceneGroup": "colour-lit-performance-stage",
+      "events": [],
+      "notes": "People perform changing poses on a coloured-light stage with equipment. Excluded as an unmatched performance/prop setting.",
+      "sha256": "e71712a299d408ff692dab7bcab41b784d5a6a0c816a627b35b642b81eb46c3b",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 7.966666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-11.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_287",
+      "decision": "exclude",
+      "sceneGroup": "colour-lit-performance-stage",
+      "events": [],
+      "notes": "People perform changing poses on a coloured-light stage with equipment. Excluded as an unmatched performance/prop setting.",
+      "sha256": "f8eefb266d2c5593b4088da6399905b940335f2ab0d93c649131f7c08d28fbf5",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.666666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-11.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_289",
+      "decision": "exclude",
+      "sceneGroup": "home-computer-desk",
+      "events": [],
+      "notes": "One person sits at a computer beneath shelves. This home desk is not the perimeter computer lab; exclude as unmatched.",
+      "sha256": "be677c8bed8bb2afb46118e935f107844fdcd293f1f12cfcef1081122616f162",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 10.645375914836993,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-11.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_291",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "b83d68778d21aeeac315516db313cac822ace311de3ee8ea93eebbd771646335",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.133333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-11.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_293",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "46307f74201049c28a6e902acadf2d9c399bbd6b68d6ec40e9202f587f08ff03",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.6,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-12.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_295",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "f0283e9d50662d3d2a0380cbf3359f0a7715577bf58820ff97fda3bde2f44e36",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.2,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-12.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_297",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "5b791541aa93b519eb6ce0802bcfb35816755d8782aa2cdb81fc171cf7fb0e0b",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 8.8,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-12.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_299",
+      "decision": "exclude",
+      "sceneGroup": "campus-entrance-planters-courtyard",
+      "events": [],
+      "notes": "Separated figures make repeated arm and body gestures. Omitted under the conservative brief excluding vague gesture-only scenes; no argument or intent claim is made, and no events are labelled.",
+      "sha256": "00e46ce0bdf33380d139400ed1d01f20f3b75816fe2d140404ba22a762749af8",
+      "sourceArchive": "nv_b_02.rar",
+      "durationSeconds": 5.366666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-12.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_317",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "5649ccece516c7d7d3a66425d5e591cad0c79167f1f68733afd8f9a43ee624e8",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.566666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-13.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_322",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "487678f0e18f069c886d5b250d954e6e5c68c5dc1d13b1f5af6a536fd7f0e2e9",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 8.966666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-13.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_327",
+      "decision": "exclude",
+      "sceneGroup": "office-desks-board-wood-door",
+      "events": [],
+      "notes": "Two people stand near office desks and make arm gestures. Omit the vague gesture-only scene; do not infer an argument, intent or a match to the perimeter computer lab.",
+      "sha256": "e8724f3edb03e20ebfe3957007d7a1989052aee59e2971502a892f7ee2e1be7a",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.766666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-13.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_338",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "7883235a6b820e3c14fccd8300a6d4b71e3b700856355239b7d7d894e6c319d0",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 5.466666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-13.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_345",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "7b85dd643d72c8eca38db59f314b5f9192c8624c402a67723b9263bf7dce4bef",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.3,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-14.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_350",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "e4423a5ea14ed78c5e2c960aa99497ae4b6fa7d1742d3e28a04cf16cef2f9dc4",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.066666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-14.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_355",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "197a776ecafd2b89cd152d148552e0766474e3d365778e6286f1d5b3c9d19696",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 5.033333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-14.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_360",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "7d7041634fdd57c1c11d4c84a721c76ad9d462da18f0e1c55adae15f0dcfd6ff",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.2,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-14.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_365",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [],
+      "notes": "One person sits or makes large body/leg movements on a bed. Excluded because the domestic bedroom is not a matched fight setting in this review.",
+      "sha256": "b91948f6871250ca2271fb50ed2dcf942382bb4a1742d8ee5145f5a366d29716",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 11.833333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-15.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_370",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [],
+      "notes": "One person sits or makes large body/leg movements on a bed. Excluded because the domestic bedroom is not a matched fight setting in this review.",
+      "sha256": "07b94742438ed4309b5349b3da8180819c7c311bd0c953cea900cb2ef54fe188",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 12.666666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-15.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_375",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "6875241662e2b7f75ad5b21190497747339cc08ece1cbcf02766934d8a0e2236",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 11.3,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-15.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_380",
+      "decision": "exclude",
+      "sceneGroup": "residential-rooftop",
+      "events": [],
+      "notes": "A person moves, bends or exercises on a residential rooftop. Excluded because the rooftop background is not matched to the retained campus fight footage.",
+      "sha256": "9864bc96718e329e09f95da9bb7a0d14f4788424be98108888efbec588675103",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 14.366666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-15.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_385",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-tree-planter-courtyard",
+      "events": [],
+      "notes": "Two people make close arm/upper-body movements beside a tree and planters. Some contact is occluded and cannot confidently be retained as normal from these samples.",
+      "sha256": "b32201c45924f070591ef44403a6d88fa05820bbfc916ecff46c55ec29e84c58",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.433333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-16.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_390",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-open-courtyard",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Several people walk and shift position together across the open brick-building courtyard. No strike, shove or grappling is visible in the selected 0-4 second window.",
+      "sha256": "2ad9d93f79ed606330b4d980ba6d85762dacc3aec17dbe631d33c26199f8eda9",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.966666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-16.jpg",
+        "data/vid/review-round2-expanded/nv_b_390-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_395",
+      "decision": "exclude",
+      "sceneGroup": "plain-white-wall-group-poses",
+      "events": [],
+      "notes": "Two people make repeated arm/body poses against a plain white wall. Background match is unverified; omit this gesture-only scene.",
+      "sha256": "fbc68e6dd08a30d2264317bd4112d13e8724811051254b8f143312291b2b6655",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 9.833333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-16.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_400",
+      "decision": "exclude",
+      "sceneGroup": "rural-field-path",
+      "events": [],
+      "notes": "People stand, walk or make arm/leg movements beside cultivated fields. Excluded because this rural background is not established as matched to the retained campus fight footage.",
+      "sha256": "0c08cb72a0ccf81701cfca04051c08337c6446c691690b2681acb7e7420bf57c",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 5.5,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-16.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_405",
+      "decision": "ambiguous",
+      "sceneGroup": "home-sofa-doorway",
+      "events": [],
+      "notes": "Two people show hand/forearm or close upper-body contact near a sofa and doorway. Omit rather than assuming benign interaction from the nonviolent archive label.",
+      "sha256": "107423e027b32fb4a1885a75fb067c55889f9f1e8d35cfc866e362e27c76dbff",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.566666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-17.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_410",
+      "decision": "ambiguous",
+      "sceneGroup": "home-sofa-doorway",
+      "events": [],
+      "notes": "Two people show hand/forearm or close upper-body contact near a sofa and doorway. Omit rather than assuming benign interaction from the nonviolent archive label.",
+      "sha256": "62d8129fb2844c434608b4a1ad6330c9d0c33e324420f1bf085a35291cc57517",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.833333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-17.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_416",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "b9464ded549c339c27fc6f402fb578289ac0c14cc936f662609457a069f3a49d",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-17.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_421",
+      "decision": "exclude",
+      "sceneGroup": "decorated-yellow-red-stage",
+      "events": [],
+      "notes": "People make coordinated changing body poses on a brightly decorated stage. Excluded as an unmatched staged-performance background for this matched-setting selection.",
+      "sha256": "1af22115ceba027f61df55edc735147af661c58011b24b212c75ea7f014466b3",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-17.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_426",
+      "decision": "exclude",
+      "sceneGroup": "classroom-chair-rows-board",
+      "events": [],
+      "notes": "A standing person extends or moves arms beside a board while others remain seated among classroom chairs. Omit this gesture/object-directed scene under the conservative selection brief; no argument or intent inferred.",
+      "sha256": "d845f718c2db8e6eda116e03630128df8721846abec4b8fa11604dbce2666f92",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.5,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-18.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_431",
+      "decision": "exclude",
+      "sceneGroup": "classroom-chair-rows-board",
+      "events": [],
+      "notes": "A standing person extends or moves arms beside a board while others remain seated among classroom chairs. Omit this gesture/object-directed scene under the conservative selection brief; no argument or intent inferred.",
+      "sha256": "cd99c185b8e66ff1c83ed29ec59631182e0286fedc4c79ece4868c7d470e9c54",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-18.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_436",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-open-courtyard",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "A foreground person walks toward a small standing group in the courtyard. Retain 0-4 seconds of walking and separated standing positions; later interactions are unannotated.",
+      "sha256": "e266c4123e155f1d8e4be2a0f367a876ae3560dc17ed8e7b1de5a3da1554030a",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 8.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-18.jpg",
+        "data/vid/review-round2-expanded/nv_b_436-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_441",
+      "decision": "exclude",
+      "sceneGroup": "home-bed-book",
+      "events": [],
+      "notes": "One seated person holds an open book on a bed. Excluded as an unmatched domestic prop scene.",
+      "sha256": "1b29e270dfe8e46db1eea7966dcde62891863158f8fad5d856ef070d7ee372e0",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.4,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-18.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_446",
+      "decision": "ambiguous",
+      "sceneGroup": "home-bed-cabinet",
+      "events": [],
+      "notes": "Two people stand close beside a bed/cabinet with partly obscured hand movements. Contact cannot be confidently resolved; no normal events retained.",
+      "sha256": "315fc7a8d4c7661d8b674f9279f248d55a1e09735b597d885ef03a60f10d88d9",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 5.233333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-19.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_452",
+      "decision": "exclude",
+      "sceneGroup": "home-close-view-small-items",
+      "events": [],
+      "notes": "One person reads, handles a phone/cup or makes small hand movements in a domestic room. Excluded as unmatched home/object-handling footage.",
+      "sha256": "2018ee0949b95aab7ae6f4aefd05b33899e275949741099c4f27b61acb4d64be",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.233333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-19.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_457",
+      "decision": "exclude",
+      "sceneGroup": "home-close-view-small-items",
+      "events": [],
+      "notes": "One person reads, handles a phone/cup or makes small hand movements in a domestic room. Excluded as unmatched home/object-handling footage.",
+      "sha256": "ee3d370e3add9c9ee8c6dfd4519391e612f4a0950547d8a909f10cc15ee1ca37",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 8.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-19.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_462",
+      "decision": "exclude",
+      "sceneGroup": "home-close-view-small-items",
+      "events": [],
+      "notes": "One person reads, handles a phone/cup or makes small hand movements in a domestic room. Excluded as unmatched home/object-handling footage.",
+      "sha256": "4ab34fd372f806b8fa9fc2e380afa6eef61a718871e32d67b859d8f10f9e6352",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 8.833333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-19.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_467",
+      "decision": "exclude",
+      "sceneGroup": "home-close-view-small-items",
+      "events": [],
+      "notes": "One person reads, handles a phone/cup or makes small hand movements in a domestic room. Excluded as unmatched home/object-handling footage.",
+      "sha256": "45191786992c5219c3e48d52fd98df64a14fd93c61bfb4b619314a322145b8b0",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 5.466666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-20.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_473",
+      "decision": "exclude",
+      "sceneGroup": "home-close-view-small-items",
+      "events": [],
+      "notes": "One person reads, handles a phone/cup or makes small hand movements in a domestic room. Excluded as unmatched home/object-handling footage.",
+      "sha256": "0850418bfb75895efe936a0be4f52cbf4cf54d2f4091713c14da31be96a4cc45",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.166666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-20.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_478",
+      "decision": "exclude",
+      "sceneGroup": "home-close-view-small-items",
+      "events": [],
+      "notes": "One person reads, handles a phone/cup or makes small hand movements in a domestic room. Excluded as unmatched home/object-handling footage.",
+      "sha256": "1b61223f69fd71782276611c8adc4492870696be9d17e3b54810811c88f53d62",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.866666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-20.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_485",
+      "decision": "train-normal",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people stand facing each other, join right hands briefly near the end of the selected window, then turn away. The sampled motion is consistent with a hand-clasp greeting; no visible strike or grappling. Retain only 0-4 seconds, with no intent claim.",
+      "sha256": "93dbe1ed957b6e2aec2aab61c9710325f76d9c34283a3e47232a39e5dc96e0c1",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.6,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-20.jpg",
+        "data/vid/review-round2-expanded/nv_b_485-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_490",
+      "decision": "train-normal",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people walk side by side along the covered corridor toward the camera. They remain upright with no strike or grappling visible during 0-4 seconds.",
+      "sha256": "c91954c01c06939b004727fa3e4ee5029ab21df7b9efed4154249391c59a1600",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.369123041013672,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-21.jpg",
+        "data/vid/review-round2-expanded/nv_b_490-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_498",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [],
+      "notes": "Two people face one another with repeated raised-hand gestures. Omit this vague gesture-only scene, without claiming an argument or intent.",
+      "sha256": "3e010e19af5a63ff24961f00615cd9b96a4df65f13565d5218c7d1e38ae9d1b4",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.774441107774441,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-21.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_503",
+      "decision": "exclude",
+      "sceneGroup": "campus-exterior-brick-wall",
+      "events": [],
+      "notes": "One person handles and bounces a ball. Excluded as a prop-centred scene under this selection brief.",
+      "sha256": "191afe759140c0970e0af9baac60ed579c6bc2177e5b12a0b991283428d85269",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.435811937312438,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-21.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_512",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-corridor-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "One person repeatedly spreads and closes the arms and legs in jumping-jack-like exercise. No second person or interpersonal target is visible in the selected 0-4 second window. Useful vigorous solo motion; no activity intent inferred.",
+      "sha256": "fb403005f3027b46a6122e25f7935d56eb51f2c1189213da978c51af13ddbea6",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.402467489163055,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-21.jpg",
+        "data/vid/review-round2-expanded/nv_b_512-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_518",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-brick-door-railing",
+      "events": [],
+      "notes": "Two people face one another with repeated hand/arm gestures near a brick doorway and railing. Omit vague gesture-only footage; no argument or intent claim.",
+      "sha256": "420f96d625cb559017a820cacef33c8329f2733612c59620d42ca2e7944eaecd",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.735911970656886,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-22.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_523",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-table",
+      "events": [],
+      "notes": "A person bends over and handles items on a table. Excluded as an object-centred scene under the conservative brief.",
+      "sha256": "187c5dad5e6e1a4e53983715bb3a319c1ad7a570a92abc218d605b216c1eef91",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.533333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-22.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_530",
+      "decision": "exclude",
+      "sceneGroup": "campus-open-atrium-columns",
+      "events": [],
+      "notes": "Two people face one another with repeated raised-hand gestures. Omit the vague gesture-only interaction; no positive or normal interval inferred.",
+      "sha256": "75c01fba27f153ba4d9d339bfb8b3459daf2d5ef95e4486598bcf793897c107e",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.369123041013672,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-22.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_535",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [],
+      "notes": "One person manipulates a dark garment beside corridor furniture. Omitted as a prop/garment-centred scene under this review brief.",
+      "sha256": "421b09c3434daa49022beecfa841e1e02b78d096f1665b3ac1ee25f11d202785",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.5,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-22.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_536",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [],
+      "notes": "One person manipulates a dark garment beside corridor furniture. Omitted as a prop/garment-centred scene under this review brief.",
+      "sha256": "363309c06434f613fbb364b2f616dce1ac0668bed40b290462c93d458e94c32e",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 5.2,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-23.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_540",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-brick-door-railing",
+      "events": [],
+      "notes": "Two people face one another with repeated hand/arm gestures near a brick doorway and railing. Omit vague gesture-only footage; no argument or intent claim.",
+      "sha256": "e4478540a0b9ce77f6ff713f3c841d4f610be7ead83cd34ff6b033e3cc8a2920",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.568856285428477,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-23.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_543",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-patterned-bed",
+      "events": [],
+      "notes": "One person handles clothing or bags on a bed. Excluded as an unmatched domestic object-handling scene.",
+      "sha256": "9b83ac710de594a25159018dcc3b6bdaf090de87408aa61767faa98893c0f576",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.766666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-23.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_549",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-patterned-bed",
+      "events": [],
+      "notes": "One person handles clothing or bags on a bed. Excluded as an unmatched domestic object-handling scene.",
+      "sha256": "72fddcfa05d2ed67f58c9c5c7cf8518f0f9fb0425dd0622ccb79d51c3e610467",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 4.766666666666667,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-23.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_552",
+      "decision": "train-normal",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people approach each other walking, then join hands at waist level and stand upright. The visible hand-clasp configuration resembles a greeting; no strike or grappling is visible in the selected 0-4 seconds. Later footage remains unannotated.",
+      "sha256": "70cc48b3e501c6a3231ab11e729f2243dc42a959c987095c2e26e3e1dd061557",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.233333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-24.jpg",
+        "data/vid/review-round2-expanded/nv_b_552-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_555",
+      "decision": "exclude",
+      "sceneGroup": "home-mirror-drawers",
+      "events": [],
+      "notes": "One person leans toward a mirror/drawers and makes hand-to-face movements. Excluded as an unmatched domestic scene.",
+      "sha256": "1168afc80110e9e232eda88a1c836a7972d056ad0df72874753fb184deab2147",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.733333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-24.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_558",
+      "decision": "exclude",
+      "sceneGroup": "home-tiled-floor",
+      "events": [],
+      "notes": "One person performs repeated push-up-like movements on a tiled domestic floor. Unmatched background; exclude from the matched-setting selection.",
+      "sha256": "748ce4dd05ea94c20ae8701ab7cbdff9c90b0a1194195ed05725948223c9030f",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.566666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-24.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_563",
+      "decision": "train-normal",
+      "sceneGroup": "campus-covered-corridor-brick-door-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people approach along a brick corridor beside a stairwell, extend right hands and stand with a hand clasp. No visible strike, shove or grappling during 0-4 seconds; greeting-like appearance does not establish intent.",
+      "sha256": "4518be3f3b9108211ba390811b4bf0a6b577a4b40d49d18b899e47a0339174b4",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.333333333333333,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-24.jpg",
+        "data/vid/review-round2-expanded/nv_b_563-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_566",
+      "decision": "train-normal",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people approach one another near corridor seating, briefly join hands and then stand separated. No visible strike, shove or grappling in the selected 0-4 seconds. Other margins remain unannotated.",
+      "sha256": "7718c12cc52a63c2c5ec926097bed001169991016631bd7f26361e3c0e858407",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 6.066666666666666,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-25.jpg",
+        "data/vid/review-round2-expanded/nv_b_566-window-0-4.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_569",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-corridor-columns-railing",
+      "events": [],
+      "notes": "Two standing people make repeated raised-hand gestures. Omit vague gesture-only interaction rather than assigning intent or a normal contact interval.",
+      "sha256": "ec434825e28c85d1deefe26aa5b99f15dafadf21d97dbc62505b515142b44613",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 7.633333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-25.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_572",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-cup",
+      "events": [],
+      "notes": "A person holds/pours liquid with a cup and extends it toward the camera. Excluded as an unmatched domestic prop scene.",
+      "sha256": "9adfcbc042aec955081f22b79df0d3819cf268976b42002f28adec1a5826b555",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 8.9,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-25.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_575",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen",
+      "events": [],
+      "notes": "A person handles items beside kitchen counters or cookware. Excluded as an unmatched domestic/prop-centred setting.",
+      "sha256": "9c347e4241a8373e6a256b49a2a0af0769dd8d3476bb611c7c13b8717fe3d507",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 8.0,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-25.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_578",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen",
+      "events": [],
+      "notes": "A person handles items beside kitchen counters or cookware. Excluded as an unmatched domestic/prop-centred setting.",
+      "sha256": "7953d76890977dbf73b6bd2ba35d57385e16af33bb1da6755875ee8f11740cf0",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 10.333333333333334,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-26.jpg"
+      ]
+    },
+    {
+      "id": "nv_b_581",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-open-atrium-columns",
+      "events": [],
+      "notes": "Several people make vigorous arm/leg movements, with an additional close foreground figure. Occlusion and sampled frames do not resolve every interaction; no normal interval retained.",
+      "sha256": "f5540bddfe68c38141aa39088e0063c8d043b34b68b0467334c194ea226f2c17",
+      "sourceArchive": "nv_b_03.rar",
+      "durationSeconds": 11.831550802139036,
+      "evidenceFiles": [
+        "data/vid/review-round2-expanded/page-26.jpg"
+      ]
+    }
+  ]
+}

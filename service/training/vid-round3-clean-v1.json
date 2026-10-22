@@ -1,0 +1,2455 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "vid-v2",
+      "url": "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/N4LNZD&version=2.0",
+      "license": "CC0-1.0",
+      "trainingAllowed": true,
+      "evidence": [
+        "https://dataverse.harvard.edu/api/datasets/:persistentId/versions/2.0?persistentId=doi:10.7910/DVN/N4LNZD",
+        "service/training/vid-source.json: explicit deposit copyright permission; consent author-reported; not complete non-copyright clearance"
+      ]
+    }
+  ],
+  "recordings": [
+    {
+      "id": "v_c_b_100",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_100.mp4",
+      "sha256": "9d6f146b40d5eeeaa0b603814f64c607569130e3287e53cb880ac41434f129f9",
+      "durationSeconds": 5.1,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.02,
+          "endSeconds": 4.15,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_114",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_114.mp4",
+      "sha256": "8e142ecd2cb1d8f3447087cce5a22d245945da76fa75e4e7f8d3af2e9c4f35ef",
+      "durationSeconds": 6.233333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 1.15,
+          "endSeconds": 3.51,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_140",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_140.mp4",
+      "sha256": "fb05e2ee94b89764c8bdd97d20660353bf162652813e46baf0fecaea9a560a06",
+      "durationSeconds": 7.0,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.69,
+          "endSeconds": 3.65,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_144",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_144.mp4",
+      "sha256": "9603ffb93a58e73c09b8077e83f05afef805eb08ae31a19a3c28da06ba29832b",
+      "durationSeconds": 4.166666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:covered-campus-hall-grey-pillars",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.27,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_147",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_147.mp4",
+      "sha256": "d4cd5e532e085597f325f6e28e73a1449da73fd281f7f233561467a75a1bc728",
+      "durationSeconds": 8.566666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:brick-courtyard-blue-benches",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.33,
+          "endSeconds": 7.9,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_149",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_149.mp4",
+      "sha256": "6fac64dc6a90069695ddb12161f9a581599d173c57db990f2daf082e0d36da87",
+      "durationSeconds": 8.6,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:brick-courtyard-blue-benches",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 5.13,
+          "endSeconds": 7.93,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_152",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_152.mp4",
+      "sha256": "4634060f816e2bb99dce6f83b67fec739eaa48ec1f272f6500e5c5ed43ceaa67",
+      "durationSeconds": 6.333333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-classroom-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.37,
+          "endSeconds": 5.7,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_156",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_156.mp4",
+      "sha256": "bc0842e29d2b58d32ba408e0617f7c3afb542dfa4e2c5570f310236c6c3ea5b7",
+      "durationSeconds": 9.766666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:brick-stair-courtyard-blue-seats",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.6,
+          "endSeconds": 9.27,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_159",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_159.mp4",
+      "sha256": "5d00bc87b1d6129bf8cda4136d4115087eecea07d57d9b1b76050cbd5de37759",
+      "durationSeconds": 5.133333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-wood-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 3.1,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_162",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_162.mp4",
+      "sha256": "c339af82b3bfcf0f1d3ffa1145a15d527f998d7d4287bfa3b89b88dd1164a0ba",
+      "durationSeconds": 5.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-wood-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 3.37,
+          "endSeconds": 5.6,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_167",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_167.mp4",
+      "sha256": "7c09c5fc2b93a7d4f0b0c24ba12df5f2fb90e9015d007e213168163b42eba110",
+      "durationSeconds": 8.168822328114365,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:covered-corridor-brick-doorway",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.65,
+          "endSeconds": 6.47,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_170",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_170.mp4",
+      "sha256": "6373ce8b8aa39231f3e09f84300f684af738b056b712daefe20456d9be3e6154",
+      "durationSeconds": 6.133333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:brick-wall-corridor-row-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.67,
+          "endSeconds": 4.73,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_172",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_172.mp4",
+      "sha256": "02e2bbfbe11f08cb21427c1ce10ca0a055a0adfa009b726360e6791781f329c6",
+      "durationSeconds": 8.366666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-perimeter-wood-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 4.066666666666666,
+          "endSeconds": 7.933333333333334,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_174",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_174.mp4",
+      "sha256": "1dc2dbae7c5c1656255b2d5d1f795840842684c312680ddff1df30c785526c48",
+      "durationSeconds": 6.566666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-wood-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.1,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_177",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_177.mp4",
+      "sha256": "474d55689f8bdb508094d5c3bd1fcec74a58b28be6045a9844ee988cd0aa085c",
+      "durationSeconds": 7.233333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-wood-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 6.83,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_180",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_180.mp4",
+      "sha256": "71885803266d27902ca9b108aad8af9d461b848576c9adb3d8937e77372ee2a1",
+      "durationSeconds": 7.433333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-wood-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 7.03,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_183",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_183.mp4",
+      "sha256": "1922252837ce31aeba995ba1ba3e5d831469f2e3c335bb316c30ebd28797afa2",
+      "durationSeconds": 8.73229939312205,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:brick-wall-corridor-row-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 1.820633850303439,
+          "endSeconds": 3.944706675657451,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_185",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_185.mp4",
+      "sha256": "abb18ac449f4ae67a4bc868f19a6ebad44bbbdb137ccd7978be6492b3f53ce1b",
+      "durationSeconds": 6.233333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-classroom-plain-white-wall",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.37,
+          "endSeconds": 3.0,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_188",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_188.mp4",
+      "sha256": "b74c395d22b1dd7143d46961004de8dcf454552a666cb1d279c8a6fd98c1b257",
+      "durationSeconds": 8.0,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-classroom-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 1.8,
+          "endSeconds": 7.57,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_190",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_190.mp4",
+      "sha256": "02e5183b223712d993bcc24ed47a5e42ca2a7bf45f290947cf70840168d893f3",
+      "durationSeconds": 5.166666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.6666666666666666,
+          "endSeconds": 3.933333333333333,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_192",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_192.mp4",
+      "sha256": "c052f8a072e0bcdfbf5462c18caa973926e9b4e91c533586285db7e0cfac1d58",
+      "durationSeconds": 6.633333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-classroom-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 1.23,
+          "endSeconds": 4.3,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_23",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_23.mp4",
+      "sha256": "8d30348c16522c381913b8fdeec55caee130308d3422635ca61e4300042b795d",
+      "durationSeconds": 5.066666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.31,
+          "endSeconds": 4.71,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_26",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_26.mp4",
+      "sha256": "db1e81a8cd4a517154eeaa9faa1ba93de89f453b76f8969f3684da1dfd9e2760",
+      "durationSeconds": 5.333333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.32,
+          "endSeconds": 4.08,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_37",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_37.mp4",
+      "sha256": "b5cc5220e1b878e56a732dc2aa5f1f7ee7fbd3618075522967ff145b23e6a15f",
+      "durationSeconds": 6.133333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.36,
+          "endSeconds": 3.94,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_4",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_4.mp4",
+      "sha256": "6a711b0cff6ee18638c68b0a27044ed22b43ced23b7fa9ef87c40c61fd61f61b",
+      "durationSeconds": 4.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.92,
+          "endSeconds": 4.0,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_55",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_55.mp4",
+      "sha256": "a6a30128bbb4c1f444729c9439794d27b5cc3b0d7225e827b6266cdfcda3929f",
+      "durationSeconds": 7.666666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.42,
+          "endSeconds": 4.61,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_59",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_59.mp4",
+      "sha256": "5623875621339d6c1fcdd8d504af673d80a8350a5e7ccead7fcc8c1c33cbee48",
+      "durationSeconds": 8.333333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-beige-blinds",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.45,
+          "endSeconds": 3.61,
+          "label": 1
+        },
+        {
+          "startSeconds": 4.67,
+          "endSeconds": 7.48,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_62",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_62.mp4",
+      "sha256": "fd650de4adf5dc561c9dcc0d404dbc0cc181f3387244fc92f9df0851ad090981",
+      "durationSeconds": 7.833333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-room-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.43,
+          "endSeconds": 6.36,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_67",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_67.mp4",
+      "sha256": "ae98152ead013f146d99f2580bfd9eff8c7961ed48c22f016cc48beff3d9bd50",
+      "durationSeconds": 7.133333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-room-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 1.9,
+          "endSeconds": 6.68,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_7",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_7.mp4",
+      "sha256": "8bae978a880b4021f5defd3500f9b7776b76c9ce86c48e89f7037159a61abc94",
+      "durationSeconds": 6.366666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.9,
+          "endSeconds": 3.82,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_70",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_70.mp4",
+      "sha256": "a16c9a72096507f04f25e1ed5614e4975751cce848219dc1ca8010360594f01e",
+      "durationSeconds": 5.933333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-room-perimeter-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.35,
+          "endSeconds": 4.79,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_72",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_72.mp4",
+      "sha256": "073e0081862cb01a12d49a270569347b33a0eb351f1ac92ee3532fed7bd51f87",
+      "durationSeconds": 6.633333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-perimeter-wood-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.7,
+          "endSeconds": 6.533333333333333,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_78",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_78.mp4",
+      "sha256": "021320c6e762bebc25b46766cb60ceb2d66dfbce0244e2847f4552be358647f6",
+      "durationSeconds": 6.166666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-perimeter-wood-desks",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.2,
+          "endSeconds": 6.1,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_9",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_9.mp4",
+      "sha256": "3d6e4de03a6a2b7e5416f6581c770e15fdcdc7de3fcf6e1b2f5c8434fca6bf05",
+      "durationSeconds": 6.0,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:chair-room-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.1,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1255",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1255.mp4",
+      "sha256": "16dced54a584bb55b3e2b6b1acdf3f3f8715647ee5bfa746901532e2f32ff613",
+      "durationSeconds": 6.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-orange-door-shelves",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1262",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1262.mp4",
+      "sha256": "1cc2bc437010b599740df2d85683f5a819c7987f3629bef3e8863bb5145a101d",
+      "durationSeconds": 7.6,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-freezer-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1271",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1271.mp4",
+      "sha256": "1de9fb4c566b3f0ec0e2cced49281803653dc6b760e44a04d6bfc256b365abf4",
+      "durationSeconds": 7.766666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bed-striped-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1281",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1281.mp4",
+      "sha256": "046a568892e94aa7ac4427a69dc4561c68017e9fde443349605e712c1fff6580",
+      "durationSeconds": 9.5,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-doorway-bookshelf",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1284",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1284.mp4",
+      "sha256": "262802ebdf410a69d5eb1a4e24b22a0234f146ac0e957b0b27f6a539b0b2bf8a",
+      "durationSeconds": 8.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-stairwell-metal-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1294",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1294.mp4",
+      "sha256": "1bfb4b2b6c0c84e9980398f0a6936c9ff4e267c9d649e5e24e13ce9da79432e9",
+      "durationSeconds": 9.1,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-dark-wood-door",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1299",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1299.mp4",
+      "sha256": "0cd6362b208f199f880ec7deb92499081e484290ff052e2ad59c7eb2fc0f752b",
+      "durationSeconds": 8.5,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-sofa-laptop",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1300",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1300.mp4",
+      "sha256": "1e1c09509936ac8ebc2c5a587aac24e4c0636ff98346ea68a9acafef94674355",
+      "durationSeconds": 8.2,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bed-striped-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1305",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1305.mp4",
+      "sha256": "079b4d3bd42298a2dbffe1a2d0016a01ba52e53dc76d4d84a71940bbe1916939",
+      "durationSeconds": 11.533333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-wood-door-yellow-bag",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1331",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1331.mp4",
+      "sha256": "0dab0aecdf03bd19d96a6557980b233a23f09f60f0bf449ded145a6f84630bb7",
+      "durationSeconds": 8.366666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-blue-seats-ivy-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1332",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1332.mp4",
+      "sha256": "0888b7d373516fde7b7bfe857ff89ae3034e515d518576431254ff7c6cee3a0f",
+      "durationSeconds": 6.167846309403437,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-blue-seats-ivy-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1342",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1342.mp4",
+      "sha256": "20fb18f60fca1aa80834987cb72d44db73be017d48e4560e29d9442eb20b0e6b",
+      "durationSeconds": 6.499162479061976,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-blue-seats-ivy-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1347",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1347.mp4",
+      "sha256": "0ae7bd6a700ee5ea2abdefdeaabc094eeceec58994e8b33e98eafc8d6e767a21",
+      "durationSeconds": 4.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-blue-seats-ivy-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1358",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1358.mp4",
+      "sha256": "1671020e0e2344d52762d387456229e18c04d765d3249c31419a3b363afb9bca",
+      "durationSeconds": 5.197853789403085,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-blue-seats-ivy-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1360",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1360.mp4",
+      "sha256": "1a347aa94254930b11d93fcd5028d6a7d342348e5a63bbeec1f38c0da2fe4d75",
+      "durationSeconds": 5.2368245496998,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-blue-seats-ivy-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1368",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1368.mp4",
+      "sha256": "0736c1971b7d3d1964c8bad37d50f333e85b0fbca3787b662ce5880e9e7e579d",
+      "durationSeconds": 7.566666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:gym-portrait-front-floor",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1369",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1369.mp4",
+      "sha256": "1360087836d3c8e9d6620b196c0832dae07f888ea15e3724823eb4f6ee66e563",
+      "durationSeconds": 8.0,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:gym-portrait-rear-floor",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_16",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_16.mp4",
+      "sha256": "01fe3011259babb85d5baa481c8007b7b9d1c4b0ee18eda06699a19721680a51",
+      "durationSeconds": 5.912162162162162,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-open-wardrobe",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_138",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_138.mp4",
+      "sha256": "03bdd68d53dec3a5ef2ef8faa4a133c31b2006f8e91c68b1ec694d0b841fe939",
+      "durationSeconds": 7.066666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtain-bookshelves",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_166",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_166.mp4",
+      "sha256": "04c08eeb632778ebf83cd7b66def2a6ea3067d4835959d5328dcac142ca5a7f9",
+      "durationSeconds": 4.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:outdoor-painted-trees-path",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_24",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_24.mp4",
+      "sha256": "0585095ea07ceb4021aa05f433b21aa9cce9ef5bedfc300d6c96873a7b361232",
+      "durationSeconds": 11.6,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:indoor-stairs-metal-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_194",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_194.mp4",
+      "sha256": "083b4a5120167f53fe5a38eb4e326fbd12b6da8759bca718b44a3fc04df89cf1",
+      "durationSeconds": 6.9,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtain-bed",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_87",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_87.mp4",
+      "sha256": "08522d94dfb77542bd17aef68b49650dbcf2847cd97056e08f8ee4b3f56b0c95",
+      "durationSeconds": 10.065269666781175,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-pillars-red-doors",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_154",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_154.mp4",
+      "sha256": "08cd52c2f27741689a9b37085834fd639fe77b339776235ee4d0e0303c8b835c",
+      "durationSeconds": 9.9,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:rooftop-dusk-metal-stairs",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_19",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_19.mp4",
+      "sha256": "095f8eeaebb26fdd7c9da71bb9f675af0d861abad78d7ccc590071efafc9f8f7",
+      "durationSeconds": 5.371621621621621,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-dressing-table",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_1.mp4",
+      "sha256": "0a6fff0850956e470b22b56daacbcb55c7f70da0594b9edaf8e2bed95dd8cb5a",
+      "durationSeconds": 7.3,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtain-bed",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_67",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_67.mp4",
+      "sha256": "0b40f98115fd847fc45a03c10949fd28c177019f04b94079a9efa423230963a8",
+      "durationSeconds": 5.866666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-canteen-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_60",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_60.mp4",
+      "sha256": "0c9490f497d166a6e7ae0b40c7198a4a6a09dfe3eb6941335d5b3ca1f314e0d9",
+      "durationSeconds": 5.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-canteen-counter",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_211",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_02/nv_b_02/nv_b_211.mp4",
+      "sha256": "74ec813dda03f460d6c238a73b4bd44e0284a80b394d1c01467432788144fe08",
+      "durationSeconds": 7.2,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-planters-entrance",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_275",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_02/nv_b_02/nv_b_275.mp4",
+      "sha256": "bb71fb5c800b37355724df1adb2ee8d65a0f2fb24f6990a023f75c15b64846c1",
+      "durationSeconds": 7.206611570247934,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-desks-embedded-portrait",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_277",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_02/nv_b_02/nv_b_277.mp4",
+      "sha256": "49c5d113b886b8b012237e0317cc15d6747ff20657dc0a55d0ab0453b96ff992",
+      "durationSeconds": 7.133421400264201,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-desks-handclasp",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_279",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_02/nv_b_02/nv_b_279.mp4",
+      "sha256": "5a9367da83b95786296d6d36b7b5d223e7a23880af51376c06edf40581e25319",
+      "durationSeconds": 7.201850016518005,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-desks-embedded-portrait",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_390",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_390.mp4",
+      "sha256": "2ad9d93f79ed606330b4d980ba6d85762dacc3aec17dbe631d33c26199f8eda9",
+      "durationSeconds": 6.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-open-brick-courtyard",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_436",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_436.mp4",
+      "sha256": "e266c4123e155f1d8e4be2a0f367a876ae3560dc17ed8e7b1de5a3da1554030a",
+      "durationSeconds": 8.0,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-open-brick-courtyard",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_485",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_485.mp4",
+      "sha256": "93dbe1ed957b6e2aec2aab61c9710325f76d9c34283a3e47232a39e5dc96e0c1",
+      "durationSeconds": 4.6,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-covered-columns-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_490",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_490.mp4",
+      "sha256": "c91954c01c06939b004727fa3e4ee5029ab21df7b9efed4154249391c59a1600",
+      "durationSeconds": 7.369123041013672,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-covered-columns-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_512",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_512.mp4",
+      "sha256": "fb403005f3027b46a6122e25f7935d56eb51f2c1189213da978c51af13ddbea6",
+      "durationSeconds": 7.402467489163055,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-brick-corridor-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_552",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_552.mp4",
+      "sha256": "70cc48b3e501c6a3231ab11e729f2243dc42a959c987095c2e26e3e1dd061557",
+      "durationSeconds": 6.233333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-covered-columns-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_563",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_563.mp4",
+      "sha256": "4518be3f3b9108211ba390811b4bf0a6b577a4b40d49d18b899e47a0339174b4",
+      "durationSeconds": 7.333333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-brick-door-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_566",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_566.mp4",
+      "sha256": "7718c12cc52a63c2c5ec926097bed001169991016631bd7f26361e3c0e858407",
+      "durationSeconds": 6.066666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-covered-columns-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_20",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_20.mp4",
+      "sha256": "be6eee9cc954e47028abfb40e128d4e0eb8320b837e80efc10e3f685404df577",
+      "durationSeconds": 5.506756756756756,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bed-red-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_28",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_28.mp4",
+      "sha256": "b22b6567b0782776887c18301931cb7bf896d0756c1a5ebe184339e551b1e966",
+      "durationSeconds": 5.439189189189189,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-desk-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_47",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_47.mp4",
+      "sha256": "74a349365efff446a9a2dd9af1d4e60f49ac43402fa7e7f483fc2390643a0973",
+      "durationSeconds": 7.466666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-room-low-camera",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_50",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_50.mp4",
+      "sha256": "35cc561c0f423bec65e11d546904a52cddb4f4fe46d96470126d33ee2c4a2243",
+      "durationSeconds": 6.0,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-corridor-stairs",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_53",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_53.mp4",
+      "sha256": "a0a9ee7c4663170591199a83d59ecf4255721478841b632f4e5ea695a49ca859",
+      "durationSeconds": 8.630456514495167,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-counter-writing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_68",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_68.mp4",
+      "sha256": "b1a20933898f6c427b4d141d6297fe7d6f67de0221a85d89d94e0daf9549c462",
+      "durationSeconds": 6.4,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-brick-corridor-red-black-panels",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_71",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_71.mp4",
+      "sha256": "9dfb93a147fc6d4c04665d93e0d870d0d5e8bdecb65aa474abbec9c1d1e8f30d",
+      "durationSeconds": 6.633333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-corridor-stairs-shopfront",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_109",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_109.mp4",
+      "sha256": "fd948e4e59c61ed9d3c1159b9ed6f1ffb4a32684e84f4040b7880a1406889062",
+      "durationSeconds": 8.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:white-room-group-curtained-windows",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_112",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_112.mp4",
+      "sha256": "30a9f83592883a1c2da5fa09f545a3e134dc44c0dfb2cb3c1e6043412ef658df",
+      "durationSeconds": 5.666666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bedroom-blue-curtain",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_122",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_122.mp4",
+      "sha256": "8e2e4b6fad77bd5133a3ca1b090b3072983864b63d66a48fd6795816edc51295",
+      "durationSeconds": 7.366666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-brick-corridor-red-black-panels",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_125",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_125.mp4",
+      "sha256": "9a9d2486f31d4aab388aaf292f82a22ebad961c34dc5175eee771c820a701d08",
+      "durationSeconds": 6.7,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-brick-corridor-window",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_129",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_129.mp4",
+      "sha256": "bb841a2bfb06fc10baccfba976538fd5733ab71c553f0552a06085d9049a4840",
+      "durationSeconds": 7.533333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:campus-brick-room-photo-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_160",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_160.mp4",
+      "sha256": "e038c690fbc3797643a358b910c08057b5ac578b68c1eec527e3f7852ee908b9",
+      "durationSeconds": 6.4,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:outdoor-tree-path-backlit",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_168",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_168.mp4",
+      "sha256": "e071ba15bcf5ce4d209b2f59a5a29f105352cfe0a79856383d767b0eb78992ef",
+      "durationSeconds": 6.333333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bedroom-blue-curtain",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_171",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_171.mp4",
+      "sha256": "f1e90fe9d052688f2171215cd9de4dc283b2725b3f1d75de13234a69aa864c30",
+      "durationSeconds": 6.4,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bedroom-blue-curtain",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_190",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_190.mp4",
+      "sha256": "ad4bb2e7c50bee81fb6811f95f66bc381b505610ebef389a8eafb9cd973ee7d6",
+      "durationSeconds": 5.439189189189189,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-window-blue-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_193",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_193.mp4",
+      "sha256": "1efc76a087e191cca6ff08acc75f79564ecf3f548ce200ed57902a36b949a45b",
+      "durationSeconds": 7.0608108108108105,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-sofa-patterned-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_2",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_2.mp4",
+      "sha256": "c050dd040892d8070a684b997041dcec3b8e94be4fc0bd6527212424e94d1aae",
+      "durationSeconds": 6.566666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_150",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_150.mp4",
+      "sha256": "d105e82522b69c05b67cee114d886f4515e1ea751122eca363d5c69af310334b",
+      "durationSeconds": 8.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_164",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_164.mp4",
+      "sha256": "45309e1b632bc518d92b1756e6a1b586d44afa6c65cb9e1d1ff679fb391bda67",
+      "durationSeconds": 4.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:outdoor-tree-path",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_183",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_183.mp4",
+      "sha256": "b68252656f2094521af8ea799f6d1a72357d910704c32487ac775f4f80100afb",
+      "durationSeconds": 8.633333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_204",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_01/nv_b_01/nv_b_204.mp4",
+      "sha256": "4cde6d69ac07b36f06cda68dc1d43e167fc7413ba358c8ec9f168096bb8776b6",
+      "durationSeconds": 5.878378378378378,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-doorway-tiled-wall",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_226",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_02/nv_b_02/nv_b_226.mp4",
+      "sha256": "14580b2dd2d57c020e457f26569b996df08213a81c345186e026cc8a5c3dc78d",
+      "durationSeconds": 8.033333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:decorated-indoor-stage",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_292",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_02/nv_b_02/nv_b_292.mp4",
+      "sha256": "6fda0f6606d0932be337c025d0e21a0af5ade9f7c83854068216428590b3996a",
+      "durationSeconds": 8.933333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:decorated-indoor-stage",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_344",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_344.mp4",
+      "sha256": "8d39f2de3ba9acf5e971552a96099b776636826e05730f68c44208c6e57936b7",
+      "durationSeconds": 5.4,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:rooftop-parapet",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_358",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_358.mp4",
+      "sha256": "8b3c0888f246afa892e3c6dc8d98cc0a15034b1405728403884e85407ec0c54e",
+      "durationSeconds": 9.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:rooftop-water-tank",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_372",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_372.mp4",
+      "sha256": "e1c47b7620ca7f3d633b272ad922ef35fdb3547eff5180296a9dba94b91679f5",
+      "durationSeconds": 6.8,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-blue-curtains",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_398",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_398.mp4",
+      "sha256": "204fc647241b2d9c17d23871dfd27e2d1f46dbf8cc0b5beb719f739b3e41d0ba",
+      "durationSeconds": 9.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:white-wall-paired-movement",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_425",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_03/nv_b_03/nv_b_425.mp4",
+      "sha256": "641bd38601cdc64bb1e1093b684287510a4b22ecd88627c54304b2f2bd58a4ec",
+      "durationSeconds": 5.933333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-whiteboard-seated-group",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1289",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1289.mp4",
+      "sha256": "d5bbe48b573d1ab0d0cc949351ee8c53a8c2525a1f0e41c49235a59758a393b1",
+      "durationSeconds": 8.566666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:indoor-stairwell-railing",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1366",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1366.mp4",
+      "sha256": "8c56ac45292e580664d5e0f920b222c0f1a490225b849f7dc1195372fc079d81",
+      "durationSeconds": 5.866666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:indoor-gym-floor",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "nv_b_1380",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/nv_b_06/nv_b_06/nv_b_1380.mp4",
+      "sha256": "fead164ab67b7fc0d808c115618909aa795dbd3c7f73e750f88d4089aca9ff63",
+      "durationSeconds": 5.433333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:home-bed-red-cover",
+      "label": 0,
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_6",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_6.mp4",
+      "sha256": "2e7957b45b8d32b3e5de67583d535fc8f0c099cb6ad5e861d58184f0e4d6d248",
+      "durationSeconds": 6.633333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-white-walls-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.5,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_27",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_27.mp4",
+      "sha256": "5324a907f0addd629bdd4d72ebbbc88b9863721739c84f3faa27cd707a6830bf",
+      "durationSeconds": 5.866666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-white-walls-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 2.3,
+          "endSeconds": 5.5,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_35",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_35.mp4",
+      "sha256": "8651b7101b1fd7110a46a155609385d1cd88b0aa53209e9babec69bf2aeceb8d",
+      "durationSeconds": 6.5,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 2.0,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.6,
+          "endSeconds": 4.8,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_39",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_39.mp4",
+      "sha256": "97f38f6c4e6171231b619845ad332a198387f3cbe4fbf2710501cc1bbd9b87d4",
+      "durationSeconds": 6.133333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 5.6,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_42",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_42.mp4",
+      "sha256": "214d07328b4426e24c57aabb115254dba146d6dc7cb8d45869b1f8eca55aac94",
+      "durationSeconds": 5.4,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 4.9,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_47",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_47.mp4",
+      "sha256": "9a275e65a53b5eee1d9f69f8fe11fc89ab20216b8de3ae883c4028ce613cb6ef",
+      "durationSeconds": 5.966666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.3,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_56",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_56.mp4",
+      "sha256": "20e2fcd09612d7cc07d0bc438d0805cc504e6759c3837bb8a9e33c3c7b01ca45",
+      "durationSeconds": 5.766666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.0,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_60",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_60.mp4",
+      "sha256": "c3f6dcee8c1dfe34abd64fc6384019e57395f137ce8b4f2bc92fa987068ae60d",
+      "durationSeconds": 5.733333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.4,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_65",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_65.mp4",
+      "sha256": "328552968f1b8711f081f2e8eeacb9050dff9eda80ebe68b702486fbc6fd2500",
+      "durationSeconds": 7.1,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-desktops-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 3.7,
+          "endSeconds": 6.5,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_75",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_75.mp4",
+      "sha256": "f601795dfdd288d2aed5acfcc11cbb525a2adc46c42223f36e4c95f53ac60802",
+      "durationSeconds": 9.933333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-desktops-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 8.9,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_134",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_134.mp4",
+      "sha256": "17bad6511e795a25722fbad27778075f8ddc8b096c87efbf0a18ad0cf5e60ea5",
+      "durationSeconds": 9.1,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-brick-stair-blue-seats",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 4.1,
+          "endSeconds": 6.2,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_146",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_146.mp4",
+      "sha256": "fb7a2c10b8b3c751c1dc4564d9780a091bc023644766666e119cd8090714c4c2",
+      "durationSeconds": 6.8,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:covered-campus-hall-columns",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 2.4,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.5,
+          "endSeconds": 5.4,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_151",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_151.mp4",
+      "sha256": "e7357ab3146aa8d8c324fa2a0be97cbaeebe7f9bb88ac06c30e1fb8a859c294d",
+      "durationSeconds": 10.766666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:courtyard-covered-brick-opening",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 9.4,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_160",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_160.mp4",
+      "sha256": "70cbe61116058172dcf79aabbbc5e4a0bb6c85f083dd788edb3ad4ccc76604d2",
+      "durationSeconds": 6.433333333333334,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-desktops-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_163",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_163.mp4",
+      "sha256": "ca069102297c7a1fdc6aff17c3ad6b7877b2e2c7f643b6b4c530557f23343509",
+      "durationSeconds": 5.866666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-desktops-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 2.9,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.6,
+          "endSeconds": 5.3,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_168",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_168.mp4",
+      "sha256": "1932116fc84819f581fe2af41445925f1a9ea499e7e58a5a7d2b21d3e7169bf2",
+      "durationSeconds": 6.466666666666667,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-desktops-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_171",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_171.mp4",
+      "sha256": "533068115be76eb7022e261b2d37bbcd77e8e9a61f1bed06869c5ae28e5fa140",
+      "durationSeconds": 6.066666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:computer-lab-desktops-white-walls",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.5,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_176",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_176.mp4",
+      "sha256": "8cfba3e2f786b5d2b49f086e40483f22ed26721b774055665ffd4111ae4e871b",
+      "durationSeconds": 6.866666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 6.3,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_187",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_187.mp4",
+      "sha256": "93b1650d665b5abc3fff668ad8be5d12e5a3257d83f08c68fe136cf7d766b7d5",
+      "durationSeconds": 6.566666666666666,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-white-walls-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_201",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_201.mp4",
+      "sha256": "6daa7892454b8aa82b0401f8b05989e361cab54f1bccd9937189cdc6297cccdd",
+      "durationSeconds": 6.233333333333333,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:classroom-beige-blinds-chairs",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 4.1,
+          "label": 1
+        }
+      ]
+    },
+    {
+      "id": "v_c_b_209",
+      "sourceId": "vid-v2",
+      "recordingGroup": "vid-v2-unresolved-session-cohort",
+      "path": "media/v_c_b_01/v_c_b_01/v_c_b_209.mp4",
+      "sha256": "f30d1e6606e9a51912af4507fb509dc19ee481c779efb538837327558f70fddd",
+      "durationSeconds": 9.06113537117904,
+      "split": "train",
+      "reviewStatus": "reviewed",
+      "domain": "staged-rgb:covered-brick-wall-corridor",
+      "label": 1,
+      "events": [
+        {
+          "startSeconds": 5.5,
+          "endSeconds": 5.9,
+          "label": 1
+        },
+        {
+          "startSeconds": 6.9,
+          "endSeconds": 8.8,
+          "label": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2306 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "Provisional independent assistant visual review, model-blind. Selected 48 rounded evenly spaced indices across numeric-ID sorted remaining eligible v_c_b recordings >=4s (119 eligible at selection), excluding every prior review ID/hash regardless of decision. Directly inspected all 48 timestamped 24-frame full-context sheets via view_image. Sequentially decoded using one OpenCV decoder and cv2.setNumThreads(1); every successful read used actual CAP_PROP_POS_MSEC, required finite and strictly increasing, no FPS-derived time. Directly inspected all ordered all-source-frame contact-sheet pages for 22 candidates; also wider all-frame pages for 134 and 209, and 13 enlarged 3-frame detail sheets. Dense source frames support every loader-eligible accepted four-second window. Visual judgments entered manually after inspection; no classifier execution, scores, audio or continuous-motion playback.",
+  "limitations": [
+    "Assistant visual labels are provisional, not human ground truth or continuous-motion playback. Static images cannot establish force, intent, actual impacts, identity, injury or crime.",
+    "Screening samples only 24 full-context frames per recording. Dense candidates include every successfully decoded source frame as resized, timestamped ordered crops; blur, occlusion and image size limit certainty. Crops can cut peripheral people; wider pages and enlarged details supplement disputed interactions.",
+    "Conservative positive intervals only; unannotated setup, releases, occluded gaps and tails are unknown, never normal. No label 0 events. No boundary was extended to obtain window eligibility.",
+    "Props/weapons and prop-centred chair setups excluded. Brief or uncertain contact and gesture-only imagery remain ambiguous. No accepted-count target was forced.",
+    "All VID material is one unresolved training cohort, vid-v2-unresolved-session-cohort. Scene tags are descriptive only; no calibration or holdout and no independent-actor/session claim. Overlapping windows are dependent observations.",
+    "Pinned existing official archive records document copyright provenance only. Participant consent is author-reported; no independent participant-release or full non-copyright rights clearance. Raw footage/evidence stays local and ignored.",
+    "Only existing imported footage reviewed; no downloads, installs, new archives, GPU/model/inference/training, service/live changes, commits/deployments or external messages. Parent owns merging and any GPU work."
+  ],
+  "recordings": [
+    {
+      "id": "v_c_b_2",
+      "decision": "ambiguous",
+      "sceneGroup": "courtyard-covered-brick-blue-seats",
+      "events": [],
+      "notes": "Small central group with raised arms and brief close approaches; sustained opposed contact not resolved confidently from screening. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_2-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_2-pts.json"
+      ],
+      "sha256": "265730a47fdeefc8ba6d3ca9fc15c12a862f5c76388fb88228ca7e66baa228c9",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_2.mp4",
+      "durationSeconds": 7.033333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 211,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 7.0,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_2-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_6",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-white-walls-chairs",
+      "events": [
+        {
+          "startSeconds": 0.5,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ],
+      "notes": "Sustained upper-body and shoulder/neck holds with bent torsos, braced legs and shared rotation. Omit early approach and late margin.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_6-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_6-pts.json",
+        "data/vid/review-round3-pos/v_c_b_6-dense.json",
+        "data/vid/review-round3-pos/v_c_b_6-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_6-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_6-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_6-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_6-dense-05.jpg"
+      ],
+      "sha256": "2e7957b45b8d32b3e5de67583d535fc8f0c099cb6ad5e861d58184f0e4d6d248",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_6.mp4",
+      "durationSeconds": 6.633333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 199,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.6,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_6-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_6-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 199
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_6",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.875,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_6-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_6",
+            "startSeconds": 2.6333333333333337,
+            "endSeconds": 6.633333333333334,
+            "positiveCoverageFraction": 0.7916666666666665,
+            "sourceFrameIndicesInclusive": [
+              79,
+              198
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_6-dense.json",
+            "endBeyondLastPTSSeconds": 0.0333333333333341
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_10",
+      "decision": "exclude",
+      "sceneGroup": "classroom-white-walls-chairs",
+      "events": [],
+      "notes": "Racket-shaped handled prop is plainly visible beside the pair in enlarged detail; exclude entire prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_10-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_10-pts.json",
+        "data/vid/review-round3-pos/v_c_b_10-detail.json",
+        "data/vid/review-round3-pos/v_c_b_10-detail.jpg"
+      ],
+      "sha256": "864e452658282629a901d789b17837ef6b60d93a20a2fd252ec672eca34dba7e",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_10.mp4",
+      "durationSeconds": 6.266666666666667,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 188,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.233333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_10-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_14",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-door-planters",
+      "events": [],
+      "notes": "Long slender rod is held and swung toward the partner; confirmed in enlarged detail. Exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_14-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_14-pts.json",
+        "data/vid/review-round3-pos/v_c_b_14-detail.json",
+        "data/vid/review-round3-pos/v_c_b_14-detail.jpg"
+      ],
+      "sha256": "5e2fe9a4ef2ea89a3f13cd6441f405f72dea2f254d8bb70615fdc1fd9c6ec9a0",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_14.mp4",
+      "durationSeconds": 7.4,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 222,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 7.366666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_14-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_17",
+      "decision": "ambiguous",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [],
+      "notes": "Mixed close approaches, lifted limbs and clothing handling with intermittent separation; no sufficiently clear conservative grappling interval retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_17-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_17-pts.json"
+      ],
+      "sha256": "8eac9f44e8053b28b6b3664a06baecdac09d9b4cf3eb0bee00fd9fcf75ae9984",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_17.mp4",
+      "durationSeconds": 9.933333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 298,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 9.9,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_17-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_24",
+      "decision": "ambiguous",
+      "sceneGroup": "courtyard-covered-brick-blue-seats",
+      "events": [],
+      "notes": "Small group alternates separation and close arm gestures; contact configuration and timing remain uncertain. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_24-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_24-pts.json"
+      ],
+      "sha256": "f1770faf5c267635ae65c8e5502f0494a4b81da74709f55b5405346d9fdd24e9",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_24.mp4",
+      "durationSeconds": 8.233333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 247,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 8.2,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_24-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_27",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-white-walls-chairs",
+      "events": [
+        {
+          "startSeconds": 2.3,
+          "endSeconds": 5.5,
+          "label": 1
+        }
+      ],
+      "notes": "Rear torso/upper-body hold and paired turning with bent knees; central sustained grapple retained, preceding swings and tail omitted.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_27-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_27-pts.json",
+        "data/vid/review-round3-pos/v_c_b_27-dense.json",
+        "data/vid/review-round3-pos/v_c_b_27-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_27-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_27-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_27-dense-04.jpg"
+      ],
+      "sha256": "5324a907f0addd629bdd4d72ebbbc88b9863721739c84f3faa27cd707a6830bf",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_27.mp4",
+      "durationSeconds": 5.866666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 176,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.833333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_27-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_27-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 176
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_27",
+            "startSeconds": 1.8666666666666663,
+            "endSeconds": 5.866666666666666,
+            "positiveCoverageFraction": 0.8,
+            "sourceFrameIndicesInclusive": [
+              55,
+              175
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_27-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_32",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-brick-wall-corridor",
+      "events": [],
+      "notes": "People approach waiting group; late upper-body cluster is brief and partially obscured. No conservative eligible contact span retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_32-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_32-pts.json"
+      ],
+      "sha256": "dc954f61c3a1cb56b872d62cbd5791af12c0237b9959d82be213811ba9745d0a",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_32.mp4",
+      "durationSeconds": 5.033333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 151,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.0,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_32-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_35",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 2.0,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.6,
+          "endSeconds": 4.8,
+          "label": 1
+        }
+      ],
+      "notes": "Two pairs show opposing shoulder/upper-arm grips and bracing. Separate intervals preserve the intervening release and approach; later uncertain gestures omitted.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_35-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_35-pts.json",
+        "data/vid/review-round3-pos/v_c_b_35-dense.json",
+        "data/vid/review-round3-pos/v_c_b_35-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_35-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_35-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_35-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_35-dense-05.jpg"
+      ],
+      "sha256": "8651b7101b1fd7110a46a155609385d1cd88b0aa53209e9babec69bf2aeceb8d",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_35.mp4",
+      "durationSeconds": 6.5,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 195,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.466666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_35-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_35-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 195
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_35",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.55,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_35-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_39",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 5.6,
+          "label": 1
+        }
+      ],
+      "notes": "Central person repeatedly held at head/shoulder by nearby partners while bent, then turning against their arm grips. Raised-arm images do not establish impact; retain visible gripping sequence only.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_39-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_39-pts.json",
+        "data/vid/review-round3-pos/v_c_b_39-dense.json",
+        "data/vid/review-round3-pos/v_c_b_39-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_39-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_39-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_39-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_39-detail.json",
+        "data/vid/review-round3-pos/v_c_b_39-detail.jpg"
+      ],
+      "sha256": "97f38f6c4e6171231b619845ad332a198387f3cbe4fbf2710501cc1bbd9b87d4",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_39.mp4",
+      "durationSeconds": 6.133333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 184,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.1,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_39-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_39-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 184
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_39",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.925,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_39-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_39",
+            "startSeconds": 2.1333333333333337,
+            "endSeconds": 6.133333333333334,
+            "positiveCoverageFraction": 0.8666666666666665,
+            "sourceFrameIndicesInclusive": [
+              64,
+              183
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_39-dense.json",
+            "endBeyondLastPTSSeconds": 0.0333333333333341
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_42",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 4.9,
+          "label": 1
+        }
+      ],
+      "notes": "Crouching person under head/shoulder holds, then rising into opposing arm/shoulder grips. Omit final release and approach.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_42-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_42-pts.json",
+        "data/vid/review-round3-pos/v_c_b_42-dense.json",
+        "data/vid/review-round3-pos/v_c_b_42-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_42-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_42-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_42-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_42-detail.json",
+        "data/vid/review-round3-pos/v_c_b_42-detail.jpg"
+      ],
+      "sha256": "214d07328b4426e24c57aabb115254dba146d6dc7cb8d45869b1f8eca55aac94",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_42.mp4",
+      "durationSeconds": 5.4,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 162,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.366666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_42-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_42-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 162
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_42",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.925,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_42-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_42",
+            "startSeconds": 1.4000000000000004,
+            "endSeconds": 5.4,
+            "positiveCoverageFraction": 0.875,
+            "sourceFrameIndicesInclusive": [
+              42,
+              161
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_42-dense.json",
+            "endBeyondLastPTSSeconds": 0.0333333333333341
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_47",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.3,
+          "label": 1
+        }
+      ],
+      "notes": "Repeated opposing upper-body, neck and arm holds among three people with bracing and torso rotation. Enlarged views resolve hands/forearms; no held weapon-like prop observed.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_47-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_47-pts.json",
+        "data/vid/review-round3-pos/v_c_b_47-dense.json",
+        "data/vid/review-round3-pos/v_c_b_47-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_47-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_47-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_47-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_47-detail.json",
+        "data/vid/review-round3-pos/v_c_b_47-detail.jpg"
+      ],
+      "sha256": "9a275e65a53b5eee1d9f69f8fe11fc89ab20216b8de3ae883c4028ce613cb6ef",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_47.mp4",
+      "durationSeconds": 5.966666666666667,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 179,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.933333333333334,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_47-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_47-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 179
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_47",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.95,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_47-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_47",
+            "startSeconds": 1.9666666666666668,
+            "endSeconds": 5.966666666666667,
+            "positiveCoverageFraction": 0.8333333333333333,
+            "sourceFrameIndicesInclusive": [
+              59,
+              178
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_47-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_51",
+      "decision": "ambiguous",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [],
+      "notes": "Repeated raised-arm gestures and bent postures with separation; actual paired opposition is not resolved sufficiently. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_51-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_51-pts.json"
+      ],
+      "sha256": "f6b2092fa5d768655a7a7cae4f526722a388914964024d8d750e10fee6746cb8",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_51.mp4",
+      "durationSeconds": 5.3,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 159,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.266666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_51-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_56",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.0,
+          "label": 1
+        }
+      ],
+      "notes": "Paired head/shoulder and forearm holds maintained through a turn; both lean and brace. Omit final release and uncertain tail.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_56-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_56-pts.json",
+        "data/vid/review-round3-pos/v_c_b_56-dense.json",
+        "data/vid/review-round3-pos/v_c_b_56-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_56-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_56-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_56-dense-04.jpg"
+      ],
+      "sha256": "20e2fcd09612d7cc07d0bc438d0805cc504e6759c3837bb8a9e33c3c7b01ca45",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_56.mp4",
+      "durationSeconds": 5.766666666666667,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 173,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.733333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_56-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_56-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 173
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_56",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.95,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_56-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_56",
+            "startSeconds": 1.7666666666666666,
+            "endSeconds": 5.766666666666667,
+            "positiveCoverageFraction": 0.8083333333333333,
+            "sourceFrameIndicesInclusive": [
+              53,
+              172
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_56-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_60",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.4,
+          "label": 1
+        }
+      ],
+      "notes": "Paired neck/shoulder grip with strongly bent torso and opposing hand/arm contact through rotation. Do not infer force or impact.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_60-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_60-pts.json",
+        "data/vid/review-round3-pos/v_c_b_60-dense.json",
+        "data/vid/review-round3-pos/v_c_b_60-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_60-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_60-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_60-dense-04.jpg"
+      ],
+      "sha256": "c3f6dcee8c1dfe34abd64fc6384019e57395f137ce8b4f2bc92fa987068ae60d",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_60.mp4",
+      "durationSeconds": 5.733333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 172,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.7,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_60-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_60-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 172
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_60",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.95,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_60-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_60",
+            "startSeconds": 1.7333333333333334,
+            "endSeconds": 5.733333333333333,
+            "positiveCoverageFraction": 0.9166666666666667,
+            "sourceFrameIndicesInclusive": [
+              52,
+              171
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_60-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_65",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [
+        {
+          "startSeconds": 3.7,
+          "endSeconds": 6.5,
+          "label": 1
+        }
+      ],
+      "notes": "Standing partner grips the crouched partner at upper body/head while the latter lowers to floor; retain later paired contact only. Early floor cluster is occluded and unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_65-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_65-pts.json",
+        "data/vid/review-round3-pos/v_c_b_65-dense.json",
+        "data/vid/review-round3-pos/v_c_b_65-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_65-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_65-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_65-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_65-dense-05.jpg"
+      ],
+      "sha256": "328552968f1b8711f081f2e8eeacb9050dff9eda80ebe68b702486fbc6fd2500",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_65.mp4",
+      "durationSeconds": 7.1,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 213,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 7.066666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_65-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_65-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 213
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_65",
+            "startSeconds": 3.0999999999999996,
+            "endSeconds": 7.1,
+            "positiveCoverageFraction": 0.7,
+            "sourceFrameIndicesInclusive": [
+              92,
+              212
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_65-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_68",
+      "decision": "exclude",
+      "sceneGroup": "courtyard-covered-blue-seats",
+      "events": [],
+      "notes": "A long slender held rod accompanies separated arm swings. Exclude prop-centred interaction.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_68-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_68-pts.json"
+      ],
+      "sha256": "18801ff6b420cae90ce4594748443afb54aaa3daf8d15b685d6282668d166246",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_68.mp4",
+      "durationSeconds": 5.333333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 160,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.3,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_68-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_75",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 8.9,
+          "label": 1
+        }
+      ],
+      "notes": "Sustained opposing collar/shoulder and forearm grips with braced feet and repeated paired bending. Omit final fall and tail margin.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_75-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-pts.json",
+        "data/vid/review-round3-pos/v_c_b_75-dense.json",
+        "data/vid/review-round3-pos/v_c_b_75-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-dense-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-dense-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_75-dense-07.jpg"
+      ],
+      "sha256": "f601795dfdd288d2aed5acfcc11cbb525a2adc46c42223f36e4c95f53ac60802",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_75.mp4",
+      "durationSeconds": 9.933333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 298,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 9.9,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_75-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_75-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 298
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_75",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.95,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_75-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_75",
+            "startSeconds": 4.0,
+            "endSeconds": 8.0,
+            "positiveCoverageFraction": 1.0,
+            "sourceFrameIndicesInclusive": [
+              120,
+              240
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_75-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_75",
+            "startSeconds": 5.933333333333334,
+            "endSeconds": 9.933333333333334,
+            "positiveCoverageFraction": 0.7416666666666667,
+            "sourceFrameIndicesInclusive": [
+              178,
+              297
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_75-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_80",
+      "decision": "exclude",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [],
+      "notes": "Interaction centres on a person in a rolling chair with partners leaning over and handling the chair/seated configuration. Conservatively exclude prop-centred setup.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_80-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_80-pts.json"
+      ],
+      "sha256": "612c006a17633c1dcbe77287b5fef4755f02b7733a8f0a9db12cfec2016096ec",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_80.mp4",
+      "durationSeconds": 5.233333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 157,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.2,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_80-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_85",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-door-planters",
+      "events": [],
+      "notes": "Long pale rod is raised/extended between people. Exclude prop-centred scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_85-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_85-pts.json"
+      ],
+      "sha256": "dfb2e086d8ab91c533e3b3935591bce096f995834bd504c8e2026f3ef89edba1",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_85.mp4",
+      "durationSeconds": 5.133333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 154,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.1,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_85-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_88",
+      "decision": "ambiguous",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [],
+      "notes": "Intermittent close arm gestures followed by separation; sustained opposed contact uncertain. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_88-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_88-pts.json"
+      ],
+      "sha256": "180ce5a151ea667ff2f5e0b2d6abc135860c5b6320531f734f0526d4b52f899f",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_88.mp4",
+      "durationSeconds": 5.066666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 152,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.033333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_88-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_94",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-door-planters",
+      "events": [],
+      "notes": "Long thin held rod is visible across repeated arm/leg actions. Exclude prop interaction.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_94-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_94-pts.json"
+      ],
+      "sha256": "60ccd3fad722b659400c99e34fa4f20799ebeabfc16bfd779a480ae6bc239cd2",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_94.mp4",
+      "durationSeconds": 6.233333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 187,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.2,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_94-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_99",
+      "decision": "ambiguous",
+      "sceneGroup": "exterior-ivy-wall",
+      "events": [],
+      "notes": "Distant people with raised arms and broad motions; hand/body contact is too small to resolve conservatively. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_99-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_99-pts.json"
+      ],
+      "sha256": "279c4e7464aad375319fd70ad465d5911e35287c676d2cc52ccf6b6a9777d74b",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_99.mp4",
+      "durationSeconds": 8.666666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 260,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 8.633333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_99-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_104",
+      "decision": "exclude",
+      "sceneGroup": "exterior-ivy-wall",
+      "events": [],
+      "notes": "Enlarged view confirms an elongated pale handled object with coloured end beside the central pair. Exclude prop scene despite apparent body contact.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_104-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-pts.json",
+        "data/vid/review-round3-pos/v_c_b_104-dense.json",
+        "data/vid/review-round3-pos/v_c_b_104-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-dense-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-dense-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_104-detail.json",
+        "data/vid/review-round3-pos/v_c_b_104-detail.jpg"
+      ],
+      "sha256": "56186dcfc122c999a7bb9e4a52b7707e3be641a01a844a52e2b37edab07396ad",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_104.mp4",
+      "durationSeconds": 8.566666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 257,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 8.533333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_104-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_104-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 257
+          }
+        ],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_108",
+      "decision": "exclude",
+      "sceneGroup": "courtyard-brick-stair-blue-seats",
+      "events": [],
+      "notes": "Enlarged view confirms a long straight rod raised beside the pair. Exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_108-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_108-pts.json",
+        "data/vid/review-round3-pos/v_c_b_108-detail.json",
+        "data/vid/review-round3-pos/v_c_b_108-detail.jpg"
+      ],
+      "sha256": "f35a1529a8f2ac15b69bb792e68f7e4a8c108c9e11374ac2ad3822c313e5a162",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_108.mp4",
+      "durationSeconds": 8.233333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 247,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 8.2,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_108-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_115",
+      "decision": "exclude",
+      "sceneGroup": "courtyard-brick-stair-blue-seats",
+      "events": [],
+      "notes": "Long straight rod visible beside central actor in enlarged detail. Exclude prop interaction.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_115-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_115-pts.json",
+        "data/vid/review-round3-pos/v_c_b_115-detail.json",
+        "data/vid/review-round3-pos/v_c_b_115-detail.jpg"
+      ],
+      "sha256": "a04c93b3c3802efd31763e619c4862498de9a46d5fca7f2d244c5a18d1641f33",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_115.mp4",
+      "durationSeconds": 8.666666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 260,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 8.633333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_115-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_120",
+      "decision": "exclude",
+      "sceneGroup": "courtyard-brick-stair-blue-seats",
+      "events": [],
+      "notes": "Long white flexible/rod-like object visibly held across the central interaction. Exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_120-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_120-pts.json"
+      ],
+      "sha256": "1ec25a65e8f7b37eb9c311b51923f5e04facd896820d5a368309f59e4c911f13",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_120.mp4",
+      "durationSeconds": 9.6,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 288,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 9.566666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_120-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_125",
+      "decision": "ambiguous",
+      "sceneGroup": "courtyard-brick-stair-blue-seats",
+      "events": [],
+      "notes": "Mostly separated arm gestures and approaches; no sustained opposing grip resolved. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_125-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_125-pts.json"
+      ],
+      "sha256": "540db248c1c3e0ee26c136d5a4a7d57338937d8afd05f93918e8f29ff63659de",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_125.mp4",
+      "durationSeconds": 6.4,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 192,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.366666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_125-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_128",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-brick-wall-corridor",
+      "events": [],
+      "notes": "Long setup followed by brief late close cluster, obscuring hand contacts. No eligible conservative interval retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_128-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_128-pts.json"
+      ],
+      "sha256": "8986a3993fef61c4f8f1b5d36f3a43ec4ab664e933350ce2abbc9e14e44ba5e6",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_128.mp4",
+      "durationSeconds": 6.933333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 208,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.8999999999999995,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_128-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_134",
+      "decision": "train-positive",
+      "sceneGroup": "courtyard-brick-stair-blue-seats",
+      "events": [
+        {
+          "startSeconds": 4.1,
+          "endSeconds": 6.2,
+          "label": 1
+        }
+      ],
+      "notes": "Enlarged detail shows opposing collar/shoulder and forearm grips between two braced people while a third stands close. Retain the clear central grapple only; early cluster and late gestures omitted.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_134-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-pts.json",
+        "data/vid/review-round3-pos/v_c_b_134-dense.json",
+        "data/vid/review-round3-pos/v_c_b_134-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-dense-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-dense-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-wide.json",
+        "data/vid/review-round3-pos/v_c_b_134-wide-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-wide-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-wide-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-wide-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-wide-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-wide-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_134-detail.json",
+        "data/vid/review-round3-pos/v_c_b_134-detail.jpg"
+      ],
+      "sha256": "17bad6511e795a25722fbad27778075f8ddc8b096c87efbf0a18ad0cf5e60ea5",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_134.mp4",
+      "durationSeconds": 9.1,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 273,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 9.066666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_134-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_134-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 273
+          },
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_134-wide.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 273
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_134",
+            "startSeconds": 4.0,
+            "endSeconds": 8.0,
+            "positiveCoverageFraction": 0.5250000000000001,
+            "sourceFrameIndicesInclusive": [
+              120,
+              240
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_134-wide.json",
+            "endBeyondLastPTSSeconds": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_138",
+      "decision": "exclude",
+      "sceneGroup": "covered-campus-hall-columns",
+      "events": [],
+      "notes": "Long pale rod held vertically beside approaching group. Exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_138-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_138-pts.json"
+      ],
+      "sha256": "c26db4af71cff6e3ee5ea46b0e78221e3ceec314afc824c65db2f718373ff48f",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_138.mp4",
+      "durationSeconds": 4.0,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 120,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 3.966666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_138-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_143",
+      "decision": "exclude",
+      "sceneGroup": "covered-campus-hall-columns",
+      "events": [],
+      "notes": "Long slender pale rod accompanies upper-body actions and remains visible toward the tail. Exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_143-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_143-pts.json"
+      ],
+      "sha256": "9fcb2069c9bb874ab87441a0ddeae81126faa556eaaeaec796e04f2df42ee319",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_143.mp4",
+      "durationSeconds": 6.7,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 201,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.666666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_143-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_146",
+      "decision": "train-positive",
+      "sceneGroup": "covered-campus-hall-columns",
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 2.4,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.5,
+          "endSeconds": 5.4,
+          "label": 1
+        }
+      ],
+      "notes": "Paired head/upper-arm holds and leaning torsos. Separate intervals omit the brief release; later hand gestures and tail remain unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_146-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_146-pts.json",
+        "data/vid/review-round3-pos/v_c_b_146-dense.json",
+        "data/vid/review-round3-pos/v_c_b_146-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_146-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_146-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_146-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_146-dense-05.jpg"
+      ],
+      "sha256": "fb7a2c10b8b3c751c1dc4564d9780a091bc023644766666e119cd8090714c4c2",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_146.mp4",
+      "durationSeconds": 6.8,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 204,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.766666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_146-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_146-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 204
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_146",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.625,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_146-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_151",
+      "decision": "train-positive",
+      "sceneGroup": "courtyard-covered-brick-opening",
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 9.4,
+          "label": 1
+        }
+      ],
+      "notes": "Several people repeatedly grip shoulders/upper arms in a close, braced cluster with shared turns. Enlarged views show hands at the disputed interaction. Omit setup and late separation.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_151-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-pts.json",
+        "data/vid/review-round3-pos/v_c_b_151-dense.json",
+        "data/vid/review-round3-pos/v_c_b_151-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-dense-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-dense-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-dense-07.jpg",
+        "data/vid/review-round3-pos/v_c_b_151-detail.json",
+        "data/vid/review-round3-pos/v_c_b_151-detail.jpg"
+      ],
+      "sha256": "e7357ab3146aa8d8c324fa2a0be97cbaeebe7f9bb88ac06c30e1fb8a859c294d",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_151.mp4",
+      "durationSeconds": 10.766666666666667,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 323,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 10.733333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_151-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_151-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 323
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_151",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.9,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_151-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_151",
+            "startSeconds": 4.0,
+            "endSeconds": 8.0,
+            "positiveCoverageFraction": 1.0,
+            "sourceFrameIndicesInclusive": [
+              120,
+              240
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_151-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_151",
+            "startSeconds": 6.7666666666666675,
+            "endSeconds": 10.766666666666667,
+            "positiveCoverageFraction": 0.6583333333333332,
+            "sourceFrameIndicesInclusive": [
+              203,
+              322
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_151-dense.json",
+            "endBeyondLastPTSSeconds": 0.03333333333333499
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_154",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-campus-landing-signs",
+      "events": [],
+      "notes": "Paired arm gestures with intermittent closeness; repeated contact vs separated gestures unresolved. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_154-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_154-pts.json"
+      ],
+      "sha256": "313a812a8a3738b256e7eef8e4483241a93bb7815fb021038b8a42f0c633204a",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_154.mp4",
+      "durationSeconds": 7.6,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 228,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 7.566666666666666,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_154-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_160",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ],
+      "notes": "Two people maintain head/shoulder holds while leaning, turning and lowering their torsos. Retain paired grappling, omit ending margin.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_160-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_160-pts.json",
+        "data/vid/review-round3-pos/v_c_b_160-dense.json",
+        "data/vid/review-round3-pos/v_c_b_160-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_160-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_160-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_160-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_160-dense-05.jpg"
+      ],
+      "sha256": "70cbe61116058172dcf79aabbbc5e4a0bb6c85f083dd788edb3ad4ccc76604d2",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_160.mp4",
+      "durationSeconds": 6.433333333333334,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 193,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.4,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_160-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_160-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 193
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_160",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.95,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_160-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_160",
+            "startSeconds": 2.4333333333333336,
+            "endSeconds": 6.433333333333334,
+            "positiveCoverageFraction": 0.8416666666666666,
+            "sourceFrameIndicesInclusive": [
+              73,
+              192
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_160-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_163",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 2.9,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.6,
+          "endSeconds": 5.3,
+          "label": 1
+        }
+      ],
+      "notes": "Opposing forearm/shoulder and collar holds with bracing. A brief turn obscures the hand configuration, so that gap and final tail are unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_163-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_163-pts.json",
+        "data/vid/review-round3-pos/v_c_b_163-dense.json",
+        "data/vid/review-round3-pos/v_c_b_163-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_163-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_163-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_163-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_163-detail.json",
+        "data/vid/review-round3-pos/v_c_b_163-detail.jpg"
+      ],
+      "sha256": "ca069102297c7a1fdc6aff17c3ad6b7877b2e2c7f643b6b4c530557f23343509",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_163.mp4",
+      "durationSeconds": 5.866666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 176,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.833333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_163-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_163-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 176
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_163",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.725,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_163-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_163",
+            "startSeconds": 1.8666666666666663,
+            "endSeconds": 5.866666666666666,
+            "positiveCoverageFraction": 0.6833333333333333,
+            "sourceFrameIndicesInclusive": [
+              55,
+              175
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_163-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_168",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ],
+      "notes": "Paired upper-body/neck holds through bending and lowering to floor; bent partner braces with feet and hand. Omit starting and ending margins.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_168-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_168-pts.json",
+        "data/vid/review-round3-pos/v_c_b_168-dense.json",
+        "data/vid/review-round3-pos/v_c_b_168-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_168-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_168-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_168-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_168-dense-05.jpg"
+      ],
+      "sha256": "1932116fc84819f581fe2af41445925f1a9ea499e7e58a5a7d2b21d3e7169bf2",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_168.mp4",
+      "durationSeconds": 6.466666666666667,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 194,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.433333333333334,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_168-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_168-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 194
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_168",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.925,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_168-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_168",
+            "startSeconds": 2.466666666666667,
+            "endSeconds": 6.466666666666667,
+            "positiveCoverageFraction": 0.8333333333333333,
+            "sourceFrameIndicesInclusive": [
+              74,
+              193
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_168-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_171",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.2,
+          "endSeconds": 5.5,
+          "label": 1
+        }
+      ],
+      "notes": "Paired opposing shoulder/neck and forearm holds followed by deep bending and lowering. Only the visible contact sequence retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_171-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_171-pts.json",
+        "data/vid/review-round3-pos/v_c_b_171-dense.json",
+        "data/vid/review-round3-pos/v_c_b_171-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_171-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_171-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_171-dense-04.jpg"
+      ],
+      "sha256": "533068115be76eb7022e261b2d37bbcd77e8e9a61f1bed06869c5ae28e5fa140",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_171.mp4",
+      "durationSeconds": 6.066666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 182,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.033333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_171-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_171-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 182
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_171",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.95,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_171-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_171",
+            "startSeconds": 2.0666666666666664,
+            "endSeconds": 6.066666666666666,
+            "positiveCoverageFraction": 0.8583333333333334,
+            "sourceFrameIndicesInclusive": [
+              62,
+              181
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_171-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_176",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 6.3,
+          "label": 1
+        }
+      ],
+      "notes": "Standing person maintains two-hand upper-body/head grip against crouched/seated partner, who braces on floor and legs. Omit edge margins.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_176-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_176-pts.json",
+        "data/vid/review-round3-pos/v_c_b_176-dense.json",
+        "data/vid/review-round3-pos/v_c_b_176-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_176-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_176-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_176-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_176-dense-05.jpg"
+      ],
+      "sha256": "8cfba3e2f786b5d2b49f086e40483f22ed26721b774055665ffd4111ae4e871b",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_176.mp4",
+      "durationSeconds": 6.866666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 206,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.833333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_176-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_176-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 206
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_176",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.925,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_176-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_176",
+            "startSeconds": 2.8666666666666663,
+            "endSeconds": 6.866666666666666,
+            "positiveCoverageFraction": 0.8583333333333334,
+            "sourceFrameIndicesInclusive": [
+              85,
+              205
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_176-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_179",
+      "decision": "exclude",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [],
+      "notes": "Central seated rolling-chair interaction and partners bent over it; conservative prop-centred exclusion.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_179-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_179-pts.json"
+      ],
+      "sha256": "67a9ffc7fccf71289e2398fef6be348fdf38162607de3249a3db6f043bfc80c2",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_179.mp4",
+      "durationSeconds": 6.066666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 182,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.033333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_179-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_184",
+      "decision": "exclude",
+      "sceneGroup": "computer-lab-desktops-white-walls",
+      "events": [],
+      "notes": "Central seated rolling-chair cluster with partners leaning over it; conservative prop-centred exclusion.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_184-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_184-pts.json"
+      ],
+      "sha256": "b22fccbc5de84883c860ff0285c9cd4b34b1f6b5cc14968380098ff4bd9fef9c",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_184.mp4",
+      "durationSeconds": 6.966666666666667,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 209,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.933333333333334,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_184-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_187",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-white-walls-chairs",
+      "events": [
+        {
+          "startSeconds": 0.4,
+          "endSeconds": 5.8,
+          "label": 1
+        }
+      ],
+      "notes": "Repeated opposing upper-arm/shoulder grips with bent torsos and braced feet among the central group; retain clear paired grappling only.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_187-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_187-pts.json",
+        "data/vid/review-round3-pos/v_c_b_187-dense.json",
+        "data/vid/review-round3-pos/v_c_b_187-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_187-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_187-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_187-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_187-dense-05.jpg"
+      ],
+      "sha256": "93b1650d665b5abc3fff668ad8be5d12e5a3257d83f08c68fe136cf7d766b7d5",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_187.mp4",
+      "durationSeconds": 6.566666666666666,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 197,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.533333333333333,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_187-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_187-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 197
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_187",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.9,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_187-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          },
+          {
+            "id": "v_c_b_187",
+            "startSeconds": 2.5666666666666664,
+            "endSeconds": 6.566666666666666,
+            "positiveCoverageFraction": 0.8083333333333333,
+            "sourceFrameIndicesInclusive": [
+              77,
+              196
+            ],
+            "sourceFramesCoveringWindow": 120,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_187-dense.json",
+            "endBeyondLastPTSSeconds": 0.033333333333333215
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_193",
+      "decision": "ambiguous",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [],
+      "notes": "Distant pair alternates raised arms and bending; hand configurations/contact are uncertain. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_193-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_193-pts.json"
+      ],
+      "sha256": "a43f404f04a246692b56478738204a4ac5f5679ce23a0bb7021da2db36d229cf",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_193.mp4",
+      "durationSeconds": 6.0,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 180,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.966666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_193-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_196",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-brick-wall-corridor",
+      "events": [],
+      "notes": "Approach to seated person and later separated gestures; actual opposed contact not sufficiently resolved. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_196-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_196-pts.json"
+      ],
+      "sha256": "fd96afb1bbb5b8d15007a378f5936532bec28e80ecd9075d735dbad9ff4c3ace",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_196.mp4",
+      "durationSeconds": 7.704160246533128,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 200,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 7.665639445300463,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_196-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_201",
+      "decision": "train-positive",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [
+        {
+          "startSeconds": 0.3,
+          "endSeconds": 4.1,
+          "label": 1
+        }
+      ],
+      "notes": "Standing partner holds upper back/neck of deeply bent partner while both lower toward floor. Omit later prone/wrist-only configuration and uncertain tail.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_201-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_201-pts.json",
+        "data/vid/review-round3-pos/v_c_b_201-dense.json",
+        "data/vid/review-round3-pos/v_c_b_201-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_201-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_201-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_201-dense-04.jpg"
+      ],
+      "sha256": "6daa7892454b8aa82b0401f8b05989e361cab54f1bccd9937189cdc6297cccdd",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_201.mp4",
+      "durationSeconds": 6.233333333333333,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 187,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 6.2,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_201-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_201-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 187
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_201",
+            "startSeconds": 0.0,
+            "endSeconds": 4.0,
+            "positiveCoverageFraction": 0.925,
+            "sourceFrameIndicesInclusive": [
+              0,
+              120
+            ],
+            "sourceFramesCoveringWindow": 121,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_201-dense.json",
+            "endBeyondLastPTSSeconds": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "v_c_b_205",
+      "decision": "ambiguous",
+      "sceneGroup": "classroom-beige-blinds-chairs",
+      "events": [],
+      "notes": "Three people with repeated open hand/arm gestures; enlarged views do not establish sustained grappling. No labels.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_205-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_205-pts.json",
+        "data/vid/review-round3-pos/v_c_b_205-detail.json",
+        "data/vid/review-round3-pos/v_c_b_205-detail.jpg"
+      ],
+      "sha256": "ddda391f097d00f71ded74c088f1e7dfdd2277d72292efc06b6669de2fac3e0c",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_205.mp4",
+      "durationSeconds": 6.0,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 180,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 5.966666666666667,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_205-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [],
+        "noNominalFPSTimestampFallback": true
+      }
+    },
+    {
+      "id": "v_c_b_209",
+      "decision": "train-positive",
+      "sceneGroup": "covered-brick-wall-corridor",
+      "events": [
+        {
+          "startSeconds": 5.5,
+          "endSeconds": 5.9,
+          "label": 1
+        },
+        {
+          "startSeconds": 6.9,
+          "endSeconds": 8.8,
+          "label": 1
+        }
+      ],
+      "notes": "Enlarged views show an initial opposed upper-body grip and later clear collar/arm grapple with bent torsos and wide bracing. Intervening occluded cluster and early unrelated contact remain unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-pos/v_c_b_209-screen.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-pts.json",
+        "data/vid/review-round3-pos/v_c_b_209-dense.json",
+        "data/vid/review-round3-pos/v_c_b_209-dense-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-dense-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-dense-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-dense-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-dense-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-dense-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-wide.json",
+        "data/vid/review-round3-pos/v_c_b_209-wide-01.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-wide-02.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-wide-03.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-wide-04.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-wide-05.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-wide-06.jpg",
+        "data/vid/review-round3-pos/v_c_b_209-detail.json",
+        "data/vid/review-round3-pos/v_c_b_209-detail.jpg"
+      ],
+      "sha256": "f30d1e6606e9a51912af4507fb509dc19ee481c779efb538837327558f70fddd",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_209.mp4",
+      "durationSeconds": 9.06113537117904,
+      "actualPTScoverage": {
+        "method": "one sequential OpenCV decoder; CAP_PROP_POS_MSEC after each successful read; no FPS-generated timestamps",
+        "strictFiniteIncreasing": true,
+        "decodedFrameCount": 249,
+        "firstPTSSeconds": 0.0,
+        "lastPTSSeconds": 9.024745269286754,
+        "timestampsFile": "data/vid/review-round3-pos/v_c_b_209-pts.json",
+        "screenInspectedFrameCount": 24,
+        "denseEvidence": [
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_209-dense.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 249
+          },
+          {
+            "indexFile": "data/vid/review-round3-pos/v_c_b_209-wide.json",
+            "allSourceFramesIncluded": true,
+            "directlyInspectedAllPages": true,
+            "frameCount": 249
+          }
+        ],
+        "noNominalFPSTimestampFallback": true,
+        "eligibleWindowCoverage": [
+          {
+            "id": "v_c_b_209",
+            "startSeconds": 5.06113537117904,
+            "endSeconds": 9.06113537117904,
+            "positiveCoverageFraction": 0.5750000000000002,
+            "sourceFrameIndicesInclusive": [
+              139,
+              248
+            ],
+            "sourceFramesCoveringWindow": 110,
+            "allSourceFramesDirectlyInspectedInOrderedSheets": true,
+            "evidenceIndex": "data/vid/review-round3-pos/v_c_b_209-wide.json",
+            "endBeyondLastPTSSeconds": 0.03639010189228564
+          }
+        ]
+      }
+    }
+  ],
+  "provenanceValidationFile": "data/vid/review-round3-pos/provenance-validation.json"
+}

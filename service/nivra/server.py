@@ -2,6 +2,8 @@
 import asyncio
 from contextlib import asynccontextmanager
 import json
+import os
+import platform
 import secrets
 import struct
 from pathlib import Path
@@ -13,10 +15,10 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 from starlette.middleware.trustedhost import TrustedHostMiddleware
+from .auth import AuthMiddleware
 
 ROOT = Path(__file__).resolve().parents[2]
 PORT = 8765
-ORIGINS = {f'http://127.0.0.1:{PORT}', f'http://localhost:{PORT}'}
 COOKIE = 'nivra_local_session'
 MAX_FRAME_BYTES = 1_500_000
 
@@ -67,7 +69,7 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     fight_demo = None
     if enable_fight_demo:
         from .fight_demo import FightDemo
-        fight_demo = FightDemo(unpack_frame, allowed_origins=ORIGINS | ({classroom.public} if classroom.public else set()))
+        fight_demo = FightDemo(unpack_frame, allowed_origins=classroom.origins)
 
     @asynccontextmanager
     async def lifespan(app):
@@ -75,7 +77,10 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
             try:
                 state['models'] = await asyncio.to_thread(model_factory)
             except Exception as error:
-                state['error'] = str(error)
+                if platform.system() == 'Darwin' and os.environ.get('NIVRA_AUTO_RELAY', '1') != '0':
+                    classroom.device_fallback('Local model could not load on this Mac; using camera-device analysis.')
+                else:
+                    state['error'] = str(error)
         task = None if relay_only else asyncio.create_task(load())
         if fight_demo: await fight_demo.start()
         await classroom.start()
@@ -86,9 +91,12 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
     from urllib.parse import urlsplit
-    hosts = ['127.0.0.1', 'localhost'] + ([urlsplit(classroom.public).hostname] if classroom.public else [])
+    hosts = sorted({urlsplit(origin).hostname for origin in classroom.origins} | {'127.0.0.1'})
+    app.add_middleware(AuthMiddleware, auth=classroom.auth)
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
     app.include_router(classroom.router)
+    from .sites import create_router as create_sites_router
+    app.include_router(create_sites_router(classroom))
     if fight_demo:
         app.include_router(fight_demo.router)
         app.state.fight_demo = fight_demo
@@ -102,18 +110,18 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['Referrer-Policy'] = 'no-referrer'
         if request.url.path.startswith('/api/'):
-            response.headers['Cache-Control'] = 'no-store'
+            response.headers.setdefault('Cache-Control', 'no-store')
         return response
 
     @app.get('/api/v1/health')
     async def health():
-        return {'version': 1, 'backend': 'relay-only' if relay_only else 'local-ai', 'status': 'disabled' if relay_only else 'error' if state['error'] else 'ready' if state['models'] else 'loading',
+        return {'version': 1, 'backend': 'relay-only' if state['relayOnly'] else 'local-ai', 'status': 'disabled' if state['relayOnly'] else 'error' if state['error'] else 'ready' if state['models'] else 'loading',
                 'error': state['error'], 'experimental': True,
-                'runtime': state['models'].runtime if state['models'] else None}
+                'runtime': classroom.runtime()}
 
     @app.post('/api/v1/session')
     async def session(request: Request):
-        if request.headers.get('origin') not in ORIGINS or request.headers.get('host') not in ('127.0.0.1:8765','localhost:8765') or any(h in request.headers for h in ('forwarded','x-forwarded-for','x-forwarded-host','x-forwarded-proto')):
+        if not classroom.is_local(request):
             return JSONResponse({'error': 'Origin rejected'}, status_code=403)
         response = Response(status_code=204)
         response.set_cookie(COOKIE, token, httponly=True, samesite='strict', path='/api/v1', max_age=None)
@@ -122,7 +130,7 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     @app.websocket('/api/v1/stream')
     async def stream(socket: WebSocket):
         credential = socket.cookies.get(COOKIE, '')
-        if socket.headers.get('origin') not in ORIGINS or not secrets.compare_digest(credential, token):
+        if socket.headers.get('origin') not in classroom.origins or not secrets.compare_digest(credential, token):
             await socket.close(code=1008)
             return
         if state['models'] is None or state['busy']:
@@ -176,6 +184,11 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     @app.get('/camera')
     @app.get('/lab')
     @app.get('/fight')
+    @app.get('/wall')
+    @app.get('/guard')
+    @app.get('/setup')
+    @app.get('/login')
+    @app.get('/guard/login')
     async def application_route():
         return FileResponse(ROOT / 'dist' / 'index.html',headers={'Cache-Control':'no-store'})
 
@@ -192,5 +205,7 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
 
 if __name__ == '__main__':
     import uvicorn
-    uvicorn.run(create_app(), host='127.0.0.1', port=PORT, access_log=False, ws_max_size=MAX_FRAME_BYTES,
+    from .tls import serving_options
+    options = serving_options()
+    uvicorn.run(create_app(relay_only=os.environ.get('NIVRA_RELAY_ONLY') == '1'), **options, access_log=False, ws_max_size=MAX_FRAME_BYTES,
                 ws_max_queue=1, log_level='warning')

@@ -20,6 +20,28 @@ npm run dev:classroom-ai
 - Clearly labelled generated sample workspace: `http://127.0.0.1:8765/?demo=1`
 - Camera publisher: `/camera` (open a pairing link from Cameras)
 - Original browser/local-AI single-camera lab: `/lab`
+- **NIVRA Command system** (full guide: [docs/command-system-contract.md](docs/command-system-contract.md)):
+  - `/login` reviewer/admin sign-in, `/guard` guard sign-in (Clerk; a clearly labelled
+    *Developer sign-in* is used when no Clerk keys are set, local/LAN only).
+  - `/setup` (admin): guided setup — site name → floors with uploaded plan images and
+    scale → camera phones (pair by QR, drag onto the plan, turn the view cone) →
+    guards (add/invite, drag to their post) and reviewer invites → test alert.
+  - `/wall` (reviewer + judges screen): live feeds on the real floor plans, red edge
+    glow on a flagged camera, review window with the 18 s clip recorded on the
+    service (RAM only), nearest guards by post, confirm/false alarm/alert guard,
+    response clock, escalation when a guard does not acknowledge.
+  - `/guard` (guard phone): loud 4 s ring + vibration, slide to acknowledge, route on
+    the floor plan, on scene / situation clear, shift status, lock-screen push alerts
+    (Android; iPhone needs iOS 16.4+ and Add to Home Screen — [docs/guard-alerts.md](docs/guard-alerts.md)).
+  - MacBook showcase setup, HTTPS for phones and measured model speed:
+    [docs/mac-showcase.md](docs/mac-showcase.md), [docs/mac-runtime-verification.md](docs/mac-runtime-verification.md).
+  - Clerk: copy `.env.example` to `.env.local`, set `VITE_CLERK_PUBLISHABLE_KEY`
+    (before `npm run build`) and `CLERK_SECRET_KEY`, `CLERK_ISSUER`,
+    `NIVRA_AUTHORIZED_PARTIES`, `NIVRA_ADMIN_EMAILS` for the service; add the session
+    token claim `{"metadata": "{{user.public_metadata}}"}` in the Clerk dashboard.
+- Sample versions: `/wall?demo=1` and `/guard?demo=1&guard=G2` in two tabs of the
+  same browser stay in sync. **Run sample incident** starts the story. Generated
+  imagery and the Orbit Mall sample plan; no live detection.
 
 Phone frames travel to this PC for analysis; they are retained only in bounded RAM
 windows. SQLite saves camera locations and event metadata, never footage. Remote

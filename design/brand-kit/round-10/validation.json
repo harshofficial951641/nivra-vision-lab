@@ -1,0 +1,29 @@
+[
+  {
+    "concept": "Bound",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "a4aa715e558d2ea82a518d5ceeadc1dc97d296da2f65ec268aabdba8e745c6cc"
+  },
+  {
+    "concept": "Passage",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "bfad14eeccf13702e7b159bda5373e52a181a743dae3e707f75239f06140cd97"
+  },
+  {
+    "concept": "Ready",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "c670b8abd971c8c28ebc78b665c7ac79127f9a4e6b1754b94a5cd7f559cea048"
+  }
+]

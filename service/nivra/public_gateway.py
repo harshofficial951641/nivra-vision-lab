@@ -13,7 +13,7 @@ class PublicGateway:
         path = scope.get('path', '')
         valid = secrets.compare_digest(headers.get(b'x-nivra-relay', b''), self.secret.encode())
         allowed = (path.startswith('/api/v2/') and path != '/api/v2/operator/invite') or (
-            scope.get('method') == 'GET' and (path in ('/', '/camera', '/lab', '/fight', '/favicon.svg')
+            scope.get('method') == 'GET' and (path in ('/', '/camera', '/lab', '/fight', '/wall', '/guard', '/setup', '/login', '/guard/login', '/favicon.svg')
             or path.startswith(('/assets/', '/brand/', '/mediapipe/', '/models/', '/fight-samples/'))))
         if not valid or not allowed:
             if scope['type'] == 'websocket': await send({'type': 'websocket.close', 'code': 1008})

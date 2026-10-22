@@ -11,6 +11,25 @@ import onnxruntime as ort
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def select_device(requested=None):
+    requested = requested or os.environ.get('NIVRA_DEVICE', 'auto')
+    if requested not in ('auto', 'cuda', 'mps', 'cpu'):
+        raise ValueError('NIVRA_DEVICE must be auto, cuda, mps, or cpu')
+    available = {'cuda': torch.cuda.is_available(),
+                 'mps': bool(getattr(torch.backends, 'mps', None) and torch.backends.mps.is_available()),
+                 'cpu': True}
+    if requested != 'auto':
+        if not available[requested]:
+            raise RuntimeError(f'Requested device {requested} is unavailable')
+        return requested
+    return next(device for device in ('cuda', 'mps', 'cpu') if available[device])
+
+
+def onnx_providers(device):
+    preferred = {'cuda': 'CUDAExecutionProvider', 'mps': 'CoreMLExecutionProvider'}.get(device)
+    return ([preferred] if preferred in ort.get_available_providers() else []) + ['CPUExecutionProvider']
+
+
 def iou(a, b):
     intersection = np.maximum(0, np.minimum(a[2:], b[2:]) - np.maximum(a[:2], b[:2])).prod()
     return float(intersection / max(1e-6, np.prod(a[2:] - a[:2]) + np.prod(b[2:] - b[:2]) - intersection))
@@ -35,12 +54,12 @@ class Models:
             with path.open('rb') as stream:
                 if hashlib.file_digest(stream, 'sha256').hexdigest() != model['sha256']:
                     raise RuntimeError(f"Model integrity check failed: {model['id']}")
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.device = select_device()
         torch.set_num_threads(4)
         # Loading torch first makes its bundled CUDA/cuDNN libraries available on Windows.
-        if hasattr(ort, 'preload_dlls'):
+        if self.device == 'cuda' and hasattr(ort, 'preload_dlls'):
             ort.preload_dlls()
-        providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if self.device == 'cuda' else ['CPUExecutionProvider']
+        providers = onnx_providers(self.device)
         options = ort.SessionOptions()
         options.intra_op_num_threads = 4
         if self.person_model == 'rtmo':
@@ -49,16 +68,20 @@ class Models:
         else:
             self.detector = ort.InferenceSession(str(ROOT / 'models/yolox_s.onnx'), options, providers=providers)
             self.pose = ort.InferenceSession(str(ROOT / 'models/rtmpose_m.onnx'), options, providers=providers)
-        from pytorchvideo.models.hub import slowfast_r50_detection
-        self.action = slowfast_r50_detection(pretrained=False)
-        weights = torch.load(ROOT / 'models/slowfast_r50.pyth', map_location='cpu', weights_only=True)
-        self.action.load_state_dict(weights['model_state'])
-        self.action.eval().to(self.device)
+        self.action = None
+        if self.fight_model == 'ava':
+            from pytorchvideo.models.hub import slowfast_r50_detection
+            self.action = slowfast_r50_detection(pretrained=False)
+            weights = torch.load(ROOT / 'models/slowfast_r50.pyth', map_location='cpu', weights_only=True)
+            self.action.load_state_dict(weights['model_state'])
+            self.action.eval().to(self.device)
         self.fight = None
         if self.fight_model == 'x3d':
             from .x3d_candidate import X3DCandidate
             self.fight = X3DCandidate()
-        self.runtime = {'action': self.device, 'detector': self.detector.get_providers()[0],
+            self.fight.model.to(self.device)
+            self.fight.device = self.device
+        self.runtime = {'device': self.device, 'action': self.device, 'detector': self.detector.get_providers()[0],
                         'pose': self.pose.get_providers()[0], 'personModel': self.person_model,
                         'fightModel': self.fight_model, 'maxPeople': 50 if self.person_model == 'rtmo' else 8,
                         'validated': False}
@@ -139,6 +162,8 @@ class Models:
 
     @torch.inference_mode()
     def actions(self, frames, boxes):
+        if self.action is None:
+            return np.zeros((len(boxes), 80), np.float32)
         if not len(boxes):
             return np.empty((0, 80), np.float32)
         h, w = frames[0].shape[:2]

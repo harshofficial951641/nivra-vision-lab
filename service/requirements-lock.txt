@@ -34,6 +34,7 @@ opencv-python==4.11.0.86
 packaging==26.3
 parameterized==0.9.0
 pillow==12.3.0
+python-multipart==0.0.22
 pluggy==1.6.0
 portalocker==4.4.0
 protobuf==7.36.2
@@ -62,3 +63,18 @@ urllib3==2.8.0
 uvicorn==0.34.2
 websockets==15.0.1
 yacs==0.1.8
+PyJWT==2.10.1
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.11
+pywebpush==2.5.0
+py-vapid==1.9.6
+http-ece==1.2.1
+aiohttp==3.14.5
+aiohappyeyeballs==2.7.1
+aiosignal==1.4.0
+attrs==26.1.0
+frozenlist==1.8.0
+multidict==7.1.0
+propcache==0.5.4
+yarl==1.25.1

@@ -38,4 +38,20 @@ webcam/phone execution is unverified. The public deployment depends on the PC
 service and temporary bridge remaining online; deployment/live checks are
 recorded by the Sites tools separately.
 
+## Public access restoration ? 22 October 2026
+
+Hosting-only restoration of the existing approved `/fight` interface; no new visual concept or source build. Sites project `appgprj_6ab0ca77fc5c8191b14a130684b40844` remains public. Reused saved version 8 and refreshed only the protected runtime bridge credentials/upstream. Deployment `appgdep_6ad96756eae88191b918708cc05f365b` succeeded with environment revision 4. No training data, model weights, credentials, or local research artifacts were packaged or published in this operation.
+
+Public entry: https://nivra-vision-lab.topperly.chatgpt.site/fight
+
+Fresh checks:
+- Anonymous HTTP `/fight` returned 200, with no Site sign-in required. Public health reported ready, X3D-M, CUDA, busy false after completion. Anonymous protected `/api/v2/me` returned 403.
+- Browser grappling sample completed: 20 analyzed windows, 17 review windows, final displayed score 0.997. These are overlapping classifier windows, not independent incidents or accuracy evidence.
+- Browser non-fight/shadowboxing sample completed: 16 analyzed windows, zero review windows, final displayed score 0.123. Both runs used the PC GPU through the public Site WebSocket connection.
+- Inspected desktop 1280x800 and 1280x900 and mobile 390x844. No horizontal overflow at the checked desktop/mobile sizes; source preview, controls and results remained present. File input has its visible label; keyboard focus styling is present. This is a bounded accessibility check, not a full WCAG audit.
+- Console inspection found Electron preview-host startup errors and aborted blob seek requests; no application exception stopped either completed model run. Own-file selection and physical webcam permission/capture were not exercised in this restoration check.
+- Kept the selected baseline checkpoint and classifier threshold unchanged. The fine-tuned offline candidate was not promoted. PC service and tunnel are intentionally left running; PC sleep/shutdown or tunnel exit interrupts remote inference.
+
+Evidence: desktop completed grappling screenshot `C:/Users/harsh.DESKTOP-VE90R6D/.t3codex/userdata/browser-artifacts/browser-screenshot-nivra-vision-lab-topperly-chatgpt-site-mviv9rg7-6245665c.png`; mobile `browser-screenshot-nivra-vision-lab-topperly-chatgpt-site-mvivagg7-a0b448bb.png`; final desktop `browser-screenshot-nivra-vision-lab-topperly-chatgpt-site-mvivcjse-dab8aa17.png` in the same directory.
+
 final result: passed

@@ -1,0 +1,68 @@
+[
+  {
+    "direction": "Watchful",
+    "board": "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\brand-kit\\watchful-exploration\\01-watchful\\brand-kit.png",
+    "source": "exec-8397f6e3-5444-4606-ac9e-ccba205fa256.png",
+    "contrast": [
+      {
+        "foreground": "#241D33",
+        "background": "#EEF2F6",
+        "ratio": 14.38
+      },
+      {
+        "foreground": "#EEF2F6",
+        "background": "#241D33",
+        "ratio": 14.38
+      },
+      {
+        "foreground": "#241D33",
+        "background": "#FF6B3D",
+        "ratio": 5.72
+      }
+    ]
+  },
+  {
+    "direction": "Peripheral",
+    "board": "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\brand-kit\\watchful-exploration\\02-peripheral\\brand-kit.png",
+    "source": "exec-5261e3dd-0512-4e87-9064-3dbb1bafff24.png",
+    "contrast": [
+      {
+        "foreground": "#201D36",
+        "background": "#F2F2F8",
+        "ratio": 14.59
+      },
+      {
+        "foreground": "#F2F2F8",
+        "background": "#6552E8",
+        "ratio": 4.8
+      },
+      {
+        "foreground": "#201D36",
+        "background": "#D5E89A",
+        "ratio": 12.27
+      }
+    ]
+  },
+  {
+    "direction": "Lookout",
+    "board": "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\brand-kit\\watchful-exploration\\03-lookout\\brand-kit.png",
+    "source": "exec-a7b385e8-db92-442b-9a99-1a0c249b2974.png",
+    "contrast": [
+      {
+        "foreground": "#164B43",
+        "background": "#F5F7F2",
+        "ratio": 9.18
+      },
+      {
+        "foreground": "#F5F7F2",
+        "background": "#164B43",
+        "ratio": 9.18
+      },
+      {
+        "foreground": "#164B43",
+        "background": "#D9F36A",
+        "ratio": 8.0
+      }
+    ]
+  }
+]

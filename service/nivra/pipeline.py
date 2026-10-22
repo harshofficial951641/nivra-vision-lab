@@ -110,7 +110,7 @@ class Pipeline:
         video = [(t,image) for t,image in rgb if timestamp-t <= 2200]
         fresh_action = False
         action_motion = {}
-        if timestamp - self.last_action >= 400 and len(video) >= 8 and timestamp - video[0][0] >= 1600:
+        if getattr(self.models, 'fight_model', 'ava') != 'x3d' and timestamp - self.last_action >= 400 and len(video) >= 8 and timestamp - video[0][0] >= 1600:
             records = [record for record in self.frames if timestamp-record[0] <= 2200]
             times = np.linspace(video[0][0], timestamp, 32)
             chosen = [min(video, key=lambda r: abs(r[0] - t)) for t in times]
@@ -144,10 +144,12 @@ class Pipeline:
                                        startMs=sampled[0][0], endMs=timestamp, model='x3d-rwf2000-candidate')
             self.decisions.scene_update(timestamp,people,self.fight_evidence['publisherScore'],self.fight_evidence['startMs'])
             self.last_fight = timestamp
+            if getattr(self.models, 'fight_model', 'ava') == 'x3d':
+                self.evidence_ms = timestamp
         recent = bool(self.decisions.events and timestamp - self.decisions.events[0]['occurredAtMs'] < 4000)
         excluded = max(0, len(tracked) - len(people))
         action_people = sum(p['id'] in self.actions for p in people)
-        partial_action = self.evidence_ms >= 0 and action_people < len(people)
+        partial_action = getattr(self.models, 'fight_model', 'ava') != 'x3d' and self.evidence_ms >= 0 and action_people < len(people)
         sparse = gap > 600
         limited = len(people) < 2 or excluded > 0 or partial_action or sparse or any(p['ambiguous'] for p in people)
         status = 'alert' if recent else 'limited' if limited else 'warming' if self.evidence_ms < 0 else 'clear'

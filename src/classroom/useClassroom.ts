@@ -1,6 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import { api, socketUrl, type Snapshot } from './contracts'
-export function useClassroom(enabled: boolean) {
+import { authenticateSocket } from '../auth/session'
+export function useClassroom(
+  enabled: boolean,
+  onFrame?: (cameraId: string, jpeg: Blob, receivedAt: number) => void,
+  /** Command system: authenticate the socket with the signed-in session instead of the operator cookie. */
+  tokenAuth = false,
+) {
+  const frameListener = useRef(onFrame)
+  useEffect(() => {
+    frameListener.current = onFrame
+  })
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null)
   const [connection, setConnection] = useState<
     'connecting' | 'connected' | 'disconnected'
@@ -36,7 +46,9 @@ export function useClassroom(enabled: boolean) {
       const batch: typeof previews = {}
       for (const [id, frame] of pending) {
         if (!latest.current?.cameras.some(camera => camera.id === id && camera.feed === 'live' && camera.generation === frame.meta.generation)) continue
-        const url = URL.createObjectURL(new Blob([frame.bytes.slice(frame.offset)], { type: 'image/jpeg' }))
+        const jpeg = new Blob([frame.bytes.slice(frame.offset)], { type: 'image/jpeg' })
+        frameListener.current?.(id, jpeg, frame.received)
+        const url = URL.createObjectURL(jpeg)
         const previous = urls.get(id)
         urls.set(id, url)
         batch[id] = { ...frame.meta, url, received: frame.received }
@@ -56,9 +68,10 @@ export function useClassroom(enabled: boolean) {
     const connect = async () => {
       setConnection('connecting')
       try {
-        await api('/session', 'POST')
+        if (!tokenAuth) await api('/session', 'POST')
         if (stopped) return
         socket = new WebSocket(socketUrl('/operator'))
+        if (tokenAuth) authenticateSocket(socket)
         socket.binaryType = 'arraybuffer'
         socket.onopen = () => {
           attempts = 0
@@ -71,7 +84,7 @@ export function useClassroom(enabled: boolean) {
             if (typeof event.data === 'string') {
               const data = JSON.parse(event.data) as Snapshot
               if (
-                data.version !== 2 ||
+                (data.version !== 2 && data.version !== 3) ||
                 data.type !== 'snapshot' ||
                 !Array.isArray(data.cameras) ||
                 !Array.isArray(data.events)
@@ -123,6 +136,8 @@ export function useClassroom(enabled: boolean) {
         }
         socket.onclose = (event) => {
           if (event.code === 1013 && event.reason) setError(event.reason)
+          if (event.code === 4401) setError('Your session expired. Sign in again.')
+          if (event.code === 4403) setError('This account cannot open Command.')
           if (!stopped) retry()
         }
         socket.onerror = () => {
@@ -157,6 +172,6 @@ export function useClassroom(enabled: boolean) {
       socket?.close()
       urls.forEach((url) => URL.revokeObjectURL(url))
     }
-  }, [enabled])
+  }, [enabled, tokenAuth])
   return { snapshot, connection, error, previews }
 }

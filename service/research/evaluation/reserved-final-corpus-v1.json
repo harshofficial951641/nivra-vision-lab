@@ -1,0 +1,2400 @@
+[
+  {
+    "id": "wave1-positive-tokyo-judo",
+    "source": "https://commons.wikimedia.org/wiki/File:Judo-Tokyo-2016-10-1.webm",
+    "sourceGroup": "commons-nesnad-judo-tokyo-2016-10-01",
+    "license": "CC-BY-SA-4.0",
+    "author": "Nesnad",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Judo-Tokyo-2016-10-1.webm",
+    "conditions": {
+      "tags": [
+        "indoor-colour",
+        "multiple-pairs",
+        "distant-subjects-in-wide-view",
+        "partial-occlusion",
+        "camera-zoom-change",
+        "sports-practice"
+      ],
+      "sensorModality": "unknown",
+      "nearIR": "unverified",
+      "thermalIR": "unverified",
+      "nativeCameraResolution": "unknown",
+      "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+      "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+      "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+    },
+    "path": "../cache/eval-wave1/positives/tokyo-judo/original.webm",
+    "sha256": "8d2731d725e03eca9cc85567650a9855e8ce5bf407da200455f11db89ce92643",
+    "durationMs": 30272.0,
+    "events": [
+      {
+        "startMs": 13000.0,
+        "endMs": 21000.0,
+        "targetLabel": 1,
+        "label": "physical-contact-proxy"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationBasis": "Provisional assistant every-available-frame sports/drill contact-proxy review; reviewed literal is loader eligibility only. No verified hostile fight, human ground truth, normal tails or negative labels.",
+    "annotationMethod": "Model-blind view_image inspection of every available decoded frame covering each of the six original proposed contact spans, including the immediately preceding/following boundary frames. New sequential OpenCV decode with one active CPU decoder/one decoder thread and cv2.setNumThreads(1), verified against hash-pinned original FFmpeg integer PTS and its +3ms OpenCV offset. All prior saved all-frame contact sheets also re-inspected. Chronological still-frame inspection; no real-time video playback, no FPS-derived clocks, no audio/model scores/inference/training/GPU/downloads.",
+    "denseReviewNotes": "All 242 covering frames inspected in nine chronological sheets, plus full-frame boundary context and all three prior all-frame sheets. The central floor pair maintains visible upper-body/torso contact while rolling/repositioning and settling into a ground hold throughout the proposed span. Other floor pairs are also in contact; standing people partly occlude some other pairs but do not remove the visible central contact evidence. Sport/practice contact proxy only; no hostile intent, force or injury inference.",
+    "limitations": [
+      "Provisional assistant judgments, not human ground truth or independent human review.",
+      "Sport/practice/instructional contact proxies do not establish real hostile fights, intent, force, injury, identity, guilt or crime.",
+      "Every available decoded frame was inspected; motion between video exposures and native PTS gaps is not directly observed. Native gaps are explicitly recorded; no frame/time synthesis.",
+      "Contact evidence establishes a scene-level episode, not exhaustive localization or labeling of every person/pair in the frame. Tokyo contains partial occlusion of other pairs.",
+      "Only the proposed 39 seconds are adjudicated here; all other source time remains outside this dense review and is never newly marked normal.",
+      "Original source groups/roles are unchanged. Actor/session independence and publisher/pretraining overlap remain unknown. This adds no independent recordings or human ground truth.",
+      "Original source rights/participant-release limitations remain as recorded in the original bundle; no new clearance or camera/night/crowd capability is asserted."
+    ],
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "author": "Nesnad",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Judo-Tokyo-2016-10-1.webm",
+      "provenance": {
+        "sourcePageId": 95246383,
+        "sourcePageRevisionId": 680220632,
+        "sourcePageRevisionTimestamp": "2022-08-04T03:58:56Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=680220632",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/tokyo-judo/source-wikitext.txt",
+        "sourceWikitextSha256": "aefc87b30ff090bfb3377de14c66d73f6e2edb62c3ef12e933def02d7caad338",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/tokyo-judo/source.json",
+        "sourceMetadataSha256": "d1ff8aac4dcb3b6b122b17a159fb8e3477355532a5a1aeceac6c443929a3b289",
+        "uploadTimestamp": "2020-10-20T06:56:34Z",
+        "publisherSha1": "41b78a51b2337aff2f05997fd8f431199a211ced",
+        "actualSourceSha256": "8d2731d725e03eca9cc85567650a9855e8ce5bf407da200455f11db89ce92643",
+        "actualWorkingSha256": "8d2731d725e03eca9cc85567650a9855e8ce5bf407da200455f11db89ce92643",
+        "sizeBytes": 9138017,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/tokyo-judo/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/tokyo-judo/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/tokyo-judo/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 30233.0,
+        "declaredEndMinusLastObservedFrameMs": 42.0,
+        "roleHashFirstByte": 235,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/tokyo-judo/contact-1.jpg": "19774d85d39da033fb75c3cf619f9ccc0c294ce1b0db2ccb10565a810800a154",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-2.jpg": "0eeae9e4d57709279df8c88b26da68defa4cd789f33c4307613b56b3ac824460",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-1.jpg": "727a657f7ce6df1bed0d25c82c2908064d98e36762dd4c9f792aef8b6be43170",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-2.jpg": "1da8b0ac29129ca7e78a25d55ad9ab01355f427ddebfd4f9e4081d58adeb9d14",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-3.jpg": "f876383625bd92a9cb6db0b35e155065e89e9b93a7f810076019be73bc1e05e7",
+          "../cache/eval-wave1/positives/tokyo-judo/dense-1.jpg": "838ebd5799512d617d88508c15795eb041fcaafe5fd2bd9e33e3912ab82f7a9c",
+          "../cache/eval-wave1/positives/tokyo-judo/dense-2.jpg": "81091616ea46119b04d246131e205995ad155a2b3a1c672d73f6701411081eb9",
+          "../cache/eval-wave1/positives/tokyo-judo/detail-1.jpg": "8f1fd7e72226a2c9d554abfdd30e875c8d82f62bee44ca65bb196f5df39eb5cd",
+          "../cache/eval-wave1/positives/tokyo-judo/detail-16.jpg": "b73b47845f04e322ccb6fd7aa7894b949ee4102c0f0eedc0490c1e68fcacf874",
+          "../cache/eval-wave1/positives/tokyo-judo/detail-32.jpg": "6e460febefc2915f44b36d9816423b16a2e793cb8754bf43ed295bc18aec5478"
+        }
+      },
+      "caveat": "Pinned primary uploader/author copyright grant; independent ownership/participant releases/consent not verified. License is not a model release."
+    },
+    "roleAssignment": {
+      "rule": "first byte SHA256 UTF8('nivra-online-wave1-v1:'+sourceGroup) <128 development; otherwise reserved-audit",
+      "firstByte": 235,
+      "processorRoleMapping": "reserved-audit -> reserved; no group/role reassignment"
+    },
+    "timingLineage": {
+      "sourceDurationMs": 30275,
+      "sourceEventBoundsMs": {
+        "startMs": 13003,
+        "endMs": 21003
+      },
+      "openCvToSourceOffsetMs": 3.0,
+      "transformation": "OpenCV event bounds and declared duration = original source values minus proven constant offset; media bytes unchanged; no FPS-derived timeline",
+      "sourceClockPath": "service/research/cache/eval-wave1/positives/tokyo-judo/source-clock.json",
+      "sourceClockSha256": "29cf967356385daa5ec3af287d1a45815d958acda3f3c02a5514d0d7dd1f9231",
+      "openCvClockPath": "service/research/cache/eval-wave1/positives/tokyo-judo/decode.json",
+      "openCvClockSha256": "c547dfd76c8ad9165c476890fb8081b71e7cc088d94b17575be2560350e288a7",
+      "allFrameCount": 907,
+      "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+      "sourceTimeBase": "1/1000",
+      "firstObservedOpenCvPtsMs": 0.0,
+      "lastObservedOpenCvPtsMs": 30230.0,
+      "declaredEndMinusLastObservedMs": 42.0,
+      "unobservedTailLabel": "unknown",
+      "coveragePath": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/coverage.json",
+      "coverageSha256": "5eba5f51a4cc98ac550778c32a4981dfa39c224f8af988314c3ac65b8ddc147f",
+      "coveringFrameIndices": {
+        "first": 389,
+        "last": 630,
+        "inclusive": true,
+        "count": 242
+      }
+    },
+    "originalBundle": {
+      "path": "service/research/evaluation/wave1-positive-review.json",
+      "sha256": "efb829f62b010ef091b3e452fd3abb6109c741cfcf3a513d2cdb51e1a89a7440"
+    },
+    "denseReview": {
+      "path": "service/research/evaluation/wave1-positive-dense-review.json",
+      "sha256": "4c84e7a06fc01eb9b274108d4e7faedaff4982af3b81afab2be23de5e62a7eea"
+    },
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-01.jpg",
+        "sha256": "7f74fdc63b70eafdfb2308c381eafbda2f4195937f60ba6f4fa4599ed14645df",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-02.jpg",
+        "sha256": "7be186fb368e2b97bd0b98d842d29effadea569ae8e1817a1bc79cfb62ae11da",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-03.jpg",
+        "sha256": "05c89e26aac8fa80d506e91a6eea06657fe09e4fa7572f04be398faead2218b1",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-04.jpg",
+        "sha256": "b251b670af8c2fadb8be0e9787631c32070d3c6ad9abf69d109576c9727bf745",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-05.jpg",
+        "sha256": "a8a79533e8c84940f69e831c66e527f482eecf1a12fd04483cf31fa3425b44d2",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-06.jpg",
+        "sha256": "68299f82283da05636ce63042e024937b39e1a013438b2ed6a9b46f876c3d3ec",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-07.jpg",
+        "sha256": "67480f5113db52586652fd0bec7b2a102d5431874e12de9349a08b43363c3a16",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-08.jpg",
+        "sha256": "88f611596ef97c99373c6876aae31bd0be63a0e50fe57a50e3d53bf0a50e8a08",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/frames-09.jpg",
+        "sha256": "66f5c87772b68d893a0c9859d0575732eeefe544deabada713f61319b3c8a1ad",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-tokyo-judo/context-boundaries.jpg",
+        "sha256": "9a62b17460847b8cbde120ef144953c6f7b1d95696f5b14b52c6a2fa722e6667",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "boundary-context"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/tokyo-judo/contact-all-frames-1.jpg",
+        "sha256": "727a657f7ce6df1bed0d25c82c2908064d98e36762dd4c9f792aef8b6be43170",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/tokyo-judo/contact-all-frames-2.jpg",
+        "sha256": "1da8b0ac29129ca7e78a25d55ad9ab01355f427ddebfd4f9e4081d58adeb9d14",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/tokyo-judo/contact-all-frames-3.jpg",
+        "sha256": "f876383625bd92a9cb6db0b35e155065e89e9b93a7f810076019be73bc1e05e7",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      }
+    ],
+    "metadataPathBase": "repository-root for evidence, rights provenance inherited paths relative to originalBundle; media path relative to this corpus",
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 13000.0,
+        "label": "unknown"
+      },
+      {
+        "startMs": 21000.0,
+        "endMs": 30272.0,
+        "label": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "wave1-positive-buganda-wrestling",
+    "source": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom.webm",
+    "sourceGroup": "commons-samson-ssemakadde-buganda-wrestling-2026-09-17",
+    "license": "CC0-1.0",
+    "author": "Samson Ssemakadde",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Traditional_wrestling_in_Buganda_kingdom.webm",
+    "conditions": {
+      "tags": [
+        "daylight-colour",
+        "two-contact-participants",
+        "spectator-background",
+        "320x240-original-upload",
+        "letterboxed",
+        "sports-contact"
+      ],
+      "sensorModality": "unknown",
+      "nearIR": "unverified",
+      "thermalIR": "unverified",
+      "nativeCameraResolution": "unknown",
+      "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+      "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+      "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+    },
+    "path": "../cache/eval-wave1/positives/buganda-wrestling/original.webm",
+    "sha256": "cd2375820472a15ccd3991f64e1932cc4ac19265962ca313439a53e252c4ecad",
+    "durationMs": 29280.0,
+    "events": [
+      {
+        "startMs": 1000.0,
+        "endMs": 7000.0,
+        "targetLabel": 1,
+        "label": "physical-contact-proxy"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationBasis": "Provisional assistant every-available-frame sports/drill contact-proxy review; reviewed literal is loader eligibility only. No verified hostile fight, human ground truth, normal tails or negative labels.",
+    "annotationMethod": "Model-blind view_image inspection of every available decoded frame covering each of the six original proposed contact spans, including the immediately preceding/following boundary frames. New sequential OpenCV decode with one active CPU decoder/one decoder thread and cv2.setNumThreads(1), verified against hash-pinned original FFmpeg integer PTS and its +3ms OpenCV offset. All prior saved all-frame contact sheets also re-inspected. Chronological still-frame inspection; no real-time video playback, no FPS-derived clocks, no audio/model scores/inference/training/GPU/downloads.",
+    "denseReviewNotes": "All 147 covering frames inspected in five chronological sheets, full-frame boundary context and both prior all-frame sheets. Two foreground participants retain upper-body/head/arm grips while leaning, pushing their bodies against each other and shifting foot positions. The pair remains visibly coupled at both proposed boundaries and throughout the available frames. Bystanders remain adjacent; no object is used by the interacting pair. Sport contact proxy only, with low coded resolution limiting fine hand placement.",
+    "limitations": [
+      "Provisional assistant judgments, not human ground truth or independent human review.",
+      "Sport/practice/instructional contact proxies do not establish real hostile fights, intent, force, injury, identity, guilt or crime.",
+      "Every available decoded frame was inspected; motion between video exposures and native PTS gaps is not directly observed. Native gaps are explicitly recorded; no frame/time synthesis.",
+      "Contact evidence establishes a scene-level episode, not exhaustive localization or labeling of every person/pair in the frame. Tokyo contains partial occlusion of other pairs.",
+      "Only the proposed 39 seconds are adjudicated here; all other source time remains outside this dense review and is never newly marked normal.",
+      "Original source groups/roles are unchanged. Actor/session independence and publisher/pretraining overlap remain unknown. This adds no independent recordings or human ground truth.",
+      "Original source rights/participant-release limitations remain as recorded in the original bundle; no new clearance or camera/night/crowd capability is asserted."
+    ],
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "author": "Samson Ssemakadde",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom.webm",
+      "provenance": {
+        "sourcePageId": 199664046,
+        "sourcePageRevisionId": 1277702438,
+        "sourcePageRevisionTimestamp": "2026-09-17T09:50:43Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1277702438",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/buganda-wrestling/source-wikitext.txt",
+        "sourceWikitextSha256": "dd534f17988cd668a512027d9e8b9675a0f9fc986a9fdcf395695ca37836b98d",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/buganda-wrestling/source.json",
+        "sourceMetadataSha256": "f28ad6ecb61dddb301f3aae9e90a34eb0f41440d56a72b791adb27b050c88e7a",
+        "uploadTimestamp": "2026-09-17T09:50:40Z",
+        "publisherSha1": "780cf5e7cac00202546f50eccb5c5ead4667780f",
+        "actualSourceSha256": "cd2375820472a15ccd3991f64e1932cc4ac19265962ca313439a53e252c4ecad",
+        "actualWorkingSha256": "cd2375820472a15ccd3991f64e1932cc4ac19265962ca313439a53e252c4ecad",
+        "sizeBytes": 9958401,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/buganda-wrestling/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/buganda-wrestling/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/buganda-wrestling/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 29243.0,
+        "declaredEndMinusLastObservedFrameMs": 40.0,
+        "roleHashFirstByte": 128,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-1.jpg": "65d590a790fe4eae714e780230ff70224816057a9fd40fc1d6563184eee84b89",
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-2.jpg": "19fdd294ab69f8c929775308c991395518a9533dcb4204931667319527e414a0",
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-1.jpg": "13455d5bcc45270f93a2e4d987e9edfc49a9505af96d467db6565d535bcb0866",
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-2.jpg": "119d2c5f1d7d75d2844908fb1a104831a04bf9a3f94257c7f662fe8bf902bf62",
+          "../cache/eval-wave1/positives/buganda-wrestling/dense-1.jpg": "c9aa891e8ccfd0294371888c3d8244554ddc85f29af506d2f0d4f2ec80d67f3d",
+          "../cache/eval-wave1/positives/buganda-wrestling/dense-2.jpg": "9bf2f193f2d70f0cf7d8eee06b1614d197f5a15b34fb6163386670abe8c06975"
+        }
+      },
+      "caveat": "Pinned primary uploader/author copyright grant; independent ownership/participant releases/consent not verified. License is not a model release."
+    },
+    "roleAssignment": {
+      "rule": "first byte SHA256 UTF8('nivra-online-wave1-v1:'+sourceGroup) <128 development; otherwise reserved-audit",
+      "firstByte": 128,
+      "processorRoleMapping": "reserved-audit -> reserved; no group/role reassignment"
+    },
+    "timingLineage": {
+      "sourceDurationMs": 29283,
+      "sourceEventBoundsMs": {
+        "startMs": 1003,
+        "endMs": 7003
+      },
+      "openCvToSourceOffsetMs": 3.0,
+      "transformation": "OpenCV event bounds and declared duration = original source values minus proven constant offset; media bytes unchanged; no FPS-derived timeline",
+      "sourceClockPath": "service/research/cache/eval-wave1/positives/buganda-wrestling/source-clock.json",
+      "sourceClockSha256": "6e3edd167afcfd94ad45a817292b1ed66487b780995ea8fe518afae0f5d6e558",
+      "openCvClockPath": "service/research/cache/eval-wave1/positives/buganda-wrestling/decode.json",
+      "openCvClockSha256": "0c10dc94cedec22c0a0b26bca8787c69161c8f77d6776c378fbb74fb12dd3720",
+      "allFrameCount": 702,
+      "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+      "sourceTimeBase": "1/1000",
+      "firstObservedOpenCvPtsMs": 0.0,
+      "lastObservedOpenCvPtsMs": 29240.000000000004,
+      "declaredEndMinusLastObservedMs": 39.99999999999636,
+      "unobservedTailLabel": "unknown",
+      "coveragePath": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/coverage.json",
+      "coverageSha256": "25b902e9f801b247b8ef139ec99d5592c4d4d0c1ed311fd634976bba35c4b92e",
+      "coveringFrameIndices": {
+        "first": 23,
+        "last": 169,
+        "inclusive": true,
+        "count": 147
+      }
+    },
+    "originalBundle": {
+      "path": "service/research/evaluation/wave1-positive-review.json",
+      "sha256": "efb829f62b010ef091b3e452fd3abb6109c741cfcf3a513d2cdb51e1a89a7440"
+    },
+    "denseReview": {
+      "path": "service/research/evaluation/wave1-positive-dense-review.json",
+      "sha256": "4c84e7a06fc01eb9b274108d4e7faedaff4982af3b81afab2be23de5e62a7eea"
+    },
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/frames-01.jpg",
+        "sha256": "12d4b2e4ad8eb818dbaaf6b8361b0aa9be5e42b644839f942b3a28bab8c09db8",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/frames-02.jpg",
+        "sha256": "f53794286eb6aa4879abf0c0d8e13e9cb2a555c900eb0fd0fa07fb83de6d7074",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/frames-03.jpg",
+        "sha256": "be3d8e9056beaae27038d7eb8c5a912a5b9bec2f0892115c0cf85b349e5d4807",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/frames-04.jpg",
+        "sha256": "b7582a2078cde17ccd13b18a14d43cacb5fe4447a07509e4cb4b76e9752d23fe",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/frames-05.jpg",
+        "sha256": "0581a245c6b094fdf36e9d7c20c5beae4abed0b22b9ee0c2735438d88576bf89",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-wrestling/context-boundaries.jpg",
+        "sha256": "dcab301e1679371d90ade1bc191bcd00b702aca94fb095c802f91261033f7070",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "boundary-context"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-1.jpg",
+        "sha256": "13455d5bcc45270f93a2e4d987e9edfc49a9505af96d467db6565d535bcb0866",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-2.jpg",
+        "sha256": "119d2c5f1d7d75d2844908fb1a104831a04bf9a3f94257c7f662fe8bf902bf62",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      }
+    ],
+    "metadataPathBase": "repository-root for evidence, rights provenance inherited paths relative to originalBundle; media path relative to this corpus",
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 1000.0,
+        "label": "unknown"
+      },
+      {
+        "startMs": 7000.0,
+        "endMs": 29280.0,
+        "label": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "wave1-positive-buganda-ekigwo",
+    "source": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom_(Ekigwo).webm",
+    "sourceGroup": "commons-samson-ssemakadde-buganda-wrestling-2026-09-17",
+    "license": "CC0-1.0",
+    "author": "Samson Ssemakadde",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Traditional_wrestling_in_Buganda_kingdom_%28Ekigwo%29.webm",
+    "conditions": {
+      "tags": [
+        "daylight-colour",
+        "two-contact-participants",
+        "spectator-background",
+        "320x240-original-upload",
+        "letterboxed",
+        "sports-contact"
+      ],
+      "sensorModality": "unknown",
+      "nearIR": "unverified",
+      "thermalIR": "unverified",
+      "nativeCameraResolution": "unknown",
+      "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+      "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+      "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+    },
+    "path": "../cache/eval-wave1/positives/buganda-ekigwo/original.webm",
+    "sha256": "7e18df576db51a4ac929739dcf2df0db9b11ad3ed3af732e6832ab13db3246db",
+    "durationMs": 31281.0,
+    "events": [
+      {
+        "startMs": 15000.0,
+        "endMs": 23000.0,
+        "targetLabel": 1,
+        "label": "physical-contact-proxy"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationBasis": "Provisional assistant every-available-frame sports/drill contact-proxy review; reviewed literal is loader eligibility only. No verified hostile fight, human ground truth, normal tails or negative labels.",
+    "annotationMethod": "Model-blind view_image inspection of every available decoded frame covering each of the six original proposed contact spans, including the immediately preceding/following boundary frames. New sequential OpenCV decode with one active CPU decoder/one decoder thread and cv2.setNumThreads(1), verified against hash-pinned original FFmpeg integer PTS and its +3ms OpenCV offset. All prior saved all-frame contact sheets also re-inspected. Chronological still-frame inspection; no real-time video playback, no FPS-derived clocks, no audio/model scores/inference/training/GPU/downloads.",
+    "denseReviewNotes": "All 194 covering frames inspected in seven chronological sheets, full-frame boundary context and both prior all-frame sheets. Two participants maintain upper-body/head/arm contact while changing stance; one briefly dips toward a knee/groundward position and rises while still visibly coupled. No completed takedown or injury is inferred. Contact remains visible at both proposed boundaries. The native 80 ms PTS gap near 20 seconds is retained explicitly; no missing-time frames are invented.",
+    "limitations": [
+      "Provisional assistant judgments, not human ground truth or independent human review.",
+      "Sport/practice/instructional contact proxies do not establish real hostile fights, intent, force, injury, identity, guilt or crime.",
+      "Every available decoded frame was inspected; motion between video exposures and native PTS gaps is not directly observed. Native gaps are explicitly recorded; no frame/time synthesis.",
+      "Contact evidence establishes a scene-level episode, not exhaustive localization or labeling of every person/pair in the frame. Tokyo contains partial occlusion of other pairs.",
+      "Only the proposed 39 seconds are adjudicated here; all other source time remains outside this dense review and is never newly marked normal.",
+      "Original source groups/roles are unchanged. Actor/session independence and publisher/pretraining overlap remain unknown. This adds no independent recordings or human ground truth.",
+      "Original source rights/participant-release limitations remain as recorded in the original bundle; no new clearance or camera/night/crowd capability is asserted."
+    ],
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "author": "Samson Ssemakadde",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom_(Ekigwo).webm",
+      "provenance": {
+        "sourcePageId": 199664047,
+        "sourcePageRevisionId": 1282190472,
+        "sourcePageRevisionTimestamp": "2026-10-01T14:43:06Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1282190472",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/buganda-ekigwo/source-wikitext.txt",
+        "sourceWikitextSha256": "90b008db76f7a64403962dbb08489320e3c45e210a75f7061d5ec30538020d90",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/buganda-ekigwo/source.json",
+        "sourceMetadataSha256": "eb7d23e86295a34f84fefff87adca5b1925fd3461f940595f90d288d7bcce783",
+        "uploadTimestamp": "2026-09-17T09:50:42Z",
+        "publisherSha1": "1719cdd80bc8655f820402a7a2194de5598a1550",
+        "actualSourceSha256": "7e18df576db51a4ac929739dcf2df0db9b11ad3ed3af732e6832ab13db3246db",
+        "actualWorkingSha256": "7e18df576db51a4ac929739dcf2df0db9b11ad3ed3af732e6832ab13db3246db",
+        "sizeBytes": 11720443,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/buganda-ekigwo/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 31243.0,
+        "declaredEndMinusLastObservedFrameMs": 41.0,
+        "roleHashFirstByte": 128,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-1.jpg": "bf2d7ae15d86df584ac20addb073c5287c4af0601197877e88198f1aad69cf48",
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-2.jpg": "0aeb6662fdaeae05ce08917444acbad9be4eecf21f81705162a7078f3faeb3d2",
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-1.jpg": "fc82156a53bc6a74682e97b300c3685858cb442f9880bfae4363af5233ce03f5",
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-2.jpg": "2c4e404c752e3a4b41bb3e9f3ae90fc360202c517b2de4c8a1e166aa7b07c958",
+          "../cache/eval-wave1/positives/buganda-ekigwo/dense-1.jpg": "3d2cbd4ebfdd15cd591120db76c14c02e474433a2ac93eac38795c199a6cdd26",
+          "../cache/eval-wave1/positives/buganda-ekigwo/dense-2.jpg": "4eafe8a192c3bf09863c8ddce2112c2a47fee1f9d1b73c5dea768be05c0326a8"
+        }
+      },
+      "caveat": "Pinned primary uploader/author copyright grant; independent ownership/participant releases/consent not verified. License is not a model release."
+    },
+    "roleAssignment": {
+      "rule": "first byte SHA256 UTF8('nivra-online-wave1-v1:'+sourceGroup) <128 development; otherwise reserved-audit",
+      "firstByte": 128,
+      "processorRoleMapping": "reserved-audit -> reserved; no group/role reassignment"
+    },
+    "timingLineage": {
+      "sourceDurationMs": 31284,
+      "sourceEventBoundsMs": {
+        "startMs": 15003,
+        "endMs": 23003
+      },
+      "openCvToSourceOffsetMs": 3.0,
+      "transformation": "OpenCV event bounds and declared duration = original source values minus proven constant offset; media bytes unchanged; no FPS-derived timeline",
+      "sourceClockPath": "service/research/cache/eval-wave1/positives/buganda-ekigwo/source-clock.json",
+      "sourceClockSha256": "7b87ef04c4fd424463b69c11faf15c29c8f1c794355aef007f4cb21959367209",
+      "openCvClockPath": "service/research/cache/eval-wave1/positives/buganda-ekigwo/decode.json",
+      "openCvClockSha256": "bcf2fc06d950d6ed0a5942de5edca09ae8e690ea26b8c0e4a05d0108e45db4e4",
+      "allFrameCount": 750,
+      "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+      "sourceTimeBase": "1/1000",
+      "firstObservedOpenCvPtsMs": 0.0,
+      "lastObservedOpenCvPtsMs": 31240.000000000004,
+      "declaredEndMinusLastObservedMs": 40.99999999999636,
+      "unobservedTailLabel": "unknown",
+      "coveragePath": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/coverage.json",
+      "coverageSha256": "de830ac0fcb90c146373b862b530b2fb17dcf54635aa2b53d00aef7e380f005c",
+      "coveringFrameIndices": {
+        "first": 359,
+        "last": 552,
+        "inclusive": true,
+        "count": 194
+      }
+    },
+    "originalBundle": {
+      "path": "service/research/evaluation/wave1-positive-review.json",
+      "sha256": "efb829f62b010ef091b3e452fd3abb6109c741cfcf3a513d2cdb51e1a89a7440"
+    },
+    "denseReview": {
+      "path": "service/research/evaluation/wave1-positive-dense-review.json",
+      "sha256": "4c84e7a06fc01eb9b274108d4e7faedaff4982af3b81afab2be23de5e62a7eea"
+    },
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-01.jpg",
+        "sha256": "78561158e4d911cb590efc97c7f7d59d3b7a6a898d614cd791959f55bbe60702",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-02.jpg",
+        "sha256": "20e353f2b0bd2080a52161ae02872e8926c9f47488afa06d4b8f365546ca55ca",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-03.jpg",
+        "sha256": "73a3df57746c60487124eb0f08f4ddf13822b807dae69b42a2819636fa80170c",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-04.jpg",
+        "sha256": "c259297a41b39fe9542a4065f948968b952b7bb372a91812bd3ea18e58ca5f44",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-05.jpg",
+        "sha256": "f3f33ff11447d10be0b29c408c30881e90860e4f95245faf7a22c172812a5ba6",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-06.jpg",
+        "sha256": "7530f267f02c202b015296afe7baae2e3c03509e5864b595aa5da2691bef2e49",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/frames-07.jpg",
+        "sha256": "840d154b1594fed89ca6ec5c30ea0ac1a3bffc98740f7ac5a1bebaf3a3ea839b",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo/context-boundaries.jpg",
+        "sha256": "e81df71efc67c78697648e33aaec4dfc460f92973b16c15ff780e5652cef6073",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "boundary-context"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-1.jpg",
+        "sha256": "fc82156a53bc6a74682e97b300c3685858cb442f9880bfae4363af5233ce03f5",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-2.jpg",
+        "sha256": "2c4e404c752e3a4b41bb3e9f3ae90fc360202c517b2de4c8a1e166aa7b07c958",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      }
+    ],
+    "metadataPathBase": "repository-root for evidence, rights provenance inherited paths relative to originalBundle; media path relative to this corpus",
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 15000.0,
+        "label": "unknown"
+      },
+      {
+        "startMs": 23000.0,
+        "endMs": 31281.0,
+        "label": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "wave1-positive-buganda-ekigwo1",
+    "source": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom_(Ekigwo)1.webm",
+    "sourceGroup": "commons-samson-ssemakadde-buganda-wrestling-2026-09-17",
+    "license": "CC0-1.0",
+    "author": "Samson Ssemakadde",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Traditional_wrestling_in_Buganda_kingdom_%28Ekigwo%291.webm",
+    "conditions": {
+      "tags": [
+        "daylight-colour",
+        "two-contact-participants",
+        "spectator-background",
+        "320x240-original-upload",
+        "letterboxed",
+        "sports-contact",
+        "reviewed-ordinary-motion-lead-out"
+      ],
+      "sensorModality": "unknown",
+      "nearIR": "unverified",
+      "thermalIR": "unverified",
+      "nativeCameraResolution": "unknown",
+      "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+      "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+      "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+    },
+    "path": "../cache/eval-wave1/positives/buganda-ekigwo1/original.webm",
+    "sha256": "69162b3dd01e69ca2c90eff7ec2a87eeb930299435714f76d47a310323f52bf0",
+    "durationMs": 12012.0,
+    "events": [
+      {
+        "startMs": 400.0,
+        "endMs": 6400.0,
+        "targetLabel": 1,
+        "label": "physical-contact-proxy"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationBasis": "Provisional assistant every-available-frame sports/drill contact-proxy review; reviewed literal is loader eligibility only. No verified hostile fight, human ground truth, normal tails or negative labels.",
+    "annotationMethod": "Model-blind view_image inspection of every available decoded frame covering each of the six original proposed contact spans, including the immediately preceding/following boundary frames. New sequential OpenCV decode with one active CPU decoder/one decoder thread and cv2.setNumThreads(1), verified against hash-pinned original FFmpeg integer PTS and its +3ms OpenCV offset. All prior saved all-frame contact sheets also re-inspected. Chronological still-frame inspection; no real-time video playback, no FPS-derived clocks, no audio/model scores/inference/training/GPU/downloads.",
+    "denseReviewNotes": "All 146 covering frames inspected in five chronological sheets, full-frame boundary context and both prior all-frame sheets. Head/upper-body and arm contact remains visible as the two participants lean, shift stance and rotate. A hand briefly changes grip but the bodies/other grip remain coupled; no full separation occurs in the proposed span. Both boundary neighborhoods support retained contact. Native 80 ms PTS spacing is recorded; fine grip detail remains limited by 320x240 coded video.",
+    "limitations": [
+      "Provisional assistant judgments, not human ground truth or independent human review.",
+      "Sport/practice/instructional contact proxies do not establish real hostile fights, intent, force, injury, identity, guilt or crime.",
+      "Every available decoded frame was inspected; motion between video exposures and native PTS gaps is not directly observed. Native gaps are explicitly recorded; no frame/time synthesis.",
+      "Contact evidence establishes a scene-level episode, not exhaustive localization or labeling of every person/pair in the frame. Tokyo contains partial occlusion of other pairs.",
+      "Only the proposed 39 seconds are adjudicated here; all other source time remains outside this dense review and is never newly marked normal.",
+      "Original source groups/roles are unchanged. Actor/session independence and publisher/pretraining overlap remain unknown. This adds no independent recordings or human ground truth.",
+      "Original source rights/participant-release limitations remain as recorded in the original bundle; no new clearance or camera/night/crowd capability is asserted."
+    ],
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "author": "Samson Ssemakadde",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom_(Ekigwo)1.webm",
+      "provenance": {
+        "sourcePageId": 199664045,
+        "sourcePageRevisionId": 1286416370,
+        "sourcePageRevisionTimestamp": "2026-10-12T22:30:32Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1286416370",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/buganda-ekigwo1/source-wikitext.txt",
+        "sourceWikitextSha256": "c637663e8870cfc42e0c9690ec9bf2d6587e2397a2844432abe8cc6d05cdf34f",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/buganda-ekigwo1/source.json",
+        "sourceMetadataSha256": "f988b4e5af1a4f52dd6543778cd53edb7a66c0a1fda3ecfdce68ac62ac7e89e0",
+        "uploadTimestamp": "2026-09-17T09:50:40Z",
+        "publisherSha1": "21c2e0f55b12a63049cfb9944615d2cfe6a8b094",
+        "actualSourceSha256": "69162b3dd01e69ca2c90eff7ec2a87eeb930299435714f76d47a310323f52bf0",
+        "actualWorkingSha256": "69162b3dd01e69ca2c90eff7ec2a87eeb930299435714f76d47a310323f52bf0",
+        "sizeBytes": 3751597,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/buganda-ekigwo1/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo1/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo1/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 1.8189894035458565e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 11963.0,
+        "declaredEndMinusLastObservedFrameMs": 52.0,
+        "roleHashFirstByte": 128,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-1.jpg": "63d45f8405e9f85a8b03708d2c8d5ceacb2ea6b0b599d7cefd9bdaf0006618dd",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-2.jpg": "9ce34f081409fd69ff4319f9e9dfb13f2e27828d63b2167345e26e251e7227e8",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-1.jpg": "40306946025983fed85dbd17d9da87728b70764bf933b6330df3c0fe1785c932",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-2.jpg": "5a746e91276d14e223627e9cf93c4a7f3667371e54b93f045e17e15820259c3d",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/dense-1.jpg": "a1ccaf2d9f32dd8b02c5f0f6a5be003886d0fbde1220580f971f4edca0002664",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/dense-2.jpg": "b3435354bd0752cbd5d0250deab2acf3aad2db9c3686b694831e799d6e8cd71b",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/normal-all-frames-1.jpg": "9bdb60a397b1cf17b840b400c8062d5bad00d0ea0e2e646cef545ad053287f59",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/normal-all-frames-2.jpg": "7b11e79c01d2b5be3bcf1ca119fcf056cecf76a688e2edb1150607f5234d9364"
+        }
+      },
+      "caveat": "Pinned primary uploader/author copyright grant; independent ownership/participant releases/consent not verified. License is not a model release."
+    },
+    "roleAssignment": {
+      "rule": "first byte SHA256 UTF8('nivra-online-wave1-v1:'+sourceGroup) <128 development; otherwise reserved-audit",
+      "firstByte": 128,
+      "processorRoleMapping": "reserved-audit -> reserved; no group/role reassignment"
+    },
+    "timingLineage": {
+      "sourceDurationMs": 12015,
+      "sourceEventBoundsMs": {
+        "startMs": 403,
+        "endMs": 6403
+      },
+      "openCvToSourceOffsetMs": 3.0,
+      "transformation": "OpenCV event bounds and declared duration = original source values minus proven constant offset; media bytes unchanged; no FPS-derived timeline",
+      "sourceClockPath": "service/research/cache/eval-wave1/positives/buganda-ekigwo1/source-clock.json",
+      "sourceClockSha256": "aab9cfe456b1b2d61ab6e9c83055831c1ae8c9c492c3474b8a6e47227a8da7cc",
+      "openCvClockPath": "service/research/cache/eval-wave1/positives/buganda-ekigwo1/decode.json",
+      "openCvClockSha256": "7fdf780577712b065398fc91ae576422940ed1e55cce29646481fd64ee715266",
+      "allFrameCount": 288,
+      "allFrameMappingMaxResidualMs": 1.8189894035458565e-12,
+      "sourceTimeBase": "1/1000",
+      "firstObservedOpenCvPtsMs": 0.0,
+      "lastObservedOpenCvPtsMs": 11960.0,
+      "declaredEndMinusLastObservedMs": 52.0,
+      "unobservedTailLabel": "unknown",
+      "coveragePath": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/coverage.json",
+      "coverageSha256": "9401086f2c2d970bf117f6e3663ef72645ae9e5750ae6c524ffc0d00e4318a70",
+      "coveringFrameIndices": {
+        "first": 9,
+        "last": 154,
+        "inclusive": true,
+        "count": 146
+      }
+    },
+    "originalBundle": {
+      "path": "service/research/evaluation/wave1-positive-review.json",
+      "sha256": "efb829f62b010ef091b3e452fd3abb6109c741cfcf3a513d2cdb51e1a89a7440"
+    },
+    "denseReview": {
+      "path": "service/research/evaluation/wave1-positive-dense-review.json",
+      "sha256": "4c84e7a06fc01eb9b274108d4e7faedaff4982af3b81afab2be23de5e62a7eea"
+    },
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/frames-01.jpg",
+        "sha256": "cba729bf3af9814498aee733543a15056d9d070b5b42086c49d139132e7c7124",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/frames-02.jpg",
+        "sha256": "3effe81737b1a18a717d97ec9738acc90fc21c92b352e415b6d58da3cc9465ab",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/frames-03.jpg",
+        "sha256": "49d70838090c29607c78fe26db6c392fd4b70e78be9883a704e90cd692a49975",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/frames-04.jpg",
+        "sha256": "408ec3b16ea8308d592055c235bcba6b8712c9c1405c2434f5b2698f623f2f8e",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/frames-05.jpg",
+        "sha256": "6e197a8022b5071177629c799656afbe55fe0d53148df37733a14e5c5942c1a3",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-buganda-ekigwo1/context-boundaries.jpg",
+        "sha256": "0add5c5a43a296095a6f1491f8b8d8dcf3f8b86679d110005ad5aed5ab42215a",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "boundary-context"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-1.jpg",
+        "sha256": "40306946025983fed85dbd17d9da87728b70764bf933b6330df3c0fe1785c932",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-2.jpg",
+        "sha256": "5a746e91276d14e223627e9cf93c4a7f3667371e54b93f045e17e15820259c3d",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      }
+    ],
+    "metadataPathBase": "repository-root for evidence, rights provenance inherited paths relative to originalBundle; media path relative to this corpus",
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 400.0,
+        "label": "unknown"
+      },
+      {
+        "startMs": 6400.0,
+        "endMs": 12012.0,
+        "label": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "wave1-positive-kata-juji-jime",
+    "source": "https://commons.wikimedia.org/wiki/File:Ffo3._Kata-juji-jime_Vegyes_hajt%C3%B3kafog%C3%A1s%C3%BA_keresztfojt%C3%A1s_szemb%C5%91l.webm",
+    "sourceGroup": "commons-hvja-judo-instruction-2024",
+    "license": "CC-BY-4.0",
+    "author": "Hvja",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Ffo3._Kata-juji-jime_Vegyes_hajt%C3%B3kafog%C3%A1s%C3%BA_keresztfojt%C3%A1s_szemb%C5%91l.webm",
+    "conditions": {
+      "tags": [
+        "indoor-colour",
+        "two-person-contact-drill",
+        "ground-hold",
+        "controlled-demonstration",
+        "static-camera"
+      ],
+      "sensorModality": "unknown",
+      "nearIR": "unverified",
+      "thermalIR": "unverified",
+      "nativeCameraResolution": "unknown",
+      "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+      "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+      "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+    },
+    "path": "../cache/eval-wave1/positives/kata-juji-jime/original.webm",
+    "sha256": "8b92b1e2de139834ec78e0dcee8ba39e192bfe263fef5cc1a057d929ace45cf2",
+    "durationMs": 17760.0,
+    "events": [
+      {
+        "startMs": 4500.0,
+        "endMs": 11500.0,
+        "targetLabel": 1,
+        "label": "physical-contact-proxy"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationBasis": "Provisional assistant every-available-frame sports/drill contact-proxy review; reviewed literal is loader eligibility only. No verified hostile fight, human ground truth, normal tails or negative labels.",
+    "annotationMethod": "Model-blind view_image inspection of every available decoded frame covering each of the six original proposed contact spans, including the immediately preceding/following boundary frames. New sequential OpenCV decode with one active CPU decoder/one decoder thread and cv2.setNumThreads(1), verified against hash-pinned original FFmpeg integer PTS and its +3ms OpenCV offset. All prior saved all-frame contact sheets also re-inspected. Chronological still-frame inspection; no real-time video playback, no FPS-derived clocks, no audio/model scores/inference/training/GPU/downloads.",
+    "denseReviewNotes": "All 177 covering frames inspected in six chronological sheets, full-frame boundary context and both prior all-frame sheets. A kneeling participant maintains hands/upper-body contact with a supine partner, progressively leans forward into a controlled ground-hold demonstration and adjusts posture without complete release within the proposed span. This is modest-motion instructional partner contact; choke efficacy, injury, distress, hostile intent and resistance level are not inferred.",
+    "limitations": [
+      "Provisional assistant judgments, not human ground truth or independent human review.",
+      "Sport/practice/instructional contact proxies do not establish real hostile fights, intent, force, injury, identity, guilt or crime.",
+      "Every available decoded frame was inspected; motion between video exposures and native PTS gaps is not directly observed. Native gaps are explicitly recorded; no frame/time synthesis.",
+      "Contact evidence establishes a scene-level episode, not exhaustive localization or labeling of every person/pair in the frame. Tokyo contains partial occlusion of other pairs.",
+      "Only the proposed 39 seconds are adjudicated here; all other source time remains outside this dense review and is never newly marked normal.",
+      "Original source groups/roles are unchanged. Actor/session independence and publisher/pretraining overlap remain unknown. This adds no independent recordings or human ground truth.",
+      "Original source rights/participant-release limitations remain as recorded in the original bundle; no new clearance or camera/night/crowd capability is asserted."
+    ],
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Hvja",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Ffo3._Kata-juji-jime_Vegyes_hajt%C3%B3kafog%C3%A1s%C3%BA_keresztfojt%C3%A1s_szemb%C5%91l.webm",
+      "provenance": {
+        "sourcePageId": 153698348,
+        "sourcePageRevisionId": 1251945448,
+        "sourcePageRevisionTimestamp": "2026-07-25T16:06:16Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1251945448",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/kata-juji-jime/source-wikitext.txt",
+        "sourceWikitextSha256": "e34eca7aafac8cb4d2161d1839faa559827125cb7181ca3c30b63443c006fe58",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/kata-juji-jime/source.json",
+        "sourceMetadataSha256": "a0be927a878561af0334e9f8e15cc38efe9149e85bb1cb44f2c16945b085a2f9",
+        "uploadTimestamp": "2024-10-09T08:08:03Z",
+        "publisherSha1": "443ba91b0916faf0571824cb11a84cf7a93a8e99",
+        "actualSourceSha256": "8b92b1e2de139834ec78e0dcee8ba39e192bfe263fef5cc1a057d929ace45cf2",
+        "actualWorkingSha256": "8b92b1e2de139834ec78e0dcee8ba39e192bfe263fef5cc1a057d929ace45cf2",
+        "sizeBytes": 17331443,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/kata-juji-jime/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/kata-juji-jime/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/kata-juji-jime/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 17723.0,
+        "declaredEndMinusLastObservedFrameMs": 40.0,
+        "roleHashFirstByte": 219,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-1.jpg": "bd17bd013785976f4086982d29510c3449e6d719eba809b130a27adc81831193",
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-2.jpg": "b21fda9a270f472be362a6f33977abc616fee1a30dd03a155bf37ea7ea1cd5f8",
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-1.jpg": "647e905d4e7a5036c3e66abdc3ec1fefa5262f6959c99dc4a88e91c1585506a7",
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-2.jpg": "b45325fced8f87f5d37d766a029da8ccfdfa75b21eba9dd6a5c13d7c3092f52c",
+          "../cache/eval-wave1/positives/kata-juji-jime/dense-1.jpg": "f8aa15ccfa44420823be5507d4da7bd45503bc520d43121e2a0088a6a69cef09",
+          "../cache/eval-wave1/positives/kata-juji-jime/dense-2.jpg": "3297b8638a872dc56d1bc630a94304fdf13375752a9465157c1e4deee496995c"
+        }
+      },
+      "caveat": "Pinned primary uploader/author copyright grant; independent ownership/participant releases/consent not verified. License is not a model release."
+    },
+    "roleAssignment": {
+      "rule": "first byte SHA256 UTF8('nivra-online-wave1-v1:'+sourceGroup) <128 development; otherwise reserved-audit",
+      "firstByte": 219,
+      "processorRoleMapping": "reserved-audit -> reserved; no group/role reassignment"
+    },
+    "timingLineage": {
+      "sourceDurationMs": 17763,
+      "sourceEventBoundsMs": {
+        "startMs": 4503,
+        "endMs": 11503
+      },
+      "openCvToSourceOffsetMs": 3.0,
+      "transformation": "OpenCV event bounds and declared duration = original source values minus proven constant offset; media bytes unchanged; no FPS-derived timeline",
+      "sourceClockPath": "service/research/cache/eval-wave1/positives/kata-juji-jime/source-clock.json",
+      "sourceClockSha256": "ea3ce74c10df9e8a34d8769221bf660158d4b661570c126a450d9aacd6898f8a",
+      "openCvClockPath": "service/research/cache/eval-wave1/positives/kata-juji-jime/decode.json",
+      "openCvClockSha256": "0589367dd8ebd6970cc748febd2e13a0e93f56f44de0a9d242a4fc3e2b59423c",
+      "allFrameCount": 444,
+      "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+      "sourceTimeBase": "1/1000",
+      "firstObservedOpenCvPtsMs": 0.0,
+      "lastObservedOpenCvPtsMs": 17720.0,
+      "declaredEndMinusLastObservedMs": 40.0,
+      "unobservedTailLabel": "unknown",
+      "coveragePath": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/coverage.json",
+      "coverageSha256": "ddcacf8c98b2200cf0cb85de178bcec9af830ea4773bf564ba5c1cf2701700fb",
+      "coveringFrameIndices": {
+        "first": 112,
+        "last": 288,
+        "inclusive": true,
+        "count": 177
+      }
+    },
+    "originalBundle": {
+      "path": "service/research/evaluation/wave1-positive-review.json",
+      "sha256": "efb829f62b010ef091b3e452fd3abb6109c741cfcf3a513d2cdb51e1a89a7440"
+    },
+    "denseReview": {
+      "path": "service/research/evaluation/wave1-positive-dense-review.json",
+      "sha256": "4c84e7a06fc01eb9b274108d4e7faedaff4982af3b81afab2be23de5e62a7eea"
+    },
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/frames-01.jpg",
+        "sha256": "6696f7dc2c60d37a51de4fef4d911e2a599987b92e0cd575c6acdb10587bdba5",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/frames-02.jpg",
+        "sha256": "25ddcc781f9720f30d6d69d0c593ca3666d42647e00d6e8cffc0938ddba04ba3",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/frames-03.jpg",
+        "sha256": "2ad97b0ba7bd1a56d46707dda232b38782cc22b63722df0313eda38f5a813c55",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/frames-04.jpg",
+        "sha256": "3c1185c7315820beacb1e41861dcf2e9f7f24dca9f3ed3bfd0dd7cd6d61a1e50",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/frames-05.jpg",
+        "sha256": "1771b4ef1bfceb25041203843753bb9a79020eb8d6b2bf48f9b97f8598ff96d4",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/frames-06.jpg",
+        "sha256": "cd32be180669d88cd6084fc8aa726dbd222a42a00d71fb9347553d143e4b8586",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-kata-juji-jime/context-boundaries.jpg",
+        "sha256": "2f85b5a8d91d19d2f1c06e4657eee1b51efe3773370ca14d9e94caf62c6a0318",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "boundary-context"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-1.jpg",
+        "sha256": "647e905d4e7a5036c3e66abdc3ec1fefa5262f6959c99dc4a88e91c1585506a7",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-2.jpg",
+        "sha256": "b45325fced8f87f5d37d766a029da8ccfdfa75b21eba9dd6a5c13d7c3092f52c",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      }
+    ],
+    "metadataPathBase": "repository-root for evidence, rights provenance inherited paths relative to originalBundle; media path relative to this corpus",
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 4500.0,
+        "label": "unknown"
+      },
+      {
+        "startMs": 11500.0,
+        "endMs": 17760.0,
+        "label": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "wave1-positive-hon-kesa-gatame",
+    "source": "https://commons.wikimedia.org/wiki/File:Fl2.1._Hon-kesa-gatame,_fog%C3%B3k%C3%A9z_nyak_alatt.webm",
+    "sourceGroup": "commons-hvja-judo-instruction-2024",
+    "license": "CC-BY-4.0",
+    "author": "Hvja",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Fl2.1._Hon-kesa-gatame%2C_fog%C3%B3k%C3%A9z_nyak_alatt.webm",
+    "conditions": {
+      "tags": [
+        "indoor-colour",
+        "two-person-contact-drill",
+        "ground-hold",
+        "controlled-demonstration",
+        "static-camera"
+      ],
+      "sensorModality": "unknown",
+      "nearIR": "unverified",
+      "thermalIR": "unverified",
+      "nativeCameraResolution": "unknown",
+      "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+      "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+      "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+    },
+    "path": "../cache/eval-wave1/positives/hon-kesa-gatame/original.webm",
+    "sha256": "028cdde0e52462bf02ed94ce94b309406e661a495e6ca8f5d3c33417c5f7a0e4",
+    "durationMs": 25802.0,
+    "events": [
+      {
+        "startMs": 6000.0,
+        "endMs": 10000.0,
+        "targetLabel": 1,
+        "label": "physical-contact-proxy"
+      }
+    ],
+    "annotationStatus": "reviewed",
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationBasis": "Provisional assistant every-available-frame sports/drill contact-proxy review; reviewed literal is loader eligibility only. No verified hostile fight, human ground truth, normal tails or negative labels.",
+    "annotationMethod": "Model-blind view_image inspection of every available decoded frame covering each of the six original proposed contact spans, including the immediately preceding/following boundary frames. New sequential OpenCV decode with one active CPU decoder/one decoder thread and cv2.setNumThreads(1), verified against hash-pinned original FFmpeg integer PTS and its +3ms OpenCV offset. All prior saved all-frame contact sheets also re-inspected. Chronological still-frame inspection; no real-time video playback, no FPS-derived clocks, no audio/model scores/inference/training/GPU/downloads.",
+    "denseReviewNotes": "All 103 covering frames inspected in four chronological sheets, full-frame boundary context and both prior all-frame sheets. One participant stays across the supine partner in a side upper-body/arm hold, adjusting leg/torso position while retaining visible partner contact throughout the proposed interval. The release/reset lies outside this selected interval. Controlled instructional ground-hold proxy only; no hostile intent, force, injury or technique-success inference.",
+    "limitations": [
+      "Provisional assistant judgments, not human ground truth or independent human review.",
+      "Sport/practice/instructional contact proxies do not establish real hostile fights, intent, force, injury, identity, guilt or crime.",
+      "Every available decoded frame was inspected; motion between video exposures and native PTS gaps is not directly observed. Native gaps are explicitly recorded; no frame/time synthesis.",
+      "Contact evidence establishes a scene-level episode, not exhaustive localization or labeling of every person/pair in the frame. Tokyo contains partial occlusion of other pairs.",
+      "Only the proposed 39 seconds are adjudicated here; all other source time remains outside this dense review and is never newly marked normal.",
+      "Original source groups/roles are unchanged. Actor/session independence and publisher/pretraining overlap remain unknown. This adds no independent recordings or human ground truth.",
+      "Original source rights/participant-release limitations remain as recorded in the original bundle; no new clearance or camera/night/crowd capability is asserted."
+    ],
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "author": "Hvja",
+      "sourcePage": "https://commons.wikimedia.org/wiki/File:Fl2.1._Hon-kesa-gatame,_fog%C3%B3k%C3%A9z_nyak_alatt.webm",
+      "provenance": {
+        "sourcePageId": 153698349,
+        "sourcePageRevisionId": 1184344219,
+        "sourcePageRevisionTimestamp": "2026-03-21T04:15:19Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1184344219",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/hon-kesa-gatame/source-wikitext.txt",
+        "sourceWikitextSha256": "ac25829e0b8b971a835f2bf7d7d60d208decaae2a2b92eae0de4eb5a1ffbd775",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/hon-kesa-gatame/source.json",
+        "sourceMetadataSha256": "65641977337a246adeaa50b8a09a18fad142c3b97383da9cdb5eedf0523f36d6",
+        "uploadTimestamp": "2024-10-09T08:08:04Z",
+        "publisherSha1": "0feffc033ebd7d4bec210c46ecb08e6f2c918043",
+        "actualSourceSha256": "028cdde0e52462bf02ed94ce94b309406e661a495e6ca8f5d3c33417c5f7a0e4",
+        "actualWorkingSha256": "028cdde0e52462bf02ed94ce94b309406e661a495e6ca8f5d3c33417c5f7a0e4",
+        "sizeBytes": 25148855,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/hon-kesa-gatame/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/hon-kesa-gatame/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/hon-kesa-gatame/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 25763.0,
+        "declaredEndMinusLastObservedFrameMs": 42.0,
+        "roleHashFirstByte": 219,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-1.jpg": "4f1b66569a13bae67ac996f4c836b0c9facb884c0b2494e5a7b4215bab4faa3b",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-2.jpg": "5787e2e935d4509ff6b94cd7cc383d622fa08e0380e72505d3bff00bc64690fb",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-1.jpg": "d46a650e38dbf523e76e2133564335b456215d97d1344f421d258b03d3efdf62",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-2.jpg": "f35a1bf320e637932e1aac55a7a94a06260e42cb16ea9fe0df43f5adc2c3d7cf",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/dense-1.jpg": "3365787fb8995410b3d024847daa846569a41a9730aa4b21e364d5810c33f952",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/dense-2.jpg": "a22b3290796f915dbe955112132929516806c808ff24311d3107eb3b30c38e92"
+        }
+      },
+      "caveat": "Pinned primary uploader/author copyright grant; independent ownership/participant releases/consent not verified. License is not a model release."
+    },
+    "roleAssignment": {
+      "rule": "first byte SHA256 UTF8('nivra-online-wave1-v1:'+sourceGroup) <128 development; otherwise reserved-audit",
+      "firstByte": 219,
+      "processorRoleMapping": "reserved-audit -> reserved; no group/role reassignment"
+    },
+    "timingLineage": {
+      "sourceDurationMs": 25805,
+      "sourceEventBoundsMs": {
+        "startMs": 6003,
+        "endMs": 10003
+      },
+      "openCvToSourceOffsetMs": 3.0,
+      "transformation": "OpenCV event bounds and declared duration = original source values minus proven constant offset; media bytes unchanged; no FPS-derived timeline",
+      "sourceClockPath": "service/research/cache/eval-wave1/positives/hon-kesa-gatame/source-clock.json",
+      "sourceClockSha256": "ac0d43bbef1d902a57e89d354da290171c7bc7c9dc23916e2767ce02cea468ab",
+      "openCvClockPath": "service/research/cache/eval-wave1/positives/hon-kesa-gatame/decode.json",
+      "openCvClockSha256": "2a1fcd0bde371f884b41b85ce1f16c11a6a71ab6e4946553d256259208780e4f",
+      "allFrameCount": 645,
+      "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+      "sourceTimeBase": "1/1000",
+      "firstObservedOpenCvPtsMs": 0.0,
+      "lastObservedOpenCvPtsMs": 25760.0,
+      "declaredEndMinusLastObservedMs": 42.0,
+      "unobservedTailLabel": "unknown",
+      "coveragePath": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-hon-kesa-gatame/coverage.json",
+      "coverageSha256": "b2649bdcc1f0995a37bd3feb045a412db6cc25af430c13ca91e4f7e05e3ab931",
+      "coveringFrameIndices": {
+        "first": 149,
+        "last": 251,
+        "inclusive": true,
+        "count": 103
+      }
+    },
+    "originalBundle": {
+      "path": "service/research/evaluation/wave1-positive-review.json",
+      "sha256": "efb829f62b010ef091b3e452fd3abb6109c741cfcf3a513d2cdb51e1a89a7440"
+    },
+    "denseReview": {
+      "path": "service/research/evaluation/wave1-positive-dense-review.json",
+      "sha256": "4c84e7a06fc01eb9b274108d4e7faedaff4982af3b81afab2be23de5e62a7eea"
+    },
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-hon-kesa-gatame/frames-01.jpg",
+        "sha256": "463748f800900327aff15f25de31ca60da89c48b848f883073ffb8a3977aae57",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-hon-kesa-gatame/frames-02.jpg",
+        "sha256": "32eb0e0c838f2bcbe7a017275b5102575cea111bcdd13947afd0523ef685c1fb",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-hon-kesa-gatame/frames-03.jpg",
+        "sha256": "d7696945339d8be9839189a30f45c56284abf1a79d547b67d89dd4fe384462c6",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-hon-kesa-gatame/frames-04.jpg",
+        "sha256": "699fa5b781769494dff788847f162fcf808b2cc682a90fdd19d54f01ed472a8a",
+        "inspection": "view_image; every row-major frame cell inspected",
+        "kind": "new-complete-chronological-sheet"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/dense-review-v1/wave1-positive-hon-kesa-gatame/context-boundaries.jpg",
+        "sha256": "55e10efdf880341d8bcf80cefc5cc76218d6b3aaf631a569af286b2c83613b49",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "boundary-context"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-1.jpg",
+        "sha256": "d46a650e38dbf523e76e2133564335b456215d97d1344f421d258b03d3efdf62",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-2.jpg",
+        "sha256": "f35a1bf320e637932e1aac55a7a94a06260e42cb16ea9fe0df43f5adc2c3d7cf",
+        "inspection": "view_image; visually inspected during this dense-review task",
+        "kind": "existing-all-frame-sheet-reinspected"
+      }
+    ],
+    "metadataPathBase": "repository-root for evidence, rights provenance inherited paths relative to originalBundle; media path relative to this corpus",
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 6000.0,
+        "label": "unknown"
+      },
+      {
+        "startMs": 10000.0,
+        "endMs": 25802.0,
+        "label": "unknown"
+      }
+    ]
+  },
+  {
+    "id": "online-normal-01",
+    "source": "https://commons.wikimedia.org/wiki/File:Diti_hugs_Natalie.ogv",
+    "sourceGroup": "commons-author:dimitri \u201cditi\u201d torterat",
+    "license": "CC BY 2.0 fr",
+    "author": "Dimitri \u201cDiti\u201d Torterat",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/fr/deed.en",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+    "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+    "path": "../cache/eval-wave1/negatives/neg01/original.ogv",
+    "durationMs": 10960.0,
+    "events": [
+      {
+        "startMs": 280.0,
+        "endMs": 4280.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w01",
+        "sourceStartMs": 280.0,
+        "sourceEndMs": 4280.0,
+        "sourceMinusOpenCvOffsetMs": 0.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 4280.0,
+        "endMs": 8280.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w02",
+        "sourceStartMs": 4280.0,
+        "sourceEndMs": 8280.0,
+        "sourceMinusOpenCvOffsetMs": 0.0,
+        "controlNote": null
+      }
+    ],
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "humanGroundTruth": false,
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "annotationStatus": "reviewed",
+    "annotationBasis": "Parent-authorized loader admission of PROVISIONAL assistant dense static-frame annotations only. Reviewed literal is offline runner eligibility, not human ground truth or independently verified normality.",
+    "annotationMethod": "Fresh sequential FFmpeg showinfo PTS; sequential OpenCV frame-index crosswalk. All consecutive frames from latest PTS <= window start through first PTS >= window end, inclusive. Boundary frames may provide context outside the exact window. 48 chronological frames per sheet, row-major, aspect-preserved 320x180 cells, caption source PTS ms and frame index. No subsampling. All 147 sheets were actually inspected through view_image at original sheet resolution, in chronological order. Each cell is aspect-preserved within 320x180 pixels; portrait imagery is consequently smaller. Every covering decoded frame was included, without temporal subsampling. This is static visual inspection, not real-time playback.",
+    "clockRebase": {
+      "id": "online-normal-01",
+      "eventClock": "OpenCV CAP_PROP_POS_MSEC after read",
+      "sourceClock": "acquired-file container presentation timestamp; publisher transcode where declared",
+      "sourceMinusOpenCvOffsetMs": 0.0,
+      "conversion": "OpenCV milliseconds = source PTS milliseconds - constant offset",
+      "rawSourceDurationMs": 10960.0,
+      "openCvDeclaredDurationMs": 10960.0,
+      "firstObservedSourcePtsMs": 0.0,
+      "lastObservedSourcePtsMs": 10920.0,
+      "firstOpenCvPtsMsFromVerifiedOffset": 0.0,
+      "lastOpenCvPtsMsFromVerifiedOffset": 10920.0,
+      "decodedFrameCount": 274,
+      "crosswalkPath": "service/research/cache/eval-wave1/negatives/neg01/pts-crosswalk.json",
+      "crosswalkSha256": "4d7f1436502b432161a4c8a920442f8fd4f9a5013e15acd0a875738c56a08e58",
+      "originalSequentialPtsPath": "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.json",
+      "originalSequentialPtsSha256": "e064d5b9bafb62eb4256aa0dde3d4623ff615f049c8af2e748e071820ce77e4b",
+      "denseSourceReceipt": {
+        "id": "online-normal-01",
+        "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+        "decodedFrames": 274,
+        "sourcePtsOffsetFromOpenCvMs": 0.0,
+        "ptsPath": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/sequential-pts.json",
+        "ptsSha256": "22541d69670ce5952538a7d58b0466478a0825965b3a9d92689f2ef024811ff4",
+        "logSha256": "8e3eb8268b0bad01a537f4aa564354f9d457b46ebbc9575fda54c727c1f906a5",
+        "command": [
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\venvs\\videomae457\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+          "-nostdin",
+          "-hide_banner",
+          "-threads",
+          "2",
+          "-filter_threads",
+          "1",
+          "-i",
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\cache\\eval-wave1\\negatives\\neg01\\original.ogv",
+          "-map",
+          "0:v:0",
+          "-vf",
+          "showinfo",
+          "-an",
+          "-f",
+          "null",
+          "-"
+        ]
+      },
+      "proofLimits": "Prior sequential preparation compared every OpenCV frame to matching FFmpeg source-frame PTS with constant offset tolerance <0.15ms and equal frame counts. Its pinned utility/receipt and saved sample crosswalk are validated here. Full per-frame OpenCV observations were not persisted; derived OpenCV endpoints above are explicitly offset-derived, not fresh decoder observations. No FPS-based clock or new decode."
+    },
+    "originalUnknownIntervalsSourceMs": [
+      {
+        "startMs": 0,
+        "endMs": 280.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 10760.0,
+        "endMs": 10960.0,
+        "reason": "outside retained normal evidence or uninspected tail; not negative"
+      }
+    ],
+    "originalEventsSourceMsNotAdmittedWholesale": [
+      {
+        "startMs": 280.0,
+        "endMs": 10760.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 280.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 8280.0,
+        "endMs": 10960.0,
+        "reason": "Outside admitted dense-supported interval, including uninspected tail; not negative"
+      }
+    ],
+    "denseUnknownWindowsSourceMs": [],
+    "admittedWindowsSourceMs": [
+      {
+        "windowId": "w01",
+        "startMs": 280.0,
+        "endMs": 4280.0,
+        "notes": "All consecutive frames show approach and arm opening into a bilateral embrace with a costumed figure; no directed strikes or rough play visible. Bystanders remain apart.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w02",
+        "startMs": 4280.0,
+        "endMs": 8280.0,
+        "notes": "Sustained stationary bilateral embrace; mild body overlap consistent throughout consecutive frames, with separated standing bystanders. Ordinary contact is visible, not a no-contact claim.",
+        "controlNote": null
+      }
+    ],
+    "easierControlDurationMs": 0,
+    "animalOnlyControlDurationMs": 0,
+    "conditions": {
+      "motion": "embrace and arm extension",
+      "contact": "ordinary embrace visible; not non-contact",
+      "visiblePeopleApproxRange": [
+        5,
+        9
+      ],
+      "illumination": "outdoor daylight",
+      "occlusion": "partial during embrace; background bodies overlap",
+      "sensor": "RGB visible-light; no near-IR evidence",
+      "personPixelHeight": "not measured",
+      "frameRateReported": 25.0,
+      "compression": {
+        "codec": "theora",
+        "kind": "publisher original encoded file",
+        "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+      },
+      "nativeCameraResolution": "unknown",
+      "downloadedSourceDimensions": [
+        720,
+        576
+      ]
+    },
+    "rights": {
+      "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1206753875",
+      "sourcePageRevision": {
+        "revid": 1206753875,
+        "parentid": 862979850,
+        "timestamp": "2026-05-01T21:04:01Z"
+      },
+      "metadataPath": "service/research/cache/eval-wave1/negatives/neg01/rights-source-metadata.json",
+      "metadataSha256": "b9d4108bb916dcb677e35999f5865c86c22d8d18ffec4ef7121ee4f1aab2e984",
+      "wikitextSha256": "06162fc5ae56c27e940b809cf094e12570c243007794f8030f82b17557c05214",
+      "retrievedAtUtc": "2026-10-21T17:02:11.403886+00:00",
+      "credit": "Own work (Youtube version)",
+      "attribution": "File:Diti hugs Natalie.ogv by Dimitri \u201cDiti\u201d Torterat; CC BY 2.0 fr; https://commons.wikimedia.org/w/index.php?oldid=1206753875; https://creativecommons.org/licenses/by/2.0/fr/deed.en",
+      "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+    },
+    "originalMedia": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "publisherSha1": "7f12cb37ea0e529d0c367ffbdb1c690524bc868c",
+      "publisherDeclaredBytes": 2816816,
+      "publishedDimensions": [
+        720,
+        576
+      ],
+      "acquired": true,
+      "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+      "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv"
+    },
+    "acquiredSource": {
+      "kind": "original",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv",
+      "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+      "sizeBytes": 2816816,
+      "sourcePtsStartMs": 0.0,
+      "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.json",
+      "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+      "maxPtsGapMs": 40.000000000000924
+    },
+    "transformationLineage": {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "acquisition": "original bytes",
+      "publishedTranscodeMetadata": null,
+      "workingOperation": "none; working media equals acquired source bytes",
+      "localTimeOffsetMs": 0,
+      "timeScale": 1,
+      "sheetClockToContainerPtsOffsetMs": 0.0,
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "cv2Threads": 1,
+      "ffmpegThreads": 2
+    },
+    "limitations": [
+      "Assistant static-image review is not human ground truth, motion playback or proof of absence of hidden contact. Complete frame coverage does not resolve occlusion.",
+      "Aspect-preserved contact-sheet cells reduce spatial detail. Small/hidden group interactions were conservatively retained as unknown; no native-resolution visibility claim.",
+      "Only the frozen 49 candidate windows are adjudicated. Original intervals, margins and tails outside these windows are not newly approved as normal.",
+      "All development windows remain unknown. Supported windows all retain reserved-audit roles; roles must not be reassigned to obtain development negatives.",
+      "Two supported windows (8 seconds) are easier dog/handler controls, including one animal-only window (4 seconds). They do not establish hard human-motion robustness.",
+      "Source-author grouping is inherited unchanged. Actor/session independence and publisher-pretrain overlap remain unknown.",
+      "No accuracy, operational camera-hour, 50-100-person crowd, near-IR, thermal or low-light colour CCTV capability claim. No identity, intent, injury, crime or guilt inference.",
+      "Source rights/attribution and transformation lineage remain those in the pinned original bundle. No new rights clearance or participant releases are implied."
+    ],
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w01-p00.jpg",
+        "sha256": "da39b4112cf53c341bc46d1270a4f2f9b12991587935e3106766b1c0b411e355",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w01-p01.jpg",
+        "sha256": "57396b8c77fbdb4ec6ada47e4107ffbdd6a11ffd5d13769d428a51a626a0fad7",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w01-p02.jpg",
+        "sha256": "038a41d70f0ce266988c2f1363b7fa583dc2e855ad34a5fae752efcca866a7da",
+        "frameCount": 5
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w02-p00.jpg",
+        "sha256": "f0db39ce289e78fa5d09f72fc02b670d96353237e0115aca903de60bcf9fbddb",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w02-p01.jpg",
+        "sha256": "cb88ad552ddbb13354993d54e5079a6bb255b691552d2401270b427d992cc137",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w02-p02.jpg",
+        "sha256": "e6bbe7169153186ed14880c57bec5dc0df838f081acd8a24190680f02ca3aac8",
+        "frameCount": 5
+      }
+    ],
+    "reviewProvenance": [
+      {
+        "path": "service/research/evaluation/wave1-negative-review.json",
+        "sha256": "e90d7bf4867fc0f989a95df4ce234e4b431d66c0bdaf16b3d4ce1d4512e4c9b4"
+      },
+      {
+        "path": "service/research/evaluation/wave1-negative-dense-review.json",
+        "sha256": "7bbd390f5a8301edd7df854d75b385181505d9274a565fc7c1b92506113e99d6"
+      },
+      {
+        "path": "service/research/runs/online-negative-parent-preflight-v1.json",
+        "sha256": "6a1ed32fbbe3ef6bffa645ebdd437bd6eeaf6350f62a7317421306f75d362f01"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/coverage-manifest.json",
+        "sha256": "412dd08c4f89f13652ab860befe23beeb769707a49ac78a060fd92207b4505d7"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/validation.json",
+        "sha256": "e2dae71d977c90e3b85f30b9cac4fda2a5bc82a86e672ab339ec8a4373974aac"
+      }
+    ]
+  },
+  {
+    "id": "online-normal-03",
+    "source": "https://commons.wikimedia.org/wiki/File:Chinese_man_dancing.webm",
+    "sourceGroup": "commons-author:nicholas gemini",
+    "license": "CC BY-SA 4.0",
+    "author": "Nicholas Gemini",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Chinese_man_dancing.webm/Chinese_man_dancing.webm.480p.vp9.webm",
+    "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+    "path": "../cache/eval-wave1/negatives/neg03/published-transcode.webm",
+    "durationMs": 27710.0,
+    "events": [
+      {
+        "startMs": 267.0,
+        "endMs": 4267.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w03",
+        "sourceStartMs": 279.0,
+        "sourceEndMs": 4279.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 4267.0,
+        "endMs": 8267.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w04",
+        "sourceStartMs": 4279.0,
+        "sourceEndMs": 8279.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 8267.0,
+        "endMs": 12267.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w05",
+        "sourceStartMs": 8279.0,
+        "sourceEndMs": 12279.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 16780.0,
+        "endMs": 20780.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w06",
+        "sourceStartMs": 16792.0,
+        "sourceEndMs": 20792.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 20780.0,
+        "endMs": 24780.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w07",
+        "sourceStartMs": 20792.0,
+        "sourceEndMs": 24792.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      }
+    ],
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "humanGroundTruth": false,
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "annotationStatus": "reviewed",
+    "annotationBasis": "Parent-authorized loader admission of PROVISIONAL assistant dense static-frame annotations only. Reviewed literal is offline runner eligibility, not human ground truth or independently verified normality.",
+    "annotationMethod": "Fresh sequential FFmpeg showinfo PTS; sequential OpenCV frame-index crosswalk. All consecutive frames from latest PTS <= window start through first PTS >= window end, inclusive. Boundary frames may provide context outside the exact window. 48 chronological frames per sheet, row-major, aspect-preserved 320x180 cells, caption source PTS ms and frame index. No subsampling. All 147 sheets were actually inspected through view_image at original sheet resolution, in chronological order. Each cell is aspect-preserved within 320x180 pixels; portrait imagery is consequently smaller. Every covering decoded frame was included, without temporal subsampling. This is static visual inspection, not real-time playback.",
+    "clockRebase": {
+      "id": "online-normal-03",
+      "eventClock": "OpenCV CAP_PROP_POS_MSEC after read",
+      "sourceClock": "acquired-file container presentation timestamp; publisher transcode where declared",
+      "sourceMinusOpenCvOffsetMs": 12.0,
+      "conversion": "OpenCV milliseconds = source PTS milliseconds - constant offset",
+      "rawSourceDurationMs": 27722.0,
+      "openCvDeclaredDurationMs": 27710.0,
+      "firstObservedSourcePtsMs": 12.0,
+      "lastObservedSourcePtsMs": 27689.0,
+      "firstOpenCvPtsMsFromVerifiedOffset": 0.0,
+      "lastOpenCvPtsMsFromVerifiedOffset": 27677.0,
+      "decodedFrameCount": 827,
+      "crosswalkPath": "service/research/cache/eval-wave1/negatives/neg03/pts-crosswalk.json",
+      "crosswalkSha256": "724ae837efbda8062a4e272f4658497a2bbcd179ce766162db2a7e10ebd89929",
+      "originalSequentialPtsPath": "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.json",
+      "originalSequentialPtsSha256": "cf1ad6684705f93faeebe5577268c52db6b444d4d42e0ca7635a308c3005c241",
+      "denseSourceReceipt": {
+        "id": "online-normal-03",
+        "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+        "decodedFrames": 827,
+        "sourcePtsOffsetFromOpenCvMs": 12.0,
+        "ptsPath": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/sequential-pts.json",
+        "ptsSha256": "dcc832a02e2241fe35a7e580e3671e4ede811c9debd26782addde94b8dcb2ed5",
+        "logSha256": "59b43276910332dbde92314d8b50e4cd309788e2d735d9cd18a5327b6ece9326",
+        "command": [
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\venvs\\videomae457\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+          "-nostdin",
+          "-hide_banner",
+          "-threads",
+          "2",
+          "-filter_threads",
+          "1",
+          "-i",
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\cache\\eval-wave1\\negatives\\neg03\\published-transcode.webm",
+          "-map",
+          "0:v:0",
+          "-vf",
+          "showinfo",
+          "-an",
+          "-f",
+          "null",
+          "-"
+        ]
+      },
+      "proofLimits": "Prior sequential preparation compared every OpenCV frame to matching FFmpeg source-frame PTS with constant offset tolerance <0.15ms and equal frame counts. Its pinned utility/receipt and saved sample crosswalk are validated here. Full per-frame OpenCV observations were not persisted; derived OpenCV endpoints above are explicitly offset-derived, not fresh decoder observations. No FPS-based clock or new decode."
+    },
+    "originalUnknownIntervalsSourceMs": [
+      {
+        "startMs": 0,
+        "endMs": 279.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 14285.0,
+        "endMs": 16792.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 27288.0,
+        "endMs": 27722.0,
+        "reason": "outside retained normal evidence or uninspected tail; not negative"
+      }
+    ],
+    "originalEventsSourceMsNotAdmittedWholesale": [
+      {
+        "startMs": 279.0,
+        "endMs": 14285.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      },
+      {
+        "startMs": 16792.0,
+        "endMs": 27288.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 267.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 12267.0,
+        "endMs": 16780.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 24780.0,
+        "endMs": 27710.0,
+        "reason": "Outside admitted dense-supported interval, including uninspected tail; not negative"
+      }
+    ],
+    "denseUnknownWindowsSourceMs": [],
+    "admittedWindowsSourceMs": [
+      {
+        "windowId": "w03",
+        "startMs": 279.0,
+        "endMs": 4279.0,
+        "notes": "Single foreground person gestures while holding a small device. Camera rolls and produces blur, but no second interacting person or contact sequence is visible across all frames.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w04",
+        "startMs": 4279.0,
+        "endMs": 8279.0,
+        "notes": "Single foreground person repeatedly raises and sweeps one arm while holding a device in the other. Camera rolls back upright; no person-directed contact sequence visible.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w05",
+        "startMs": 8279.0,
+        "endMs": 12279.0,
+        "notes": "Foreground person crosses/sweeps own forearms and handles a device. A partial arm at right edge remains separate; no directed person-to-person contact visible.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w06",
+        "startMs": 16792.0,
+        "endMs": 20792.0,
+        "notes": "Foreground person holds a device near face, makes small gestures, then examines/handles it; no second interacting person or contact visible in consecutive frames.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w07",
+        "startMs": 20792.0,
+        "endMs": 24792.0,
+        "notes": "Device handling and touching own chin, then turning toward counter. Partial edge arm stays separate; no person-directed contact sequence visible.",
+        "controlNote": null
+      }
+    ],
+    "easierControlDurationMs": 0,
+    "animalOnlyControlDurationMs": 0,
+    "conditions": {
+      "motion": "solo fast arm gestures then device handling",
+      "contact": "no person-to-person contact apparent in retained intervals",
+      "visiblePeopleApproxRange": [
+        1,
+        2
+      ],
+      "illumination": "indoor colour under shop lighting",
+      "occlusion": "passer crossing retained as unknown",
+      "sensor": "RGB visible-light; no near-IR evidence",
+      "personPixelHeight": "not measured",
+      "frameRateReported": 29.916666666666668,
+      "compression": {
+        "codec": "vp9",
+        "kind": "publisher-generated lossy transcode",
+        "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+      },
+      "nativeCameraResolution": "unknown",
+      "downloadedSourceDimensions": [
+        854,
+        480
+      ]
+    },
+    "rights": {
+      "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=856725232",
+      "sourcePageRevision": {
+        "revid": 856725232,
+        "parentid": 469995861,
+        "timestamp": "2024-02-29T03:44:03Z"
+      },
+      "metadataPath": "service/research/cache/eval-wave1/negatives/neg03/rights-source-metadata.json",
+      "metadataSha256": "07ac508d17107ac89532b5f332df9b221a8a176a22f96727d1bcdf25b33dec9d",
+      "wikitextSha256": "4b1dc140630d4c4d13ac0e37ace1b04b3e860e224f1d3f7830ff9818af02a76b",
+      "retrievedAtUtc": "2026-10-21T17:02:11.436910+00:00",
+      "credit": "Own work",
+      "attribution": "File:Chinese man dancing.webm by Nicholas Gemini; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=856725232; https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+    },
+    "originalMedia": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Chinese_man_dancing.webm",
+      "publisherSha1": "49ff6794e2f58ede97aadbe0e31abe43b40e5b31",
+      "publisherDeclaredBytes": 7943561,
+      "publishedDimensions": [
+        1280,
+        720
+      ],
+      "acquired": false,
+      "sha256": null,
+      "path": null
+    },
+    "acquiredSource": {
+      "kind": "published-transcode",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Chinese_man_dancing.webm/Chinese_man_dancing.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg03/published-transcode.webm",
+      "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+      "sizeBytes": 4670100,
+      "sourcePtsStartMs": 12.0,
+      "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.json",
+      "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+      "maxPtsGapMs": 100.00000000000009
+    },
+    "transformationLineage": {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Chinese_man_dancing.webm",
+      "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+      "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+      "workingOperation": "none; working media equals acquired source bytes",
+      "localTimeOffsetMs": 0,
+      "timeScale": 1,
+      "sheetClockToContainerPtsOffsetMs": 12.0,
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "cv2Threads": 1,
+      "ffmpegThreads": 2
+    },
+    "limitations": [
+      "Assistant static-image review is not human ground truth, motion playback or proof of absence of hidden contact. Complete frame coverage does not resolve occlusion.",
+      "Aspect-preserved contact-sheet cells reduce spatial detail. Small/hidden group interactions were conservatively retained as unknown; no native-resolution visibility claim.",
+      "Only the frozen 49 candidate windows are adjudicated. Original intervals, margins and tails outside these windows are not newly approved as normal.",
+      "All development windows remain unknown. Supported windows all retain reserved-audit roles; roles must not be reassigned to obtain development negatives.",
+      "Two supported windows (8 seconds) are easier dog/handler controls, including one animal-only window (4 seconds). They do not establish hard human-motion robustness.",
+      "Source-author grouping is inherited unchanged. Actor/session independence and publisher-pretrain overlap remain unknown.",
+      "No accuracy, operational camera-hour, 50-100-person crowd, near-IR, thermal or low-light colour CCTV capability claim. No identity, intent, injury, crime or guilt inference.",
+      "Source rights/attribution and transformation lineage remain those in the pinned original bundle. No new rights clearance or participant releases are implied."
+    ],
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w03-p00.jpg",
+        "sha256": "4c3975a99a929d360a982da901cc917a82c09edb6b5370cb52b0587700933246",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w03-p01.jpg",
+        "sha256": "6874484994ff2308b55522a347cd347dde5d6fccd202be4b15385f4273587aff",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w03-p02.jpg",
+        "sha256": "0a2b42dcd983da436d189718a904a8dd455e492262a49ab2ddefc82956a8e01b",
+        "frameCount": 23
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w04-p00.jpg",
+        "sha256": "43784621cd6b943966f90a8d335ecbe812fe34b23628d153545b4d8fbd550ca0",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w04-p01.jpg",
+        "sha256": "1fde73fa587f8a1d8f4e13d5227dfdf82a4e45e42b48496359f123078d75c7de",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w04-p02.jpg",
+        "sha256": "52664d41d5eb63b9941b509a0dfe111667719295b3ad0aa60efa4b2cde9c1ea2",
+        "frameCount": 26
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w05-p00.jpg",
+        "sha256": "fb69035df7a3bfd70ca29fc353eda277e7e80046e48ff2a4db4a9c75ab2efb8e",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w05-p01.jpg",
+        "sha256": "6b01093d1cf7e5ad262dc6bb4402e7a9ecf58b166b3be36974f8eab55c90d020",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w05-p02.jpg",
+        "sha256": "645c970814805fb8535154ee37f40215c43c9c4ca809edc6e74cde5ed394c7fc",
+        "frameCount": 25
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w06-p00.jpg",
+        "sha256": "f0179df88ca85732cc9d385eb3ee2cd97ffe7e044511284edf7cb28557a5bbbe",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w06-p01.jpg",
+        "sha256": "1ac22fcaa8f92880d39e43cf27b130a57384459512752f85a2d607e5b72bef62",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w06-p02.jpg",
+        "sha256": "0393bf54fa77c10e57e2e9a14d53db2c25a7b159eee4d8b053ce04aba9fa93f2",
+        "frameCount": 25
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w07-p00.jpg",
+        "sha256": "41e2e2fa86b20cd5f30111aa48e63feaf715b1fdc7754aaed92b7ca4dd42a9f9",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w07-p01.jpg",
+        "sha256": "0b3a0a01120f7debed0d925fab24a17a956637387d45e856dcae22367ac71b1c",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w07-p02.jpg",
+        "sha256": "5b748d37b08cb28ae8a037dfc95558b6ed072dd35562866548f26a4ac98fd7e5",
+        "frameCount": 26
+      }
+    ],
+    "reviewProvenance": [
+      {
+        "path": "service/research/evaluation/wave1-negative-review.json",
+        "sha256": "e90d7bf4867fc0f989a95df4ce234e4b431d66c0bdaf16b3d4ce1d4512e4c9b4"
+      },
+      {
+        "path": "service/research/evaluation/wave1-negative-dense-review.json",
+        "sha256": "7bbd390f5a8301edd7df854d75b385181505d9274a565fc7c1b92506113e99d6"
+      },
+      {
+        "path": "service/research/runs/online-negative-parent-preflight-v1.json",
+        "sha256": "6a1ed32fbbe3ef6bffa645ebdd437bd6eeaf6350f62a7317421306f75d362f01"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/coverage-manifest.json",
+        "sha256": "412dd08c4f89f13652ab860befe23beeb769707a49ac78a060fd92207b4505d7"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/validation.json",
+        "sha256": "e2dae71d977c90e3b85f30b9cac4fda2a5bc82a86e672ab339ec8a4373974aac"
+      }
+    ]
+  },
+  {
+    "id": "online-normal-07",
+    "source": "https://commons.wikimedia.org/wiki/File:Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+    "sourceGroup": "commons-author:sage ross",
+    "license": "CC BY-SA 3.0",
+    "author": "Sage Ross",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv/Dog_walking_in_the_Mission_in_San_Francisco.ogv.480p.vp9.webm",
+    "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+    "path": "../cache/eval-wave1/negatives/neg07/published-transcode.webm",
+    "durationMs": 16834.0,
+    "events": [
+      {
+        "startMs": 4250.0,
+        "endMs": 8250.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w38",
+        "sourceStartMs": 4264.0,
+        "sourceEndMs": 8264.0,
+        "sourceMinusOpenCvOffsetMs": 14.0,
+        "controlNote": "Animal-only ordinary scene; no visible person. Easier control, not a hard human-motion negative."
+      },
+      {
+        "startMs": 12250.0,
+        "endMs": 16250.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w40",
+        "sourceStartMs": 12264.0,
+        "sourceEndMs": 16264.0,
+        "sourceMinusOpenCvOffsetMs": 14.0,
+        "controlNote": "Ordinary dog/handler walking; easier control."
+      }
+    ],
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "humanGroundTruth": false,
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "annotationStatus": "reviewed",
+    "annotationBasis": "Parent-authorized loader admission of PROVISIONAL assistant dense static-frame annotations only. Reviewed literal is offline runner eligibility, not human ground truth or independently verified normality.",
+    "annotationMethod": "Fresh sequential FFmpeg showinfo PTS; sequential OpenCV frame-index crosswalk. All consecutive frames from latest PTS <= window start through first PTS >= window end, inclusive. Boundary frames may provide context outside the exact window. 48 chronological frames per sheet, row-major, aspect-preserved 320x180 cells, caption source PTS ms and frame index. No subsampling. All 147 sheets were actually inspected through view_image at original sheet resolution, in chronological order. Each cell is aspect-preserved within 320x180 pixels; portrait imagery is consequently smaller. Every covering decoded frame was included, without temporal subsampling. This is static visual inspection, not real-time playback.",
+    "clockRebase": {
+      "id": "online-normal-07",
+      "eventClock": "OpenCV CAP_PROP_POS_MSEC after read",
+      "sourceClock": "acquired-file container presentation timestamp; publisher transcode where declared",
+      "sourceMinusOpenCvOffsetMs": 14.0,
+      "conversion": "OpenCV milliseconds = source PTS milliseconds - constant offset",
+      "rawSourceDurationMs": 16848.0,
+      "openCvDeclaredDurationMs": 16834.0,
+      "firstObservedSourcePtsMs": 14.0,
+      "lastObservedSourcePtsMs": 16806.0,
+      "firstOpenCvPtsMsFromVerifiedOffset": 0.0,
+      "lastOpenCvPtsMsFromVerifiedOffset": 16792.0,
+      "decodedFrameCount": 404,
+      "crosswalkPath": "service/research/cache/eval-wave1/negatives/neg07/pts-crosswalk.json",
+      "crosswalkSha256": "8e92fa0d7b784ef0054bf1c4f946abdddfcc438fa426145f2631eaabaa21fc7e",
+      "originalSequentialPtsPath": "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.json",
+      "originalSequentialPtsSha256": "09a8dd1614f401f01f54d61151c23cb3bcd5fee5cd79a1207b650e66d1f37e87",
+      "denseSourceReceipt": {
+        "id": "online-normal-07",
+        "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+        "decodedFrames": 404,
+        "sourcePtsOffsetFromOpenCvMs": 14.0,
+        "ptsPath": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/sequential-pts.json",
+        "ptsSha256": "a688865f753a8b6b6b31c1a458c02cd2e8a6405296bc2c6bc2865a5785f56679",
+        "logSha256": "add3164b47148bdbb387bc1cfb34d2b4ddd1cdee27e2792ed575ca5674ea2d3e",
+        "command": [
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\venvs\\videomae457\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+          "-nostdin",
+          "-hide_banner",
+          "-threads",
+          "2",
+          "-filter_threads",
+          "1",
+          "-i",
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\cache\\eval-wave1\\negatives\\neg07\\published-transcode.webm",
+          "-map",
+          "0:v:0",
+          "-vf",
+          "showinfo",
+          "-an",
+          "-f",
+          "null",
+          "-"
+        ]
+      },
+      "proofLimits": "Prior sequential preparation compared every OpenCV frame to matching FFmpeg source-frame PTS with constant offset tolerance <0.15ms and equal frame counts. Its pinned utility/receipt and saved sample crosswalk are validated here. Full per-frame OpenCV observations were not persisted; derived OpenCV endpoints above are explicitly offset-derived, not fresh decoder observations. No FPS-based clock or new decode."
+    },
+    "originalUnknownIntervalsSourceMs": [
+      {
+        "startMs": 0,
+        "endMs": 264.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 16764.0,
+        "endMs": 16848.0,
+        "reason": "outside retained normal evidence or uninspected tail; not negative"
+      }
+    ],
+    "originalEventsSourceMsNotAdmittedWholesale": [
+      {
+        "startMs": 264.0,
+        "endMs": 16764.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 4250.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 8250.0,
+        "endMs": 12250.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 16250.0,
+        "endMs": 16834.0,
+        "reason": "Outside admitted dense-supported interval, including uninspected tail; not negative"
+      }
+    ],
+    "denseUnknownWindowsSourceMs": [
+      {
+        "windowId": "w37",
+        "startMs": 264.0,
+        "endMs": 4264.0,
+        "notes": "Ordinary dog walking is visible initially, but camera pans away and crops the accompanying person during the final part; complete human-motion coverage is unavailable."
+      },
+      {
+        "windowId": "w39",
+        "startMs": 8264.0,
+        "endMs": 12264.0,
+        "notes": "Dog walking continues, but handler reenters initially as cropped arm/torso and road-side subjects are small. Human coverage is incomplete for a full negative window."
+      }
+    ],
+    "admittedWindowsSourceMs": [
+      {
+        "windowId": "w38",
+        "startMs": 4264.0,
+        "endMs": 8264.0,
+        "notes": "Entire window follows a walking dog beside parked vehicles; no visible people or person-to-person interaction. Animal-only ordinary-scene control, not a hard human-interaction negative; no claim about offscreen handler.",
+        "controlNote": "Animal-only ordinary scene; no visible person. Easier control, not a hard human-motion negative."
+      },
+      {
+        "windowId": "w40",
+        "startMs": 12264.0,
+        "endMs": 16264.0,
+        "notes": "Handler walks behind leashed dog and briefly pauses; distant cyclist remains separated. Consecutive frames show ordinary walking with no person-directed contact. Easier ordinary-motion control.",
+        "controlNote": "Ordinary dog/handler walking; easier control."
+      }
+    ],
+    "easierControlDurationMs": 8000,
+    "animalOnlyControlDurationMs": 4000,
+    "conditions": {
+      "motion": "walking, dog motion, camera pan and passing traffic",
+      "contact": "no person-to-person contact apparent",
+      "visiblePeopleApproxRange": [
+        0,
+        3
+      ],
+      "illumination": "outdoor daylight",
+      "occlusion": "person often outside frame while camera follows dog",
+      "sensor": "RGB visible-light; no IR evidence",
+      "personPixelHeight": "not measured",
+      "frameRateReported": 24.0,
+      "compression": {
+        "codec": "vp9",
+        "kind": "publisher-generated lossy transcode",
+        "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+      },
+      "nativeCameraResolution": "unknown",
+      "downloadedSourceDimensions": [
+        854,
+        480
+      ]
+    },
+    "rights": {
+      "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1207923663",
+      "sourcePageRevision": {
+        "revid": 1207923663,
+        "parentid": 724955786,
+        "timestamp": "2026-05-03T20:26:14Z"
+      },
+      "metadataPath": "service/research/cache/eval-wave1/negatives/neg07/rights-source-metadata.json",
+      "metadataSha256": "90d286f00db32b12ac8737097e399bb2c7ca0b158eda7a657c2637999b2f1878",
+      "wikitextSha256": "4dea9742e772c2f98d6b3bedc2fa39508a9ba1b34671d8b3c3eaac020b66dae4",
+      "retrievedAtUtc": "2026-10-21T17:02:11.450445+00:00",
+      "credit": "Own work",
+      "attribution": "File:Dog walking in the Mission in San Francisco.ogv by Sage Ross; CC BY-SA 3.0; https://commons.wikimedia.org/w/index.php?oldid=1207923663; https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+    },
+    "originalMedia": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+      "publisherSha1": "966fbd7f625d27180e148dd253e36d0700808bbd",
+      "publisherDeclaredBytes": 10899300,
+      "publishedDimensions": [
+        1280,
+        720
+      ],
+      "acquired": false,
+      "sha256": null,
+      "path": null
+    },
+    "acquiredSource": {
+      "kind": "published-transcode",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv/Dog_walking_in_the_Mission_in_San_Francisco.ogv.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg07/published-transcode.webm",
+      "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+      "sizeBytes": 2640195,
+      "sourcePtsStartMs": 14.0,
+      "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.json",
+      "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+      "maxPtsGapMs": 42.00000000000159
+    },
+    "transformationLineage": {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+      "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+      "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+      "workingOperation": "none; working media equals acquired source bytes",
+      "localTimeOffsetMs": 0,
+      "timeScale": 1,
+      "sheetClockToContainerPtsOffsetMs": 14.0,
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "cv2Threads": 1,
+      "ffmpegThreads": 2
+    },
+    "limitations": [
+      "Assistant static-image review is not human ground truth, motion playback or proof of absence of hidden contact. Complete frame coverage does not resolve occlusion.",
+      "Aspect-preserved contact-sheet cells reduce spatial detail. Small/hidden group interactions were conservatively retained as unknown; no native-resolution visibility claim.",
+      "Only the frozen 49 candidate windows are adjudicated. Original intervals, margins and tails outside these windows are not newly approved as normal.",
+      "All development windows remain unknown. Supported windows all retain reserved-audit roles; roles must not be reassigned to obtain development negatives.",
+      "Two supported windows (8 seconds) are easier dog/handler controls, including one animal-only window (4 seconds). They do not establish hard human-motion robustness.",
+      "Source-author grouping is inherited unchanged. Actor/session independence and publisher-pretrain overlap remain unknown.",
+      "No accuracy, operational camera-hour, 50-100-person crowd, near-IR, thermal or low-light colour CCTV capability claim. No identity, intent, injury, crime or guilt inference.",
+      "Source rights/attribution and transformation lineage remain those in the pinned original bundle. No new rights clearance or participant releases are implied."
+    ],
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w38-p00.jpg",
+        "sha256": "692dc8c6580db35b56587a30fbd99d1913fcdc9816d7a74d21df852ed3819c95",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w38-p01.jpg",
+        "sha256": "17ec6a116c32af86704e476416b610407b395ef13307593dfe50f10a4f02366e",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w38-p02.jpg",
+        "sha256": "138bc94ad3c4f20d8e2d4151e1441b714f21bdc59dc1924d8d539a7e751ea28e",
+        "frameCount": 1
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w40-p00.jpg",
+        "sha256": "d5df82ef481744ae6a8834ef2a39c88d7cd21f10becec6bd1831656d42ab1d59",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w40-p01.jpg",
+        "sha256": "5406538a640c9a9e542063e071e85cce9cb0ffce63e06b3938d4fa3a62847ed9",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w40-p02.jpg",
+        "sha256": "ad432b45cbce540da85cfe2dcc17403450b6f3794086841bff09bfbac4da5957",
+        "frameCount": 1
+      }
+    ],
+    "reviewProvenance": [
+      {
+        "path": "service/research/evaluation/wave1-negative-review.json",
+        "sha256": "e90d7bf4867fc0f989a95df4ce234e4b431d66c0bdaf16b3d4ce1d4512e4c9b4"
+      },
+      {
+        "path": "service/research/evaluation/wave1-negative-dense-review.json",
+        "sha256": "7bbd390f5a8301edd7df854d75b385181505d9274a565fc7c1b92506113e99d6"
+      },
+      {
+        "path": "service/research/runs/online-negative-parent-preflight-v1.json",
+        "sha256": "6a1ed32fbbe3ef6bffa645ebdd437bd6eeaf6350f62a7317421306f75d362f01"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/coverage-manifest.json",
+        "sha256": "412dd08c4f89f13652ab860befe23beeb769707a49ac78a060fd92207b4505d7"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/validation.json",
+        "sha256": "e2dae71d977c90e3b85f30b9cac4fda2a5bc82a86e672ab339ec8a4373974aac"
+      }
+    ]
+  },
+  {
+    "id": "wave2-normal-01",
+    "source": "https://commons.wikimedia.org/wiki/File:Drum_dancing,_Gjoa_Haven,_2019_-_02.webm",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b1/Drum_dancing%2C_Gjoa_Haven%2C_2019_-_02.webm/Drum_dancing%2C_Gjoa_Haven%2C_2019_-_02.webm.480p.vp9.webm",
+    "author": "Kerry Raymond",
+    "sourceGroup": "commons-author:kerry raymond",
+    "license": "CC-BY-4.0",
+    "path": "../cache/eval-wave2/normals/wave2-normal-01.webm",
+    "sha256": "1c69d19eef4eec8207ec57127bbb686d6383ed7f4e992e475832a5c6e9c23d5b",
+    "durationMs": 14680.0,
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "annotationStatus": "reviewed",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationMethod": "Parent-admitted provisional dense assistant ordinary-motion intervals only; actual working decoder clock; not human ground truth.",
+    "events": [
+      {
+        "startMs": 0,
+        "endMs": 4000,
+        "label": "ordinary-motion",
+        "targetLabel": 0
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 4000,
+        "endMs": 14680.0,
+        "reason": "Uninspected tail"
+      }
+    ],
+    "conditions": {
+      "controlDifficulty": "easier rhythmic motion with instrument",
+      "lighting": "indoor visible colour",
+      "modality": "visible-colour",
+      "personPixelHeights": null,
+      "visiblePersonCount": null
+    },
+    "rights": {
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "attribution": "Kerry Raymond / Wikimedia Commons / CC BY/4.0",
+      "ownWorkClaim": true,
+      "pinUrl": "https://commons.wikimedia.org/wiki/File:Drum_dancing,_Gjoa_Haven,_2019_-_02.webm?oldid=1213637488",
+      "sourcePageSha256": "62c12c59a474dbafdbfca4ed9c62e4cb611c75e1e6797b8e385e4b0995702188",
+      "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Drum dancing, Gjoa Haven, 2019 - 02.webm Drum dancing at the Gjoa Haven community hall, 2019 Date 7 September 2019 Source Own work Author Kerry Raymond Other versions This file has an extracted file : Drum dancing, Gjoa Haven, 2019 - 02 (cropped).webm . Camera location 68\u00b0 37\u2032 28.92\u2033 N, 95\u00b0 51\u2032 50.76\u2033 W View this and other nearby images on: OpenStreetMap 68.624700; -95.864100 Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution 4.0 International license. You are free: to share \u2013 to copy, distribute and transmit the work to remix \u2013 to adapt the work Under the following conditions: attribution \u2013 You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. https://creativecommons.org/licenses/by/4.0 CC BY 4.0 Creative Commons Attribution 4.0 true true <h2 ",
+      "sourcePageRetrievedAt": "2026-10-21T17:54:33.485679+00:00",
+      "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+    },
+    "lineage": {
+      "type": "official-published-480p-vp9-transcode",
+      "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Drum_dancing%2C_Gjoa_Haven%2C_2019_-_02.webm",
+      "localMediaTransformations": [],
+      "contactSheets": "aspect-preserving resize for evidence only",
+      "clockCrosswalk": {
+        "decoderClock": "OpenCV CAP_PROP_POS_MSEC after sequential read; FFmpeg backend",
+        "sourceClock": "downloaded Commons published transcode presentation clock",
+        "decoderToPublishedSourceOffsetMs": 0,
+        "originalCameraClockOffsetMs": null,
+        "originalToTranscodeTemporalCorrespondence": "Not independently verified; annotations refer only to downloaded published transcode"
+      }
+    },
+    "reviewSha256": "f92be4c8cd5e4d623b701c8349ca4c7751c0e57994d4ac21cd5a155d165f9330",
+    "evidenceHashes": {
+      "research/cache/eval-wave2/normals/wave2-normal-01-source.html": "62c12c59a474dbafdbfca4ed9c62e4cb611c75e1e6797b8e385e4b0995702188",
+      "research/cache/eval-wave2/normals/acquisition-receipts.json": "cf412ba5d732e81d7a5fe65bc3b19b2c76794a62b3b781f9e73d6c5b8f29250e",
+      "research/cache/eval-wave2/normals/candidate-freeze.json": "01cd72f71c2b33ab44b781dded6140375714a06bbd51a1c1201092f0199160be",
+      "research/cache/eval-wave2/normals/decoder-evidence.json": "5735147f5b773bb78f5cb91c35a2c77c7564428f0ea6a574507a3e6137ceb5df",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0000.jpg": "a2dac88c1388f552ac8061ccb13f8bddadcbc0ee0b5c36529f78c2eef0129937",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0016.jpg": "157c17c442a376c3216b181556739c5085da061747b1ca1cea99b9ab0874dfdc",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0032.jpg": "6b46ce3993b89249f954618f15e13592ccc1455db1b80a3b07508da8d980f3c3",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0048.jpg": "8aa00b64a4aeff6b6308f313f33ed1ce933429916eb80aba723fc5d163d17932",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0064.jpg": "cc3968e0f03561e321480e2e90481866aebe170e562e6115aeb4c429e9964bd9",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0080.jpg": "b03e46f9bfca9bef8df5a8fb2c10c584e9891ab6c0df1cf48421939db8d7dc3d",
+      "research/cache/eval-wave2/normals/wave2-normal-01-frames-0096.jpg": "985bdf3bbbc87b355ce85318c823e63c767a0e525e15bc2103d74e92965a934f"
+    }
+  },
+  {
+    "id": "wave3-government-125927",
+    "source": "https://www.dvidshub.net/video/125927/physical-training",
+    "url": "https://d34w7g4gy10iej.cloudfront.net/video/1109/DOD_100243809/DOD_100243809-720x406-800k.mp4",
+    "author": "Mariah K. Duncan",
+    "sourceGroup": "dvids-author:mariah k. duncan",
+    "license": "US-government-public-domain-claim-with-DVIDS-restrictions",
+    "path": "../cache/eval-wave3/government-normals/125927-silent.mp4",
+    "sha256": "64c1dc6319bece908f6768718100488586884e2541cd3b4ea62241b02a2346ce",
+    "durationMs": 85518.85218551886,
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "annotationStatus": "reviewed",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationMethod": "Parent-admitted provisional dense assistant ordinary-motion intervals only; actual working decoder clock; not human ground truth.",
+    "events": [
+      {
+        "startMs": 20020.02002002002,
+        "endMs": 24020.02002002002,
+        "label": "ordinary-motion",
+        "targetLabel": 0
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 20020.02002002002,
+        "reason": "Unannotated slate, unsuitable imagery or incomplete visual coverage"
+      },
+      {
+        "startMs": 24020.02002002002,
+        "endMs": 85518.85218551886,
+        "reason": "Uninspected or insufficiently clear; sparse overview does not establish normality"
+      }
+    ],
+    "conditions": {
+      "domain": "government exercise B-roll; domain-shift control",
+      "controlDifficulty": "easier ordinary exercise",
+      "lighting": "daylight visible colour",
+      "sensor": "unverified visible-colour camera; no NIR or thermal evidence",
+      "personPixelHeights": null,
+      "visiblePersonCount": null,
+      "crowdSizeVerified": false
+    },
+    "rights": {
+      "classification": "DVIDS file-level PUBLIC DOMAIN; U.S. official government visual information claim, not CC0",
+      "policyUrl": "https://www.dvidshub.net/about/copyright",
+      "policyPinSha256": "0639befbd30b4b5e37e37fb2b8479c41b4d737b352a56da13aa09c9fc22bdc1a",
+      "sourcePageSha256": "2d081ca19815e9ce626219fc49de3f53f0a6199dbd19e3ff7c2aa800f4257b10",
+      "sourcePageRetrievedAt": "2026-10-21T18:01:58.228750+00:00",
+      "authorAndUnitEvidence": "Video by Pfc. Mariah Duncan II Marine Expeditionary Force March 2022\"> \u2714 \u2717 Subscribe 118 if (quickSubscribeIncluded == undefined) { var quickSubscribeIncluded = true; // only include this code ONCE per page $(document).ready(function() { function toggleSubscribed(data) { if (data.loggedIn === true) { $.getJSON('/alerts/checksubscribe', {'searchTerm': '58', 'searchType': 'unit'}, function(data, textStatus, xhr) { if (data.count === 0) { $('.subscribe-text').text('Subscribe'); } else { $('.subscribe-text').text('Subscribed'); } }); } else { $('.subscribe-text').text('Subscribe'); } } $(document).bind(dvids.auth.events.query, function(event, data) { toggleSubscribed(data); }); $(document).bind(dvids.auth.events.loginSuccess, function(event, data) { toggleSubscribed(data); }); $(document).bind(dvids.auth.events.logout, function(event, data) { $('.subscribe-text').text('Subscribe'); }); $(\"a.newswire-subscribe\").click(function(event) { event.preventDefault(); var element = $(this); var searchTerm = element.attr(\"id\"); var searchType = element.attr(\"alert_type\"); var href = element.attr(\"href\"); var subscribed = parseInt(element.siblings('div.subscribed-count').html()); $.ajax({ type: \"POST\", url: \"/alerts/quicksubscribe\", context: this, data: { searchTerm: searchTerm, searchType: searchType, }, success: function(data) { if (data == \"please login\") { window.location.href = href; } else if (data.result == \"error\") { UIkit.notify(data.message, {status:'danger', timeout : 0}); } else if (data.result == \"success\" && data.message == \"unsubscribed\") { element.removeClass(\"subscribed\").removeClass(\"unsubscribe\"); element.find(\"span.subscribe-text\").html(\"Subscribe\"); element.siblings('div.subscribed-count').html(subscribed - 1); element.find(\"span.bell\").show(); element.find(\"span.checkmark, span.x\").hide(); } else if (data.result == \"success\" && data.message == \"subscribed\") { element.addClass(\"subscribed\"); element.find(\"span.subscribe-text\").html(\"Subscribed\"); element.siblings('div.subscribed-count').html(subscribed + 1); element.find(\"span.bell\").hide(); element.find(\"span.checkmark\").show(); } } }); }); $(document).on(\"mouseenter\", \"a.newswire-subscribe.subscribed\", function(event) { $(this).addClass(\"unsubscribe\"); $(this).find(\"span.subscribe-text\").html(\"Unsubscribe\"); $(this).find(\"span.x\").show(); $(this).find(\"span.checkmark\").hide(); }); $(document).on(\"mouseleave\", \"a.newswire-subscribe.subscribed\", function(event) { $(this).removeClass(\"unsubscribe\"); $(this).find(\"span.subscribe-text\").html(\"Subscribed\"); $(this).find(\"span.x\").hide(); $(this).find(\"span.checkmark\").show(); }); }); } U.S. Navy Sailor HM2 Ryan W. Tilley with Division Surgical Battalion, 2D Marine Division conducts physical training on August 4, 2011 aboard Camp Lejeune, N.C. HM2 Tilley is responsible for the physical fitness as well as the combat readiness of his junior sailors. He maintains an effective training program that implements strength exercise that work all the major muscle groups of his sailors. (U.S. Marine motion imagery by Lance Cpl. Mariah K. Duncan). Also available in High Definition. VIDEO INFO Date Taken: 08.05.2011 Date Posted: 09.17.2011 06:20 Category: B-Roll Video ID: 125927 VIRIN: 110805-M-OH059-001 Filename: DOD_100243809 Length: 00:01:26 Location: CAMP LEJEUNE, NORTH CAROLINA, US Video Analytics Downloads: 25 High-Res. Downloads: 25 PUBLIC DOMAIN This work, Physical Training , by PFC Mariah Duncan , identified by DVIDS , must comply with the restrictions shown on https://www.dvidshub.net/about/copyright . ",
+      "attribution": "Mariah K. Duncan / DVIDS video 125927 / credited U.S. military motion imagery",
+      "reuseLimitations": [
+        "Government-employee official-duty work generally lacks U.S. copyright; file-level public-domain claim is the acquisition basis. No worldwide public-domain determination.",
+        "DVIDS does not waive privacy/publicity rights and warns some hosted visual information may include third-party IP.",
+        "No implied government endorsement; military marks may carry trademark restrictions.",
+        "Audio was not auditioned or cleared; original downloaded assets preserved, but all evidence/model working files are video-only stream-copy. No copyright music clearance inferred.",
+        "Offline visual evaluation only in this task. No separate express machine-learning training grant or checkpoint terms inferred. No public marketing use authorized."
+      ],
+      "nonEndorsementDisclaimer": "The appearance of U.S. Department of War (DoW) visual information does not imply or constitute DoW endorsement."
+    },
+    "lineage": {
+      "transformation": "FFmpeg7.1 video stream-copy remux, audio omitted; no image crop, rescale, fps conversion or re-encode in working media",
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "clockCrosswalk": {
+        "inputRawFirstPtsMs": 0.0,
+        "silentWorkingRawFirstPtsMs": 65.9826,
+        "decoderFirstPtsMs": 0.0,
+        "explanation": "Video stream-copy retains first video frame order. OpenCV POS_MSEC is normalized to first decoded frame0. FFmpeg copyts showinfo independently pins raw input and working first PTS. HLS first segment EXTINF starts0; exact correspondence to full embedded MP4/player timeline was not independently verified. Original camera timeline unknown.",
+        "annotationClock": "Milliseconds since first decoded video presentation in acquired asset; this is the clock used by events and local OpenCV reads",
+        "decoderToAnnotationOffsetMs": 0,
+        "decoderToInputRawPtsOffsetMs": 0.0,
+        "decoderToWorkingRawPtsOffsetMs": 65.9826,
+        "dvidsPlayerToAnnotationOffsetMs": 0,
+        "cameraClockOffsetMs": null,
+        "timestampQuantizationToleranceMs": 1
+      },
+      "workingFileScope": "whole published embedded MP4",
+      "evidenceTransform": "Aspect-preserving resize into timestamped contact sheets"
+    },
+    "reviewSha256": "443554d53641562064603622c2ed125ee228f1199ed1180e683836dcccf2d7a8",
+    "evidenceHashes": {
+      "research/cache/eval-wave3/government-normals/125927-source.html": "2d081ca19815e9ce626219fc49de3f53f0a6199dbd19e3ff7c2aa800f4257b10",
+      "research/cache/eval-wave3/government-normals/candidate-freeze.json": "d8f11e2452599db568285fccac65bd6d77ad472c6096e1107317283ef5c26b16",
+      "research/cache/eval-wave3/government-normals/dvids-copyright.html": "0639befbd30b4b5e37e37fb2b8479c41b4d737b352a56da13aa09c9fc22bdc1a",
+      "research/cache/eval-wave3/government-normals/rights-policy.json": "5c50ef96ade790a429acd5ebfbfddeb482b892e6dec8dfb7bab5c7fa2a039d5e",
+      "research/cache/eval-wave3/government-normals/acquisition-receipts.json": "a27f0e66030a6be63ed832b42e8d30c8bf82d33a0411214340da2b5b82c54c35",
+      "research/cache/eval-wave3/government-normals/hls-receipts.json": "f2d6b7216f3f739829269aa34ecc924ef5779a9783b8beffd8004ce4673a5abb",
+      "research/cache/eval-wave3/government-normals/decoder-evidence.json": "4b9d5453c1568faada5a6aecb13fc148184463095e2ec42221d605744a3f8743",
+      "research/cache/eval-wave3/government-normals/125927-frames-0000.jpg": "8d9e0682b021ca3af5bc1779fa54497744157576c0d81ab95fa1ff0cc2584210",
+      "research/cache/eval-wave3/government-normals/125927-extra-5000-0000.jpg": "5cfdd7f205378739877109e24dd1502843924dea644d1529daee426b1529f6ff",
+      "research/cache/eval-wave3/government-normals/125927-extra-5000-0016.jpg": "c6b951b6a990aab6f75a285d98feb36893b9907444768a40334ac6a8132ff2ea",
+      "research/cache/eval-wave3/government-normals/125927-extra-5000-0032.jpg": "60aad4a9182768dd0706022dbb5c4851884bb40a96bffc5c46685a9444bc350b",
+      "research/cache/eval-wave3/government-normals/125927-extra-5000-0048.jpg": "3a73a8cae7f660e21e580083768d91781a1b785de57dff1cd275198b05a4b4fd",
+      "research/cache/eval-wave3/government-normals/125927-extra-5000-0064.jpg": "32a8b9749c487c02ac47f7cdc7f685c6fffb28440294c49920b6e46ceeb5555f",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0000.jpg": "b84046dabc31a3787efba56ab3f557341705709781ec859c2062ec46bd671cf2",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0016.jpg": "a4528314d5a7c0c1fadc96a0e088dd70fafd506a6ced395ba91d5e244f1ed430",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0032.jpg": "b450588d7c52716b936e381ed439bb7d48df74ba30150ea8eacad4cc4483e932",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0048.jpg": "2ff6efdaa9054f22992270282ddc855305636f9d45a039df2318066780a756ac",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0064.jpg": "42d649c481ed7701befe0fbda18498e3ac9d3ff41810de82987ebd1ea1e87857",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0080.jpg": "4bb034b36bb54dd70075002a5fc51d185b5bab5c9bf42c36f6505be491a49fa1",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0096.jpg": "927f3388a005f79b982fd1febe2181a74756cbdd7a957066425f9c8cb2a3a2de",
+      "research/cache/eval-wave3/government-normals/125927-extra-20000-0112.jpg": "a0c7eecdfb32580a00baf1b4d6a4c44e4ab8785b55015ca1829680281cc26c4a",
+      "research/cache/eval-wave3/government-normals/125927-overview.jpg": "8ccec0562195f3a841756c2479b95a787b46c2646883a49914fb66110cabae7d"
+    }
+  }
+]

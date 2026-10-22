@@ -1,0 +1,1043 @@
+{
+  "schemaVersion": 1,
+  "status": "reviewed",
+  "pathBase": "paths resolve relative to this JSON file directory",
+  "reviewMethod": "Primary rights/source revision pinning before bounded download, author/event grouping and deterministic role assignment before visual annotations or scores; model-blind timestamped image inspection. Source milliseconds are pinned FFmpeg PTS; downstream OpenCV mapping is explicit.",
+  "limitations": [
+    "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+    "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+    "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+    "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+    "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+    "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+    "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used.",
+    "Six eligible clips from three conservative source groups; two downloaded candidates excluded. All frozen candidate groups happened to hash to reserved-audit; no development groups contributed.",
+    "Execution deviation: the dense and all-frame CPU evidence utilities briefly overlapped on the last two sources after the first process yielded. Each used one decoder and cv2 threads=1; no model/GPU job occurred. Other decoding passes were sequential."
+  ],
+  "recordings": [
+    {
+      "id": "wave1-positive-tokyo-judo",
+      "sourceGroup": "commons-nesnad-judo-tokyo-2016-10-01",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Judo-Tokyo-2016-10-1.webm",
+      "author": "Nesnad",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/72/Judo-Tokyo-2016-10-1.webm",
+      "path": "../cache/eval-wave1/positives/tokyo-judo/original.webm",
+      "sha256": "8d2731d725e03eca9cc85567650a9855e8ce5bf407da200455f11db89ce92643",
+      "durationMs": 30275,
+      "nativeDimensions": {
+        "width": 1920,
+        "height": 1080,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "include-contact-proxy",
+      "reviewedIntervals": [
+        {
+          "startMs": 13003,
+          "endMs": 21003,
+          "coverage": "32 dense timestamp samples across the surrounding selected interval, plus 32 overview samples; positive episode extent remains provisional interpolation",
+          "status": "contact-proxy-sampled"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 13003,
+          "endMs": 21003,
+          "label": "physical-contact-proxy",
+          "binaryLabel": 1,
+          "description": "Indoor hall with many people on mats. In enlarged evidence, several pairs are visibly in floor grappling holds/repositioning; standing people partly occlude them. Retained central episode is a sport/practice contact proxy. No individual intent or technique success is inferred.",
+          "startsInProgress": true
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 13003,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 21003,
+          "endMs": 30275,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "indoor-colour",
+          "multiple-pairs",
+          "distant-subjects-in-wide-view",
+          "partial-occlusion",
+          "camera-zoom-change",
+          "sports-practice"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/tokyo-judo/contact-1.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/contact-2.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-2.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-3.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/dense-1.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/dense-2.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/detail-1.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/detail-16.jpg",
+        "../cache/eval-wave1/positives/tokyo-judo/detail-32.jpg"
+      ],
+      "notes": "Indoor hall with many people on mats. In enlarged evidence, several pairs are visibly in floor grappling holds/repositioning; standing people partly occlude them. Retained central episode is a sport/practice contact proxy. No individual intent or technique success is inferred.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 95246383,
+        "sourcePageRevisionId": 680220632,
+        "sourcePageRevisionTimestamp": "2022-08-04T03:58:56Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=680220632",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/tokyo-judo/source-wikitext.txt",
+        "sourceWikitextSha256": "aefc87b30ff090bfb3377de14c66d73f6e2edb62c3ef12e933def02d7caad338",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/tokyo-judo/source.json",
+        "sourceMetadataSha256": "d1ff8aac4dcb3b6b122b17a159fb8e3477355532a5a1aeceac6c443929a3b289",
+        "uploadTimestamp": "2020-10-20T06:56:34Z",
+        "publisherSha1": "41b78a51b2337aff2f05997fd8f431199a211ced",
+        "actualSourceSha256": "8d2731d725e03eca9cc85567650a9855e8ce5bf407da200455f11db89ce92643",
+        "actualWorkingSha256": "8d2731d725e03eca9cc85567650a9855e8ce5bf407da200455f11db89ce92643",
+        "sizeBytes": 9138017,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/tokyo-judo/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/tokyo-judo/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/tokyo-judo/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 30233.0,
+        "declaredEndMinusLastObservedFrameMs": 42.0,
+        "roleHashFirstByte": 235,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/tokyo-judo/contact-1.jpg": "19774d85d39da033fb75c3cf619f9ccc0c294ce1b0db2ccb10565a810800a154",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-2.jpg": "0eeae9e4d57709279df8c88b26da68defa4cd789f33c4307613b56b3ac824460",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-1.jpg": "727a657f7ce6df1bed0d25c82c2908064d98e36762dd4c9f792aef8b6be43170",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-2.jpg": "1da8b0ac29129ca7e78a25d55ad9ab01355f427ddebfd4f9e4081d58adeb9d14",
+          "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames-3.jpg": "f876383625bd92a9cb6db0b35e155065e89e9b93a7f810076019be73bc1e05e7",
+          "../cache/eval-wave1/positives/tokyo-judo/dense-1.jpg": "838ebd5799512d617d88508c15795eb041fcaafe5fd2bd9e33e3912ab82f7a9c",
+          "../cache/eval-wave1/positives/tokyo-judo/dense-2.jpg": "81091616ea46119b04d246131e205995ad155a2b3a1c672d73f6701411081eb9",
+          "../cache/eval-wave1/positives/tokyo-judo/detail-1.jpg": "8f1fd7e72226a2c9d554abfdd30e875c8d82f62bee44ca65bb196f5df39eb5cd",
+          "../cache/eval-wave1/positives/tokyo-judo/detail-16.jpg": "b73b47845f04e322ccb6fd7aa7894b949ee4102c0f0eedc0490c1e68fcacf874",
+          "../cache/eval-wave1/positives/tokyo-judo/detail-32.jpg": "6e460febefc2915f44b36d9816423b16a2e793cb8754bf43ed295bc18aec5478"
+        }
+      },
+      "allFramesReviewedContactIntervals": [
+        {
+          "startMs": 15018.0,
+          "endMs": 19022.0,
+          "frameCount": 121,
+          "evidenceMetadataFile": "../cache/eval-wave1/positives/tokyo-judo/contact-all-frames.json",
+          "method": "Every sequentially decoded frame in contiguous selected contact subset, chronological sheets; evidence crop for Tokyo only. This is frame inspection, not real-time video playback."
+        }
+      ]
+    },
+    {
+      "id": "wave1-positive-buganda-wrestling",
+      "sourceGroup": "commons-samson-ssemakadde-buganda-wrestling-2026-09-17",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom.webm",
+      "author": "Samson Ssemakadde",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/64/Traditional_wrestling_in_Buganda_kingdom.webm",
+      "path": "../cache/eval-wave1/positives/buganda-wrestling/original.webm",
+      "sha256": "cd2375820472a15ccd3991f64e1932cc4ac19265962ca313439a53e252c4ecad",
+      "durationMs": 29283,
+      "nativeDimensions": {
+        "width": 320,
+        "height": 240,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 320,
+        "height": 240
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "include-contact-proxy",
+      "reviewedIntervals": [
+        {
+          "startMs": 1003,
+          "endMs": 7003,
+          "coverage": "32 dense timestamp samples across the surrounding selected interval, plus 32 overview samples; positive episode extent remains provisional interpolation",
+          "status": "contact-proxy-sampled"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 1003,
+          "endMs": 7003,
+          "label": "physical-contact-proxy",
+          "binaryLabel": 1,
+          "description": "Two foreground participants on grass maintain upper-body grips while leaning/pushing and changing stance. Bystanders occasionally cross or obscure the pair outside the conservative retained segment. Bright outdoor sport context; low coded raster and letterboxing.",
+          "startsInProgress": true
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 1003,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 7003,
+          "endMs": 29283,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "daylight-colour",
+          "two-contact-participants",
+          "spectator-background",
+          "320x240-original-upload",
+          "letterboxed",
+          "sports-contact"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/buganda-wrestling/contact-1.jpg",
+        "../cache/eval-wave1/positives/buganda-wrestling/contact-2.jpg",
+        "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-2.jpg",
+        "../cache/eval-wave1/positives/buganda-wrestling/dense-1.jpg",
+        "../cache/eval-wave1/positives/buganda-wrestling/dense-2.jpg"
+      ],
+      "notes": "Two foreground participants on grass maintain upper-body grips while leaning/pushing and changing stance. Bystanders occasionally cross or obscure the pair outside the conservative retained segment. Bright outdoor sport context; low coded raster and letterboxing.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 199664046,
+        "sourcePageRevisionId": 1277702438,
+        "sourcePageRevisionTimestamp": "2026-09-17T09:50:43Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1277702438",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/buganda-wrestling/source-wikitext.txt",
+        "sourceWikitextSha256": "dd534f17988cd668a512027d9e8b9675a0f9fc986a9fdcf395695ca37836b98d",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/buganda-wrestling/source.json",
+        "sourceMetadataSha256": "f28ad6ecb61dddb301f3aae9e90a34eb0f41440d56a72b791adb27b050c88e7a",
+        "uploadTimestamp": "2026-09-17T09:50:40Z",
+        "publisherSha1": "780cf5e7cac00202546f50eccb5c5ead4667780f",
+        "actualSourceSha256": "cd2375820472a15ccd3991f64e1932cc4ac19265962ca313439a53e252c4ecad",
+        "actualWorkingSha256": "cd2375820472a15ccd3991f64e1932cc4ac19265962ca313439a53e252c4ecad",
+        "sizeBytes": 9958401,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/buganda-wrestling/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/buganda-wrestling/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/buganda-wrestling/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 29243.0,
+        "declaredEndMinusLastObservedFrameMs": 40.0,
+        "roleHashFirstByte": 128,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-1.jpg": "65d590a790fe4eae714e780230ff70224816057a9fd40fc1d6563184eee84b89",
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-2.jpg": "19fdd294ab69f8c929775308c991395518a9533dcb4204931667319527e414a0",
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-1.jpg": "13455d5bcc45270f93a2e4d987e9edfc49a9505af96d467db6565d535bcb0866",
+          "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames-2.jpg": "119d2c5f1d7d75d2844908fb1a104831a04bf9a3f94257c7f662fe8bf902bf62",
+          "../cache/eval-wave1/positives/buganda-wrestling/dense-1.jpg": "c9aa891e8ccfd0294371888c3d8244554ddc85f29af506d2f0d4f2ec80d67f3d",
+          "../cache/eval-wave1/positives/buganda-wrestling/dense-2.jpg": "9bf2f193f2d70f0cf7d8eee06b1614d197f5a15b34fb6163386670abe8c06975"
+        }
+      },
+      "allFramesReviewedContactIntervals": [
+        {
+          "startMs": 2003.0,
+          "endMs": 6003.0,
+          "frameCount": 97,
+          "evidenceMetadataFile": "../cache/eval-wave1/positives/buganda-wrestling/contact-all-frames.json",
+          "method": "Every sequentially decoded frame in contiguous selected contact subset, chronological sheets; evidence crop for Tokyo only. This is frame inspection, not real-time video playback."
+        }
+      ]
+    },
+    {
+      "id": "wave1-positive-buganda-ekigwo",
+      "sourceGroup": "commons-samson-ssemakadde-buganda-wrestling-2026-09-17",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom_(Ekigwo).webm",
+      "author": "Samson Ssemakadde",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/86/Traditional_wrestling_in_Buganda_kingdom_%28Ekigwo%29.webm",
+      "path": "../cache/eval-wave1/positives/buganda-ekigwo/original.webm",
+      "sha256": "7e18df576db51a4ac929739dcf2df0db9b11ad3ed3af732e6832ab13db3246db",
+      "durationMs": 31284,
+      "nativeDimensions": {
+        "width": 320,
+        "height": 240,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 320,
+        "height": 240
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "include-contact-proxy",
+      "reviewedIntervals": [
+        {
+          "startMs": 15003,
+          "endMs": 23003,
+          "coverage": "32 dense timestamp samples across the surrounding selected interval, plus 32 overview samples; positive episode extent remains provisional interpolation",
+          "status": "contact-proxy-sampled"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 15003,
+          "endMs": 23003,
+          "label": "physical-contact-proxy",
+          "binaryLabel": 1,
+          "description": "Same event/session group as the other Buganda uploads. Two foreground participants maintain upper-body grips and shift weight/stance; the selected central interval avoids the later release and earlier brief groundward dip. No distinct takedown claim is made.",
+          "startsInProgress": true
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 15003,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 23003,
+          "endMs": 31284,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "daylight-colour",
+          "two-contact-participants",
+          "spectator-background",
+          "320x240-original-upload",
+          "letterboxed",
+          "sports-contact"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/buganda-ekigwo/contact-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo/contact-2.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-2.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo/dense-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo/dense-2.jpg"
+      ],
+      "notes": "Same event/session group as the other Buganda uploads. Two foreground participants maintain upper-body grips and shift weight/stance; the selected central interval avoids the later release and earlier brief groundward dip. No distinct takedown claim is made.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 199664047,
+        "sourcePageRevisionId": 1282190472,
+        "sourcePageRevisionTimestamp": "2026-10-01T14:43:06Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1282190472",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/buganda-ekigwo/source-wikitext.txt",
+        "sourceWikitextSha256": "90b008db76f7a64403962dbb08489320e3c45e210a75f7061d5ec30538020d90",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/buganda-ekigwo/source.json",
+        "sourceMetadataSha256": "eb7d23e86295a34f84fefff87adca5b1925fd3461f940595f90d288d7bcce783",
+        "uploadTimestamp": "2026-09-17T09:50:42Z",
+        "publisherSha1": "1719cdd80bc8655f820402a7a2194de5598a1550",
+        "actualSourceSha256": "7e18df576db51a4ac929739dcf2df0db9b11ad3ed3af732e6832ab13db3246db",
+        "actualWorkingSha256": "7e18df576db51a4ac929739dcf2df0db9b11ad3ed3af732e6832ab13db3246db",
+        "sizeBytes": 11720443,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/buganda-ekigwo/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 31243.0,
+        "declaredEndMinusLastObservedFrameMs": 41.0,
+        "roleHashFirstByte": 128,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-1.jpg": "bf2d7ae15d86df584ac20addb073c5287c4af0601197877e88198f1aad69cf48",
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-2.jpg": "0aeb6662fdaeae05ce08917444acbad9be4eecf21f81705162a7078f3faeb3d2",
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-1.jpg": "fc82156a53bc6a74682e97b300c3685858cb442f9880bfae4363af5233ce03f5",
+          "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames-2.jpg": "2c4e404c752e3a4b41bb3e9f3ae90fc360202c517b2de4c8a1e166aa7b07c958",
+          "../cache/eval-wave1/positives/buganda-ekigwo/dense-1.jpg": "3d2cbd4ebfdd15cd591120db76c14c02e474433a2ac93eac38795c199a6cdd26",
+          "../cache/eval-wave1/positives/buganda-ekigwo/dense-2.jpg": "4eafe8a192c3bf09863c8ddce2112c2a47fee1f9d1b73c5dea768be05c0326a8"
+        }
+      },
+      "allFramesReviewedContactIntervals": [
+        {
+          "startMs": 16003.0,
+          "endMs": 19963.0,
+          "frameCount": 96,
+          "evidenceMetadataFile": "../cache/eval-wave1/positives/buganda-ekigwo/contact-all-frames.json",
+          "method": "Every sequentially decoded frame in contiguous selected contact subset, chronological sheets; evidence crop for Tokyo only. This is frame inspection, not real-time video playback."
+        }
+      ]
+    },
+    {
+      "id": "wave1-positive-buganda-ekigwo1",
+      "sourceGroup": "commons-samson-ssemakadde-buganda-wrestling-2026-09-17",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Traditional_wrestling_in_Buganda_kingdom_(Ekigwo)1.webm",
+      "author": "Samson Ssemakadde",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Traditional_wrestling_in_Buganda_kingdom_%28Ekigwo%291.webm",
+      "path": "../cache/eval-wave1/positives/buganda-ekigwo1/original.webm",
+      "sha256": "69162b3dd01e69ca2c90eff7ec2a87eeb930299435714f76d47a310323f52bf0",
+      "durationMs": 12015,
+      "nativeDimensions": {
+        "width": 320,
+        "height": 240,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 320,
+        "height": 240
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "include-contact-proxy",
+      "reviewedIntervals": [
+        {
+          "startMs": 403,
+          "endMs": 6403,
+          "coverage": "32 dense timestamp samples across the surrounding selected interval, plus 32 overview samples; positive episode extent remains provisional interpolation",
+          "status": "contact-proxy-sampled"
+        },
+        {
+          "startMs": 9203,
+          "endMs": 11603,
+          "coverage": "Every one of 58 sequential decoded frames from OpenCV 9200 through 11600 ms inspected in chronological sheets; FFmpeg source clock is +3 ms.",
+          "status": "ordinary-motion-all-frames-inspected"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 403,
+          "endMs": 6403,
+          "label": "physical-contact-proxy",
+          "binaryLabel": 1,
+          "description": "Same conservative Buganda group. Two participants maintain head/arm/upper-body contact while shifting stance in the retained first segment. They separate later. Every decoded frame from source 9203 to 11603 ms was inspected in chronological sheets: standing, walking and open-hand gestures without renewed sport-contact in that subset. No intent is inferred from gestures.",
+          "startsInProgress": true
+        },
+        {
+          "startMs": 9203,
+          "endMs": 11603,
+          "label": "ordinary-motion",
+          "binaryLabel": 0,
+          "description": "Standing, walking, open-hand gestures; no renewed wrestling contact within this inspected subset."
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 403,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 6403,
+          "endMs": 9203,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 11603,
+          "endMs": 12015,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "daylight-colour",
+          "two-contact-participants",
+          "spectator-background",
+          "320x240-original-upload",
+          "letterboxed",
+          "sports-contact",
+          "reviewed-ordinary-motion-lead-out"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/buganda-ekigwo1/contact-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/contact-2.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-2.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/dense-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/dense-2.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/normal-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/buganda-ekigwo1/normal-all-frames-2.jpg"
+      ],
+      "notes": "Same conservative Buganda group. Two participants maintain head/arm/upper-body contact while shifting stance in the retained first segment. They separate later. Every decoded frame from source 9203 to 11603 ms was inspected in chronological sheets: standing, walking and open-hand gestures without renewed sport-contact in that subset. No intent is inferred from gestures.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 199664045,
+        "sourcePageRevisionId": 1286416370,
+        "sourcePageRevisionTimestamp": "2026-10-12T22:30:32Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1286416370",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/buganda-ekigwo1/source-wikitext.txt",
+        "sourceWikitextSha256": "c637663e8870cfc42e0c9690ec9bf2d6587e2397a2844432abe8cc6d05cdf34f",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/buganda-ekigwo1/source.json",
+        "sourceMetadataSha256": "f988b4e5af1a4f52dd6543778cd53edb7a66c0a1fda3ecfdce68ac62ac7e89e0",
+        "uploadTimestamp": "2026-09-17T09:50:40Z",
+        "publisherSha1": "21c2e0f55b12a63049cfb9944615d2cfe6a8b094",
+        "actualSourceSha256": "69162b3dd01e69ca2c90eff7ec2a87eeb930299435714f76d47a310323f52bf0",
+        "actualWorkingSha256": "69162b3dd01e69ca2c90eff7ec2a87eeb930299435714f76d47a310323f52bf0",
+        "sizeBytes": 3751597,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/buganda-ekigwo1/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo1/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/buganda-ekigwo1/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 1.8189894035458565e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 11963.0,
+        "declaredEndMinusLastObservedFrameMs": 52.0,
+        "roleHashFirstByte": 128,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-1.jpg": "63d45f8405e9f85a8b03708d2c8d5ceacb2ea6b0b599d7cefd9bdaf0006618dd",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-2.jpg": "9ce34f081409fd69ff4319f9e9dfb13f2e27828d63b2167345e26e251e7227e8",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-1.jpg": "40306946025983fed85dbd17d9da87728b70764bf933b6330df3c0fe1785c932",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames-2.jpg": "5a746e91276d14e223627e9cf93c4a7f3667371e54b93f045e17e15820259c3d",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/dense-1.jpg": "a1ccaf2d9f32dd8b02c5f0f6a5be003886d0fbde1220580f971f4edca0002664",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/dense-2.jpg": "b3435354bd0752cbd5d0250deab2acf3aad2db9c3686b694831e799d6e8cd71b",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/normal-all-frames-1.jpg": "9bdb60a397b1cf17b840b400c8062d5bad00d0ea0e2e646cef545ad053287f59",
+          "../cache/eval-wave1/positives/buganda-ekigwo1/normal-all-frames-2.jpg": "7b11e79c01d2b5be3bcf1ca119fcf056cecf76a688e2edb1150607f5234d9364"
+        }
+      },
+      "allFramesReviewedContactIntervals": [
+        {
+          "startMs": 1003.0,
+          "endMs": 5003.0,
+          "frameCount": 97,
+          "evidenceMetadataFile": "../cache/eval-wave1/positives/buganda-ekigwo1/contact-all-frames.json",
+          "method": "Every sequentially decoded frame in contiguous selected contact subset, chronological sheets; evidence crop for Tokyo only. This is frame inspection, not real-time video playback."
+        }
+      ]
+    },
+    {
+      "id": "wave1-positive-ekpeye-wrestling",
+      "sourceGroup": "commons-umasoyee-ekpeye-wrestling-2024",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Ekpeye_wrestling.webm",
+      "author": "Ekpeye Wikimedia; credit: Franca Umasoye Igwe (User:Umasoyee) and Armstrong Opulency",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/01/Ekpeye_wrestling.webm",
+      "path": "../cache/eval-wave1/positives/ekpeye-wrestling/original.webm",
+      "sha256": "14939e8c191496dc93a1b415852d4a73485eb7a345e7653e0c1b4b9c34cfc019",
+      "durationMs": 58260,
+      "nativeDimensions": {
+        "width": 1920,
+        "height": 1080,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "exclude",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 58260,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "daylight-colour",
+          "ceremony-content",
+          "black-tail",
+          "publisher-description-content-mismatch"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/ekpeye-wrestling/contact-1.jpg",
+        "../cache/eval-wave1/positives/ekpeye-wrestling/contact-2.jpg"
+      ],
+      "notes": "EXCLUDED from contact-action evaluation: actual sampled content is seated ceremony/presentation and ordinary crowd motion, followed by black frames from approximately 18.75 s in the sparse samples. No visible grappling/contact positive was found. Filename/description was not accepted as a label; black/uninspected time is not normal time.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 153327290,
+        "sourcePageRevisionId": 950408910,
+        "sourcePageRevisionTimestamp": "2024-10-28T21:52:30Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=950408910",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/ekpeye-wrestling/source-wikitext.txt",
+        "sourceWikitextSha256": "181db9ab17e600f862d7afc46e54ed6b75be474195654a1cf18de6219da5c776",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/ekpeye-wrestling/source.json",
+        "sourceMetadataSha256": "12a4829529bd06d29769678b0d49c395cddd2dbf257656ef2a448e0cc1838c89",
+        "uploadTimestamp": "2024-09-29T15:58:23Z",
+        "publisherSha1": "4fbbb3634e79aa251fdc29154d07c3858d25bd86",
+        "actualSourceSha256": "14939e8c191496dc93a1b415852d4a73485eb7a345e7653e0c1b4b9c34cfc019",
+        "actualWorkingSha256": "14939e8c191496dc93a1b415852d4a73485eb7a345e7653e0c1b4b9c34cfc019",
+        "sizeBytes": 18820831,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/ekpeye-wrestling/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/ekpeye-wrestling/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/ekpeye-wrestling/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 0.0,
+        "allFrameMappingMaxResidualMs": 7.275957614183426e-12,
+        "observedFirstSourcePtsMs": 0.0,
+        "observedLastSourcePtsMs": 58225.0,
+        "declaredEndMinusLastObservedFrameMs": 35.0,
+        "roleHashFirstByte": 235,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/ekpeye-wrestling/contact-1.jpg": "666a9d5e356d0f39461de2b4b9260485509c280f8b1b85b71e5acdc71bd314de",
+          "../cache/eval-wave1/positives/ekpeye-wrestling/contact-2.jpg": "b369c567aa3bf3aa3e98a8ca190ba280856fcede86ade007d2d8cd958a197685"
+        }
+      }
+    },
+    {
+      "id": "wave1-positive-eta-wrestling",
+      "sourceGroup": "commons-umasoyee-ekpeye-wrestling-2024",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Eta_(Ekpeye_wrestling_match).webm",
+      "author": "Umasoyee",
+      "license": "CC-BY-SA-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/1/11/Eta_%28Ekpeye_wrestling_match%29.webm",
+      "path": "../cache/eval-wave1/positives/eta-wrestling/original.webm",
+      "sha256": "776a2aedd2cc05aa669c09de0f05abda1d25b31d7b3a80f75b9bd9f8e2d49fdf",
+      "durationMs": 58260,
+      "nativeDimensions": {
+        "width": 1920,
+        "height": 1080,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "exclude",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 58260,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "daylight-colour",
+          "sports-wrestling-visible",
+          "bystander-staffs-or-sticks",
+          "foreground-occlusion",
+          "edited-cuts",
+          "black-tail"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/eta-wrestling/contact-1.jpg",
+        "../cache/eval-wave1/positives/eta-wrestling/contact-2.jpg"
+      ],
+      "notes": "EXCLUDED under the strict no-prop/weapon-scene scope: sampled frames show multiple pairs in unarmed wrestling, but prominent bystanders hold long staffs/sticks around the interaction and there are foreground occlusions/cuts. Staff use against a person is not asserted. No positive or normal event is exported; sampled frames after about 28.13 s are black. Grouped with the same-author/date Ekpeye upload.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 153328492,
+        "sourcePageRevisionId": 1047851666,
+        "sourcePageRevisionTimestamp": "2025-06-23T01:39:16Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1047851666",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/eta-wrestling/source-wikitext.txt",
+        "sourceWikitextSha256": "a126575f1d2751c747ba10dcafca7759b5a4d7e50c51a5c6215234d34ad58f07",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/eta-wrestling/source.json",
+        "sourceMetadataSha256": "b50b1227e28fda3900a3873dee3865e96e3e90577a47c3b99794b1cf62b9ef07",
+        "uploadTimestamp": "2024-09-29T16:22:46Z",
+        "publisherSha1": "7866ba4dddc02884a787c2affaac227ae38c2369",
+        "actualSourceSha256": "776a2aedd2cc05aa669c09de0f05abda1d25b31d7b3a80f75b9bd9f8e2d49fdf",
+        "actualWorkingSha256": "776a2aedd2cc05aa669c09de0f05abda1d25b31d7b3a80f75b9bd9f8e2d49fdf",
+        "sizeBytes": 54633207,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/eta-wrestling/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/eta-wrestling/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/eta-wrestling/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 0.0,
+        "allFrameMappingMaxResidualMs": 7.275957614183426e-12,
+        "observedFirstSourcePtsMs": 0.0,
+        "observedLastSourcePtsMs": 58225.0,
+        "declaredEndMinusLastObservedFrameMs": 35.0,
+        "roleHashFirstByte": 235,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/eta-wrestling/contact-1.jpg": "c86df2e1336caf6eda969e23402699e3c2923efb5900f838c4103b571c6b0c33",
+          "../cache/eval-wave1/positives/eta-wrestling/contact-2.jpg": "e3f1485bebd0cac9c7ffdef960f3d5959db68375d4a65a29f86ddc7351901dc3"
+        }
+      }
+    },
+    {
+      "id": "wave1-positive-kata-juji-jime",
+      "sourceGroup": "commons-hvja-judo-instruction-2024",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Ffo3._Kata-juji-jime_Vegyes_hajt%C3%B3kafog%C3%A1s%C3%BA_keresztfojt%C3%A1s_szemb%C5%91l.webm",
+      "author": "Hvja",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Ffo3._Kata-juji-jime_Vegyes_hajt%C3%B3kafog%C3%A1s%C3%BA_keresztfojt%C3%A1s_szemb%C5%91l.webm",
+      "path": "../cache/eval-wave1/positives/kata-juji-jime/original.webm",
+      "sha256": "8b92b1e2de139834ec78e0dcee8ba39e192bfe263fef5cc1a057d929ace45cf2",
+      "durationMs": 17763,
+      "nativeDimensions": {
+        "width": 1920,
+        "height": 1080,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "include-contact-proxy",
+      "reviewedIntervals": [
+        {
+          "startMs": 4503,
+          "endMs": 11503,
+          "coverage": "32 dense timestamp samples across the surrounding selected interval, plus 32 overview samples; positive episode extent remains provisional interpolation",
+          "status": "contact-proxy-sampled"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 4503,
+          "endMs": 11503,
+          "label": "physical-contact-proxy",
+          "binaryLabel": 1,
+          "description": "Two participants on an indoor mat demonstrate a controlled ground-grappling drill: one kneels over the supine partner with upper-body/lapel contact, leans forward into the hold and later releases. Retained central interval has direct partner contact; no injury, hostile intent, choke efficacy or resistance level is inferred. Instructional physical-contact proxy, with modest motion rather than an independently verified fight.",
+          "startsInProgress": true
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 4503,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 11503,
+          "endMs": 17763,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "indoor-colour",
+          "two-person-contact-drill",
+          "ground-hold",
+          "controlled-demonstration",
+          "static-camera"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/kata-juji-jime/contact-1.jpg",
+        "../cache/eval-wave1/positives/kata-juji-jime/contact-2.jpg",
+        "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-2.jpg",
+        "../cache/eval-wave1/positives/kata-juji-jime/dense-1.jpg",
+        "../cache/eval-wave1/positives/kata-juji-jime/dense-2.jpg"
+      ],
+      "notes": "Two participants on an indoor mat demonstrate a controlled ground-grappling drill: one kneels over the supine partner with upper-body/lapel contact, leans forward into the hold and later releases. Retained central interval has direct partner contact; no injury, hostile intent, choke efficacy or resistance level is inferred. Instructional physical-contact proxy, with modest motion rather than an independently verified fight.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 153698348,
+        "sourcePageRevisionId": 1251945448,
+        "sourcePageRevisionTimestamp": "2026-07-25T16:06:16Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1251945448",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/kata-juji-jime/source-wikitext.txt",
+        "sourceWikitextSha256": "e34eca7aafac8cb4d2161d1839faa559827125cb7181ca3c30b63443c006fe58",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/kata-juji-jime/source.json",
+        "sourceMetadataSha256": "a0be927a878561af0334e9f8e15cc38efe9149e85bb1cb44f2c16945b085a2f9",
+        "uploadTimestamp": "2024-10-09T08:08:03Z",
+        "publisherSha1": "443ba91b0916faf0571824cb11a84cf7a93a8e99",
+        "actualSourceSha256": "8b92b1e2de139834ec78e0dcee8ba39e192bfe263fef5cc1a057d929ace45cf2",
+        "actualWorkingSha256": "8b92b1e2de139834ec78e0dcee8ba39e192bfe263fef5cc1a057d929ace45cf2",
+        "sizeBytes": 17331443,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/kata-juji-jime/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/kata-juji-jime/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/kata-juji-jime/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 17723.0,
+        "declaredEndMinusLastObservedFrameMs": 40.0,
+        "roleHashFirstByte": 219,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-1.jpg": "bd17bd013785976f4086982d29510c3449e6d719eba809b130a27adc81831193",
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-2.jpg": "b21fda9a270f472be362a6f33977abc616fee1a30dd03a155bf37ea7ea1cd5f8",
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-1.jpg": "647e905d4e7a5036c3e66abdc3ec1fefa5262f6959c99dc4a88e91c1585506a7",
+          "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames-2.jpg": "b45325fced8f87f5d37d766a029da8ccfdfa75b21eba9dd6a5c13d7c3092f52c",
+          "../cache/eval-wave1/positives/kata-juji-jime/dense-1.jpg": "f8aa15ccfa44420823be5507d4da7bd45503bc520d43121e2a0088a6a69cef09",
+          "../cache/eval-wave1/positives/kata-juji-jime/dense-2.jpg": "3297b8638a872dc56d1bc630a94304fdf13375752a9465157c1e4deee496995c"
+        }
+      },
+      "allFramesReviewedContactIntervals": [
+        {
+          "startMs": 5923.0,
+          "endMs": 10083.0,
+          "frameCount": 105,
+          "evidenceMetadataFile": "../cache/eval-wave1/positives/kata-juji-jime/contact-all-frames.json",
+          "method": "Every sequentially decoded frame in contiguous selected contact subset, chronological sheets; evidence crop for Tokyo only. This is frame inspection, not real-time video playback."
+        }
+      ]
+    },
+    {
+      "id": "wave1-positive-hon-kesa-gatame",
+      "sourceGroup": "commons-hvja-judo-instruction-2024",
+      "role": "reserved-audit",
+      "source": "https://commons.wikimedia.org/wiki/File:Fl2.1._Hon-kesa-gatame,_fog%C3%B3k%C3%A9z_nyak_alatt.webm",
+      "author": "Hvja",
+      "license": "CC-BY-4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/3/36/Fl2.1._Hon-kesa-gatame%2C_fog%C3%B3k%C3%A9z_nyak_alatt.webm",
+      "path": "../cache/eval-wave1/positives/hon-kesa-gatame/original.webm",
+      "sha256": "028cdde0e52462bf02ed94ce94b309406e661a495e6ca8f5d3c33417c5f7a0e4",
+      "durationMs": 25805,
+      "nativeDimensions": {
+        "width": 1920,
+        "height": 1080,
+        "basis": "original uploaded coded raster only; actual native camera dimensions unknown"
+      },
+      "cameraNativeDimensions": null,
+      "workingDimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Model-blind inspection with view_image of 32 timestamped overview frames per downloaded recording; included positives additionally have 32 denser frames, and Tokyo enlarged evidence. Every chronological frame in separate central contact subsets and an ordinary-motion subset was also inspected; exact subspans/counts are recorded. Sequential OpenCV decode supplied actual timestamps; pinned FFmpeg all-frame source PTS independently verified constant mapping. No nominal-FPS timeline synthesis or real-time video playback.",
+      "decision": "include-contact-proxy",
+      "reviewedIntervals": [
+        {
+          "startMs": 6003,
+          "endMs": 10003,
+          "coverage": "32 dense timestamp samples across the surrounding selected interval, plus 32 overview samples; positive episode extent remains provisional interpolation",
+          "status": "contact-proxy-sampled"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 6003,
+          "endMs": 10003,
+          "label": "physical-contact-proxy",
+          "binaryLabel": 1,
+          "description": "Same conservative Hvja author/instruction group. In the retained first demonstration, one participant moves across the supine partner into a side ground hold with upper-body/arm contact. Both remain in partner contact throughout the all-frame inspected retained subset. Later reset and second demonstration remain unannotated. No force, injury or hostile intent is inferred.",
+          "startsInProgress": true
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 6003,
+          "reason": "Unannotated or uncertain margin; sparse overview inspection does not establish a negative interval."
+        },
+        {
+          "startMs": 10003,
+          "endMs": 25805,
+          "reason": "Unannotated tail/margin; excluded recordings have no eligible scored time. Black frames are not ordinary-motion labels."
+        }
+      ],
+      "conditions": {
+        "tags": [
+          "indoor-colour",
+          "two-person-contact-drill",
+          "ground-hold",
+          "controlled-demonstration",
+          "static-camera"
+        ],
+        "sensorModality": "unknown",
+        "nearIR": "unverified",
+        "thermalIR": "unverified",
+        "nativeCameraResolution": "unknown",
+        "visibleCrowdCount": "not counted; 50-100-person condition unverified",
+        "personPixelHeight": "not measured; Tokyo distant people enlarged for review",
+        "compression": "Original Commons uploaded WebM; prior encoding history unknown"
+      },
+      "evidenceFiles": [
+        "../cache/eval-wave1/positives/hon-kesa-gatame/contact-1.jpg",
+        "../cache/eval-wave1/positives/hon-kesa-gatame/contact-2.jpg",
+        "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-1.jpg",
+        "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-2.jpg",
+        "../cache/eval-wave1/positives/hon-kesa-gatame/dense-1.jpg",
+        "../cache/eval-wave1/positives/hon-kesa-gatame/dense-2.jpg"
+      ],
+      "notes": "Same conservative Hvja author/instruction group. In the retained first demonstration, one participant moves across the supine partner into a side ground hold with upper-body/arm contact. Both remain in partner contact throughout the all-frame inspected retained subset. Later reset and second demonstration remain unannotated. No force, injury or hostile intent is inferred.",
+      "limitations": [
+        "Provisional assistant visual review, not human ground truth. Contact subspans explicitly marked all-frame were inspected as every chronological decoded frame. Wider positive spans interpolate between visually consistent nearby samples; real-time video playback was not performed.",
+        "Sports/practice contact is a physical-contact proxy. Hostility, intent, injury, identity, guilt and crime are not annotated.",
+        "No model scores were opened and no detector, model, training or CUDA job was run for selection or annotation.",
+        "Actor/session independence and overlap with any publisher model pretraining remain unknown. Source author/event grouping is conservative, not proof of independence.",
+        "Copyright grants are uploader/author assertions on pinned primary Commons file pages; no independent participant/model releases or consent verification.",
+        "Original uploaded coded dimensions are verified; original camera-native raster and sensor modality are unknown. These are sports/practice videos, not certified CCTV/night/crowd operational evidence.",
+        "All unannotated margins, tails, occlusions and uncertain intervals remain unknown; audio was not used."
+      ],
+      "provenance": {
+        "sourcePageId": 153698349,
+        "sourcePageRevisionId": 1184344219,
+        "sourcePageRevisionTimestamp": "2026-03-21T04:15:19Z",
+        "sourcePagePinnedUrl": "https://commons.wikimedia.org/w/index.php?oldid=1184344219",
+        "sourceWikitextFile": "../cache/eval-wave1/positives/hon-kesa-gatame/source-wikitext.txt",
+        "sourceWikitextSha256": "ac25829e0b8b971a835f2bf7d7d60d208decaae2a2b92eae0de4eb5a1ffbd775",
+        "sourceMetadataFile": "../cache/eval-wave1/positives/hon-kesa-gatame/source.json",
+        "sourceMetadataSha256": "65641977337a246adeaa50b8a09a18fad142c3b97383da9cdb5eedf0523f36d6",
+        "uploadTimestamp": "2024-10-09T08:08:04Z",
+        "publisherSha1": "0feffc033ebd7d4bec210c46ecb08e6f2c918043",
+        "actualSourceSha256": "028cdde0e52462bf02ed94ce94b309406e661a495e6ca8f5d3c33417c5f7a0e4",
+        "actualWorkingSha256": "028cdde0e52462bf02ed94ce94b309406e661a495e6ca8f5d3c33417c5f7a0e4",
+        "sizeBytes": 25148855,
+        "transformLineage": "No media transforms; working media is the exact preserved original Commons upload. Contact-sheet downsampling and Tokyo evidence-only crop do not alter working media.",
+        "downloadReceipt": "../cache/eval-wave1/positives/hon-kesa-gatame/download.json",
+        "ptsEvidenceFile": "../cache/eval-wave1/positives/hon-kesa-gatame/source-clock.json",
+        "opencvEvidenceFile": "../cache/eval-wave1/positives/hon-kesa-gatame/decode.json",
+        "clockMapping": "sourcePtsMs = OpenCV PosMsec + constant offset, checked on every decoded frame; no nominal FPS used",
+        "openCvToSourceOffsetMs": 3.0,
+        "allFrameMappingMaxResidualMs": 3.637978807091713e-12,
+        "observedFirstSourcePtsMs": 3.0,
+        "observedLastSourcePtsMs": 25763.0,
+        "declaredEndMinusLastObservedFrameMs": 42.0,
+        "roleHashFirstByte": 219,
+        "evidenceSha256": {
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-1.jpg": "4f1b66569a13bae67ac996f4c836b0c9facb884c0b2494e5a7b4215bab4faa3b",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-2.jpg": "5787e2e935d4509ff6b94cd7cc383d622fa08e0380e72505d3bff00bc64690fb",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-1.jpg": "d46a650e38dbf523e76e2133564335b456215d97d1344f421d258b03d3efdf62",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames-2.jpg": "f35a1bf320e637932e1aac55a7a94a06260e42cb16ea9fe0df43f5adc2c3d7cf",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/dense-1.jpg": "3365787fb8995410b3d024847daa846569a41a9730aa4b21e364d5810c33f952",
+          "../cache/eval-wave1/positives/hon-kesa-gatame/dense-2.jpg": "a22b3290796f915dbe955112132929516806c808ff24311d3107eb3b30c38e92"
+        }
+      },
+      "allFramesReviewedContactIntervals": [
+        {
+          "startMs": 5923.0,
+          "endMs": 10083.0,
+          "frameCount": 105,
+          "evidenceMetadataFile": "../cache/eval-wave1/positives/hon-kesa-gatame/contact-all-frames.json",
+          "method": "Every sequentially decoded frame in contiguous selected contact subset, chronological sheets; evidence crop for Tokyo only. This is frame inspection, not real-time video playback."
+        }
+      ]
+    }
+  ],
+  "unavailableCandidates": []
+}

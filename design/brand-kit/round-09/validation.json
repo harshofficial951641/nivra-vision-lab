@@ -1,0 +1,32 @@
+[
+  {
+    "concept": "Apricot Aperture",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "sha256": "7cbdae7b341cb71066d42ed6527d0d50b092b7dee5fb8890eb6e07623fea6867"
+  },
+  {
+    "concept": "Open Iris",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "sha256": "38b6ef52a9b7dbd1f8b78ecc32f9630a7429bf074cfd25731f91cb15a50805bc"
+  },
+  {
+    "concept": "Clear View",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "sha256": "5aa6d141cf0733ce1faf2e1dca4dea5b78369357b902701ad187589b8104f7a6"
+  }
+]

@@ -1,0 +1,98 @@
+[
+  {
+    "id": "wave3-government-831170",
+    "source": "https://www.dvidshub.net/video/831170/4th-infantry-division-newcomers-physical-training-b-roll-package",
+    "url": "https://d34w7g4gy10iej.cloudfront.net/video/2202/DOD_108809547/DOD_108809547-768x432-1200k-hls_5-768x432-1200k-hls_00001.ts",
+    "author": "Traquez Coe",
+    "sourceGroup": "dvids-author:traquez coe",
+    "license": "US-government-public-domain-claim-with-DVIDS-restrictions",
+    "path": "../cache/eval-wave3/government-normals/831170-silent.mp4",
+    "sha256": "e41a99319dc9162ee2caf89d1806c8b59199cd629f2ce43db8338efe83bed9d0",
+    "durationMs": 9976.633333333333,
+    "split": "diagnostic",
+    "role": "dev",
+    "originalRole": "development",
+    "annotationStatus": "reviewed",
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "humanGroundTruth": false,
+    "annotationMethod": "Parent admitted provisional assistant every-frame 0-4s ordinary exercise annotation. One source group only, not human truth or operational accuracy.",
+    "events": [
+      {
+        "startMs": 0,
+        "endMs": 4000,
+        "targetLabel": 0,
+        "label": "ordinary-motion"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 4000,
+        "endMs": 9976.633333333333,
+        "reason": "Uninspected or insufficiently clear; sparse overview does not establish normality"
+      }
+    ],
+    "conditions": {
+      "domain": "government exercise B-roll; domain-shift control",
+      "controlDifficulty": "easier ordinary exercise",
+      "lighting": "daylight visible colour",
+      "sensor": "unverified visible-colour camera; no NIR or thermal evidence",
+      "personPixelHeights": null,
+      "visiblePersonCount": null,
+      "crowdSizeVerified": false
+    },
+    "rights": {
+      "classification": "DVIDS file-level PUBLIC DOMAIN; U.S. official government visual information claim, not CC0",
+      "policyUrl": "https://www.dvidshub.net/about/copyright",
+      "policyPinSha256": "0639befbd30b4b5e37e37fb2b8479c41b4d737b352a56da13aa09c9fc22bdc1a",
+      "sourcePageSha256": "971e4f50e3211c111a3278cced35f7595ee60c2bf96639e4982872b860c2db9e",
+      "sourcePageRetrievedAt": "2026-10-21T18:02:07.195021+00:00",
+      "authorAndUnitEvidence": "Video by Pvt. Traquez Coe 4th Infantry Division Public Affairs Office \u2714 \u2717 Subscribe 26 if (quickSubscribeIncluded == undefined) { var quickSubscribeIncluded = true; // only include this code ONCE per page $(document).ready(function() { function toggleSubscribed(data) { if (data.loggedIn === true) { $.getJSON('/alerts/checksubscribe', {'searchTerm': '76', 'searchType': 'unit'}, function(data, textStatus, xhr) { if (data.count === 0) { $('.subscribe-text').text('Subscribe'); } else { $('.subscribe-text').text('Subscribed'); } }); } else { $('.subscribe-text').text('Subscribe'); } } $(document).bind(dvids.auth.events.query, function(event, data) { toggleSubscribed(data); }); $(document).bind(dvids.auth.events.loginSuccess, function(event, data) { toggleSubscribed(data); }); $(document).bind(dvids.auth.events.logout, function(event, data) { $('.subscribe-text').text('Subscribe'); }); $(\"a.newswire-subscribe\").click(function(event) { event.preventDefault(); var element = $(this); var searchTerm = element.attr(\"id\"); var searchType = element.attr(\"alert_type\"); var href = element.attr(\"href\"); var subscribed = parseInt(element.siblings('div.subscribed-count').html()); $.ajax({ type: \"POST\", url: \"/alerts/quicksubscribe\", context: this, data: { searchTerm: searchTerm, searchType: searchType, }, success: function(data) { if (data == \"please login\") { window.location.href = href; } else if (data.result == \"error\") { UIkit.notify(data.message, {status:'danger', timeout : 0}); } else if (data.result == \"success\" && data.message == \"unsubscribed\") { element.removeClass(\"subscribed\").removeClass(\"unsubscribe\"); element.find(\"span.subscribe-text\").html(\"Subscribe\"); element.siblings('div.subscribed-count').html(subscribed - 1); element.find(\"span.bell\").show(); element.find(\"span.checkmark, span.x\").hide(); } else if (data.result == \"success\" && data.message == \"subscribed\") { element.addClass(\"subscribed\"); element.find(\"span.subscribe-text\").html(\"Subscribed\"); element.siblings('div.subscribed-count').html(subscribed + 1); element.find(\"span.bell\").hide(); element.find(\"span.checkmark\").show(); } } }); }); $(document).on(\"mouseenter\", \"a.newswire-subscribe.subscribed\", function(event) { $(this).addClass(\"unsubscribe\"); $(this).find(\"span.subscribe-text\").html(\"Unsubscribe\"); $(this).find(\"span.x\").show(); $(this).find(\"span.checkmark\").hide(); }); $(document).on(\"mouseleave\", \"a.newswire-subscribe.subscribed\", function(event) { $(this).removeClass(\"unsubscribe\"); $(this).find(\"span.subscribe-text\").html(\"Subscribed\"); $(this).find(\"span.x\").hide(); $(this).find(\"span.checkmark\").show(); }); }); } Soldiers new to the 4th Infantry Division conduct physical training (PT) at Founder's Field, Fort Carson, Colorado, Feb. 9, 2022. The PT gave Soldiers new to the division a taste of what exercising with the added elevation at Fort Carson is like. (U.S. Army photo by Pvt. Traquez Coe) VIDEO INFO Date Taken: 02.09.2022 Date Posted: 03.04.2022 17:11 Category: B-Roll Video ID: 831170 VIRIN: 220209-A-XA304-400 Filename: DOD_108809547 Length: 00:00:41 Location: FORT CARSON, COLORADO, US Video Analytics Downloads: 13 High-Res. Downloads: 13 PUBLIC DOMAIN This work, 4th Infantry Division Newcomer's Physical Training B-Roll Package , by PV2 Traquez Coe , identified by DVIDS , must comply with the restrictions shown on https://www.dvidshub.net/about/copyright . ",
+      "attribution": "Traquez Coe / DVIDS video 831170 / credited U.S. military motion imagery",
+      "reuseLimitations": [
+        "Government-employee official-duty work generally lacks U.S. copyright; file-level public-domain claim is the acquisition basis. No worldwide public-domain determination.",
+        "DVIDS does not waive privacy/publicity rights and warns some hosted visual information may include third-party IP.",
+        "No implied government endorsement; military marks may carry trademark restrictions.",
+        "Audio was not auditioned or cleared; original downloaded assets preserved, but all evidence/model working files are video-only stream-copy. No copyright music clearance inferred.",
+        "Offline visual evaluation only in this task. No separate express machine-learning training grant or checkpoint terms inferred. No public marketing use authorized."
+      ],
+      "nonEndorsementDisclaimer": "The appearance of U.S. Department of War (DoW) visual information does not imply or constitute DoW endorsement."
+    },
+    "lineage": {
+      "transformation": "FFmpeg7.1 video stream-copy remux, audio omitted; no image crop, rescale, fps conversion or re-encode in working media",
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "clockCrosswalk": {
+        "inputRawFirstPtsMs": 2033.3670000000002,
+        "silentWorkingRawFirstPtsMs": 33.0,
+        "decoderFirstPtsMs": 0.0,
+        "explanation": "Video stream-copy retains first video frame order. OpenCV POS_MSEC is normalized to first decoded frame0. FFmpeg copyts showinfo independently pins raw input and working first PTS. HLS first segment EXTINF starts0; exact correspondence to full embedded MP4/player timeline was not independently verified. Original camera timeline unknown.",
+        "annotationClock": "Milliseconds since first decoded video presentation in acquired asset; this is the clock used by events and local OpenCV reads",
+        "decoderToAnnotationOffsetMs": 0,
+        "decoderToInputRawPtsOffsetMs": 2033.3670000000002,
+        "decoderToWorkingRawPtsOffsetMs": 33.0,
+        "dvidsPlayerToAnnotationOffsetMs": null,
+        "cameraClockOffsetMs": null,
+        "timestampQuantizationToleranceMs": 1
+      },
+      "workingFileScope": "first HLS segment only",
+      "evidenceTransform": "Aspect-preserving resize into timestamped contact sheets"
+    },
+    "reviewSha256": "443554d53641562064603622c2ed125ee228f1199ed1180e683836dcccf2d7a8",
+    "evidenceHashes": {
+      "research/cache/eval-wave3/government-normals/831170-source.html": "971e4f50e3211c111a3278cced35f7595ee60c2bf96639e4982872b860c2db9e",
+      "research/cache/eval-wave3/government-normals/candidate-freeze.json": "d8f11e2452599db568285fccac65bd6d77ad472c6096e1107317283ef5c26b16",
+      "research/cache/eval-wave3/government-normals/dvids-copyright.html": "0639befbd30b4b5e37e37fb2b8479c41b4d737b352a56da13aa09c9fc22bdc1a",
+      "research/cache/eval-wave3/government-normals/rights-policy.json": "5c50ef96ade790a429acd5ebfbfddeb482b892e6dec8dfb7bab5c7fa2a039d5e",
+      "research/cache/eval-wave3/government-normals/acquisition-receipts.json": "a27f0e66030a6be63ed832b42e8d30c8bf82d33a0411214340da2b5b82c54c35",
+      "research/cache/eval-wave3/government-normals/hls-receipts.json": "f2d6b7216f3f739829269aa34ecc924ef5779a9783b8beffd8004ce4673a5abb",
+      "research/cache/eval-wave3/government-normals/decoder-evidence.json": "4b9d5453c1568faada5a6aecb13fc148184463095e2ec42221d605744a3f8743",
+      "research/cache/eval-wave3/government-normals/831170-frames-0000.jpg": "f9893709dd757b5ab12736ce3359e86b6ca0a92b5620484a58026e0eeef4e9be",
+      "research/cache/eval-wave3/government-normals/831170-frames-0016.jpg": "a36310ede70e0c64a5722c7913d7da03a3f1bb12e102d82f90722e5695c12610",
+      "research/cache/eval-wave3/government-normals/831170-frames-0032.jpg": "9b0cff9884c0e608af5488a7ecca5eea8e746518b7bb7839c502aefba5ba96e1",
+      "research/cache/eval-wave3/government-normals/831170-frames-0048.jpg": "018f54faffc28ac298a3b138c27649a54bc9b7726881feba343810959db8430b",
+      "research/cache/eval-wave3/government-normals/831170-frames-0064.jpg": "94c311a669ec643259d0b94c5d508a9f10ea9b95cd1256f27997a398ccf6359f",
+      "research/cache/eval-wave3/government-normals/831170-frames-0080.jpg": "287d391c07bbb498efd4feee5909a1139a1a910fb180baf61e29f4038dcb57f2",
+      "research/cache/eval-wave3/government-normals/831170-frames-0096.jpg": "c4befbe72b44089c0f53f7801950094eefc62796da4ef29793cec9c11b90190e",
+      "research/cache/eval-wave3/government-normals/831170-frames-0112.jpg": "9734d13bcfc68f0a28674b3e447dfec2bd13426e8f4c2294e397aeeeb03a4f66"
+    }
+  }
+]

@@ -1,0 +1,980 @@
+[
+  {
+    "id": "online-normal-01",
+    "source": "https://commons.wikimedia.org/wiki/File:Diti_hugs_Natalie.ogv",
+    "sourceGroup": "commons-author:dimitri “diti” torterat",
+    "license": "CC BY 2.0 fr",
+    "author": "Dimitri “Diti” Torterat",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0/fr/deed.en",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+    "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+    "path": "../cache/eval-wave1/negatives/neg01/original.ogv",
+    "durationMs": 10960.0,
+    "events": [
+      {
+        "startMs": 280.0,
+        "endMs": 4280.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w01",
+        "sourceStartMs": 280.0,
+        "sourceEndMs": 4280.0,
+        "sourceMinusOpenCvOffsetMs": 0.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 4280.0,
+        "endMs": 8280.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w02",
+        "sourceStartMs": 4280.0,
+        "sourceEndMs": 8280.0,
+        "sourceMinusOpenCvOffsetMs": 0.0,
+        "controlNote": null
+      }
+    ],
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "humanGroundTruth": false,
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "annotationStatus": "reviewed",
+    "annotationBasis": "Parent-authorized loader admission of PROVISIONAL assistant dense static-frame annotations only. Reviewed literal is offline runner eligibility, not human ground truth or independently verified normality.",
+    "annotationMethod": "Fresh sequential FFmpeg showinfo PTS; sequential OpenCV frame-index crosswalk. All consecutive frames from latest PTS <= window start through first PTS >= window end, inclusive. Boundary frames may provide context outside the exact window. 48 chronological frames per sheet, row-major, aspect-preserved 320x180 cells, caption source PTS ms and frame index. No subsampling. All 147 sheets were actually inspected through view_image at original sheet resolution, in chronological order. Each cell is aspect-preserved within 320x180 pixels; portrait imagery is consequently smaller. Every covering decoded frame was included, without temporal subsampling. This is static visual inspection, not real-time playback.",
+    "clockRebase": {
+      "id": "online-normal-01",
+      "eventClock": "OpenCV CAP_PROP_POS_MSEC after read",
+      "sourceClock": "acquired-file container presentation timestamp; publisher transcode where declared",
+      "sourceMinusOpenCvOffsetMs": 0.0,
+      "conversion": "OpenCV milliseconds = source PTS milliseconds - constant offset",
+      "rawSourceDurationMs": 10960.0,
+      "openCvDeclaredDurationMs": 10960.0,
+      "firstObservedSourcePtsMs": 0.0,
+      "lastObservedSourcePtsMs": 10920.0,
+      "firstOpenCvPtsMsFromVerifiedOffset": 0.0,
+      "lastOpenCvPtsMsFromVerifiedOffset": 10920.0,
+      "decodedFrameCount": 274,
+      "crosswalkPath": "service/research/cache/eval-wave1/negatives/neg01/pts-crosswalk.json",
+      "crosswalkSha256": "4d7f1436502b432161a4c8a920442f8fd4f9a5013e15acd0a875738c56a08e58",
+      "originalSequentialPtsPath": "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.json",
+      "originalSequentialPtsSha256": "e064d5b9bafb62eb4256aa0dde3d4623ff615f049c8af2e748e071820ce77e4b",
+      "denseSourceReceipt": {
+        "id": "online-normal-01",
+        "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+        "decodedFrames": 274,
+        "sourcePtsOffsetFromOpenCvMs": 0.0,
+        "ptsPath": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/sequential-pts.json",
+        "ptsSha256": "22541d69670ce5952538a7d58b0466478a0825965b3a9d92689f2ef024811ff4",
+        "logSha256": "8e3eb8268b0bad01a537f4aa564354f9d457b46ebbc9575fda54c727c1f906a5",
+        "command": [
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\venvs\\videomae457\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+          "-nostdin",
+          "-hide_banner",
+          "-threads",
+          "2",
+          "-filter_threads",
+          "1",
+          "-i",
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\cache\\eval-wave1\\negatives\\neg01\\original.ogv",
+          "-map",
+          "0:v:0",
+          "-vf",
+          "showinfo",
+          "-an",
+          "-f",
+          "null",
+          "-"
+        ]
+      },
+      "proofLimits": "Prior sequential preparation compared every OpenCV frame to matching FFmpeg source-frame PTS with constant offset tolerance <0.15ms and equal frame counts. Its pinned utility/receipt and saved sample crosswalk are validated here. Full per-frame OpenCV observations were not persisted; derived OpenCV endpoints above are explicitly offset-derived, not fresh decoder observations. No FPS-based clock or new decode."
+    },
+    "originalUnknownIntervalsSourceMs": [
+      {
+        "startMs": 0,
+        "endMs": 280.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 10760.0,
+        "endMs": 10960.0,
+        "reason": "outside retained normal evidence or uninspected tail; not negative"
+      }
+    ],
+    "originalEventsSourceMsNotAdmittedWholesale": [
+      {
+        "startMs": 280.0,
+        "endMs": 10760.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 280.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 8280.0,
+        "endMs": 10960.0,
+        "reason": "Outside admitted dense-supported interval, including uninspected tail; not negative"
+      }
+    ],
+    "denseUnknownWindowsSourceMs": [],
+    "admittedWindowsSourceMs": [
+      {
+        "windowId": "w01",
+        "startMs": 280.0,
+        "endMs": 4280.0,
+        "notes": "All consecutive frames show approach and arm opening into a bilateral embrace with a costumed figure; no directed strikes or rough play visible. Bystanders remain apart.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w02",
+        "startMs": 4280.0,
+        "endMs": 8280.0,
+        "notes": "Sustained stationary bilateral embrace; mild body overlap consistent throughout consecutive frames, with separated standing bystanders. Ordinary contact is visible, not a no-contact claim.",
+        "controlNote": null
+      }
+    ],
+    "easierControlDurationMs": 0,
+    "animalOnlyControlDurationMs": 0,
+    "conditions": {
+      "motion": "embrace and arm extension",
+      "contact": "ordinary embrace visible; not non-contact",
+      "visiblePeopleApproxRange": [
+        5,
+        9
+      ],
+      "illumination": "outdoor daylight",
+      "occlusion": "partial during embrace; background bodies overlap",
+      "sensor": "RGB visible-light; no near-IR evidence",
+      "personPixelHeight": "not measured",
+      "frameRateReported": 25.0,
+      "compression": {
+        "codec": "theora",
+        "kind": "publisher original encoded file",
+        "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+      },
+      "nativeCameraResolution": "unknown",
+      "downloadedSourceDimensions": [
+        720,
+        576
+      ]
+    },
+    "rights": {
+      "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1206753875",
+      "sourcePageRevision": {
+        "revid": 1206753875,
+        "parentid": 862979850,
+        "timestamp": "2026-05-01T21:04:01Z"
+      },
+      "metadataPath": "service/research/cache/eval-wave1/negatives/neg01/rights-source-metadata.json",
+      "metadataSha256": "b9d4108bb916dcb677e35999f5865c86c22d8d18ffec4ef7121ee4f1aab2e984",
+      "wikitextSha256": "06162fc5ae56c27e940b809cf094e12570c243007794f8030f82b17557c05214",
+      "retrievedAtUtc": "2026-10-21T17:02:11.403886+00:00",
+      "credit": "Own work (Youtube version)",
+      "attribution": "File:Diti hugs Natalie.ogv by Dimitri “Diti” Torterat; CC BY 2.0 fr; https://commons.wikimedia.org/w/index.php?oldid=1206753875; https://creativecommons.org/licenses/by/2.0/fr/deed.en",
+      "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+    },
+    "originalMedia": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "publisherSha1": "7f12cb37ea0e529d0c367ffbdb1c690524bc868c",
+      "publisherDeclaredBytes": 2816816,
+      "publishedDimensions": [
+        720,
+        576
+      ],
+      "acquired": true,
+      "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+      "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv"
+    },
+    "acquiredSource": {
+      "kind": "original",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "path": "service/research/cache/eval-wave1/negatives/neg01/original.ogv",
+      "sha256": "1fb1f3f96b875ef8528431fd9449022d5216bf441a9f27cfeb25d5902d7f94da",
+      "sizeBytes": 2816816,
+      "sourcePtsStartMs": 0.0,
+      "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg01/original-sequential-pts.json",
+      "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+      "maxPtsGapMs": 40.000000000000924
+    },
+    "transformationLineage": {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f4/Diti_hugs_Natalie.ogv",
+      "acquisition": "original bytes",
+      "publishedTranscodeMetadata": null,
+      "workingOperation": "none; working media equals acquired source bytes",
+      "localTimeOffsetMs": 0,
+      "timeScale": 1,
+      "sheetClockToContainerPtsOffsetMs": 0.0,
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "cv2Threads": 1,
+      "ffmpegThreads": 2
+    },
+    "limitations": [
+      "Assistant static-image review is not human ground truth, motion playback or proof of absence of hidden contact. Complete frame coverage does not resolve occlusion.",
+      "Aspect-preserved contact-sheet cells reduce spatial detail. Small/hidden group interactions were conservatively retained as unknown; no native-resolution visibility claim.",
+      "Only the frozen 49 candidate windows are adjudicated. Original intervals, margins and tails outside these windows are not newly approved as normal.",
+      "All development windows remain unknown. Supported windows all retain reserved-audit roles; roles must not be reassigned to obtain development negatives.",
+      "Two supported windows (8 seconds) are easier dog/handler controls, including one animal-only window (4 seconds). They do not establish hard human-motion robustness.",
+      "Source-author grouping is inherited unchanged. Actor/session independence and publisher-pretrain overlap remain unknown.",
+      "No accuracy, operational camera-hour, 50-100-person crowd, near-IR, thermal or low-light colour CCTV capability claim. No identity, intent, injury, crime or guilt inference.",
+      "Source rights/attribution and transformation lineage remain those in the pinned original bundle. No new rights clearance or participant releases are implied."
+    ],
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w01-p00.jpg",
+        "sha256": "da39b4112cf53c341bc46d1270a4f2f9b12991587935e3106766b1c0b411e355",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w01-p01.jpg",
+        "sha256": "57396b8c77fbdb4ec6ada47e4107ffbdd6a11ffd5d13769d428a51a626a0fad7",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w01-p02.jpg",
+        "sha256": "038a41d70f0ce266988c2f1363b7fa583dc2e855ad34a5fae752efcca866a7da",
+        "frameCount": 5
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w02-p00.jpg",
+        "sha256": "f0db39ce289e78fa5d09f72fc02b670d96353237e0115aca903de60bcf9fbddb",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w02-p01.jpg",
+        "sha256": "cb88ad552ddbb13354993d54e5079a6bb255b691552d2401270b427d992cc137",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-01/w02-p02.jpg",
+        "sha256": "e6bbe7169153186ed14880c57bec5dc0df838f081acd8a24190680f02ca3aac8",
+        "frameCount": 5
+      }
+    ],
+    "reviewProvenance": [
+      {
+        "path": "service/research/evaluation/wave1-negative-review.json",
+        "sha256": "e90d7bf4867fc0f989a95df4ce234e4b431d66c0bdaf16b3d4ce1d4512e4c9b4"
+      },
+      {
+        "path": "service/research/evaluation/wave1-negative-dense-review.json",
+        "sha256": "7bbd390f5a8301edd7df854d75b385181505d9274a565fc7c1b92506113e99d6"
+      },
+      {
+        "path": "service/research/runs/online-negative-parent-preflight-v1.json",
+        "sha256": "6a1ed32fbbe3ef6bffa645ebdd437bd6eeaf6350f62a7317421306f75d362f01"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/coverage-manifest.json",
+        "sha256": "412dd08c4f89f13652ab860befe23beeb769707a49ac78a060fd92207b4505d7"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/validation.json",
+        "sha256": "e2dae71d977c90e3b85f30b9cac4fda2a5bc82a86e672ab339ec8a4373974aac"
+      }
+    ]
+  },
+  {
+    "id": "online-normal-03",
+    "source": "https://commons.wikimedia.org/wiki/File:Chinese_man_dancing.webm",
+    "sourceGroup": "commons-author:nicholas gemini",
+    "license": "CC BY-SA 4.0",
+    "author": "Nicholas Gemini",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Chinese_man_dancing.webm/Chinese_man_dancing.webm.480p.vp9.webm",
+    "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+    "path": "../cache/eval-wave1/negatives/neg03/published-transcode.webm",
+    "durationMs": 27710.0,
+    "events": [
+      {
+        "startMs": 267.0,
+        "endMs": 4267.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w03",
+        "sourceStartMs": 279.0,
+        "sourceEndMs": 4279.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 4267.0,
+        "endMs": 8267.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w04",
+        "sourceStartMs": 4279.0,
+        "sourceEndMs": 8279.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 8267.0,
+        "endMs": 12267.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w05",
+        "sourceStartMs": 8279.0,
+        "sourceEndMs": 12279.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 16780.0,
+        "endMs": 20780.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w06",
+        "sourceStartMs": 16792.0,
+        "sourceEndMs": 20792.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      },
+      {
+        "startMs": 20780.0,
+        "endMs": 24780.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w07",
+        "sourceStartMs": 20792.0,
+        "sourceEndMs": 24792.0,
+        "sourceMinusOpenCvOffsetMs": 12.0,
+        "controlNote": null
+      }
+    ],
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "humanGroundTruth": false,
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "annotationStatus": "reviewed",
+    "annotationBasis": "Parent-authorized loader admission of PROVISIONAL assistant dense static-frame annotations only. Reviewed literal is offline runner eligibility, not human ground truth or independently verified normality.",
+    "annotationMethod": "Fresh sequential FFmpeg showinfo PTS; sequential OpenCV frame-index crosswalk. All consecutive frames from latest PTS <= window start through first PTS >= window end, inclusive. Boundary frames may provide context outside the exact window. 48 chronological frames per sheet, row-major, aspect-preserved 320x180 cells, caption source PTS ms and frame index. No subsampling. All 147 sheets were actually inspected through view_image at original sheet resolution, in chronological order. Each cell is aspect-preserved within 320x180 pixels; portrait imagery is consequently smaller. Every covering decoded frame was included, without temporal subsampling. This is static visual inspection, not real-time playback.",
+    "clockRebase": {
+      "id": "online-normal-03",
+      "eventClock": "OpenCV CAP_PROP_POS_MSEC after read",
+      "sourceClock": "acquired-file container presentation timestamp; publisher transcode where declared",
+      "sourceMinusOpenCvOffsetMs": 12.0,
+      "conversion": "OpenCV milliseconds = source PTS milliseconds - constant offset",
+      "rawSourceDurationMs": 27722.0,
+      "openCvDeclaredDurationMs": 27710.0,
+      "firstObservedSourcePtsMs": 12.0,
+      "lastObservedSourcePtsMs": 27689.0,
+      "firstOpenCvPtsMsFromVerifiedOffset": 0.0,
+      "lastOpenCvPtsMsFromVerifiedOffset": 27677.0,
+      "decodedFrameCount": 827,
+      "crosswalkPath": "service/research/cache/eval-wave1/negatives/neg03/pts-crosswalk.json",
+      "crosswalkSha256": "724ae837efbda8062a4e272f4658497a2bbcd179ce766162db2a7e10ebd89929",
+      "originalSequentialPtsPath": "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.json",
+      "originalSequentialPtsSha256": "cf1ad6684705f93faeebe5577268c52db6b444d4d42e0ca7635a308c3005c241",
+      "denseSourceReceipt": {
+        "id": "online-normal-03",
+        "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+        "decodedFrames": 827,
+        "sourcePtsOffsetFromOpenCvMs": 12.0,
+        "ptsPath": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/sequential-pts.json",
+        "ptsSha256": "dcc832a02e2241fe35a7e580e3671e4ede811c9debd26782addde94b8dcb2ed5",
+        "logSha256": "59b43276910332dbde92314d8b50e4cd309788e2d735d9cd18a5327b6ece9326",
+        "command": [
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\venvs\\videomae457\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+          "-nostdin",
+          "-hide_banner",
+          "-threads",
+          "2",
+          "-filter_threads",
+          "1",
+          "-i",
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\cache\\eval-wave1\\negatives\\neg03\\published-transcode.webm",
+          "-map",
+          "0:v:0",
+          "-vf",
+          "showinfo",
+          "-an",
+          "-f",
+          "null",
+          "-"
+        ]
+      },
+      "proofLimits": "Prior sequential preparation compared every OpenCV frame to matching FFmpeg source-frame PTS with constant offset tolerance <0.15ms and equal frame counts. Its pinned utility/receipt and saved sample crosswalk are validated here. Full per-frame OpenCV observations were not persisted; derived OpenCV endpoints above are explicitly offset-derived, not fresh decoder observations. No FPS-based clock or new decode."
+    },
+    "originalUnknownIntervalsSourceMs": [
+      {
+        "startMs": 0,
+        "endMs": 279.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 14285.0,
+        "endMs": 16792.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 27288.0,
+        "endMs": 27722.0,
+        "reason": "outside retained normal evidence or uninspected tail; not negative"
+      }
+    ],
+    "originalEventsSourceMsNotAdmittedWholesale": [
+      {
+        "startMs": 279.0,
+        "endMs": 14285.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      },
+      {
+        "startMs": 16792.0,
+        "endMs": 27288.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 267.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 12267.0,
+        "endMs": 16780.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 24780.0,
+        "endMs": 27710.0,
+        "reason": "Outside admitted dense-supported interval, including uninspected tail; not negative"
+      }
+    ],
+    "denseUnknownWindowsSourceMs": [],
+    "admittedWindowsSourceMs": [
+      {
+        "windowId": "w03",
+        "startMs": 279.0,
+        "endMs": 4279.0,
+        "notes": "Single foreground person gestures while holding a small device. Camera rolls and produces blur, but no second interacting person or contact sequence is visible across all frames.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w04",
+        "startMs": 4279.0,
+        "endMs": 8279.0,
+        "notes": "Single foreground person repeatedly raises and sweeps one arm while holding a device in the other. Camera rolls back upright; no person-directed contact sequence visible.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w05",
+        "startMs": 8279.0,
+        "endMs": 12279.0,
+        "notes": "Foreground person crosses/sweeps own forearms and handles a device. A partial arm at right edge remains separate; no directed person-to-person contact visible.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w06",
+        "startMs": 16792.0,
+        "endMs": 20792.0,
+        "notes": "Foreground person holds a device near face, makes small gestures, then examines/handles it; no second interacting person or contact visible in consecutive frames.",
+        "controlNote": null
+      },
+      {
+        "windowId": "w07",
+        "startMs": 20792.0,
+        "endMs": 24792.0,
+        "notes": "Device handling and touching own chin, then turning toward counter. Partial edge arm stays separate; no person-directed contact sequence visible.",
+        "controlNote": null
+      }
+    ],
+    "easierControlDurationMs": 0,
+    "animalOnlyControlDurationMs": 0,
+    "conditions": {
+      "motion": "solo fast arm gestures then device handling",
+      "contact": "no person-to-person contact apparent in retained intervals",
+      "visiblePeopleApproxRange": [
+        1,
+        2
+      ],
+      "illumination": "indoor colour under shop lighting",
+      "occlusion": "passer crossing retained as unknown",
+      "sensor": "RGB visible-light; no near-IR evidence",
+      "personPixelHeight": "not measured",
+      "frameRateReported": 29.916666666666668,
+      "compression": {
+        "codec": "vp9",
+        "kind": "publisher-generated lossy transcode",
+        "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+      },
+      "nativeCameraResolution": "unknown",
+      "downloadedSourceDimensions": [
+        854,
+        480
+      ]
+    },
+    "rights": {
+      "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=856725232",
+      "sourcePageRevision": {
+        "revid": 856725232,
+        "parentid": 469995861,
+        "timestamp": "2024-02-29T03:44:03Z"
+      },
+      "metadataPath": "service/research/cache/eval-wave1/negatives/neg03/rights-source-metadata.json",
+      "metadataSha256": "07ac508d17107ac89532b5f332df9b221a8a176a22f96727d1bcdf25b33dec9d",
+      "wikitextSha256": "4b1dc140630d4c4d13ac0e37ace1b04b3e860e224f1d3f7830ff9818af02a76b",
+      "retrievedAtUtc": "2026-10-21T17:02:11.436910+00:00",
+      "credit": "Own work",
+      "attribution": "File:Chinese man dancing.webm by Nicholas Gemini; CC BY-SA 4.0; https://commons.wikimedia.org/w/index.php?oldid=856725232; https://creativecommons.org/licenses/by-sa/4.0",
+      "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+    },
+    "originalMedia": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Chinese_man_dancing.webm",
+      "publisherSha1": "49ff6794e2f58ede97aadbe0e31abe43b40e5b31",
+      "publisherDeclaredBytes": 7943561,
+      "publishedDimensions": [
+        1280,
+        720
+      ],
+      "acquired": false,
+      "sha256": null,
+      "path": null
+    },
+    "acquiredSource": {
+      "kind": "published-transcode",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/0/0e/Chinese_man_dancing.webm/Chinese_man_dancing.webm.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg03/published-transcode.webm",
+      "sha256": "3935c1ecdbc5da7eb2aeb19411542163beed39ee1855338242a25f18f2e9c02d",
+      "sizeBytes": 4670100,
+      "sourcePtsStartMs": 12.0,
+      "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg03/original-sequential-pts.json",
+      "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+      "maxPtsGapMs": 100.00000000000009
+    },
+    "transformationLineage": {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Chinese_man_dancing.webm",
+      "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+      "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+      "workingOperation": "none; working media equals acquired source bytes",
+      "localTimeOffsetMs": 0,
+      "timeScale": 1,
+      "sheetClockToContainerPtsOffsetMs": 12.0,
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "cv2Threads": 1,
+      "ffmpegThreads": 2
+    },
+    "limitations": [
+      "Assistant static-image review is not human ground truth, motion playback or proof of absence of hidden contact. Complete frame coverage does not resolve occlusion.",
+      "Aspect-preserved contact-sheet cells reduce spatial detail. Small/hidden group interactions were conservatively retained as unknown; no native-resolution visibility claim.",
+      "Only the frozen 49 candidate windows are adjudicated. Original intervals, margins and tails outside these windows are not newly approved as normal.",
+      "All development windows remain unknown. Supported windows all retain reserved-audit roles; roles must not be reassigned to obtain development negatives.",
+      "Two supported windows (8 seconds) are easier dog/handler controls, including one animal-only window (4 seconds). They do not establish hard human-motion robustness.",
+      "Source-author grouping is inherited unchanged. Actor/session independence and publisher-pretrain overlap remain unknown.",
+      "No accuracy, operational camera-hour, 50-100-person crowd, near-IR, thermal or low-light colour CCTV capability claim. No identity, intent, injury, crime or guilt inference.",
+      "Source rights/attribution and transformation lineage remain those in the pinned original bundle. No new rights clearance or participant releases are implied."
+    ],
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w03-p00.jpg",
+        "sha256": "4c3975a99a929d360a982da901cc917a82c09edb6b5370cb52b0587700933246",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w03-p01.jpg",
+        "sha256": "6874484994ff2308b55522a347cd347dde5d6fccd202be4b15385f4273587aff",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w03-p02.jpg",
+        "sha256": "0a2b42dcd983da436d189718a904a8dd455e492262a49ab2ddefc82956a8e01b",
+        "frameCount": 23
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w04-p00.jpg",
+        "sha256": "43784621cd6b943966f90a8d335ecbe812fe34b23628d153545b4d8fbd550ca0",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w04-p01.jpg",
+        "sha256": "1fde73fa587f8a1d8f4e13d5227dfdf82a4e45e42b48496359f123078d75c7de",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w04-p02.jpg",
+        "sha256": "52664d41d5eb63b9941b509a0dfe111667719295b3ad0aa60efa4b2cde9c1ea2",
+        "frameCount": 26
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w05-p00.jpg",
+        "sha256": "fb69035df7a3bfd70ca29fc353eda277e7e80046e48ff2a4db4a9c75ab2efb8e",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w05-p01.jpg",
+        "sha256": "6b01093d1cf7e5ad262dc6bb4402e7a9ecf58b166b3be36974f8eab55c90d020",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w05-p02.jpg",
+        "sha256": "645c970814805fb8535154ee37f40215c43c9c4ca809edc6e74cde5ed394c7fc",
+        "frameCount": 25
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w06-p00.jpg",
+        "sha256": "f0179df88ca85732cc9d385eb3ee2cd97ffe7e044511284edf7cb28557a5bbbe",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w06-p01.jpg",
+        "sha256": "1ac22fcaa8f92880d39e43cf27b130a57384459512752f85a2d607e5b72bef62",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w06-p02.jpg",
+        "sha256": "0393bf54fa77c10e57e2e9a14d53db2c25a7b159eee4d8b053ce04aba9fa93f2",
+        "frameCount": 25
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w07-p00.jpg",
+        "sha256": "41e2e2fa86b20cd5f30111aa48e63feaf715b1fdc7754aaed92b7ca4dd42a9f9",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w07-p01.jpg",
+        "sha256": "0b3a0a01120f7debed0d925fab24a17a956637387d45e856dcae22367ac71b1c",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-03/w07-p02.jpg",
+        "sha256": "5b748d37b08cb28ae8a037dfc95558b6ed072dd35562866548f26a4ac98fd7e5",
+        "frameCount": 26
+      }
+    ],
+    "reviewProvenance": [
+      {
+        "path": "service/research/evaluation/wave1-negative-review.json",
+        "sha256": "e90d7bf4867fc0f989a95df4ce234e4b431d66c0bdaf16b3d4ce1d4512e4c9b4"
+      },
+      {
+        "path": "service/research/evaluation/wave1-negative-dense-review.json",
+        "sha256": "7bbd390f5a8301edd7df854d75b385181505d9274a565fc7c1b92506113e99d6"
+      },
+      {
+        "path": "service/research/runs/online-negative-parent-preflight-v1.json",
+        "sha256": "6a1ed32fbbe3ef6bffa645ebdd437bd6eeaf6350f62a7317421306f75d362f01"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/coverage-manifest.json",
+        "sha256": "412dd08c4f89f13652ab860befe23beeb769707a49ac78a060fd92207b4505d7"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/validation.json",
+        "sha256": "e2dae71d977c90e3b85f30b9cac4fda2a5bc82a86e672ab339ec8a4373974aac"
+      }
+    ]
+  },
+  {
+    "id": "online-normal-07",
+    "source": "https://commons.wikimedia.org/wiki/File:Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+    "sourceGroup": "commons-author:sage ross",
+    "license": "CC BY-SA 3.0",
+    "author": "Sage Ross",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv/Dog_walking_in_the_Mission_in_San_Francisco.ogv.480p.vp9.webm",
+    "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+    "path": "../cache/eval-wave1/negatives/neg07/published-transcode.webm",
+    "durationMs": 16834.0,
+    "events": [
+      {
+        "startMs": 4250.0,
+        "endMs": 8250.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w38",
+        "sourceStartMs": 4264.0,
+        "sourceEndMs": 8264.0,
+        "sourceMinusOpenCvOffsetMs": 14.0,
+        "controlNote": "Animal-only ordinary scene; no visible person. Easier control, not a hard human-motion negative."
+      },
+      {
+        "startMs": 12250.0,
+        "endMs": 16250.0,
+        "targetLabel": 0,
+        "label": "ordinary-motion",
+        "windowId": "w40",
+        "sourceStartMs": 12264.0,
+        "sourceEndMs": 16264.0,
+        "sourceMinusOpenCvOffsetMs": 14.0,
+        "controlNote": "Ordinary dog/handler walking; easier control."
+      }
+    ],
+    "split": "diagnostic",
+    "role": "reserved",
+    "originalRole": "reserved-audit",
+    "humanGroundTruth": false,
+    "originalAnnotationStatus": "provisional-assistant-review",
+    "annotationStatus": "reviewed",
+    "annotationBasis": "Parent-authorized loader admission of PROVISIONAL assistant dense static-frame annotations only. Reviewed literal is offline runner eligibility, not human ground truth or independently verified normality.",
+    "annotationMethod": "Fresh sequential FFmpeg showinfo PTS; sequential OpenCV frame-index crosswalk. All consecutive frames from latest PTS <= window start through first PTS >= window end, inclusive. Boundary frames may provide context outside the exact window. 48 chronological frames per sheet, row-major, aspect-preserved 320x180 cells, caption source PTS ms and frame index. No subsampling. All 147 sheets were actually inspected through view_image at original sheet resolution, in chronological order. Each cell is aspect-preserved within 320x180 pixels; portrait imagery is consequently smaller. Every covering decoded frame was included, without temporal subsampling. This is static visual inspection, not real-time playback.",
+    "clockRebase": {
+      "id": "online-normal-07",
+      "eventClock": "OpenCV CAP_PROP_POS_MSEC after read",
+      "sourceClock": "acquired-file container presentation timestamp; publisher transcode where declared",
+      "sourceMinusOpenCvOffsetMs": 14.0,
+      "conversion": "OpenCV milliseconds = source PTS milliseconds - constant offset",
+      "rawSourceDurationMs": 16848.0,
+      "openCvDeclaredDurationMs": 16834.0,
+      "firstObservedSourcePtsMs": 14.0,
+      "lastObservedSourcePtsMs": 16806.0,
+      "firstOpenCvPtsMsFromVerifiedOffset": 0.0,
+      "lastOpenCvPtsMsFromVerifiedOffset": 16792.0,
+      "decodedFrameCount": 404,
+      "crosswalkPath": "service/research/cache/eval-wave1/negatives/neg07/pts-crosswalk.json",
+      "crosswalkSha256": "8e92fa0d7b784ef0054bf1c4f946abdddfcc438fa426145f2631eaabaa21fc7e",
+      "originalSequentialPtsPath": "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.json",
+      "originalSequentialPtsSha256": "09a8dd1614f401f01f54d61151c23cb3bcd5fee5cd79a1207b650e66d1f37e87",
+      "denseSourceReceipt": {
+        "id": "online-normal-07",
+        "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+        "decodedFrames": 404,
+        "sourcePtsOffsetFromOpenCvMs": 14.0,
+        "ptsPath": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/sequential-pts.json",
+        "ptsSha256": "a688865f753a8b6b6b31c1a458c02cd2e8a6405296bc2c6bc2865a5785f56679",
+        "logSha256": "add3164b47148bdbb387bc1cfb34d2b4ddd1cdee27e2792ed575ca5674ea2d3e",
+        "command": [
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\venvs\\videomae457\\Lib\\site-packages\\imageio_ffmpeg\\binaries\\ffmpeg-win-x86_64-v7.1.exe",
+          "-nostdin",
+          "-hide_banner",
+          "-threads",
+          "2",
+          "-filter_threads",
+          "1",
+          "-i",
+          "C:\\Users\\harsh.DESKTOP-VE90R6D\\Downloads\\Nivra\\nivra-vision-lab\\service\\research\\cache\\eval-wave1\\negatives\\neg07\\published-transcode.webm",
+          "-map",
+          "0:v:0",
+          "-vf",
+          "showinfo",
+          "-an",
+          "-f",
+          "null",
+          "-"
+        ]
+      },
+      "proofLimits": "Prior sequential preparation compared every OpenCV frame to matching FFmpeg source-frame PTS with constant offset tolerance <0.15ms and equal frame counts. Its pinned utility/receipt and saved sample crosswalk are validated here. Full per-frame OpenCV observations were not persisted; derived OpenCV endpoints above are explicitly offset-derived, not fresh decoder observations. No FPS-based clock or new decode."
+    },
+    "originalUnknownIntervalsSourceMs": [
+      {
+        "startMs": 0,
+        "endMs": 264.0,
+        "reason": "outside retained normal evidence or ambiguous/occluded; not negative"
+      },
+      {
+        "startMs": 16764.0,
+        "endMs": 16848.0,
+        "reason": "outside retained normal evidence or uninspected tail; not negative"
+      }
+    ],
+    "originalEventsSourceMsNotAdmittedWholesale": [
+      {
+        "startMs": 264.0,
+        "endMs": 16764.0,
+        "label": "ordinary-motion",
+        "targetLabel": 0,
+        "physicalFightGroundTruth": false,
+        "basis": "sample-supported provisional ordinary/nonfight imagery; not uninterrupted human observation"
+      }
+    ],
+    "unknownIntervals": [
+      {
+        "startMs": 0,
+        "endMs": 4250.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 8250.0,
+        "endMs": 12250.0,
+        "reason": "Outside admitted dense-supported interval; not negative"
+      },
+      {
+        "startMs": 16250.0,
+        "endMs": 16834.0,
+        "reason": "Outside admitted dense-supported interval, including uninspected tail; not negative"
+      }
+    ],
+    "denseUnknownWindowsSourceMs": [
+      {
+        "windowId": "w37",
+        "startMs": 264.0,
+        "endMs": 4264.0,
+        "notes": "Ordinary dog walking is visible initially, but camera pans away and crops the accompanying person during the final part; complete human-motion coverage is unavailable."
+      },
+      {
+        "windowId": "w39",
+        "startMs": 8264.0,
+        "endMs": 12264.0,
+        "notes": "Dog walking continues, but handler reenters initially as cropped arm/torso and road-side subjects are small. Human coverage is incomplete for a full negative window."
+      }
+    ],
+    "admittedWindowsSourceMs": [
+      {
+        "windowId": "w38",
+        "startMs": 4264.0,
+        "endMs": 8264.0,
+        "notes": "Entire window follows a walking dog beside parked vehicles; no visible people or person-to-person interaction. Animal-only ordinary-scene control, not a hard human-interaction negative; no claim about offscreen handler.",
+        "controlNote": "Animal-only ordinary scene; no visible person. Easier control, not a hard human-motion negative."
+      },
+      {
+        "windowId": "w40",
+        "startMs": 12264.0,
+        "endMs": 16264.0,
+        "notes": "Handler walks behind leashed dog and briefly pauses; distant cyclist remains separated. Consecutive frames show ordinary walking with no person-directed contact. Easier ordinary-motion control.",
+        "controlNote": "Ordinary dog/handler walking; easier control."
+      }
+    ],
+    "easierControlDurationMs": 8000,
+    "animalOnlyControlDurationMs": 4000,
+    "conditions": {
+      "motion": "walking, dog motion, camera pan and passing traffic",
+      "contact": "no person-to-person contact apparent",
+      "visiblePeopleApproxRange": [
+        0,
+        3
+      ],
+      "illumination": "outdoor daylight",
+      "occlusion": "person often outside frame while camera follows dog",
+      "sensor": "RGB visible-light; no IR evidence",
+      "personPixelHeight": "not measured",
+      "frameRateReported": 24.0,
+      "compression": {
+        "codec": "vp9",
+        "kind": "publisher-generated lossy transcode",
+        "bitrateOrCompressionQuality": "publisher transcode bandwidth in frozen-transcode-plan.json; original encoder settings unknown"
+      },
+      "nativeCameraResolution": "unknown",
+      "downloadedSourceDimensions": [
+        854,
+        480
+      ]
+    },
+    "rights": {
+      "sourcePagePin": "https://commons.wikimedia.org/w/index.php?oldid=1207923663",
+      "sourcePageRevision": {
+        "revid": 1207923663,
+        "parentid": 724955786,
+        "timestamp": "2026-05-03T20:26:14Z"
+      },
+      "metadataPath": "service/research/cache/eval-wave1/negatives/neg07/rights-source-metadata.json",
+      "metadataSha256": "90d286f00db32b12ac8737097e399bb2c7ca0b158eda7a657c2637999b2f1878",
+      "wikitextSha256": "4dea9742e772c2f98d6b3bedc2fa39508a9ba1b34671d8b3c3eaac020b66dae4",
+      "retrievedAtUtc": "2026-10-21T17:02:11.450445+00:00",
+      "credit": "Own work",
+      "attribution": "File:Dog walking in the Mission in San Francisco.ogv by Sage Ross; CC BY-SA 3.0; https://commons.wikimedia.org/w/index.php?oldid=1207923663; https://creativecommons.org/licenses/by-sa/3.0",
+      "changes": "publisher transcode where stated; contact-sheet/enlargement derivatives for review. No local media trim, time stretch, crop or synthetic degradation. Derivative evidence shared under the source CC licence where required."
+    },
+    "originalMedia": {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+      "publisherSha1": "966fbd7f625d27180e148dd253e36d0700808bbd",
+      "publisherDeclaredBytes": 10899300,
+      "publishedDimensions": [
+        1280,
+        720
+      ],
+      "acquired": false,
+      "sha256": null,
+      "path": null
+    },
+    "acquiredSource": {
+      "kind": "published-transcode",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv/Dog_walking_in_the_Mission_in_San_Francisco.ogv.480p.vp9.webm",
+      "path": "service/research/cache/eval-wave1/negatives/neg07/published-transcode.webm",
+      "sha256": "3c3a2ffdeb1ceaef3e9de8d6ab0b4b516fb4ef4c83fb902052ed23e489a8d1e6",
+      "sizeBytes": 2640195,
+      "sourcePtsStartMs": 14.0,
+      "sequentialPtsFile": "service/research/cache/eval-wave1/negatives/neg07/original-sequential-pts.json",
+      "ptsFilenameNote": "original-sequential-pts is a historical utility filename; it contains actual acquired-source PTS, including publisher transcodes.",
+      "maxPtsGapMs": 42.00000000000159
+    },
+    "transformationLineage": {
+      "originalUrl": "https://upload.wikimedia.org/wikipedia/commons/6/67/Dog_walking_in_the_Mission_in_San_Francisco.ogv",
+      "acquisition": "published Wikimedia transcode linked by Commons videoinfo API",
+      "publishedTranscodeMetadata": "service/research/cache/eval-wave1/negatives/published-transcode-metadata.json",
+      "workingOperation": "none; working media equals acquired source bytes",
+      "localTimeOffsetMs": 0,
+      "timeScale": 1,
+      "sheetClockToContainerPtsOffsetMs": 14.0,
+      "ffmpegSha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3",
+      "cv2Threads": 1,
+      "ffmpegThreads": 2
+    },
+    "limitations": [
+      "Assistant static-image review is not human ground truth, motion playback or proof of absence of hidden contact. Complete frame coverage does not resolve occlusion.",
+      "Aspect-preserved contact-sheet cells reduce spatial detail. Small/hidden group interactions were conservatively retained as unknown; no native-resolution visibility claim.",
+      "Only the frozen 49 candidate windows are adjudicated. Original intervals, margins and tails outside these windows are not newly approved as normal.",
+      "All development windows remain unknown. Supported windows all retain reserved-audit roles; roles must not be reassigned to obtain development negatives.",
+      "Two supported windows (8 seconds) are easier dog/handler controls, including one animal-only window (4 seconds). They do not establish hard human-motion robustness.",
+      "Source-author grouping is inherited unchanged. Actor/session independence and publisher-pretrain overlap remain unknown.",
+      "No accuracy, operational camera-hour, 50-100-person crowd, near-IR, thermal or low-light colour CCTV capability claim. No identity, intent, injury, crime or guilt inference.",
+      "Source rights/attribution and transformation lineage remain those in the pinned original bundle. No new rights clearance or participant releases are implied."
+    ],
+    "evidenceFiles": [
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w38-p00.jpg",
+        "sha256": "692dc8c6580db35b56587a30fbd99d1913fcdc9816d7a74d21df852ed3819c95",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w38-p01.jpg",
+        "sha256": "17ec6a116c32af86704e476416b610407b395ef13307593dfe50f10a4f02366e",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w38-p02.jpg",
+        "sha256": "138bc94ad3c4f20d8e2d4151e1441b714f21bdc59dc1924d8d539a7e751ea28e",
+        "frameCount": 1
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w40-p00.jpg",
+        "sha256": "d5df82ef481744ae6a8834ef2a39c88d7cd21f10becec6bd1831656d42ab1d59",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w40-p01.jpg",
+        "sha256": "5406538a640c9a9e542063e071e85cce9cb0ffce63e06b3938d4fa3a62847ed9",
+        "frameCount": 48
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/online-normal-07/w40-p02.jpg",
+        "sha256": "ad432b45cbce540da85cfe2dcc17403450b6f3794086841bff09bfbac4da5957",
+        "frameCount": 1
+      }
+    ],
+    "reviewProvenance": [
+      {
+        "path": "service/research/evaluation/wave1-negative-review.json",
+        "sha256": "e90d7bf4867fc0f989a95df4ce234e4b431d66c0bdaf16b3d4ce1d4512e4c9b4"
+      },
+      {
+        "path": "service/research/evaluation/wave1-negative-dense-review.json",
+        "sha256": "7bbd390f5a8301edd7df854d75b385181505d9274a565fc7c1b92506113e99d6"
+      },
+      {
+        "path": "service/research/runs/online-negative-parent-preflight-v1.json",
+        "sha256": "6a1ed32fbbe3ef6bffa645ebdd437bd6eeaf6350f62a7317421306f75d362f01"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/coverage-manifest.json",
+        "sha256": "412dd08c4f89f13652ab860befe23beeb769707a49ac78a060fd92207b4505d7"
+      },
+      {
+        "path": "service/research/cache/eval-wave1/negatives/dense-review-v1/validation.json",
+        "sha256": "e2dae71d977c90e3b85f30b9cac4fda2a5bc82a86e672ab339ec8a4373974aac"
+      }
+    ]
+  }
+]

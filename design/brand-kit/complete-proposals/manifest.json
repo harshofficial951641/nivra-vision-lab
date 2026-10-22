@@ -1,0 +1,95 @@
+[
+  {
+    "id": "01",
+    "slug": "insight",
+    "name": "Insight",
+    "font": "Manrope",
+    "fontdir": "manrope",
+    "source": "exec-af026935-f23a-45e6-8d10-9205cc93e268.png",
+    "colors": [
+      "#234AE8",
+      "#DFF568",
+      "#111D32",
+      "#F4F7FF"
+    ],
+    "names": [
+      "Electric blue",
+      "Lime",
+      "Ink",
+      "Cool white"
+    ],
+    "crop": [
+      55,
+      145,
+      835,
+      235
+    ],
+    "idea": "A compact viewing aperture makes observation the identifying feature.",
+    "graphic": "An enlarged aperture creates a window into a real place. Use one crop per composition, with a broad quiet field around it.",
+    "tone": "Direct / perceptive / confident",
+    "balance": "Blue 40% / white 35% / ink 15% / lime 10%",
+    "risk": "The optical mark needs a final distinctiveness check. Refine the aperture and outer contour before producing master vectors."
+  },
+  {
+    "id": "02",
+    "slug": "assurance",
+    "name": "Assurance",
+    "font": "Plus Jakarta Sans",
+    "fontdir": "plusjakartasans",
+    "source": "exec-159e193c-30ed-4123-88d2-1a639d192587.png",
+    "colors": [
+      "#5425B9",
+      "#FFB071",
+      "#211331",
+      "#FAF7FF"
+    ],
+    "names": [
+      "Violet",
+      "Apricot",
+      "Aubergine",
+      "Paper"
+    ],
+    "crop": [
+      70,
+      108,
+      425,
+      262
+    ],
+    "idea": "A broad protective upper form holds a clear line of sight above a compact base.",
+    "graphic": "Use a broad upper curve and an open interval. Carry that geometry into crops and separators without repeating rows of little symbols.",
+    "tone": "Protective / composed / attentive",
+    "balance": "Paper 40% / violet 30% / aubergine 20% / apricot 10%",
+    "risk": "The protected-view symbol can suggest an eye or canopy. Keep the two parts consistent and verify recognition at small sizes."
+  },
+  {
+    "id": "03",
+    "slug": "vigil",
+    "name": "Vigil",
+    "font": "DM Sans",
+    "fontdir": "dmsans",
+    "source": "exec-9919fd4a-bdfa-4801-b9b9-c5450b2484b7.png",
+    "colors": [
+      "#006A50",
+      "#F4F36D",
+      "#102B23",
+      "#F5FAF6"
+    ],
+    "names": [
+      "Emerald",
+      "Lemon",
+      "Deep green",
+      "Porcelain"
+    ],
+    "crop": [
+      48,
+      72,
+      510,
+      432
+    ],
+    "idea": "An upright opening and observed point create a firm, watchful presence.",
+    "graphic": "Use an offset plane and a generous opening. Keep the composition anchored to a steady vertical edge; one lemon detail draws attention.",
+    "tone": "Watchful / capable / grounded",
+    "balance": "Emerald 35% / porcelain 30% / deep green 25% / lemon 10%",
+    "risk": "The upright mark may evoke camera hardware. It is a surveillance concept, not a claim that NIVRA manufactures a camera."
+  }
+]

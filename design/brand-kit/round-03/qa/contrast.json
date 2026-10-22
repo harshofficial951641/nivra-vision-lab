@@ -1,0 +1,107 @@
+[
+  {
+    "direction": "Open Moment",
+    "pairs": [
+      {
+        "foreground": "#172329",
+        "background": "#F4F7F4",
+        "ratio": 14.87,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#F4F7F4",
+        "background": "#113D42",
+        "ratio": 10.99,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#113D42",
+        "background": "#59D8C3",
+        "ratio": 6.8,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#F4F7F4",
+        "background": "#59D8C3",
+        "ratio": 1.62,
+        "normal_text_AA": false
+      },
+      {
+        "foreground": "#59D8C3",
+        "background": "#113D42",
+        "ratio": 6.8,
+        "normal_text_AA": true
+      }
+    ]
+  },
+  {
+    "direction": "Quiet Pivot",
+    "pairs": [
+      {
+        "foreground": "#201B25",
+        "background": "#F4F1F7",
+        "ratio": 15.08,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#F4F1F7",
+        "background": "#32233F",
+        "ratio": 12.97,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#32233F",
+        "background": "#B9A0EE",
+        "ratio": 6.44,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#F4F1F7",
+        "background": "#B9A0EE",
+        "ratio": 2.01,
+        "normal_text_AA": false
+      },
+      {
+        "foreground": "#B9A0EE",
+        "background": "#32233F",
+        "ratio": 6.44,
+        "normal_text_AA": true
+      }
+    ]
+  },
+  {
+    "direction": "Common Ground",
+    "pairs": [
+      {
+        "foreground": "#292327",
+        "background": "#F8F5F0",
+        "ratio": 14.16,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#F8F5F0",
+        "background": "#292327",
+        "ratio": 14.16,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#292327",
+        "background": "#F4AA76",
+        "ratio": 7.96,
+        "normal_text_AA": true
+      },
+      {
+        "foreground": "#F8F5F0",
+        "background": "#F4AA76",
+        "ratio": 1.78,
+        "normal_text_AA": false
+      },
+      {
+        "foreground": "#F4AA76",
+        "background": "#292327",
+        "ratio": 7.96,
+        "normal_text_AA": true
+      }
+    ]
+  }
+]

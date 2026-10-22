@@ -1,0 +1,62 @@
+[
+  {
+    "direction": "Insight",
+    "text_pairs": [
+      {
+        "foreground": "#111D32",
+        "background": "#F4F7FF",
+        "ratio": 15.73
+      },
+      {
+        "foreground": "#F4F7FF",
+        "background": "#234AE8",
+        "ratio": 6.09
+      },
+      {
+        "foreground": "#111D32",
+        "background": "#DFF568",
+        "ratio": 13.97
+      }
+    ]
+  },
+  {
+    "direction": "Assurance",
+    "text_pairs": [
+      {
+        "foreground": "#211331",
+        "background": "#FAF7FF",
+        "ratio": 16.48
+      },
+      {
+        "foreground": "#FAF7FF",
+        "background": "#5425B9",
+        "ratio": 8.46
+      },
+      {
+        "foreground": "#211331",
+        "background": "#FFB071",
+        "ratio": 9.73
+      }
+    ]
+  },
+  {
+    "direction": "Vigil",
+    "text_pairs": [
+      {
+        "foreground": "#102B23",
+        "background": "#F5FAF6",
+        "ratio": 14.29
+      },
+      {
+        "foreground": "#F5FAF6",
+        "background": "#006A50",
+        "ratio": 6.26
+      },
+      {
+        "foreground": "#102B23",
+        "background": "#F4F36D",
+        "ratio": 12.85
+      }
+    ]
+  }
+]

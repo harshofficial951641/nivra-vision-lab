@@ -1,0 +1,11 @@
+{
+  "dataset": "doi:10.7910/DVN/N4LNZD",
+  "version": 2,
+  "metadataUrl": "https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId=doi:10.7910/DVN/N4LNZD",
+  "license": "CC0-1.0",
+  "files": [
+    {"name": "nv_b_01.rar", "id": 10123371, "bytes": 713547207, "md5": "9858c0e0fef9b0e2444275f42d6694e7", "publisherCategory": "nonviolent"},
+    {"name": "nv_b_06.rar", "id": 10123402, "bytes": 474233176, "md5": "dfd6c6c470b5de2d55e603386b02cf4d", "publisherCategory": "nonviolent"},
+    {"name": "v_c_b_01.rar", "id": 10123417, "bytes": 594209838, "md5": "5f5636575db44dba6eb41723d928fd52", "publisherCategory": "classroom-violent"}
+  ]
+}

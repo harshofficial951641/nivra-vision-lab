@@ -1,0 +1,141 @@
+{
+  "reviewMethod": "16 timestamped RGB frames; motion not continuously viewed",
+  "limitations": [
+    "Assistant visual screening of timestamped contact sheets, not a human annotation session, continuous playback or complete frame-by-frame video review.",
+    "Event intervals are provisional source-time approximations supported by sampled contact configurations. Continuity between frames, actual impacts and exact boundaries have not been verified.",
+    "Label 1 means selected staged physical-interaction imagery suitable for experimental positive training; it does not establish intent, injury, a crime or clinically/operationally validated violence recognition.",
+    "Only retained intervals are eligible. Initial approaches, separations and uncertain margins outside those intervals are not positive-labelled by this review.",
+    "Every retained interval spans at least two seconds and can cover the majority of a four-second training window. A four-second window must still be clipped to the source duration and checked for interval overlap.",
+    "All VID recordings and derivatives are training-only in this candidate. Actor/session lineage is unknown, so no VID calibration or unseen evaluation claim is supported.",
+    "Scene groups refer only to visible backgrounds and conservatively similar locations. They neither identify actors nor establish distinct recording sessions.",
+    "Ambiguous and excluded recordings have no accepted positive intervals. Unreviewed recordings remain excluded from the candidate manifest."
+  ],
+  "recordings": [
+    {
+      "id": "v_c_b_199",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Three people approach, turn and make intermittent arm/shoulder contact among classroom chairs. Sparse frames do not separate brief directed actions from ordinary positioning or establish a clear sustained contact episode. Publisher class alone is insufficient."
+    },
+    {
+      "id": "v_c_b_78",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-perimeter-wood-desks",
+      "events": [{ "startSeconds": 2.09, "endSeconds": 5.27, "label": 1 }],
+      "notes": "Repeated sampled views show a standing person leaning over and gripping the upper body of a seated person, with substantial sideways chair/body displacement. Retain the central contact span; omit the early setup and late release. Continuity and force are not independently measured."
+    },
+    {
+      "id": "v_c_b_89",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Separated figures make raised-arm and leg movements near an entrance; a long light-coloured prop is visible in later frames. No sufficiently clear sustained person-to-person contact interval can be assigned from these samples. Do not train the prop or raised-arm appearance as a positive shortcut."
+    },
+    {
+      "id": "v_c_b_172",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-perimeter-wood-desks",
+      "events": [{ "startSeconds": 3.37, "endSeconds": 7.18, "label": 1 }],
+      "notes": "Across the retained central frames a standing person maintains an upper-body grip on a seated/crouched person while their torsos repeatedly bend and move together. Other people are present. The interval is a provisional subset of the longer interaction; omit the initial approach and final hand-obstructed margin."
+    },
+    {
+      "id": "v_c_b_190",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [{ "startSeconds": 1.42, "endSeconds": 4.74, "label": 1 }],
+      "notes": "Two central people repeatedly hold/contact each other's upper arms and shoulders while turning and bracing, visible across adjacent sampled frames. Retain the central paired contact configurations; omit the early approach and final edge of the clip. No specific strike, intent or injury is established."
+    },
+    {
+      "id": "v_c_b_72",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-perimeter-wood-desks",
+      "events": [{ "startSeconds": 2.24, "endSeconds": 5.68, "label": 1 }],
+      "notes": "Two central people remain closely joined at shoulders/upper arms through the retained samples, with repeated bent torsos, pulling-like arm configurations and shared rotation. Retain only the sustained close-contact portion; surrounding observers do not supply additional positive events."
+    },
+    {
+      "id": "v_c_b_117",
+      "decision": "train-positive",
+      "sceneGroup": "brick-atrium-stair-blue-chairs",
+      "events": [{ "startSeconds": 0.97, "endSeconds": 3.59, "label": 1 }],
+      "notes": "The central people are repeatedly joined through arms/shoulders while one torso bends and rotates; another person remains very close. Multiple samples support a contact episode, although precise impacts cannot be established. Exclude the initial uncertain margin and the visibly separating final frames."
+    },
+    {
+      "id": "v_c_b_110",
+      "decision": "exclude",
+      "sceneGroup": "brick-atrium-stair-blue-chairs",
+      "events": [],
+      "notes": "Several people are spaced around the atrium making large arm movements with long light-coloured props. The samples do not establish a clear sustained unarmed body-contact interval. Exclude rather than learn props, gestures or the publisher label as evidence of the target interaction."
+    },
+    {
+      "id": "v_c_b_50",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Brief arm/shoulder contacts alternate with separation and large gestures among three figures. The clearly supported contact bursts are too short or interrupted to assign a conservative two-second interval from these frames. Continuous playback could resolve the ambiguity; it was not performed."
+    },
+    {
+      "id": "v_c_b_21",
+      "decision": "train-positive",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [{ "startSeconds": 1.29, "endSeconds": 4.87, "label": 1 }],
+      "notes": "A rear figure maintains shoulder/upper-torso contact with the central figure across the retained samples while the central figure repeatedly lifts a leg toward the person in front. Positive support is the sustained upper-body hold and combined physical interaction; actual kicks or impacts are not asserted. Initial and final margins are omitted."
+    },
+    {
+      "id": "v_c_b_97",
+      "decision": "exclude",
+      "sceneGroup": "exterior-ivy-wall-wide",
+      "events": [],
+      "notes": "Wide distant view shows several separated figures making large gestures, with prop-like thin objects visible. Clear prolonged body contact cannot be resolved at this scale. Exclude instead of assigning the full clip positive from its folder name."
+    },
+    {
+      "id": "v_c_b_133",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-atrium-columns",
+      "events": [],
+      "notes": "Two people repeatedly extend arms near one another while a third stands behind. Sampled hand/forearm proximity is insufficient to distinguish brief contact from ordinary greeting or gestures, and no sustained upper-body hold is clear. No positive interval retained."
+    },
+    {
+      "id": "v_c_b_58",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [{ "startSeconds": 0.87, "endSeconds": 4.35, "label": 1 }],
+      "notes": "Two close figures repeatedly maintain shoulder/head-area and upper-arm contact while bending and rotating together across the central samples. Retain that paired contact span; exclude the approach/start edge and later release/bent-away frames. Hand placement does not establish choking or injury."
+    },
+    {
+      "id": "v_c_b_19",
+      "decision": "ambiguous",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Several figures make arm extensions near the entrance. A possible rear upper-body hold is partly obscured, and foreground approaches/retreats interrupt the visible contact evidence. The sampled frames do not support a sufficiently certain sustained interval; exclude from positive training pending better temporal review."
+    },
+    {
+      "id": "v_c_b_155",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-corridor-brick-door-railing",
+      "events": [],
+      "notes": "The two figures become small and partly obscured near a distant doorway. Sixteen frames across almost nineteen seconds leave more than a second between observations. Arm proximity and body positioning cannot establish a conservative continuous contact interval; do not interpolate a long positive episode."
+    },
+    {
+      "id": "v_c_b_71",
+      "decision": "train-positive",
+      "sceneGroup": "computer-lab-perimeter-wood-desks",
+      "events": [{ "startSeconds": 1.27, "endSeconds": 5.16, "label": 1 }],
+      "notes": "Two central people repeatedly hold/contact shoulders and upper arms while bending and turning together, including a clearly bent torso in the middle of the sequence. Keep the sustained paired-contact subset and omit the less certain initial and separating final margins. Continuous motion was not viewed."
+    },
+    {
+      "id": "v_c_b_113",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-atrium-columns",
+      "events": [],
+      "notes": "One figure repeatedly raises and extends an arm toward another, but the figures remain separated in several samples. Brief possible contacts and large temporal sampling gaps do not establish a two-second sustained episode. Do not turn arm-raising alone into a positive label."
+    },
+    {
+      "id": "v_c_b_98",
+      "decision": "exclude",
+      "sceneGroup": "exterior-ivy-wall-wide",
+      "events": [],
+      "notes": "People remain distributed across a wide outdoor view with repeated large gestures and prop-like objects. No conservative sustained body-contact interval is visually resolved; reject as a positive training example in this selection."
+    }
+  ]
+}

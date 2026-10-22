@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-21T17:58:44.008631+00:00",
+  "reviewMethod": "Model-blind frozen eight-author cohort; sequential actual PTS and every-frame chronological sheet inspection for acquired intended0-4000ms intervals.",
+  "candidateFreezeSha256": "01cd72f71c2b33ab44b781dded6140375714a06bbd51a1c1201092f0199160be",
+  "roleRule": "SHA256 UTF8(nivra-online-wave1-v1:+sourceGroup) first byte <128 development otherwise reserved-audit",
+  "mediaBytesDownloaded": 4305132,
+  "mediaCapBytes": 100000000,
+  "summary": {
+    "frozenGroups": 8,
+    "frozenDevelopmentGroups": 5,
+    "frozenReservedGroups": 3,
+    "acquiredRecordings": 2,
+    "inspectedFrames": 202,
+    "inspectedSheets": 14,
+    "eligibleDevelopmentGroups": 0,
+    "eligibleDevelopmentWindows": 0,
+    "eligibleReservedGroups": 1,
+    "eligibleReservedWindows": 1,
+    "eligibleNormalDurationMs": 4000,
+    "developmentTargetMet": false
+  },
+  "limitations": [
+    "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+    "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+    "Actor/session independence and publisher pretraining overlap unknown.",
+    "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+    "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established.",
+    "HTTP429 on third media request caused host-wide backoff; no repeated blocked URL or alternate mirror. Six candidates unavailable.",
+    "Recorded source clock is downloaded published transcode PTS; original upload/camera clock correspondence not certified."
+  ],
+  "recordings": [
+    {
+      "id": "wave2-normal-01",
+      "sourceGroup": "commons-author:kerry raymond",
+      "role": "reserved-audit",
+      "author": "Kerry Raymond",
+      "license": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Drum_dancing,_Gjoa_Haven,_2019_-_02.webm",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b1/Drum_dancing%2C_Gjoa_Haven%2C_2019_-_02.webm/Drum_dancing%2C_Gjoa_Haven%2C_2019_-_02.webm.480p.vp9.webm",
+      "path": "research/cache/eval-wave2/normals/wave2-normal-01.webm",
+      "sha256": "1c69d19eef4eec8207ec57127bbb686d6383ed7f4e992e475832a5c6e9c23d5b",
+      "sizeBytes": 964559,
+      "durationMs": 14680.0,
+      "durationMethod": "Conservative observed decoded clock extent through final frame PTS; final frame presentation duration unknown",
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": {
+        "width": 1080,
+        "height": 1920
+      },
+      "workingDimensions": {
+        "width": 270,
+        "height": 480
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Every sequential decoded frame from source PTS0 through4000ms including both boundaries inspected with view_image; 16frames per chronological1600x1080 sheet, aspect preserved, individual PTS labels. cv2.setNumThreads(1), one decoder. No sampled-frame substitution.",
+      "reviewedIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 4000,
+          "firstFrameIndex": 0,
+          "lastFrameIndex": 100,
+          "frameCount": 101,
+          "coverage": "every-decoded-frame"
+        }
+      ],
+      "events": [
+        {
+          "startMs": 0,
+          "endMs": 4000,
+          "label": "ordinary-motion",
+          "binaryLabel": 0
+        }
+      ],
+      "unknownIntervals": [
+        {
+          "startMs": 4000,
+          "endMs": 14680.0,
+          "reason": "Uninspected tail"
+        }
+      ],
+      "eligibleFourSecondWindows": 1,
+      "decision": "retain-normal",
+      "conditions": {
+        "controlDifficulty": "easier rhythmic motion with instrument",
+        "lighting": "indoor visible colour",
+        "modality": "visible-colour",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "Every frame 0 through100 inclusive shows an isolated full-body performer stepping and rotating/striking a large handheld drum, with seated spectators behind. No visible person-to-person contact. Easier ordinary rhythmic motion control with an instrument; not an unarmed interaction challenge.",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "Kerry Raymond / Wikimedia Commons / CC BY/4.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Drum_dancing,_Gjoa_Haven,_2019_-_02.webm?oldid=1213637488",
+        "sourcePageSha256": "62c12c59a474dbafdbfca4ed9c62e4cb611c75e1e6797b8e385e4b0995702188",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Drum dancing, Gjoa Haven, 2019 - 02.webm Drum dancing at the Gjoa Haven community hall, 2019 Date 7 September 2019 Source Own work Author Kerry Raymond Other versions This file has an extracted file : Drum dancing, Gjoa Haven, 2019 - 02 (cropped).webm . Camera location 68° 37′ 28.92″ N, 95° 51′ 50.76″ W View this and other nearby images on: OpenStreetMap 68.624700; -95.864100 Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution 4.0 International license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. https://creativecommons.org/licenses/by/4.0 CC BY 4.0 Creative Commons Attribution 4.0 true true <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:33.485679+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Drum_dancing%2C_Gjoa_Haven%2C_2019_-_02.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": {
+          "decoderClock": "OpenCV CAP_PROP_POS_MSEC after sequential read; FFmpeg backend",
+          "sourceClock": "downloaded Commons published transcode presentation clock",
+          "decoderToPublishedSourceOffsetMs": 0,
+          "originalCameraClockOffsetMs": null,
+          "originalToTranscodeTemporalCorrespondence": "Not independently verified; annotations refer only to downloaded published transcode"
+        }
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-01-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json",
+        "research/cache/eval-wave2/normals/decoder-evidence.json",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0000.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0016.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0032.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0048.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0064.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0080.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-01-frames-0096.jpg"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-02",
+      "sourceGroup": "commons-author:rmall253",
+      "role": "development",
+      "author": "Rmall253",
+      "license": "CC-BY-SA-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:The_dancing_men_of_Liberia_3.webm",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5e/The_dancing_men_of_Liberia_3.webm/The_dancing_men_of_Liberia_3.webm.480p.vp9.webm",
+      "path": "research/cache/eval-wave2/normals/wave2-normal-02.webm",
+      "sha256": "4a78a0a982496801a8a405005f689777f8fbd8cc6de20b5cce294ab3accbf199",
+      "sizeBytes": 3340573,
+      "durationMs": 19680.0,
+      "durationMethod": "Conservative observed decoded clock extent through final frame PTS; final frame presentation duration unknown",
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": {
+        "width": 1920,
+        "height": 1080
+      },
+      "workingDimensions": {
+        "width": 854,
+        "height": 480
+      },
+      "annotationStatus": "provisional-assistant-review",
+      "annotationMethod": "Every sequential decoded frame from source PTS0 through4000ms including both boundaries inspected with view_image; 16frames per chronological1600x1080 sheet, aspect preserved, individual PTS labels. cv2.setNumThreads(1), one decoder. No sampled-frame substitution.",
+      "reviewedIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 4000,
+          "firstFrameIndex": 0,
+          "lastFrameIndex": 100,
+          "frameCount": 101,
+          "coverage": "every-decoded-frame"
+        }
+      ],
+      "events": [],
+      "unknownIntervals": [
+        {
+          "startMs": 0,
+          "endMs": 19680.0,
+          "reason": "Opening obscured transition; remainder outside frozen interval uninspected"
+        }
+      ],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unknown",
+      "conditions": {
+        "controlDifficulty": "harder energetic acrobatic motion with obscured prefix",
+        "lighting": "daylight visible colour",
+        "modality": "visible-colour",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "Black-block opening transition obscures people through roughly880ms. Later inspected frames show a performer bending and balancing on hands/head, with surrounding people. Frozen 0-4000ms span remains unknown because opening is not observable; no new span substituted.",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Rmall253 / Wikimedia Commons / CC BY-SA/4.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:The_dancing_men_of_Liberia_3.webm?oldid=1204569120",
+        "sourcePageSha256": "749d62c8d435f757e677942e2740aa21db344c864eb989ca84947a2ad6771a8e",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description The dancing men of Liberia 3.webm English: Men from Liberia celebrating an event through local dance and music. This is an image from Liberia Date 20 December 2016 Source Own work Author Rmall253 (IFES) Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original. https://creativecommons.org/licenses/by-sa/4.0 CC BY-SA 4.0 Creative Commons Attribution-Share Alike 4.0 true true This image was uploaded as part of Wiki Loves Africa 2016 . Afrikaans | Alemannisch | العربية | বাংলা | brezhoneg | català | Cymraeg | dansk | Deutsch | English | español | eesti | suomi | français | Frysk | Gaeilge | galego | magyar | Ido | italiano | 日本語 | 한국어 | Lëtzebuergesch | македонски | norsk bokmål | नेपाली | Nederlands | norsk nynorsk | norsk | português | română | русский | sicilianu | slovenščina | shqip | српски / srpski | svenska | ไทย | Tagalog | українська | +/− <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:34.860552+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5e/The_dancing_men_of_Liberia_3.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": {
+          "decoderClock": "OpenCV CAP_PROP_POS_MSEC after sequential read; FFmpeg backend",
+          "sourceClock": "downloaded Commons published transcode presentation clock",
+          "decoderToPublishedSourceOffsetMs": 0,
+          "originalCameraClockOffsetMs": null,
+          "originalToTranscodeTemporalCorrespondence": "Not independently verified; annotations refer only to downloaded published transcode"
+        }
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-02-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json",
+        "research/cache/eval-wave2/normals/decoder-evidence.json",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0000.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0016.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0032.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0048.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0064.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0080.jpg",
+        "research/cache/eval-wave2/normals/wave2-normal-02-frames-0096.jpg"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-03",
+      "sourceGroup": "commons-author:sdkb",
+      "role": "reserved-audit",
+      "author": "Sdkb",
+      "license": "CC-BY-SA-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Contra_dancers_at_the_2019_Flurry_Festival.webm",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/f/fa/Contra_dancers_at_the_2019_Flurry_Festival.webm/Contra_dancers_at_the_2019_Flurry_Festival.webm.480p.vp9.webm",
+      "path": null,
+      "sha256": null,
+      "sizeBytes": 0,
+      "durationMs": null,
+      "durationMethod": null,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": null,
+      "workingDimensions": null,
+      "annotationStatus": "not-acquired",
+      "annotationMethod": "Metadata only; no imagery inspected.",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unavailable",
+      "conditions": {
+        "controlDifficulty": "uninspected",
+        "lighting": "unknown",
+        "modality": "unknown",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "No visual label: http-error",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "attribution": "Sdkb / Wikimedia Commons / CC BY-SA/3.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Contra_dancers_at_the_2019_Flurry_Festival.webm?oldid=867859214",
+        "sourcePageSha256": "f1cbc4ea4383157f820cab52f8d898dfe23c0605aafa18c0b060b784d9cb65fd",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Contra dancers at the 2019 Flurry Festival.webm English: Contra dancers at the 2019 Flurry Festival in Saratoga Springs, New York Date 16 February 2019 Source Own work Author Sdkb Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original. https://creativecommons.org/licenses/by-sa/3.0 CC BY-SA 3.0 Creative Commons Attribution-Share Alike 3.0 true true <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:35.940558+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Contra_dancers_at_the_2019_Flurry_Festival.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": null
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-03-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-04",
+      "sourceGroup": "commons-author:vicente quintero",
+      "role": "development",
+      "author": "Vicente Quintero",
+      "license": "CC-BY-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Sabana_Grande_Caracas._People_walking_on_the_Boulevard_of_Sabana_Grande,_famous_in_Caracas,_Venezuela.webm",
+      "url": null,
+      "path": null,
+      "sha256": null,
+      "sizeBytes": 0,
+      "durationMs": null,
+      "durationMethod": null,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": null,
+      "workingDimensions": null,
+      "annotationStatus": "not-acquired",
+      "annotationMethod": "Metadata only; no imagery inspected.",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unavailable",
+      "conditions": {
+        "controlDifficulty": "uninspected",
+        "lighting": "unknown",
+        "modality": "unknown",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "No visual label: not-attempted-host-backoff-after-429",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by/3.0/",
+        "attribution": "Vicente Quintero / Wikimedia Commons / CC BY/3.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Sabana_Grande_Caracas._People_walking_on_the_Boulevard_of_Sabana_Grande,_famous_in_Caracas,_Venezuela.webm?oldid=1199293943",
+        "sourcePageSha256": "6f2576713e14a9f51f152ef7804bac7bd1f3fe3415fdec95f6d8915fdc89af73",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Sabana Grande Caracas. People walking on the Boulevard of Sabana Grande, famous in Caracas, Venezuela.webm People walking on the Boulevard of Sabana Grande, famous in Caracas, Venezuela This file is licensed under the Creative Commons Attribution 3.0 Unported license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. https://creativecommons.org/licenses/by/3.0 CC BY 3.0 Creative Commons Attribution 3.0 true true Date 17 May 2018 Source Own work Author QuinteroP , Vicente Quintero Licensing [ edit ] <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:36.778014+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/51/Sabana_Grande_Caracas._People_walking_on_the_Boulevard_of_Sabana_Grande%2C_famous_in_Caracas%2C_Venezuela.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": null
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-04-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-05",
+      "sourceGroup": "commons-author:protoplasmakid",
+      "role": "development",
+      "author": "ProtoplasmaKid",
+      "license": "CC-BY-SA-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Cruce_peatonal_de_Eje_Central_L%C3%A1zaro_C%C3%A1rdenas_y_Avenida_Madero,_Ciudad_de_M%C3%A9xico.webm",
+      "url": null,
+      "path": null,
+      "sha256": null,
+      "sizeBytes": 0,
+      "durationMs": null,
+      "durationMethod": null,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": null,
+      "workingDimensions": null,
+      "annotationStatus": "not-acquired",
+      "annotationMethod": "Metadata only; no imagery inspected.",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unavailable",
+      "conditions": {
+        "controlDifficulty": "uninspected",
+        "lighting": "unknown",
+        "modality": "unknown",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "No visual label: not-attempted-host-backoff-after-429",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "ProtoplasmaKid / Wikimedia Commons / CC BY-SA/4.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Cruce_peatonal_de_Eje_Central_L%C3%A1zaro_C%C3%A1rdenas_y_Avenida_Madero,_Ciudad_de_M%C3%A9xico.webm?oldid=1090402649",
+        "sourcePageSha256": "4c096e30ad098383f87a9a2defb2145440042fad881ee07d9a14c083cfcbccd5",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Cruce peatonal de Eje Central Lázaro Cárdenas y Avenida Madero, Ciudad de México.webm English: Video of the crosswalk of Eje Central Lázaro Cárdenas and Avenida Madero, Mexico City. One of the busiest in the city. Observed: 00:00 People crossing at the crosswalk. 01:13 First person view of the crossing from east to west. Español: Video del cruce peatonal de Eje Central Lázaro Cárdenas y Avenida Madero, Ciudad de México. Uno de los más transitados de la ciudad. Se observan: 00:00 Personas cruzando en el paso peatonal 01:13 Vista en primera persona del cruce de oriente a poniente. Date 2 January 2023 Source Own work Author ProtoplasmaKid Permission ( Reusing this file ) This creative work was created by ProtoplasmaKid It is licensed under a Creative Commons License. You are free to use and distribute it as you wish. On the condition that you always place my attribution next to the material or in the credits of your derivative work in a visible, prominently, and intentional manner, as follows: ProtoplasmaKid / Wikimedia Commons / CC-BY-SA 4.0 Although this work, or modified versions of it, may appear on many websites, this is the original material, and using it for free ONLY requires adhering to the license. Also, it would be greatly appreciated if you notify me of the use of my photo, or if you want a different shot or version or a license for full commercial use, contact me by email or on my discussion page . Attribution ( required by the license ) InfoField © ProtoplasmaKid / Wikimedia Commons / CC BY-SA 4.0 InfoField © ProtoplasmaKid / Wikimedia Commons Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original. https://creativecommons.org/licenses/by-sa/4.0 CC BY-SA 4.0 Creative Commons Attribution-Share Alike 4.0 true true <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:38.432216+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Cruce_peatonal_de_Eje_Central_L%C3%A1zaro_C%C3%A1rdenas_y_Avenida_Madero%2C_Ciudad_de_M%C3%A9xico.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": null
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-05-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-06",
+      "sourceGroup": "commons-author:basile morin",
+      "role": "development",
+      "author": "Basile Morin",
+      "license": "CC-BY-SA-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Shibuya_Crossing,_Tokyo,_Japan_(video).webm",
+      "url": null,
+      "path": null,
+      "sha256": null,
+      "sizeBytes": 0,
+      "durationMs": null,
+      "durationMethod": null,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": null,
+      "workingDimensions": null,
+      "annotationStatus": "not-acquired",
+      "annotationMethod": "Metadata only; no imagery inspected.",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unavailable",
+      "conditions": {
+        "controlDifficulty": "uninspected",
+        "lighting": "unknown",
+        "modality": "unknown",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "No visual label: not-attempted-host-backoff-after-429",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Basile Morin / Wikimedia Commons / CC BY-SA/4.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Shibuya_Crossing,_Tokyo,_Japan_(video).webm?oldid=1154429684",
+        "sourcePageSha256": "a72f3293f1af2cecfb711b8b9b63e5a1d8b80e3ad5cfce71b41c67ccdc821dfb",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Shibuya Crossing, Tokyo, Japan (video).webm English: Located in front of the Shibuya Station Hachiko exit, Shibuya Crossing (Tokyo, Japan) is famous for its scramble crossing, when hundreds of people, and at peak times upwards of 3000 pedestrians, inundate the entire intersection, crossing and coming from all directions at once, walking . 日本語: 渋谷スクランブル交差点 は、渋谷駅ハチ公口前に位置する東京の著名な交差点であり、数百人、ピーク時には3000人以上の歩行者が一斉に四方から横断する「スクランブル交差点」として知られています。 Français : Shibuya Crossing , carrefour situé en face de la sortie Hachiko de la gare de Shibuya, un jeudi après-midi (Tokyo, Japon). La circulation des véhicules est complètement arrêtée pendant cinquante-cinq secondes pour permettre aux piétons de traverser l'intersection. La fréquentation de l'endroit et le fait qu'il soit inondé de publicité font que ce carrefour est fréquemment comparé au Times Square de New York. Polski: Słynne skrzyżowanie przed wyjściem ze stacji kolejowej Shibuya w okręgu specjalnym Shibuya , w Tokio , w Japonii . Setki, a w godzinach szczytu nawet ponad 3000 pieszych zalewa całe skrzyżowanie przychodząc ze wszystkich stron jednocześnie. Čeština: Přechod mimořádného množství chodců přes světelnou křižovatku v jedné z nejrušnějších tokijských čtvrtí Šibuja v době dopravní špičky poblíž místní železniční stanice. Эрзянь: Shibuya Crossing ( Токио ош , Япония ) станциянть вакссо - тесэ сядо ломанть, а сех ламо 3000 молицят ютыть кинть ве ёндо омбоцев. Date 7 June 2019 Source Own work Author Basile Morin |date=2019-06-07 |source= Own work |author= Basile Morin |permission= |other versions= }} Assessment [ edit ] This file was selected as the media of the day for 7 November 2019. English: Located in front of the Shibuya Station Hachiko exit, Shibuya Crossing (Tokyo, Japan) is famous for its scramble crossing, when hundreds of people, and at peak times upwards of 3000 pedestrians, inundate the entire intersection, crossing and coming from all directions at once. .mw-parser-output .tpl-hidden{clear:both}.mw-parser-output .tpl-hidden>.mw-collapsible-toggle{float:none}.mw-parser-output .tpl-hidden::before{display:none}.mw-parser-output .tpl-hidden.mw-made-collapsible>.mw-collapsible-toggle>.tpl-hidden-arrowtoggle{padding-left:20px;background-image:url(\"https://upload.wikimedia.org/wikipedia/commons/1/10/MediaWiki_Vector_skin_action_arrow.png\");background-position:left 50%;background-repeat:no-repeat}.mw-parser-output .tpl-hidden.mw-made-collapsible.mw-collapsed>.mw-collapsible-toggle>.tpl-hidden-arrowtoggle{background-image:url(\"https://upload.wikimedia.org/wikipedia/commons/4/41/MediaWiki_Vector_skin_right_arrow.png\")}.mw-parser-output [dir=rtl] .tpl-hidden.mw-made-collapsible.mw-collapsed>.mw-collapsible-toggle>.tpl-hidden-arrowtoggle{background-image:url(\"https://upload.wikimedia.org/wikipedia/commons/1/1e/MediaWiki_Vector_skin_left_arrow.png\")} MOTD captions Čeština: Přechod mimořádného množství chodců přes světelnou křižovatku v jedné z nejrušnějších tokijských čtvrtí Šibuja v době dopravní špičky poblíž místní železniční stanice. English: Located in front of the Shibuya Station Hachiko exit, Shibuya Crossing (Tokyo, Japan) is famous for its scramble crossing, when hundreds of people, and at peak times upwards of 3000 pedestrians, inundate the entire intersection, crossing and coming from all directions at once. Эрзянь: Shibuya Crossing ( Токио ош , Япония ) станциянть вакссо - тесэ сядо ломанть, а сех ламо 3000 молицят ютыть кинть ве ёндо омбоцев. Polski: Słynne skrzyżowanie przed wyjściem ze stacji kolejowej Shibuya w okręgu specjalnym Shibuya , w Tokio , w Japonii . Setki, a w godzinach szczytu nawet ponad 3000 pieszych zalewa całe skrzyżowanie przychodząc ze wszystkich stron jednocześnie. This is a featured media on Wikimedia Commons and is considered one of the finest files. If you have a file of similar quality that can be published under a suitable copyright license, be sure to upload it , tag it , and nominate it . Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution-Share Alike 4.0 International license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original. https://creativecommons.org/licenses/by-sa/4.0 CC BY-SA 4.0 Creative Commons Attribution-Share Alike 4.0 true true <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:39.619072+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Shibuya_Crossing%2C_Tokyo%2C_Japan_%28video%29.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": null
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-06-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-07",
+      "sourceGroup": "commons-author:amada44",
+      "role": "development",
+      "author": "Amada44",
+      "license": "CC-BY-SA-3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Venice_at_night.webm",
+      "url": null,
+      "path": null,
+      "sha256": null,
+      "sizeBytes": 0,
+      "durationMs": null,
+      "durationMethod": null,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": null,
+      "workingDimensions": null,
+      "annotationStatus": "not-acquired",
+      "annotationMethod": "Metadata only; no imagery inspected.",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unavailable",
+      "conditions": {
+        "controlDifficulty": "uninspected",
+        "lighting": "unknown",
+        "modality": "unknown",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "No visual label: not-attempted-host-backoff-after-429",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0/",
+        "attribution": "Amada44 / Wikimedia Commons / CC BY-SA/3.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Venice_at_night.webm?oldid=515902327",
+        "sourcePageSha256": "a3fbc318292fa4d7b178c2f2ba561cbbd49a1896b593205749fdd4aed82f9a6f",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Venice at night.webm English: People walking in Venice at night Date May 2015 Source Own work Author Amada44 Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. share alike – If you remix, transform, or build upon the material, you must distribute your contributions under the same or compatible license as the original. https://creativecommons.org/licenses/by-sa/3.0 CC BY-SA 3.0 Creative Commons Attribution-Share Alike 3.0 true true <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:40.602993+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Venice_at_night.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": null
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-07-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    },
+    {
+      "id": "wave2-normal-08",
+      "sourceGroup": "commons-author:harriwillz",
+      "role": "reserved-audit",
+      "author": "Harriwillz",
+      "license": "CC-BY-4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Cultural_dancers.webm",
+      "url": null,
+      "path": null,
+      "sha256": null,
+      "sizeBytes": 0,
+      "durationMs": null,
+      "durationMethod": null,
+      "nativeDimensions": null,
+      "publishedOriginalDimensions": null,
+      "workingDimensions": null,
+      "annotationStatus": "not-acquired",
+      "annotationMethod": "Metadata only; no imagery inspected.",
+      "reviewedIntervals": [],
+      "events": [],
+      "unknownIntervals": [],
+      "eligibleFourSecondWindows": 0,
+      "decision": "unavailable",
+      "conditions": {
+        "controlDifficulty": "uninspected",
+        "lighting": "unknown",
+        "modality": "unknown",
+        "personPixelHeights": null,
+        "visiblePersonCount": null
+      },
+      "notes": "No visual label: not-attempted-host-backoff-after-429",
+      "rights": {
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "attribution": "Harriwillz / Wikimedia Commons / CC BY/4.0",
+        "ownWorkClaim": true,
+        "pinUrl": "https://commons.wikimedia.org/wiki/File:Cultural_dancers.webm?oldid=1206462955",
+        "sourcePageSha256": "98a903e76aa1e560dd815f5384d658ee829b9287e325fb69630920be45ceaddc",
+        "rightsExcerpt": "id=\"Summary\">Summary [ edit ] Description Cultural dancers.webm English: cultural dancers performing at a wedding Date 10 April 2026 Source Own work Author Harriwillz Licensing [ edit ] I, the copyright holder of this work, hereby publish it under the following license: This file is licensed under the Creative Commons Attribution 4.0 International license. You are free: to share – to copy, distribute and transmit the work to remix – to adapt the work Under the following conditions: attribution – You must give appropriate credit, provide a link to the license, and indicate if changes were made. You may do so in any reasonable manner, but not in any way that suggests the licensor endorses you or your use. https://creativecommons.org/licenses/by/4.0 CC BY 4.0 Creative Commons Attribution 4.0 true true <h2 ",
+        "sourcePageRetrievedAt": "2026-10-21T17:54:41.602523+00:00",
+        "permittedUseEvidence": "File-level CC licence allows copying/adaptation subject to attribution and applicable share-alike; training versus evaluation has no separate grant. No release/consent or model-weight licence inferred."
+      },
+      "lineage": {
+        "type": "official-published-480p-vp9-transcode",
+        "originalDownloadUrl": "https://upload.wikimedia.org/wikipedia/commons/3/31/Cultural_dancers.webm",
+        "localMediaTransformations": [],
+        "contactSheets": "aspect-preserving resize for evidence only",
+        "clockCrosswalk": null
+      },
+      "evidenceFiles": [
+        "research/cache/eval-wave2/normals/wave2-normal-08-source.html",
+        "research/cache/eval-wave2/normals/acquisition-receipts.json",
+        "research/cache/eval-wave2/normals/candidate-freeze.json"
+      ],
+      "limitations": [
+        "Provisional assistant static-frame review, not human ground truth or independently verified continuous motion.",
+        "Published Commons transcodes, not original camera files; camera-native dimensions and temporal correspondence to original upload are unverified.",
+        "Actor/session independence and publisher pretraining overlap unknown.",
+        "Uninspected tails remain unknown; no inference, model scores, GPU or training used.",
+        "No measured person pixel heights or crowd count; no CCTV/night/crowd capability established."
+      ]
+    }
+  ]
+}

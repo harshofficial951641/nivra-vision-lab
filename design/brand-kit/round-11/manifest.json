@@ -1,0 +1,83 @@
+[
+  {
+    "slug": "01-alert-lynx",
+    "name": "Alert Lynx",
+    "source": "exec-9941dcd3-9740-4c69-a451-721e120f8493.png",
+    "colors": {
+      "citron": "#C8F13A",
+      "ink": "#182619",
+      "sage": "#E3EAD7",
+      "chalk": "#F8FAF3"
+    },
+    "text_pairs": [
+      [
+        "#182619",
+        "#F8FAF3"
+      ],
+      [
+        "#182619",
+        "#C8F13A"
+      ],
+      [
+        "#182619",
+        "#E3EAD7"
+      ]
+    ],
+    "font": "Manrope",
+    "description": "An upright lynx silhouette gives the identity a recognizable watchful subject. Plain NIVRA text sits beside it, with no hidden initials or modified letters. Ear tufts and the seated contour carry recognition; the eye is incidental animal anatomy. The detailed ear and leg cuts require small-size simplification before a final app icon. Intended ink follows the delivered board label #182619."
+  },
+  {
+    "slug": "02-beacon",
+    "name": "Beacon",
+    "source": "exec-002e5708-dcbd-43f2-ae8b-128f968a14d9.png",
+    "colors": {
+      "orange": "#FF7A28",
+      "plum": "#2B183A",
+      "peach": "#FFE2C9",
+      "white": "#FFFBF5"
+    },
+    "text_pairs": [
+      [
+        "#2B183A",
+        "#FFFBF5"
+      ],
+      [
+        "#2B183A",
+        "#FF7A28"
+      ],
+      [
+        "#FFFBF5",
+        "#2B183A"
+      ]
+    ],
+    "font": "Inter",
+    "description": "A short beacon with an offset light wedge makes observation and signalling explicit. Plain NIVRA text is independent of the symbol. It is easier to interpret than the abstract alternative, but may suggest maritime/navigation products and its familiar pictorial subject is a differentiation risk. The beam is a graphic metaphor, not a claim of automated alerting."
+  },
+  {
+    "slug": "03-mantle",
+    "name": "Mantle",
+    "source": "exec-0756de7e-b2dd-44e2-9fdf-e205f28e561f.png",
+    "colors": {
+      "violet": "#613BFD",
+      "lilac": "#DCD2FF",
+      "aubergine": "#201634",
+      "porcelain": "#F9F7FF"
+    },
+    "text_pairs": [
+      [
+        "#201634",
+        "#F9F7FF"
+      ],
+      [
+        "#F9F7FF",
+        "#613BFD"
+      ],
+      [
+        "#201634",
+        "#DCD2FF"
+      ]
+    ],
+    "font": "Manrope",
+    "description": "Three curved plates form an abstract protective covering. This is the comparison route for a user leaning toward recognizable imagery: it is compact but gives a less immediate security reading. It contains no intended letter, eye or animal. Violet follows the delivered board label #613BFD; generated pixels remain illustrative."
+  }
+]

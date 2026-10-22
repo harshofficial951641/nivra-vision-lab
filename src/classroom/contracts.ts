@@ -1,7 +1,11 @@
+import { sessionToken } from '../auth/session'
+import type { FloorRecord, GuardRecord, Placement } from '../command/types'
 export const isLocalDashboard = ['localhost', '127.0.0.1'].includes(location.hostname)
 export interface CameraLocation {
   id: string
   name: string
+  label?: string | null
+  placement?: Placement | null
   building: string
   floor: string
   enabled: boolean
@@ -49,17 +53,38 @@ export interface Incident {
   status: 'open' | 'acknowledged' | 'resolved'
   revision: number
   updated_at: number
+  // Review lifecycle (schema v2+). Absent on older services.
+  reviewed_at?: number | null
+  decision?: 'confirmed' | 'false_alarm' | null
+  reason?: 'play_sport' | 'greeting' | 'camera_glitch' | 'other' | null
+  note?: string | null
+  guard?: string | null
+  decided_at?: number | null
+  alerted_at?: number | null
+  guard_ack_at?: number | null
+  guard_declined_at?: number | null
+  on_scene_at?: number | null
+  escalated_at?: number | null
+  reviewer_id?: string | null
+  floor_id?: string | null
+  clip?: { status: 'recording' | 'ready' | 'expired' | 'none'; frames: number } | null
 }
 export interface Snapshot {
-  version: 2
+  version: 2 | 3
   type: 'snapshot'
   cameras: CameraLocation[]
   events: Incident[]
-  analytics: { total: number; pending: number; resolved: number }
+  analytics: { total: number; pending: number; resolved: number; confirmed?: number; falseAlarms?: number }
   service: 'ready' | 'loading' | 'error'
   publicOrigin: string | null
   retention: 'event-records-only'
   experimental: true
+  // v3 (command system). Absent on older services.
+  serverTime?: number
+  me?: { role: string } | null
+  site?: { id: string; name: string } | null
+  floors?: FloorRecord[]
+  guards?: GuardRecord[]
   runtime: {
     compute?: 'camera-device'
     personModel?: string
@@ -67,23 +92,36 @@ export interface Snapshot {
     maxPeople?: number
   } | null
 }
+export class ApiError extends Error {
+  status: number
+  constructor(message: string, status: number) {
+    super(message)
+    this.status = status
+  }
+}
 export async function api<T>(
   path: string,
   method = 'GET',
   body?: unknown,
 ): Promise<T> {
+  const token = await sessionToken()
+  const headers: Record<string, string> = {}
+  if (token) headers.Authorization = `Bearer ${token}`
+  const isForm = typeof FormData !== 'undefined' && body instanceof FormData
+  if (body && !isForm) headers['Content-Type'] = 'application/json'
   const response = await fetch(`/api/v2${path}`, {
     method,
     credentials: 'same-origin',
-    headers: body ? { 'Content-Type': 'application/json' } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
+    headers,
+    body: body ? (isForm ? (body as FormData) : JSON.stringify(body)) : undefined,
   })
   if (!response.ok) {
     const payload = await response.json().catch(() => null)
-    throw new Error(
+    throw new ApiError(
       typeof payload?.detail === 'string'
         ? payload.detail
         : `Request failed (${response.status}).`,
+      response.status,
     )
   }
   return response.status === 204 ? (undefined as T) : response.json()

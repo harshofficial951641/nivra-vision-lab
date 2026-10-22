@@ -1,0 +1,121 @@
+{
+  "reviewMethod": "16 timestamped RGB frames per clip; not continuous motion or human annotation",
+  "limitations": [
+    "These are provisional assistant visual decisions for training selection, not ground-truth annotations or an independent evaluation set.",
+    "Sampled frames do not establish the absence of brief events between timestamps or at unsampled clip boundaries. A full-duration normal interval extrapolates beyond the sampled observations.",
+    "Blurred faces, occlusion and still frames limit judgments about brief physical contact. No identity, intent, relationship or audio claims are made.",
+    "sceneGroup describes visible settings only. It does not establish independent recordings, sessions, actors or original-media lineage.",
+    "All accepted recordings remain within the same VID training cohort. They must not be divided into a purported unseen calibration or holdout set without verified recording/session lineage.",
+    "The one ambiguous interaction is excluded from normal training until continuous motion can be reviewed."
+  ],
+  "recordings": [
+    {
+      "id": "nv_b_1255",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One person beside an orange door and shelving, opening/holding the door. No interpersonal strike or grappling is visible in the sampled frames."
+    },
+    {
+      "id": "nv_b_1262",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "Two people standing indoors near a chest freezer, gesturing and extending hands/forearms toward one another. No visible strike, forceful shove or grappling in the sampled sequence; the interaction's purpose is not inferred."
+    },
+    {
+      "id": "nv_b_1271",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One person approaches a bed and lifts/spreads a sheet over a reclining person. The visible action concerns bedding; no strike or grappling is visible."
+    },
+    {
+      "id": "nv_b_1281",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One person walks through a bedroom doorway beside a bookcase, turns and walks back. No physical interaction with another person is visible."
+    },
+    {
+      "id": "nv_b_1284",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-stairwell",
+      "notes": "One person walks upstairs alongside a railing and leaves the view. No visible interpersonal contact."
+    },
+    {
+      "id": "nv_b_1294",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One person remains by a doorway with a hand near the lower face/neck. No other person or physical interaction is visible; no emotional state is inferred."
+    },
+    {
+      "id": "nv_b_1299",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One seated person uses a laptop. No interpersonal contact is visible."
+    },
+    {
+      "id": "nv_b_1300",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One person handles/folds clothing beside a bed. No interpersonal contact is visible."
+    },
+    {
+      "id": "nv_b_1305",
+      "decision": "train-normal",
+      "sceneGroup": "vid-home-interiors-unverified-cohort",
+      "notes": "One person handles books and a yellow bag beside a wardrobe mirror. The second visible figure is a mirror reflection, not counted as another participant. No interpersonal contact is visible."
+    },
+    {
+      "id": "nv_b_1331",
+      "decision": "train-normal",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "Two people sit close together looking at a notebook/paper on a blue seat. Hands move near the page; no strike or grappling is visible."
+    },
+    {
+      "id": "nv_b_1332",
+      "decision": "train-normal",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "Two seated people look at and write/point on a notebook or paper. No strike or grappling is visible. Setting/action resemble nv_b_1331, without claiming independent recording lineage."
+    },
+    {
+      "id": "nv_b_1338",
+      "decision": "ambiguous",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "Two standing people lean toward each other around 2.3-2.9 seconds. Head/upper-body contact and motion direction cannot be resolved confidently from these stills. Exclude from normal training; do not infer a greeting or a strike."
+    },
+    {
+      "id": "nv_b_1342",
+      "decision": "train-normal",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "Two people stand apart and gesture with their hands. No bodily contact or strike is visible in the sampled frames."
+    },
+    {
+      "id": "nv_b_1347",
+      "decision": "train-normal",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "One foreground person brings their palms together and lowers them. No interpersonal contact is visible; no cultural meaning or intent is inferred."
+    },
+    {
+      "id": "nv_b_1358",
+      "decision": "train-normal",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "One seated person moves a white sheet/paper against an adjacent blue seat. No interpersonal contact is visible."
+    },
+    {
+      "id": "nv_b_1360",
+      "decision": "train-normal",
+      "sceneGroup": "vid-courtyard-blue-seats-ivy-wall",
+      "notes": "One seated person moves a white sheet/paper against an adjacent blue seat from another view. No interpersonal contact is visible. Setting/action resemble nv_b_1358 without establishing session lineage."
+    },
+    {
+      "id": "nv_b_1368",
+      "decision": "train-normal",
+      "sceneGroup": "vid-gym-pushup-views",
+      "notes": "One foreground person performs repeated push-ups on a gym floor. No physical interaction with another person is visible."
+    },
+    {
+      "id": "nv_b_1369",
+      "decision": "train-normal",
+      "sceneGroup": "vid-gym-pushup-views",
+      "notes": "Push-ups are visible from behind in a gym. No interpersonal contact is visible. Setting/action resemble nv_b_1368; no independent recording lineage is asserted."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "file": "A-attentive-presence.png",
+    "source": "exec-51217447-d26c-4590-8d4e-489c0cdfa233.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "5cccf0e58c685199c1c89f7cd5c6bfbefc67906721ec44f90c00924be7407a9f"
+  },
+  {
+    "file": "B-protected-sight.png",
+    "source": "exec-25bcfba0-0b68-431b-93b4-d85d93833a49.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "52096b4f4a7ad57d9eb28f1707806d7ca79edb112fcb41604f0babbcacf23eee"
+  },
+  {
+    "file": "C-intervention.png",
+    "source": "exec-5513da07-cc32-4aa5-ab23-29fed677350b.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "6acab6a209c431260d9537ba85d842358ec1e5a29ef525ad4beb7ee36b24bc51"
+  },
+  {
+    "file": "D-overhang-experiment.png",
+    "source": "exec-1e56647e-2846-4711-bce7-555f4acb6d90.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "opaque": true,
+    "sha256": "0e6f39e0220e93c14c12f0419fbd4ab946f83ce282044f59c7f3d9e39aa620d8"
+  }
+]

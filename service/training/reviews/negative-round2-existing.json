@@ -1,0 +1,862 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "Provisional assistant visual review via local OpenCV RGB contact sheets opened with view_image. First: 60 numerically ID-spread unreviewed nv_b_01.rar clips, five timestamped frames each on ten overview sheets. Then: 36 selected clips, 32 ordered source-frame samples spanning each complete clip. Finally: all consecutive source frames from frame zero through the first frame at or after 4.0 s for 18 candidate normal intervals (17 retained; nv_b_149 rejected after boundary inspection), visually inspected on timestamped full-frame contact sheets. cv2.setNumThreads(1); one sequential decoder; no GPU, audio or motion playback. Source seconds use decoded frame index / reported FPS. Evidence paths are repository-relative.",
+  "limitations": [
+    "Assistant screening labels are provisional training selections, not human ground truth. Publisher category was used only to find the archive pool, never as label approval.",
+    "Only retained 0-4 s normal intervals have every-frame contact-sheet coverage. Full-clip 32-frame sheets and overview sheets are sampled; brief events between those samples may be missed. No continuous motion playback was performed.",
+    "Contact sheets contain downscaled, blurred-face RGB thumbnails. Occlusion, distance, backlighting and absent audio limit judgments about contact mechanics. Every-frame inspection does not eliminate visual interpretation error.",
+    "No identity, intent, injury, crime or relationship is inferred. Gesture-only and unclear contact scenes do not receive positive labels. Sports/prop scenes are excluded.",
+    "sceneGroup describes visible backgrounds only; actors, sessions and source-media lineage are unknown. All records remain in the single VID training cohort, not independent calibration or holdout data.",
+    "All tails after the retained four-second spans remain unannotated, including visually sampled tails that may appear normal.",
+    "Selection intentionally favors campus settings, groups and movement; this is not a representative prevalence sample. No training or detector-performance claim follows from this review."
+  ],
+  "recordings": [
+    {
+      "id": "nv_b_20",
+      "decision": "train-normal",
+      "sceneGroup": "home-bed-red-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two seated people make small hand movements over fabric/items on a bed; no strike, shove or grappling visible across the fully inspected 0-4 s interval. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-01.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_20-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_20-fullframes-0-4.jpg"
+      ],
+      "sha256": "be6eee9cc954e47028abfb40e128d4e0eb8320b837e80efc10e3f685404df577",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_20.mp4",
+      "durationSeconds": 5.506756756756756,
+      "intervalFrameCoverage": {
+        "id": "nv_b_20",
+        "frameCount": 120,
+        "fps": 29.6,
+        "firstSeconds": 0,
+        "lastSeconds": 4.02027027027027,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_23",
+      "decision": "exclude",
+      "sceneGroup": "home-bed-carved-headboard",
+      "events": [],
+      "notes": "Two seated people exchange small pointing/hand gestures. Gestures alone do not support an unarmed-fight label; excluded from this conservative interaction batch, without assigning argument or intent.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-02.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_23-dense.jpg"
+      ],
+      "sha256": "ad71a9fd2a47aa391d11b2b2563cf8d4af21cf78997ebf4d861295946049906a",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_23.mp4",
+      "durationSeconds": 5.135135135135135
+    },
+    {
+      "id": "nv_b_28",
+      "decision": "train-normal",
+      "sceneGroup": "home-desk-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two seated people work with items on a desk, with small hand movements and no interpersonal strike or grappling across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-02.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_28-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_28-fullframes-0-4.jpg"
+      ],
+      "sha256": "b22b6567b0782776887c18301931cb7bf896d0756c1a5ebe184339e551b1e966",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_28.mp4",
+      "durationSeconds": 5.439189189189189,
+      "intervalFrameCoverage": {
+        "id": "nv_b_28",
+        "frameCount": 120,
+        "fps": 29.6,
+        "firstSeconds": 0,
+        "lastSeconds": 4.02027027027027,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_44",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen-counter",
+      "events": [],
+      "notes": "One person raises/lowers a hand near the face; a second enters and gestures toward the first. Vague gestures without established unarmed physical-fight mechanics; excluded rather than inferred positive or normal.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-03.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_44-dense.jpg"
+      ],
+      "sha256": "1484fee3291fe7e4bb08af4f3e23fc72d1ffa4c5d1fc30418b817034d84246b4",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_44.mp4",
+      "durationSeconds": 5.133333333333334
+    },
+    {
+      "id": "nv_b_47",
+      "decision": "train-normal",
+      "sceneGroup": "home-room-low-camera",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Retain only 0-4 s: one person crosses into view and stands with arms down. A second person enters after roughly 5.5 s and later gestures; that tail is unannotated. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-03.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_47-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_47-fullframes-0-4.jpg"
+      ],
+      "sha256": "74a349365efff446a9a2dd9af1d4e60f49ac43402fa7e7f483fc2390643a0973",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_47.mp4",
+      "durationSeconds": 7.466666666666667,
+      "intervalFrameCoverage": {
+        "id": "nv_b_47",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_50",
+      "decision": "train-normal",
+      "sceneGroup": "campus-corridor-stairs",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people walk side by side away from the camera with arms down, without striking or grappling across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-03.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_50-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_50-fullframes-0-4.jpg"
+      ],
+      "sha256": "35cc561c0f423bec65e11d546904a52cddb4f4fe46d96470126d33ee2c4a2243",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_50.mp4",
+      "durationSeconds": 6.0,
+      "intervalFrameCoverage": {
+        "id": "nv_b_50",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_53",
+      "decision": "train-normal",
+      "sceneGroup": "campus-counter-writing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people lean over a counter and write/point on its surface; no interpersonal strike, shove or grappling across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-03.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_53-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_53-fullframes-0-4.jpg"
+      ],
+      "sha256": "a0a9ee7c4663170591199a83d59ecf4255721478841b632f4e5ea695a49ca859",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_53.mp4",
+      "durationSeconds": 8.630456514495167,
+      "intervalFrameCoverage": {
+        "id": "nv_b_53",
+        "frameCount": 122,
+        "fps": 30.01,
+        "firstSeconds": 0,
+        "lastSeconds": 4.031989336887704,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_57",
+      "decision": "exclude",
+      "sceneGroup": "outdoor-night-sports-court",
+      "events": [],
+      "notes": "People move rapidly on a marked court with visible rackets. Prop/sports scene excluded under task scope; no violence or intent inferred.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-03.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_57-dense.jpg"
+      ],
+      "sha256": "2c98b9a6226614aa25e04487778db797abf7028be9bb8e1d30490b25b2e94e41",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_57.mp4",
+      "durationSeconds": 5.466666666666667
+    },
+    {
+      "id": "nv_b_61",
+      "decision": "exclude",
+      "sceneGroup": "campus-corridor-railings",
+      "events": [],
+      "notes": "Two people face one another and raise hands near upper-body/face height. Gestural exchange with unclear brief contact, excluded rather than assigned an action or intent.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-03.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_61-dense.jpg"
+      ],
+      "sha256": "4c85dafb9cbaa0a55534ed65eb08d6a9eae509c2e87e70575f495f5a66517ddf",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_61.mp4",
+      "durationSeconds": 6.134142231209976
+    },
+    {
+      "id": "nv_b_64",
+      "decision": "exclude",
+      "sceneGroup": "campus-corridor-open-floor",
+      "events": [],
+      "notes": "Two standing people repeatedly raise/extend arms toward one another. Vague gestures and possible hand contact do not establish fight mechanics; excluded from this batch.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-04.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_64-dense.jpg"
+      ],
+      "sha256": "15ec87ce7b70630bbd5006cda8bdee25b9a92223727c6824745d261bc0b39d70",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_64.mp4",
+      "durationSeconds": 6.433333333333334
+    },
+    {
+      "id": "nv_b_68",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-corridor-red-black-panels",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people approach and join one hand each at about waist level, holding the low hand contact while standing apart. No strike, shove, upper-body restraint or grappling visible across 0-4 s. The visual hand contact resembles a handshake; no purpose or relationship is assigned. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-04.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_68-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_68-fullframes-0-4.jpg"
+      ],
+      "sha256": "b1a20933898f6c427b4d141d6297fe7d6f67de0221a85d89d94e0daf9549c462",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_68.mp4",
+      "durationSeconds": 6.4,
+      "intervalFrameCoverage": {
+        "id": "nv_b_68",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_71",
+      "decision": "train-normal",
+      "sceneGroup": "campus-corridor-stairs-shopfront",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "One foreground person stands near the railing with small arm movements and no interpersonal contact across 0-4 s; distant background figures are small. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-04.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_71-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_71-fullframes-0-4.jpg"
+      ],
+      "sha256": "9dfb93a147fc6d4c04665d93e0d870d0d5e8bdecb65aa474abbec9c1d1e8f30d",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_71.mp4",
+      "durationSeconds": 6.633333333333334,
+      "intervalFrameCoverage": {
+        "id": "nv_b_71",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_84",
+      "decision": "exclude",
+      "sceneGroup": "classroom-white-writing-chairs",
+      "events": [],
+      "notes": "One standing person and several seated people raise/point hands. This gestural classroom scene does not establish physical-fight mechanics; excluded without inferring an argument, intent or relationships.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-05.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_84-dense.jpg"
+      ],
+      "sha256": "417e463e6aa4f7a43b8560a85378d4e307c81e1e25a39b912281c6f53d073e36",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_84.mp4",
+      "durationSeconds": 9.224109224109224
+    },
+    {
+      "id": "nv_b_89",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-corridor-railings",
+      "events": [],
+      "notes": "A third person approaches a pair and the group makes close shoulder/upper-arm movements from about 2.5 s. Occlusion and contact mechanics are unclear. No normal or positive span retained.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-05.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_89-dense.jpg"
+      ],
+      "sha256": "172e61554078d2ffd764dd8c6f1d33258c04fb0cc306fce187c0efe36297e751",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_89.mp4",
+      "durationSeconds": 10.496501166277907
+    },
+    {
+      "id": "nv_b_92",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-court-pillars",
+      "events": [],
+      "notes": "People move around an open covered court; sports-like movements and a small ball-like object are visible. Prop/sports scene excluded under task scope; no unarmed-fight label inferred.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-05.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_92-dense.jpg"
+      ],
+      "sha256": "b18bdd7a11ce91cb6d298dca7481dd823bd56f96d9c134e14badd4b7036ecb3e",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_92.mp4",
+      "durationSeconds": 9.296822177146721
+    },
+    {
+      "id": "nv_b_95",
+      "decision": "exclude",
+      "sceneGroup": "campus-courtyard-brick-wall",
+      "events": [],
+      "notes": "Visible ball handling, bouncing and close passing/defending movements among several people. Prop/sports scene excluded under task scope, without interpreting contact as violence.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-05.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_95-dense.jpg"
+      ],
+      "sha256": "90c745f2b165281fa328cbf1fcaa8c79f046b0ccf79f0b755762a8a6cfa65891",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_95.mp4",
+      "durationSeconds": 8.330545332887253
+    },
+    {
+      "id": "nv_b_98",
+      "decision": "ambiguous",
+      "sceneGroup": "covered-seating-white-chairs",
+      "events": [],
+      "notes": "People approach and make close upper-body/shoulder contact behind chairs, followed by another approach. Furniture occludes the contact; neither a benign hug nor a fight is established. No events retained.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-05.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_98-dense.jpg"
+      ],
+      "sha256": "4ce37679de07f9fb69fac3756faa5d29a0e79824899097dbfd3b32f522cb99fe",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_98.mp4",
+      "durationSeconds": 10.190444370197127
+    },
+    {
+      "id": "nv_b_101",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-brick-corridor-red-black-panels",
+      "events": [],
+      "notes": "Two people approach; one places an arm near the other shoulder/upper back and leans close around 2.5-5.5 s. Brief samples cannot reliably separate a side embrace/pat from forceful contact. No complete safe early 4 s window precedes the contact.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-05.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_101-dense.jpg"
+      ],
+      "sha256": "3046441d93d7dde60222f8d4e870b82dd1b537df01591f824de6147cc96bcdac",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_101.mp4",
+      "durationSeconds": 8.033333333333333
+    },
+    {
+      "id": "nv_b_105",
+      "decision": "ambiguous",
+      "sceneGroup": "white-room-group-curtained-windows",
+      "events": [],
+      "notes": "Multiple pairs make hand/shoulder contact and later close upper-body embraces. Some contact is occluded, and brief samples cannot establish its mechanics. Do not infer a benign greeting or a fight; no events retained.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-06.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_105-dense.jpg"
+      ],
+      "sha256": "7e073c6bb365b0ce887bdb19a84e55b2da27a1f6c14d7a54d7ef89d161881902",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_105.mp4",
+      "durationSeconds": 8.033333333333333
+    },
+    {
+      "id": "nv_b_109",
+      "decision": "train-normal",
+      "sceneGroup": "white-room-group-curtained-windows",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Several standing people make separate arm/head movements and small steps. Across 0-4 s the visible movements do not join into striking, pushing or grappling; later footage remains unannotated. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-06.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_109-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_109-fullframes-0-4.jpg"
+      ],
+      "sha256": "fd948e4e59c61ed9d3c1159b9ed6f1ffb4a32684e84f4040b7880a1406889062",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_109.mp4",
+      "durationSeconds": 8.033333333333333,
+      "intervalFrameCoverage": {
+        "id": "nv_b_109",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_112",
+      "decision": "train-normal",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "One person repeatedly bends knees and torso with hands behind the head. Vigorous solo movement with no second person or interpersonal target across 0-4 s; no named exercise or intent inferred. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-06.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_112-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_112-fullframes-0-4.jpg"
+      ],
+      "sha256": "30a9f83592883a1c2da5fa09f545a3e134dc44c0dfb2cb3c1e6043412ef658df",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_112.mp4",
+      "durationSeconds": 5.666666666666667,
+      "intervalFrameCoverage": {
+        "id": "nv_b_112",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_122",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-corridor-red-black-panels",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people walk toward the camera side by side with arms low; no strike, shove or grappling across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-06.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_122-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_122-fullframes-0-4.jpg"
+      ],
+      "sha256": "8e2e4b6fad77bd5133a3ca1b090b3072983864b63d66a48fd6795816edc51295",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_122.mp4",
+      "durationSeconds": 7.366666666666666,
+      "intervalFrameCoverage": {
+        "id": "nv_b_122",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_125",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-corridor-window",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people walk away side by side with low arms and no striking or grappling across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-07.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_125-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_125-fullframes-0-4.jpg"
+      ],
+      "sha256": "9a9d2486f31d4aab388aaf292f82a22ebad961c34dc5175eee771c820a701d08",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_125.mp4",
+      "durationSeconds": 6.7,
+      "intervalFrameCoverage": {
+        "id": "nv_b_125",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_129",
+      "decision": "train-normal",
+      "sceneGroup": "campus-brick-room-photo-wall",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people stand beside a table and look downward with small hand movements around a small held item. No strike, shove or grappling across 0-4 s; the item is not identified. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-07.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_129-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_129-fullframes-0-4.jpg"
+      ],
+      "sha256": "bb841a2bfb06fc10baccfba976538fd5733ab71c553f0552a06085d9049a4840",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_129.mp4",
+      "durationSeconds": 7.533333333333333,
+      "intervalFrameCoverage": {
+        "id": "nv_b_129",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_132",
+      "decision": "exclude",
+      "sceneGroup": "campus-corridor-stone-sculpture",
+      "events": [],
+      "notes": "Two people face one another with repeated pointing/raised-hand gestures near faces. No clear sustained physical-fight mechanics; excluded without inferring an argument or intent.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-07.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_132-dense.jpg"
+      ],
+      "sha256": "7dfdf1f05f0d63d3cd1b58d72d12c548b0c707c889db8b005738401872fe9325",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_132.mp4",
+      "durationSeconds": 7.81041388518024
+    },
+    {
+      "id": "nv_b_149",
+      "decision": "ambiguous",
+      "sceneGroup": "rooftop-daylight-low-camera",
+      "events": [],
+      "notes": "Two initially separated rooftop figures approach and draw together around 3.8-4.1 s. The fully inspected 0-4 s frame sequence does not provide a conservative complete normal window before close contact, and the later contact mechanics are unclear. No event retained; no greeting or fight inferred.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-08.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_149-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_149-fullframes-0-4.jpg"
+      ],
+      "sha256": "c68ceb68caaacbbd29a3a252d9f778a23eb6b3632c3e09b22b34b999a47015b5",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_149.mp4",
+      "durationSeconds": 5.566666666666666
+    },
+    {
+      "id": "nv_b_153",
+      "decision": "exclude",
+      "sceneGroup": "rooftop-dusk-stair-ladder",
+      "events": [],
+      "notes": "Distant figures stand near a ladder/stair structure in low light. Fine contact details are insufficiently visible; excluded for visibility rather than labeled normal.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-08.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_153-dense.jpg"
+      ],
+      "sha256": "fc5c3f8a85778b3a391cb4e9f0216ff343d4a6f51374e694d12005344462e36b",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_153.mp4",
+      "durationSeconds": 10.566666666666666
+    },
+    {
+      "id": "nv_b_157",
+      "decision": "exclude",
+      "sceneGroup": "rooftop-dusk-stair-ladder",
+      "events": [],
+      "notes": "Distant figures stand and descend beside a stair/ladder in low light. Fine contact details are insufficiently visible; excluded rather than labeled normal.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-08.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_157-dense.jpg"
+      ],
+      "sha256": "bd09d22a13d46855ec9e37d311b6f128c6f45a0249913f19d7b6c6c1ef9d882c",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_157.mp4",
+      "durationSeconds": 10.566666666666666
+    },
+    {
+      "id": "nv_b_160",
+      "decision": "train-normal",
+      "sceneGroup": "outdoor-tree-path-backlit",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Separated figures step and move their arms on a tree-lined path. No interpersonal strike, shove or grappling across 0-4 s; distant/backlit detail limits interpretation of small hand movements. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-08.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_160-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_160-fullframes-0-4.jpg"
+      ],
+      "sha256": "e038c690fbc3797643a358b910c08057b5ac578b68c1eec527e3f7852ee908b9",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_160.mp4",
+      "durationSeconds": 6.4,
+      "intervalFrameCoverage": {
+        "id": "nv_b_160",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_163",
+      "decision": "ambiguous",
+      "sceneGroup": "outdoor-tree-path-white-red-trunks",
+      "events": [],
+      "notes": "A distant group stands and steps close together with partially occluded arms/bodies. Interaction details are too small to establish a definite normal contact window or a physical fight; no events retained.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-08.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_163-dense.jpg"
+      ],
+      "sha256": "ff3fca579838eb8b0504f2c9c892bfb41de40454208c2a1f2ef4d144b14aaaa3",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_163.mp4",
+      "durationSeconds": 5.8
+    },
+    {
+      "id": "nv_b_168",
+      "decision": "train-normal",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "One person braces hands on a wall and repeatedly leans/bends the arms. No second person or interpersonal contact across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-09.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_168-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_168-fullframes-0-4.jpg"
+      ],
+      "sha256": "e071ba15bcf5ce4d209b2f59a5a29f105352cfe0a79856383d767b0eb78992ef",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_168.mp4",
+      "durationSeconds": 6.333333333333333,
+      "intervalFrameCoverage": {
+        "id": "nv_b_168",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_171",
+      "decision": "train-normal",
+      "sceneGroup": "home-bedroom-blue-curtain",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "One person repeatedly raises and lowers the torso on a bed, with hands behind the head. No second person or interpersonal contact across 0-4 s. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-09.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_171-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_171-fullframes-0-4.jpg"
+      ],
+      "sha256": "f1e90fe9d052688f2171215cd9de4dc283b2725b3f1d75de13234a69aa864c30",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_171.mp4",
+      "durationSeconds": 6.4,
+      "intervalFrameCoverage": {
+        "id": "nv_b_171",
+        "frameCount": 121,
+        "fps": 30.0,
+        "firstSeconds": 0,
+        "lastSeconds": 4.0,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_184",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen-counter",
+      "events": [],
+      "notes": "Two people face one another with repeated raised/pointing hand movements near faces. Gestures do not establish unarmed physical-fight mechanics; excluded without inferring an argument or intent.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-09.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_184-dense.jpg"
+      ],
+      "sha256": "3e582853577488f1c12b760478a4a22b501caf99e941e4ad8554238d323e891e",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_184.mp4",
+      "durationSeconds": 9.933333333333334
+    },
+    {
+      "id": "nv_b_187",
+      "decision": "exclude",
+      "sceneGroup": "home-room-wardrobe-low-camera",
+      "events": [],
+      "notes": "Two people face one another, point and move hands near the other upper body/face. Contact mechanics are unclear; no fight or normal span inferred from the gestural exchange.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-10.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_187-dense.jpg"
+      ],
+      "sha256": "29ddcffdd82515a07c10811fe998c4e521ef95582d318fb72af897b865de21f2",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_187.mp4",
+      "durationSeconds": 6.1
+    },
+    {
+      "id": "nv_b_190",
+      "decision": "train-normal",
+      "sceneGroup": "home-window-blue-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two people separately pull/hold curtain fabric beside a window. No interpersonal strike, shove or grappling across 0-4 s; ordinary furnishing handling, no object-directed interpersonal action visible. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-10.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_190-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_190-fullframes-0-4.jpg"
+      ],
+      "sha256": "ad4bb2e7c50bee81fb6811f95f66bc381b505610ebef389a8eafb9cd973ee7d6",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_190.mp4",
+      "durationSeconds": 5.439189189189189,
+      "intervalFrameCoverage": {
+        "id": "nv_b_190",
+        "frameCount": 120,
+        "fps": 29.6,
+        "firstSeconds": 0,
+        "lastSeconds": 4.02027027027027,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    },
+    {
+      "id": "nv_b_193",
+      "decision": "train-normal",
+      "sceneGroup": "home-sofa-patterned-wall",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two seated people handle and lift a pink garment between them. No strike, shove or grappling across 0-4 s; the raised arms follow fabric handling, with no inferred purpose or relationship. All source frames covering 0-4 s were inspected in an ordered contact sheet; the tail after 4 s is unannotated.",
+      "evidenceFiles": [
+        "service/training/data/vid/review-round2-neg/overview-10.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_193-dense.jpg",
+        "service/training/data/vid/review-round2-neg/nv_b_193-fullframes-0-4.jpg"
+      ],
+      "sha256": "1efc76a087e191cca6ff08acc75f79564ecf3f548ce200ed57902a36b949a45b",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_193.mp4",
+      "durationSeconds": 7.0608108108108105,
+      "intervalFrameCoverage": {
+        "id": "nv_b_193",
+        "frameCount": 120,
+        "fps": 29.6,
+        "firstSeconds": 0,
+        "lastSeconds": 4.02027027027027,
+        "interval": [
+          0,
+          4
+        ]
+      }
+    }
+  ]
+}

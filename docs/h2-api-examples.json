@@ -1,0 +1,620 @@
+{
+  "note": "Captured from local TestClient with temporary SQLite and plan files. Example IDs/timestamps are illustrative; signed URLs expire and these temporary resources no longer exist.",
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/v2/site",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "56f94b30-5166-427c-a7c9-977fdb93abd4",
+        "name": "NIVRA"
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v2/site",
+      "request": {
+        "name": "NIVRA Mall"
+      },
+      "status": 200,
+      "response": {
+        "id": "56f94b30-5166-427c-a7c9-977fdb93abd4",
+        "name": "NIVRA Mall"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/floors",
+      "request": {
+        "name": "Ground floor"
+      },
+      "status": 201,
+      "response": {
+        "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "name": "Ground floor",
+        "order": 0,
+        "plan": null,
+        "sample": false,
+        "metersPerUnit": null
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v2/floors/a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+      "request": {
+        "name": "Ground floor",
+        "order": 0,
+        "metersPerUnit": 0.1
+      },
+      "status": 200,
+      "response": {
+        "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "name": "Ground floor",
+        "order": 0,
+        "plan": null,
+        "sample": false,
+        "metersPerUnit": 0.1
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/api/v2/floors/a1332efa-2ebe-4da1-9f3c-f4e991b831d4/plan",
+      "request": {
+        "contentType": "multipart/form-data",
+        "field": "file",
+        "filename": "plan.png",
+        "format": "PNG"
+      },
+      "status": 200,
+      "response": {
+        "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "name": "Ground floor",
+        "order": 0,
+        "plan": {
+          "url": "/api/v2/files/plan/a1332efa-2ebe-4da1-9f3c-f4e991b831d4?v=b10a722066c902710a487f424f8b54bc6c386027dd0c6a53dbdc68b8155038e3&exp=1792632770&sig=dd04a4722789be76fd85e59bc95976c610d3e56bcb7a49bc0261f61ab4d65850",
+          "width": 1000,
+          "height": 620
+        },
+        "sample": false,
+        "metersPerUnit": 0.1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/files/plan/a1332efa-2ebe-4da1-9f3c-f4e991b831d4?v=b10a722066c902710a487f424f8b54bc6c386027dd0c6a53dbdc68b8155038e3&exp=1792632770&sig=dd04a4722789be76fd85e59bc95976c610d3e56bcb7a49bc0261f61ab4d65850",
+      "request": null,
+      "status": 200,
+      "response": null,
+      "binaryResponse": {
+        "contentType": "image/webp",
+        "bytes": 68,
+        "cacheControl": "private, max-age=300"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/floors/a1332efa-2ebe-4da1-9f3c-f4e991b831d4/sample",
+      "request": null,
+      "status": 200,
+      "response": {
+        "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "name": "Ground floor",
+        "order": 0,
+        "plan": {
+          "url": "/demo/mall/plan.svg",
+          "width": 1000,
+          "height": 620
+        },
+        "sample": true,
+        "metersPerUnit": 0.1
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/floors",
+      "request": null,
+      "status": 200,
+      "response": [
+        {
+          "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+          "name": "Ground floor",
+          "order": 0,
+          "plan": {
+            "url": "/demo/mall/plan.svg",
+            "width": 1000,
+            "height": 620
+          },
+          "sample": true,
+          "metersPerUnit": 0.1
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/cameras",
+      "request": {
+        "name": "East entrance",
+        "building": "Mall",
+        "floor": "Ground floor"
+      },
+      "status": 201,
+      "response": {
+        "id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+        "name": "East entrance",
+        "building": "Mall",
+        "floor": "Ground floor",
+        "enabled": true,
+        "created": 1792632170700.74,
+        "label": "CAM-01",
+        "floor_id": null,
+        "x": null,
+        "y": null,
+        "angle": null,
+        "fov": null,
+        "range": null,
+        "placement": null
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v2/cameras/4002eaff-ec29-4b4f-b125-3071c5c472ba",
+      "request": {
+        "label": "CAM-01",
+        "placement": {
+          "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+          "x": 0.25,
+          "y": 0.4,
+          "angle": 45,
+          "fov": 90,
+          "range": 0.2
+        }
+      },
+      "status": 200,
+      "response": {
+        "id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+        "name": "East entrance",
+        "building": "Mall",
+        "floor": "Ground floor",
+        "enabled": true,
+        "created": 1792632170700.74,
+        "label": "CAM-01",
+        "floor_id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "x": 0.25,
+        "y": 0.4,
+        "angle": 45.0,
+        "fov": 90.0,
+        "range": 0.2,
+        "placement": {
+          "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+          "x": 0.25,
+          "y": 0.4,
+          "angle": 45.0,
+          "fov": 90.0,
+          "range": 0.2
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/guards",
+      "request": {
+        "callsign": "G2",
+        "name": "Example guard",
+        "email": "guard@example.com",
+        "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "post": {
+          "x": 0.4,
+          "y": 0.5
+        }
+      },
+      "status": 201,
+      "response": {
+        "id": "12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+        "callsign": "G2",
+        "name": "Example guard",
+        "userId": null,
+        "email": "guard@example.com",
+        "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "post": {
+          "x": 0.4,
+          "y": 0.5
+        },
+        "shift": "off",
+        "presence": {
+          "online": false,
+          "lastSeen": null
+        },
+        "push": false
+      }
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/v2/guards/12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+      "request": {
+        "shift": "on_shift"
+      },
+      "status": 200,
+      "response": {
+        "id": "12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+        "callsign": "G2",
+        "name": "Example guard",
+        "userId": null,
+        "email": "guard@example.com",
+        "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "post": {
+          "x": 0.4,
+          "y": 0.5
+        },
+        "shift": "on_shift",
+        "presence": {
+          "online": false,
+          "lastSeen": null
+        },
+        "push": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/guards",
+      "request": null,
+      "status": 200,
+      "response": [
+        {
+          "id": "12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+          "callsign": "G2",
+          "name": "Example guard",
+          "userId": null,
+          "email": "guard@example.com",
+          "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+          "post": {
+            "x": 0.4,
+            "y": 0.5
+          },
+          "shift": "on_shift",
+          "presence": {
+            "online": false,
+            "lastSeen": null
+          },
+          "push": false
+        }
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/events/5b24b10e-8607-46b6-aa5e-63e454d52b66/review",
+      "request": {
+        "action": "confirm",
+        "revision": 0,
+        "guard": "G2",
+        "note": "Check east entrance."
+      },
+      "status": 200,
+      "response": {
+        "id": "5b24b10e-8607-46b6-aa5e-63e454d52b66",
+        "camera_id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+        "generation": "example-generation",
+        "source_id": "source-1",
+        "received_at": 1792632170732.0774,
+        "camera_name": "East entrance",
+        "location": "Mall \u00b7 Ground floor",
+        "source_ms": 2500.0,
+        "evidence_ms": 2000.0,
+        "model": "slowfast-ava",
+        "detail": "Review the live scene.",
+        "status": "acknowledged",
+        "revision": 1,
+        "updated_at": 1792632170738.082,
+        "reviewed_at": 1792632170738.082,
+        "decision": "confirmed",
+        "reason": null,
+        "note": "Check east entrance.",
+        "guard": "G2",
+        "decided_at": 1792632170738.082,
+        "alerted_at": 1792632170738.082,
+        "on_scene_at": null,
+        "guard_ack_at": null,
+        "guard_declined_at": null,
+        "floor_id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "reviewer_id": "dev_04a1479454af0183cfc930fd",
+        "escalated_at": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/state",
+      "request": null,
+      "status": 200,
+      "response": {
+        "type": "snapshot",
+        "version": 3,
+        "serverTime": 1792632170743.0793,
+        "me": {
+          "role": "admin"
+        },
+        "site": {
+          "id": "56f94b30-5166-427c-a7c9-977fdb93abd4",
+          "name": "NIVRA Mall"
+        },
+        "floors": [
+          {
+            "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+            "name": "Ground floor",
+            "order": 0,
+            "plan": {
+              "url": "/demo/mall/plan.svg",
+              "width": 1000,
+              "height": 620
+            },
+            "sample": true,
+            "metersPerUnit": 0.1
+          }
+        ],
+        "guards": [
+          {
+            "id": "12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+            "callsign": "G2",
+            "name": "Example guard",
+            "userId": null,
+            "email": "guard@example.com",
+            "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+            "post": {
+              "x": 0.4,
+              "y": 0.5
+            },
+            "shift": "on_shift",
+            "presence": {
+              "online": false,
+              "lastSeen": null
+            },
+            "push": false
+          }
+        ],
+        "cameras": [
+          {
+            "id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+            "name": "East entrance",
+            "building": "Mall",
+            "floor": "Ground floor",
+            "enabled": true,
+            "created": 1792632170700.74,
+            "label": "CAM-01",
+            "floor_id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+            "x": 0.25,
+            "y": 0.4,
+            "angle": 45.0,
+            "fov": 90.0,
+            "range": 0.2,
+            "placement": {
+              "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+              "x": 0.25,
+              "y": 0.4,
+              "angle": 45.0,
+              "fov": 90.0,
+              "range": 0.2
+            },
+            "feed": "offline",
+            "analysis": "unavailable",
+            "compute": null,
+            "deviceStatus": null,
+            "generation": null,
+            "result": null,
+            "framesReceived": 0,
+            "framesAnalyzed": 0,
+            "framesReplaced": 0,
+            "error": null
+          }
+        ],
+        "events": [
+          {
+            "id": "5b24b10e-8607-46b6-aa5e-63e454d52b66",
+            "camera_id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+            "generation": "example-generation",
+            "source_id": "source-1",
+            "received_at": 1792632170732.0774,
+            "camera_name": "East entrance",
+            "location": "Mall \u00b7 Ground floor",
+            "source_ms": 2500.0,
+            "evidence_ms": 2000.0,
+            "model": "slowfast-ava",
+            "detail": "Review the live scene.",
+            "status": "acknowledged",
+            "revision": 1,
+            "updated_at": 1792632170738.082,
+            "reviewed_at": 1792632170738.082,
+            "decision": "confirmed",
+            "reason": null,
+            "note": "Check east entrance.",
+            "guard": "G2",
+            "decided_at": 1792632170738.082,
+            "alerted_at": 1792632170738.082,
+            "on_scene_at": null,
+            "guard_ack_at": null,
+            "guard_declined_at": null,
+            "floor_id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+            "reviewer_id": "dev_04a1479454af0183cfc930fd",
+            "escalated_at": null,
+            "clip": {
+              "status": "none",
+              "frames": 0
+            }
+          }
+        ],
+        "analytics": {
+          "total": 1,
+          "pending": 0,
+          "resolved": 0,
+          "confirmed": 1,
+          "falseAlarms": 0
+        },
+        "service": "ready",
+        "runtime": {
+          "device": "camera-device",
+          "compute": "camera-device",
+          "personModel": "MediaPipe Pose Lite",
+          "fightModel": "nivra-browser-motion-v1",
+          "maxPeople": 10,
+          "fallbackReason": null
+        },
+        "publicOrigin": null,
+        "retention": "event-records-only",
+        "experimental": true,
+        "maxCameras": 12,
+        "activeViewers": 0,
+        "maxViewers": 8
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v2/guards/12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+      "request": null,
+      "status": 204,
+      "response": null
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/v2/floors/a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+      "request": null,
+      "status": 204,
+      "response": null
+    }
+  ],
+  "snapshotV3": {
+    "type": "snapshot",
+    "version": 3,
+    "serverTime": 1792632170743.0793,
+    "me": {
+      "role": "admin"
+    },
+    "site": {
+      "id": "56f94b30-5166-427c-a7c9-977fdb93abd4",
+      "name": "NIVRA Mall"
+    },
+    "floors": [
+      {
+        "id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "name": "Ground floor",
+        "order": 0,
+        "plan": {
+          "url": "/demo/mall/plan.svg",
+          "width": 1000,
+          "height": 620
+        },
+        "sample": true,
+        "metersPerUnit": 0.1
+      }
+    ],
+    "guards": [
+      {
+        "id": "12e4d7a3-fdc6-44e3-814b-b7c9bb4ce18b",
+        "callsign": "G2",
+        "name": "Example guard",
+        "userId": null,
+        "email": "guard@example.com",
+        "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "post": {
+          "x": 0.4,
+          "y": 0.5
+        },
+        "shift": "on_shift",
+        "presence": {
+          "online": false,
+          "lastSeen": null
+        },
+        "push": false
+      }
+    ],
+    "cameras": [
+      {
+        "id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+        "name": "East entrance",
+        "building": "Mall",
+        "floor": "Ground floor",
+        "enabled": true,
+        "created": 1792632170700.74,
+        "label": "CAM-01",
+        "floor_id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "x": 0.25,
+        "y": 0.4,
+        "angle": 45.0,
+        "fov": 90.0,
+        "range": 0.2,
+        "placement": {
+          "floorId": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+          "x": 0.25,
+          "y": 0.4,
+          "angle": 45.0,
+          "fov": 90.0,
+          "range": 0.2
+        },
+        "feed": "offline",
+        "analysis": "unavailable",
+        "compute": null,
+        "deviceStatus": null,
+        "generation": null,
+        "result": null,
+        "framesReceived": 0,
+        "framesAnalyzed": 0,
+        "framesReplaced": 0,
+        "error": null
+      }
+    ],
+    "events": [
+      {
+        "id": "5b24b10e-8607-46b6-aa5e-63e454d52b66",
+        "camera_id": "4002eaff-ec29-4b4f-b125-3071c5c472ba",
+        "generation": "example-generation",
+        "source_id": "source-1",
+        "received_at": 1792632170732.0774,
+        "camera_name": "East entrance",
+        "location": "Mall \u00b7 Ground floor",
+        "source_ms": 2500.0,
+        "evidence_ms": 2000.0,
+        "model": "slowfast-ava",
+        "detail": "Review the live scene.",
+        "status": "acknowledged",
+        "revision": 1,
+        "updated_at": 1792632170738.082,
+        "reviewed_at": 1792632170738.082,
+        "decision": "confirmed",
+        "reason": null,
+        "note": "Check east entrance.",
+        "guard": "G2",
+        "decided_at": 1792632170738.082,
+        "alerted_at": 1792632170738.082,
+        "on_scene_at": null,
+        "guard_ack_at": null,
+        "guard_declined_at": null,
+        "floor_id": "a1332efa-2ebe-4da1-9f3c-f4e991b831d4",
+        "reviewer_id": "dev_04a1479454af0183cfc930fd",
+        "escalated_at": null,
+        "clip": {
+          "status": "none",
+          "frames": 0
+        }
+      }
+    ],
+    "analytics": {
+      "total": 1,
+      "pending": 0,
+      "resolved": 0,
+      "confirmed": 1,
+      "falseAlarms": 0
+    },
+    "service": "ready",
+    "runtime": {
+      "device": "camera-device",
+      "compute": "camera-device",
+      "personModel": "MediaPipe Pose Lite",
+      "fightModel": "nivra-browser-motion-v1",
+      "maxPeople": 10,
+      "fallbackReason": null
+    },
+    "publicOrigin": null,
+    "retention": "event-records-only",
+    "experimental": true,
+    "maxCameras": 12,
+    "activeViewers": 0,
+    "maxViewers": 8
+  }
+}

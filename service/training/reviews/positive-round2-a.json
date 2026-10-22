@@ -1,0 +1,460 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "Provisional assistant visual screening: directly inspected all 24 local OpenCV contact sheets via view_image, each with 24 equally spaced RGB samples from source 0.10s to duration minus 0.15s (576 frames). Additionally inspected three enlarged, timestamped detail frames each for v_c_b_18 (0.34,1.78,4.66s), v_c_b_43 (2.13,3.93,5.06s), and v_c_b_64 (1.19,2.72,3.37s): 585 sampled frames total, not continuous playback. Local OpenCV used one decoder at a time and cv2.setNumThreads(1). Selection: numeric ID sort of not-previously-reviewed v_c_b_1 through v_c_b_70 with duration >=4s; choose 24 evenly spaced rounded index positions including both endpoints from 66 eligible rows.",
+  "limitations": [
+    "Assistant sampled-frame screening is provisional, not human ground truth, continuous motion inspection or exhaustive frame-by-frame annotation. No publisher label alone approved any recording.",
+    "Event boundaries are conservative sampled source-time approximations. Continuity between samples, force and actual impacts are unverified; uncertain starts, gaps and tails remain unannotated.",
+    "Label 1 identifies visually supported staged physical-contact imagery for experimental unarmed fight training; it establishes no identity, intent, injury or crime.",
+    "Only complete four-second windows within source duration may be used. Label 1 requires at least 50 percent accepted positive-interval coverage; these recording decisions do not automatically label every window. No label 0 events were accepted.",
+    "Prop scenes are excluded; uncertain gestures or short/unclear contact sequences are ambiguous with empty events. Empty events do not imply normal footage.",
+    "All VID footage belongs to one training cohort. Actor/session lineage is unknown; descriptive scene groups establish no independence and cannot create calibration or holdout groups.",
+    "Consent and CC0 information are publisher/author-reported as documented in the shared source evidence; this review adds no independent release verification."
+  ],
+  "recordings": [
+    {
+      "id": "v_c_b_1",
+      "decision": "exclude",
+      "sceneGroup": "chair-room-white-walls",
+      "events": [],
+      "notes": "A racket-shaped long-handled prop is visible during arm swings and paired contact; exclude prop interaction from unarmed target.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_1-24.jpg",
+        "data/vid/review-round2-a/v_c_b_1-timestamps.json"
+      ],
+      "sha256": "cc6d8d1aeb82cbca5e6d774adca9dc4bfa9b2f10ece861d375a90d6873371c98",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_1.mp4",
+      "durationSeconds": 6.1
+    },
+    {
+      "id": "v_c_b_4",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 0.92,
+          "endSeconds": 4.0,
+          "label": 1
+        }
+      ],
+      "notes": "Repeated upper-body/shoulder grips and bent, jointly rotating torsos in central samples. Omit setup and late uncertain margin.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_4-24.jpg",
+        "data/vid/review-round2-a/v_c_b_4-timestamps.json"
+      ],
+      "sha256": "6a711b0cff6ee18638c68b0a27044ed22b43ced23b7fa9ef87c40c61fd61f61b",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_4.mp4",
+      "durationSeconds": 4.966666666666667
+    },
+    {
+      "id": "v_c_b_7",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.9,
+          "endSeconds": 3.82,
+          "label": 1
+        }
+      ],
+      "notes": "Two foreground people repeatedly grip upper arms/shoulders with bent torsos and shared rotation; later a third joins. Retain central paired span and leave later boundary unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_7-24.jpg",
+        "data/vid/review-round2-a/v_c_b_7-timestamps.json"
+      ],
+      "sha256": "8bae978a880b4021f5defd3500f9b7776b76c9ce86c48e89f7037159a61abc94",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_7.mp4",
+      "durationSeconds": 6.366666666666666
+    },
+    {
+      "id": "v_c_b_9",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-white-walls",
+      "events": [
+        {
+          "startSeconds": 1.6,
+          "endSeconds": 3.85,
+          "label": 1
+        }
+      ],
+      "notes": "Central samples show repeated arm/shoulder contact, bracing and bent torsos among the pair and nearby third person. Retain central contact sequence, omit final separation.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_9-24.jpg",
+        "data/vid/review-round2-a/v_c_b_9-timestamps.json"
+      ],
+      "sha256": "3d6e4de03a6a2b7e5416f6581c770e15fdcdc7de3fcf6e1b2f5c8434fca6bf05",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_9.mp4",
+      "durationSeconds": 6.0
+    },
+    {
+      "id": "v_c_b_12",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Long thin stick-like prop visible during raised-arm and leg actions; exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_12-24.jpg",
+        "data/vid/review-round2-a/v_c_b_12-timestamps.json"
+      ],
+      "sha256": "6dd27eadcf3d9f7d4af559cad511be0b5730450ac0c80c2b87b77f1b5feafed0",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_12.mp4",
+      "durationSeconds": 6.933333333333334
+    },
+    {
+      "id": "v_c_b_15",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Long light-coloured stick-like prop visible across several central samples, including near the bent torso; exclude prop scene.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_15-24.jpg",
+        "data/vid/review-round2-a/v_c_b_15-timestamps.json"
+      ],
+      "sha256": "eba4b5b10095308b1da10850e49f593cb7daa0233780484a3a52633c1bf42aa9",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_15.mp4",
+      "durationSeconds": 6.3
+    },
+    {
+      "id": "v_c_b_18",
+      "decision": "exclude",
+      "sceneGroup": "exterior-brick-entrance-planters",
+      "events": [],
+      "notes": "Detail frames confirm a long thin light-coloured stick-like prop across the torso/hands at 0.34s and around the joined shoulders at 1.78s. Exclude prop interaction.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_18-24.jpg",
+        "data/vid/review-round2-a/v_c_b_18-timestamps.json",
+        "data/vid/review-round2-a/v_c_b_18-detail.jpg"
+      ],
+      "sha256": "43db92fda557601da64ff719d03807c25cd3308cc075f2507dd87a30bbddf894",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_18.mp4",
+      "durationSeconds": 5.766666666666667
+    },
+    {
+      "id": "v_c_b_23",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.31,
+          "endSeconds": 4.71,
+          "label": 1
+        }
+      ],
+      "notes": "One person holds another across upper torso from behind while a third repeatedly reaches/contact the front; leaning and bracing persist through central samples.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_23-24.jpg",
+        "data/vid/review-round2-a/v_c_b_23-timestamps.json"
+      ],
+      "sha256": "8d30348c16522c381913b8fdeec55caee130308d3422635ca61e4300042b795d",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_23.mp4",
+      "durationSeconds": 5.066666666666666
+    },
+    {
+      "id": "v_c_b_26",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-white-walls",
+      "events": [
+        {
+          "startSeconds": 0.32,
+          "endSeconds": 4.08,
+          "label": 1
+        }
+      ],
+      "notes": "Central pair remain joined across upper torso/shoulders while another person repeatedly contacts their arms and torso; omit late release and leg extension.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_26-24.jpg",
+        "data/vid/review-round2-a/v_c_b_26-timestamps.json"
+      ],
+      "sha256": "db1e81a8cd4a517154eeaa9faa1ba93de89f453b76f8969f3684da1dfd9e2760",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_26.mp4",
+      "durationSeconds": 5.333333333333333
+    },
+    {
+      "id": "v_c_b_28",
+      "decision": "exclude",
+      "sceneGroup": "chair-room-white-walls",
+      "events": [],
+      "notes": "Racket-shaped prop clearly visible in hand during paired arm actions; exclude from unarmed target.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_28-24.jpg",
+        "data/vid/review-round2-a/v_c_b_28-timestamps.json"
+      ],
+      "sha256": "3a377c9067a9380b2c5276cc900cc686aa2733a634c263de29e98713a1119fd2",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_28.mp4",
+      "durationSeconds": 5.733333333333333
+    },
+    {
+      "id": "v_c_b_31",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Group arm/shoulder contact alternates with separation and raised-hand positioning. Sampled short holds do not establish a sufficiently conservative sustained positive interval; no normal tail assumed.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_31-24.jpg",
+        "data/vid/review-round2-a/v_c_b_31-timestamps.json"
+      ],
+      "sha256": "e2b5a8a441feeb0c97d72624e21b59bfa251dbd88d6d4521d798c8a183e34b21",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_31.mp4",
+      "durationSeconds": 6.566666666666666
+    },
+    {
+      "id": "v_c_b_34",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Several brief hand/arm contacts and raised-hand configurations around three standing people; sustained grappling versus positioning is unclear in these samples. No accepted interval.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_34-24.jpg",
+        "data/vid/review-round2-a/v_c_b_34-timestamps.json"
+      ],
+      "sha256": "b759843daefb78808ac216b1b8e3627dabc96f0d186aec3302539fc45d3a1af5",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_34.mp4",
+      "durationSeconds": 5.366666666666666
+    },
+    {
+      "id": "v_c_b_37",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 0.36,
+          "endSeconds": 3.94,
+          "label": 1
+        }
+      ],
+      "notes": "Three standing people repeatedly reach/contact the shoulders and upper body of a crouched person; central samples show close joined bodies and repeated downward arm positions. Omit later separation.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_37-24.jpg",
+        "data/vid/review-round2-a/v_c_b_37-timestamps.json"
+      ],
+      "sha256": "b5cc5220e1b878e56a732dc2aa5f1f7ee7fbd3618075522967ff145b23e6a15f",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_37.mp4",
+      "durationSeconds": 6.133333333333334
+    },
+    {
+      "id": "v_c_b_40",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds-far-view",
+      "events": [],
+      "notes": "Distant pair alternate raised arms, brief reaches and bending/separation. Hand placement and contact continuity are too unclear to accept a sustained physical-fight span.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_40-24.jpg",
+        "data/vid/review-round2-a/v_c_b_40-timestamps.json"
+      ],
+      "sha256": "1839912b55061435daaf6c6d7b654726592f2f5b0cc889ea13eaa8332dea852e",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_40.mp4",
+      "durationSeconds": 6.6
+    },
+    {
+      "id": "v_c_b_43",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Detail samples show empty hands and brief upper-arm contact, but the wider sequence alternates bending, separation and short reaches; no sufficiently sustained conservative contact interval is accepted.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_43-24.jpg",
+        "data/vid/review-round2-a/v_c_b_43-timestamps.json",
+        "data/vid/review-round2-a/v_c_b_43-detail.jpg"
+      ],
+      "sha256": "1e076cfbe3042d2545ad792bc111232fb65e823436311f939eb51b4ca9857aa7",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_43.mp4",
+      "durationSeconds": 5.433333333333334
+    },
+    {
+      "id": "v_c_b_45",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Three people alternate brief arm/shoulder holds, separation and raised-hand configurations. No sufficiently clear sustained contact span without bridging uncertain gaps.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_45-24.jpg",
+        "data/vid/review-round2-a/v_c_b_45-timestamps.json"
+      ],
+      "sha256": "257e29e29fdeb395f4f4eabef3feeb36147b4b1933b52e390b2f153df02eeda1",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_45.mp4",
+      "durationSeconds": 5.266666666666667
+    },
+    {
+      "id": "v_c_b_48",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 0.36,
+          "endSeconds": 2.45,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.76,
+          "endSeconds": 5.86,
+          "label": 1
+        }
+      ],
+      "notes": "Central group repeatedly hold/contact the upper body and shoulders of a bent person near chairs; retain two separated sampled contact episodes and leave intervening separation unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_48-24.jpg",
+        "data/vid/review-round2-a/v_c_b_48-timestamps.json"
+      ],
+      "sha256": "3bca0da58ba579c1fb43722a2e15ee30306ea885b77058e2509c34f93dd20b5b",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_48.mp4",
+      "durationSeconds": 6.266666666666667
+    },
+    {
+      "id": "v_c_b_52",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds-far-view",
+      "events": [],
+      "notes": "Distant pair alternate extended arms and bending with frequent spacing between bodies. Contact placement and continuity cannot be established conservatively.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_52-24.jpg",
+        "data/vid/review-round2-a/v_c_b_52-timestamps.json"
+      ],
+      "sha256": "f4c4d0c6cb88fcc053ac2e62fe71fc719727ebd7f0e09b7af521e670e111c8b6",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_52.mp4",
+      "durationSeconds": 5.366666666666666
+    },
+    {
+      "id": "v_c_b_55",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 0.42,
+          "endSeconds": 4.61,
+          "label": 1
+        }
+      ],
+      "notes": "Three people remain in repeated upper-arm/shoulder grips with bent torsos and shared turns through central samples; retain central interaction and omit later reconfiguration.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_55-24.jpg",
+        "data/vid/review-round2-a/v_c_b_55-timestamps.json"
+      ],
+      "sha256": "a6a30128bbb4c1f444729c9439794d27b5cc3b0d7225e827b6266cdfcda3929f",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_55.mp4",
+      "durationSeconds": 7.666666666666667
+    },
+    {
+      "id": "v_c_b_59",
+      "decision": "train-positive",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [
+        {
+          "startSeconds": 0.45,
+          "endSeconds": 3.61,
+          "label": 1
+        },
+        {
+          "startSeconds": 4.67,
+          "endSeconds": 7.48,
+          "label": 1
+        }
+      ],
+      "notes": "Pair repeatedly grip forearms/shoulders while one bends at the waist, then re-engage in an upright-to-bent contact sequence. Separate the two retained spans around an uncertain transition.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_59-24.jpg",
+        "data/vid/review-round2-a/v_c_b_59-timestamps.json"
+      ],
+      "sha256": "5623875621339d6c1fcdd8d504af673d80a8350a5e7ccead7fcc8c1c33cbee48",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_59.mp4",
+      "durationSeconds": 8.333333333333334
+    },
+    {
+      "id": "v_c_b_62",
+      "decision": "train-positive",
+      "sceneGroup": "computer-room-perimeter-desks",
+      "events": [
+        {
+          "startSeconds": 0.43,
+          "endSeconds": 6.36,
+          "label": 1
+        }
+      ],
+      "notes": "Two people on the floor remain joined through upper bodies/arms, shifting between crouched and side-lying configurations. Retain central ground-contact imagery; omit setup and final loosening.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_62-24.jpg",
+        "data/vid/review-round2-a/v_c_b_62-timestamps.json"
+      ],
+      "sha256": "fd650de4adf5dc561c9dcc0d404dbc0cc181f3387244fc92f9df0851ad090981",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_62.mp4",
+      "durationSeconds": 7.833333333333333
+    },
+    {
+      "id": "v_c_b_64",
+      "decision": "ambiguous",
+      "sceneGroup": "chair-room-beige-blinds",
+      "events": [],
+      "notes": "Detail frames show empty hands and brief shoulder/upper-arm contact, but short holds alternate with separated raised-arm and bent-body configurations. No conservative sustained interval accepted.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_64-24.jpg",
+        "data/vid/review-round2-a/v_c_b_64-timestamps.json",
+        "data/vid/review-round2-a/v_c_b_64-detail.jpg"
+      ],
+      "sha256": "d1248e36f79c884cf7e90828b19a063c42762ad7d13e1808759f0fb33bed96d1",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_64.mp4",
+      "durationSeconds": 5.266666666666667
+    },
+    {
+      "id": "v_c_b_67",
+      "decision": "train-positive",
+      "sceneGroup": "computer-room-perimeter-desks",
+      "events": [
+        {
+          "startSeconds": 1.9,
+          "endSeconds": 6.68,
+          "label": 1
+        }
+      ],
+      "notes": "Three-person contact develops into a crouched group near desks; repeated shoulder/upper-body grips, joined bending and lowering configurations support the central interval. Omit early approach and late lift/release margin.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_67-24.jpg",
+        "data/vid/review-round2-a/v_c_b_67-timestamps.json"
+      ],
+      "sha256": "ae98152ead013f146d99f2580bfd9eff8c7961ed48c22f016cc48beff3d9bd50",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_67.mp4",
+      "durationSeconds": 7.133333333333334
+    },
+    {
+      "id": "v_c_b_70",
+      "decision": "train-positive",
+      "sceneGroup": "computer-room-perimeter-desks",
+      "events": [
+        {
+          "startSeconds": 0.35,
+          "endSeconds": 4.79,
+          "label": 1
+        }
+      ],
+      "notes": "Foreground pair repeatedly grip around shoulders/upper arms while torsos bend and rotate together; retain central joined span and omit late separation.",
+      "evidenceFiles": [
+        "data/vid/review-round2-a/v_c_b_70-24.jpg",
+        "data/vid/review-round2-a/v_c_b_70-timestamps.json"
+      ],
+      "sha256": "a16c9a72096507f04f25e1ed5614e4975751cce848219dc1ca8010360594f01e",
+      "sourceArchive": "v_c_b_01.rar",
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_70.mp4",
+      "durationSeconds": 5.933333333333334
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+# Preserve the historical design archive byte-for-byte, including source hashes.
+/design/** -text -whitespace
+/docs/project-context/** -text -whitespace
+*.pdf binary
+*.zip binary
+*.pptx binary
+*.png binary
+*.jpg binary
+*.jpeg binary

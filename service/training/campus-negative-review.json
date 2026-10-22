@@ -1,0 +1,23 @@
+{
+  "reviewMethod": "Assistant visual screening of 16 timestamped RGB frames per clip, plus five-frame overview; no continuous playback or human annotation",
+  "limitations": [
+    "Provisional training labels only. Unseen brief events between sampled timestamps cannot be excluded.",
+    "Full-duration normal spans extrapolate beyond sampled instants. Selected partial spans omit later ambiguous physical contact.",
+    "Scene groups describe backgrounds, not independent actors or sessions. All recordings remain in the unresolved VID training cohort.",
+    "No identity, intent, injury or audio judgments. These are not independent evaluation ground truth."
+  ],
+  "recordings": [
+    {"id": "nv_b_16", "decision": "train-normal", "sceneGroup": "home-open-wardrobe", "notes": "Two seated people handle clothing/items in front of an open wardrobe; no strike or grappling visible."},
+    {"id": "nv_b_107", "decision": "ambiguous", "sceneGroup": "white-room-group", "notes": "Repeated shoulder/upper-arm contact and close grouped movements. Still frames do not establish how these interactions differ from retained positive contact examples; omit pending motion review."},
+    {"id": "nv_b_138", "decision": "train-normal", "sceneGroup": "home-bedroom-blue-curtain", "notes": "One person standing and handling a stringed instrument. No second person or interpersonal strike is visible."},
+    {"id": "nv_b_166", "decision": "train-normal", "sceneGroup": "outdoor-tree-path", "notes": "People stand and walk on a tree-lined path; no contact episode visible in the sampled sequence."},
+    {"id": "nv_b_24", "decision": "train-normal", "sceneGroup": "indoor-stairwell", "events": [{"startSeconds": 0, "endSeconds": 7, "label": 0}], "notes": "Retain only early descent/walking before another person approaches. Later leg extension and nearby contact around 9-11 seconds are ambiguous and remain unannotated."},
+    {"id": "nv_b_194", "decision": "train-normal", "sceneGroup": "home-bedroom-blue-curtain", "notes": "One person makes large arm/leg movements beside a bed, without an interpersonal target. Useful vigorous-motion negative; no named action or intent assigned."},
+    {"id": "nv_b_87", "decision": "train-normal", "sceneGroup": "campus-pillars-red-doors", "events": [{"startSeconds": 0, "endSeconds": 5.5, "label": 0}], "notes": "Retain early walking/separated figures. Later joined upper-body contact around 7-10 seconds remains unannotated rather than assumed to be a benign greeting."},
+    {"id": "nv_b_154", "decision": "train-normal", "sceneGroup": "rooftop-dusk", "notes": "One person descends a ladder and walks across a roof; no interpersonal contact visible."},
+    {"id": "nv_b_19", "decision": "train-normal", "sceneGroup": "home-dressing-table", "notes": "One person handles small items at a dressing table. No interpersonal strike or grappling visible."},
+    {"id": "nv_b_1", "decision": "train-normal", "sceneGroup": "home-bedroom-blue-curtain", "notes": "One person alternates sitting and reclining on a bed. No second person or interpersonal contact visible."},
+    {"id": "nv_b_67", "decision": "train-normal", "sceneGroup": "campus-open-canteen", "notes": "Separated figures make large arm/leg movements and walk in the canteen. No joined strike/grappling episode visible in the samples."},
+    {"id": "nv_b_60", "decision": "train-normal", "sceneGroup": "campus-open-canteen", "notes": "Two nearby people walk away along the canteen counter, with other people seated nearby. No strike or grappling visible."}
+  ]
+}

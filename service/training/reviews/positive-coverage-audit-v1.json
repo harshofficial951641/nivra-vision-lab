@@ -1,0 +1,883 @@
+{
+  "schemaVersion": 1,
+  "artifactType": "positive-coverage-audit-not-canonical-training-review",
+  "reviewMethod": "Repeat model-blind (no detector scores or inference) assistant visual audit of 12 existing accepted positive sources in the old 96-recording manifest. Select lexicographically ascending SHA256 order among label-1 sources, then inspect each first eligible positive four-second window returned by unchanged generate_windows. All 1450 source frames covering selected intervals, including start predecessor/end successor when available, were directly inspected as 24 ordered contact sheets with view_image at original detail. Twelve enlarged full-frame sheets add 72 frame presentations; five targeted source-crop sheets add 30. All imagery comes from sequential OpenCV CAP_PROP_POS_MSEC reads, finite and strictly increasing, cv2.setNumThreads(1), one FFMPEG decoder and decoder thread at a time. Initial judgments were frozen before this audit opened selected prior review notes; afterward prior references and disagreements were appended. No audio, continuous playback, classifier predictions, model/GPU activity or training.",
+  "limitations": [
+    "This is a second model-assisted review, not independent human ground truth. It repeats old training sources; it adds zero new sources and creates no independent holdout, calibration or new actor/session cohort.",
+    "Initial visual judgments were frozen before reading prior notes during this audit, but prior positive status and temporal event intervals were known to the unchanged window generator. An earlier turn in this same chat had displayed a prior note for v_c_b_9; that item is explicitly not fully blinded.",
+    "Every-frame static review is not continuous-motion playback, force/impact verification, intent, identity or injury evidence. Blur, occlusion, face masking and image resizing remain limitations. Ordered tiles are 240x135, enlarged full frames 720x405; five extra crops preserve aspect ratio but may omit peripheral context retained in full frames.",
+    "Only selected four-second windows were audited. Proposed events are conservative subsets of those windows, not full-source annotations, normal labels or automatic canonical training changes. Uncertain contact, gaps and tails remain unknown.",
+    "Supported means the proposed target-compatible contact intervals cover at least two seconds of the inspected four-second window under existing window_label. Uncertain short proposed intervals do not meet that threshold; unsupported prop-containing clips have empty proposedEvents and are not normal by inference.",
+    "Two source-end-aligned windows have declared ends beyond final decoded PTS by roughly one frame interval. Decoder reached EOF; no final-frame display duration was inferred from FPS. These unbracketed tails remain unannotated, and all proposed boundaries stay within observed actual PTS.",
+    "v_c_b_183 is threshold-sensitive: only about 2.124 seconds are retained in its first window. Human adjudication of onset could change eligibility. This audit is not a mandate to extend any original accepted interval.",
+    "All VID remains one unresolved training-only actor/session cohort. Consent and media-rights records are author/publisher-reported; no independent participant-release or complete non-copyright-rights clearance is established. Evidence stays local and ignored."
+  ],
+  "selectionHash": "ff51774b778d574a05472ea700292b01f43a1c1df901998cae9fa3b3514a0aa3",
+  "selectionManifestSha256": "1a0f6fc44704b73f32c5e0ab82b607fff2a702a848186b4403ddf357a0026a84",
+  "initialJudgmentsSha256": "552fbe4a4a1cc6236640d6c2340f4352d7d703e9bf0dfa05ec2cb90060bad8b6",
+  "recordings": [
+    {
+      "id": "v_c_b_78",
+      "sha256": "021320c6e762bebc25b46766cb60ceb2d66dfbce0244e2847f4552be358647f6",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 2.166666666666667,
+        "endSeconds": 6.166666666666667
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_78.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 2.2,
+          "endSeconds": 6.1,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 3.8999999999999995,
+      "proposedCoverageFraction": 0.9749999999999999,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_78-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_78-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_78-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_78-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_78-coverage.json",
+        "decodedFramesThroughEndOrEOF": 185,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 6.133333333333333,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 120,
+        "intervalFirstFrameIndex": 65,
+        "intervalLastFrameIndex": 184,
+        "intervalFirstPTSSeconds": 2.1666666666666665,
+        "intervalLastPTSSeconds": 6.133333333333333,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": false,
+        "reachedSourceEOF": true,
+        "unbracketedTailSeconds": 0.0333333333333341,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "A standing person maintains a rear arm wrap across a seated person upper chest/neck region while the seated torso repeatedly leans/rotates and hands meet the restraining arms. This is sustained paired upper-body restraint imagery, beyond a brief greeting configuration. No impact, force, intent, identity or injury determination.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/1",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 2.09,
+              "endSeconds": 5.27,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Repeated sampled views show a standing person leaning over and gripping the upper body of a seated person, with substantial sideways chair/body displacement. Retain the central contact span; omit the early setup and late release. Continuity and force are not independently measured."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 3.1033333333333326,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_172",
+      "sha256": "02e2bbfbe11f08cb21427c1ce10ca0a055a0adfa009b726360e6791781f329c6",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 4.0,
+        "endSeconds": 8.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_172.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 4.066666666666666,
+          "endSeconds": 7.933333333333334,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 3.866666666666667,
+      "proposedCoverageFraction": 0.9666666666666668,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_172-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_172-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_172-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_172-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_172-coverage.json",
+        "decodedFramesThroughEndOrEOF": 241,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 8.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 122,
+        "intervalFirstFrameIndex": 119,
+        "intervalLastFrameIndex": 240,
+        "intervalFirstPTSSeconds": 3.966666666666667,
+        "intervalLastPTSSeconds": 8.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Rear standing person arms remain wrapped across the seated person upper body/neck region; the seated torso bends and rotates while hands engage the surrounding arms. Sustained paired restraint configurations support the proxy target for more than half the inspected window. No impact or intent claim.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/3",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 3.37,
+              "endSeconds": 7.18,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Across the retained central frames a standing person maintains an upper-body grip on a seated/crouched person while their torsos repeatedly bend and move together. Other people are present. The interval is a provisional subset of the longer interaction; omit the initial approach and final hand-obstructed margin."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 3.1799999999999997,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_190",
+      "sha256": "02e5183b223712d993bcc24ed47a5e42ca2a7bf45f290947cf70840168d893f3",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_190.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 0.6666666666666666,
+          "endSeconds": 3.933333333333333,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 3.2666666666666666,
+      "proposedCoverageFraction": 0.8166666666666667,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_190-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_190-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_190-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_190-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_190-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Several foreground people maintain upper-arm/chest/shoulder grips, extended forearms against upper bodies and opposing bent/leaning torso configurations while stepping around one another. The retained central interval supports paired physical grappling/pushing imagery. No claim about force, landed strikes or intent.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/4",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 1.42,
+              "endSeconds": 4.74,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Two central people repeatedly hold/contact each other's upper arms and shoulders while turning and bracing, visible across adjacent sampled frames. Retain the central paired contact configurations; omit the early approach and final edge of the clip. No specific strike, intent or injury is established."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.58,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_72",
+      "sha256": "073e0081862cb01a12d49a270569347b33a0eb351f1ac92ee3532fed7bd51f87",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 2.6333333333333337,
+        "endSeconds": 6.633333333333334
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_72.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 2.7,
+          "endSeconds": 6.533333333333333,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 3.833333333333333,
+      "proposedCoverageFraction": 0.9583333333333333,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_72-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_72-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_72-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_72-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_72-coverage.json",
+        "decodedFramesThroughEndOrEOF": 199,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 6.6,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 120,
+        "intervalFirstFrameIndex": 79,
+        "intervalLastFrameIndex": 198,
+        "intervalFirstPTSSeconds": 2.6333333333333333,
+        "intervalLastPTSSeconds": 6.6,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": false,
+        "reachedSourceEOF": true,
+        "unbracketedTailSeconds": 0.0333333333333341,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Foreground pair repeatedly keeps hands/forearms on the other head/upper shoulder area while one or both torsos bend; head-area grips and coupled posture changes persist through the central inspected interval. Supports staged physical-contact opposition imagery; no impact or intent determination. Declared source end exceeds final actual PTS; omit that tail.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/5",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 2.24,
+              "endSeconds": 5.68,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Two central people remain closely joined at shoulders/upper arms through the retained samples, with repeated bent torsos, pulling-like arm configurations and shared rotation. Retain only the sustained close-contact portion; surrounding observers do not supply additional positive events."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 3.046666666666666,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_117",
+      "sha256": "08496fbc52239116dc3da170a287242b021a05437909d4a978f192ed67e61e0e",
+      "auditDecision": "unsupported",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_117.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [],
+      "proposedCoverageSeconds": 0,
+      "proposedCoverageFraction": 0.0,
+      "existingWindowRuleResult": null,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_117-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_117-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_117-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_117-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json",
+        "data/vid/review-positive-agreement/v_c_b_117-contact-crop.jpg",
+        "data/vid/review-positive-agreement/contact-crop-log.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_117-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "A narrow rigid metallic-looking hand-held implement is visible beside the foreground person waist and during arm movements; enlarged source crops show it clearly at 0.2 and 3.8 seconds. Another person is held from behind, so physical contact exists, but this is a prop-containing interaction and does not support the intended unarmed training target. Object identity, weapon function and impacts are not assigned.",
+      "disagreementNotes": "Disagrees with prior accepted unarmed-positive status: visible interaction prop omitted from prior rationale. Quarantine for human adjudication; this does not make the source normal.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/6",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 0.97,
+              "endSeconds": 3.59,
+              "label": 1
+            }
+          ],
+          "priorNotes": "The central people are repeatedly joined through arms/shoulders while one torso bends and rotates; another person remains very close. Multiple samples support a contact episode, although precise impacts cannot be established. Exclude the initial uncertain margin and the visibly separating final frames."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.62,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_21",
+      "sha256": "0a6a2d143a0c10c07b39dd5b593188964caa68b58c055332849bc15951f2b38d",
+      "auditDecision": "unsupported",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_21.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [],
+      "proposedCoverageSeconds": 0,
+      "proposedCoverageFraction": 0.0,
+      "existingWindowRuleResult": null,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_21-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_21-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_21-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_21-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_21-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "A long straight rod-like prop is visibly held and extended toward the foreground pair throughout the inspected window. Rear upper-body restraint also appears, but the visible prop makes this unsuitable for the unarmed target. No weapon identity, intent or impact claim.",
+      "disagreementNotes": "Disagrees with prior accepted unarmed-positive status: visible interaction prop omitted from prior rationale. Quarantine for human adjudication; this does not make the source normal.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/9",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 1.29,
+              "endSeconds": 4.87,
+              "label": 1
+            }
+          ],
+          "priorNotes": "A rear figure maintains shoulder/upper-torso contact with the central figure across the retained samples while the central figure repeatedly lifts a leg toward the person in front. Positive support is the sustained upper-body hold and combined physical interaction; actual kicks or impacts are not asserted. Initial and final margins are omitted."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.71,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_58",
+      "sha256": "0b8c5f7be8699e3dc6eeb58ef93009707b9ce7096449cbfa2f1302d428e66f6e",
+      "auditDecision": "uncertain",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_58.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 2.8,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 1.1,
+      "proposedCoverageFraction": 0.275,
+      "existingWindowRuleResult": null,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_58-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_58-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_58-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_58-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json",
+        "data/vid/review-positive-agreement/v_c_b_58-contact-crop.jpg",
+        "data/vid/review-positive-agreement/contact-crop-log.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_58-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Joined/held wrists, raised interwoven arms and under-arm turns are visible. A late bent-torso wrist-control configuration is retained only as a short physical-contact proxy interval. Earlier joined-hand turns do not confidently establish paired opposition rather than coordinated movement from these static views; do not certify two seconds of target coverage. Physical contact is visible, but not enough conservatively classifiable target duration.",
+      "disagreementNotes": "Disagrees with prior window eligibility under conservative duration interpretation: visible short contact is retained, but unclear joined-hand/gesture intervals and gaps are not extended to reach two seconds. Quarantine before freeze; no normal label proposed.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/12",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 0.87,
+              "endSeconds": 4.35,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Two close figures repeatedly maintain shoulder/head-area and upper-arm contact while bending and rotating together across the central samples. Retain that paired contact span; exclude the approach/start edge and later release/bent-away frames. Hand placement does not establish choking or injury."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 3.13,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_71",
+      "sha256": "1003197ed2ad1be7c722d03a1ffdad77b712997e45b9bee2f114951981d64f09",
+      "auditDecision": "uncertain",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_71.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 0.1,
+          "endSeconds": 0.6,
+          "label": 1
+        },
+        {
+          "startSeconds": 2.966666666666667,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 1.4333333333333331,
+      "proposedCoverageFraction": 0.3583333333333333,
+      "existingWindowRuleResult": null,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_71-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_71-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_71-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_71-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json",
+        "data/vid/review-positive-agreement/v_c_b_71-contact-crop.jpg",
+        "data/vid/review-positive-agreement/contact-crop-log.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_71-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Early upper-arm/shoulder contact and late head/neck-area grips with bent torsos are visible. Middle raised-hand/wrist configurations and brief gestures are less clear. Retain only short conservative contact spans; they total under two seconds. Full four-second-window positive coverage is uncertain; no normal label or benign/hostile intent inference. Supplemental crop partly clips one partner; full-frame ordered evidence is retained and was inspected.",
+      "disagreementNotes": "Disagrees with prior window eligibility under conservative duration interpretation: visible short contact is retained, but unclear joined-hand/gesture intervals and gaps are not extended to reach two seconds. Quarantine before freeze; no normal label proposed.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/positive-review.json",
+          "reviewSha256": "9cfd13947a0449c527de29e6bc04f6c4a1d0cc31245be9eba6476ac7834c4640",
+          "jsonPointer": "/recordings/15",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 1.27,
+              "endSeconds": 5.16,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Two central people repeatedly hold/contact shoulders and upper arms while bending and turning together, including a clearly bent torso in the middle of the sequence. Keep the sustained paired-contact subset and omit the less certain initial and separating final margins. Continuous motion was not viewed."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.73,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_183",
+      "sha256": "1922252837ce31aeba995ba1ba3e5d831469f2e3c335bb316c30ebd28797afa2",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_183.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 1.820633850303439,
+          "endSeconds": 3.944706675657451,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 2.1240728253540118,
+      "proposedCoverageFraction": 0.5310182063385029,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_183-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_183-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_183-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_183-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json",
+        "data/vid/review-positive-agreement/v_c_b_183-contact-crop.jpg",
+        "data/vid/review-positive-agreement/contact-crop-log.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_183-coverage.json",
+        "decodedFramesThroughEndOrEOF": 120,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0121375590020225,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 120,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 119,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0121375590020225,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "A person approaches from behind a seated person, places a forearm across the neck/upper-chest region and keeps the other hand near torso; seated person later lifts hands against the rear arms while leaning. Enlarged onset samples at actual PTS 1.753203 and 1.921780 seconds support the central rear-restraint configuration. Retained coverage is just over two seconds, so the window is boundary-sensitive and warrants human confirmation.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/reviews/positive-round2-c.json",
+          "reviewSha256": "42ef7f42dced4871d77ecfcb33b52d3c7324624fc93a73fcb9c7bbb4e2bbbc1e",
+          "jsonPointer": "/recordings/14",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 1.96,
+              "endSeconds": 4.55,
+              "label": 1
+            }
+          ],
+          "priorNotes": "The early central pair show a head/upper-shoulder hold from behind, repeated bent postures and chair/body displacement across adjacent samples. Retain this relatively unobstructed contact span. Later arriving people obscure the interaction, so the crowd sequence is unannotated. Provisional assistant sampled-frame screening; motion was not continuously viewed."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.04,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_174",
+      "sha256": "1dc2dbae7c5c1656255b2d5d1f795840842684c312680ddff1df30c785526c48",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_174.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 0.1,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 3.8,
+      "proposedCoverageFraction": 0.95,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_174-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_174-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_174-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_174-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_174-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Standing rear person arms encircle the seated person neck/upper torso; the seated person leans and brings hands onto the surrounding arms while both change posture. Sustained paired upper-body restraint imagery supports more than half the window; no force, impact or intent claim.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/reviews/positive-round2-c.json",
+          "reviewSha256": "42ef7f42dced4871d77ecfcb33b52d3c7324624fc93a73fcb9c7bbb4e2bbbc1e",
+          "jsonPointer": "/recordings/11",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 0.37,
+              "endSeconds": 5.9,
+              "label": 1
+            }
+          ],
+          "priorNotes": "A person behind the seated person maintains an upper-body/head hold as the seated torso twists and lowers toward the floor; contact continues in the sampled lower positions. Retain the central sustained restraint/grappling configurations. Bystanders hold small devices; no interaction weapon is resolved in the retained samples. Omit clip edges and avoid impact claims. Provisional assistant sampled-frame screening; motion was not continuously viewed."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 3.63,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_48",
+      "sha256": "3bca0da58ba579c1fb43722a2e15ee30306ea885b77058e2509c34f93dd20b5b",
+      "auditDecision": "uncertain",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_48.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 0.1,
+          "endSeconds": 0.43333333333333335,
+          "label": 1
+        },
+        {
+          "startSeconds": 1.6,
+          "endSeconds": 1.9,
+          "label": 1
+        },
+        {
+          "startSeconds": 2.3666666666666667,
+          "endSeconds": 2.533333333333333,
+          "label": 1
+        },
+        {
+          "startSeconds": 3.6666666666666665,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 1.0333333333333332,
+      "proposedCoverageFraction": 0.2583333333333333,
+      "existingWindowRuleResult": null,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_48-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_48-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_48-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_48-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json",
+        "data/vid/review-positive-agreement/v_c_b_48-contact-crop.jpg",
+        "data/vid/review-positive-agreement/contact-crop-log.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_48-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Multiple short hands-to-head/upper-body configurations occur around a person covering the head and bending. Physical contact is supported at specific short spans, but hands withdraw between episodes; backlighting, overlap and motion blur leave the accumulated target duration uncertain. Do not fill withdrawn/unclear gaps to reach two seconds. No landed-impact claim.",
+      "disagreementNotes": "Disagrees with prior window eligibility under conservative duration interpretation: visible short contact is retained, but unclear joined-hand/gesture intervals and gaps are not extended to reach two seconds. Quarantine before freeze; no normal label proposed.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/reviews/positive-round2-a.json",
+          "reviewSha256": "0eccf1faf3fe74f4b34a4372135f673ef0ed1be7e7fbaf0a43a9b3acd5efeddb",
+          "jsonPointer": "/recordings/16",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 0.36,
+              "endSeconds": 2.45,
+              "label": 1
+            },
+            {
+              "startSeconds": 3.76,
+              "endSeconds": 5.86,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Central group repeatedly hold/contact the upper body and shoulders of a bent person near chairs; retain two separated sampled contact episodes and leave intervening separation unannotated."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.3300000000000005,
+      "priorNoteCarryoverExposure": false
+    },
+    {
+      "id": "v_c_b_9",
+      "sha256": "3d6e4de03a6a2b7e5416f6581c770e15fdcdc7de3fcf6e1b2f5c8434fca6bf05",
+      "auditDecision": "supported",
+      "window": {
+        "startSeconds": 0.0,
+        "endSeconds": 4.0
+      },
+      "sourcePath": "media/v_c_b_01/v_c_b_01/v_c_b_9.mp4",
+      "sourceArchive": "v_c_b_01.rar",
+      "proposedEvents": [
+        {
+          "startSeconds": 0.1,
+          "endSeconds": 3.9,
+          "label": 1
+        }
+      ],
+      "proposedCoverageSeconds": 3.8,
+      "proposedCoverageFraction": 0.95,
+      "existingWindowRuleResult": 1,
+      "evidenceFiles": [
+        "data/vid/review-positive-agreement/v_c_b_9-ordered-01.jpg",
+        "data/vid/review-positive-agreement/v_c_b_9-ordered-02.jpg",
+        "data/vid/review-positive-agreement/v_c_b_9-enlarged.jpg",
+        "data/vid/review-positive-agreement/v_c_b_9-coverage.json",
+        "data/vid/review-positive-agreement/selection.json",
+        "data/vid/review-positive-agreement/initial-visual-judgments.json",
+        "data/vid/review-positive-agreement/prior-review-references-after-inspection.json"
+      ],
+      "actualPTScoverage": {
+        "timestampSource": "sequential actual CAP_PROP_POS_MSEC / 1000; no FPS substitution",
+        "coverageFile": "data/vid/review-positive-agreement/v_c_b_9-coverage.json",
+        "decodedFramesThroughEndOrEOF": 121,
+        "decodedFirstPTSSeconds": 0.0,
+        "decodedLastPTSSeconds": 4.0,
+        "everyIntervalSourceFrameIncluded": true,
+        "visuallyInspectedAllIntervalFrames": true,
+        "intervalFrameCount": 121,
+        "intervalFirstFrameIndex": 0,
+        "intervalLastFrameIndex": 120,
+        "intervalFirstPTSSeconds": 0.0,
+        "intervalLastPTSSeconds": 4.0,
+        "allFiniteStrictIncreasing": true,
+        "endBoundaryBracketedByActualPTS": true,
+        "reachedSourceEOF": false,
+        "unbracketedTailSeconds": 0,
+        "EOFHandling": "No missing timestamp synthesized; proposed events end at observed PTS. EOF unbracketed time remains unknown.",
+        "staticFrameReviewOnly": true
+      },
+      "notes": "Three foreground people remain in connected upper-arm/shoulder holds, with the central torso repeatedly bent and the front person extending hands/forearms toward the shoulder/head area. The retained interval shows paired/group physical grappling configurations, not solely separated gestures. No impact, force or intent determination.",
+      "disagreementNotes": "Agreement on selected-window target support, with independently proposed audit-only boundaries. This does not validate original event boundaries outside the inspected window.",
+      "priorReviewReferences": [
+        {
+          "reviewPath": "service/training/reviews/positive-round2-a.json",
+          "reviewSha256": "0eccf1faf3fe74f4b34a4372135f673ef0ed1be7e7fbaf0a43a9b3acd5efeddb",
+          "jsonPointer": "/recordings/3",
+          "priorDecision": "train-positive",
+          "priorEvents": [
+            {
+              "startSeconds": 1.6,
+              "endSeconds": 3.85,
+              "label": 1
+            }
+          ],
+          "priorNotes": "Central samples show repeated arm/shoulder contact, bracing and bent torsos among the pair and nearby third person. Retain central contact sequence, omit final separation."
+        }
+      ],
+      "priorManifestWindowPositiveCoverageSeconds": 2.25,
+      "priorNoteCarryoverExposure": true
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+[
+  {
+    "slug": "01-bound",
+    "name": "Bound",
+    "source": "exec-e5815d77-dad5-46ba-87f7-114310be174d.png",
+    "colors": {
+      "midnight": "#152536",
+      "gold": "#F5C242",
+      "mist": "#E9EFF1",
+      "white": "#FAFCFD"
+    },
+    "text_pairs": [
+      [
+        "#152536",
+        "#FAFCFD"
+      ],
+      [
+        "#FAFCFD",
+        "#152536"
+      ],
+      [
+        "#152536",
+        "#F5C242"
+      ]
+    ],
+    "font": "Manrope",
+    "description": "An enclosing structural band represents a protected space with an intentional opening. Midnight and gold establish a firm, attentive tone. The C-like contour is a recognition risk: it is not a hidden NIVRA initial. The A crossbar was restored in refinement."
+  },
+  {
+    "slug": "02-passage",
+    "name": "Passage",
+    "source": "exec-2b48459d-52f7-43ca-9feb-c7535aa471ca.png",
+    "colors": {
+      "evergreen": "#123C32",
+      "mint": "#83D2B1",
+      "pale": "#EEF0E9",
+      "ink": "#111A17"
+    },
+    "text_pairs": [
+      [
+        "#123C32",
+        "#EEF0E9"
+      ],
+      [
+        "#EEF0E9",
+        "#123C32"
+      ],
+      [
+        "#111A17",
+        "#83D2B1"
+      ]
+    ],
+    "font": "Manrope",
+    "description": "A compact N uses alternating rounded and square outer corners around a diagonal passage. It ties the mark to NIVRA's name without forcing an eye. The N construction is a familiar category, so no unique-recognition or trademark claim is made. The earlier swoosh concept was rejected internally and is not included."
+  },
+  {
+    "slug": "03-ready",
+    "name": "Ready",
+    "source": "exec-ca93f3c8-4aec-4b1f-8596-a3923870b19f.png",
+    "colors": {
+      "indigo": "#3547C8",
+      "periwinkle": "#BFC7FA",
+      "ink": "#121A30",
+      "white": "#F8FAFF"
+    },
+    "text_pairs": [
+      [
+        "#121A30",
+        "#F8FAFF"
+      ],
+      [
+        "#F8FAFF",
+        "#3547C8"
+      ],
+      [
+        "#121A30",
+        "#BFC7FA"
+      ]
+    ],
+    "font": "Inter",
+    "description": "A wordmark-led identity uses the V/R relationship to create a controlled diagonal passage. The R's stem is partly expressed by this relationship; it must be tested carefully at small sizes during refinement. The name itself carries the identity, without an added icon."
+  }
+]

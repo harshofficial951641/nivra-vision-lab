@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "dataset": "doi:10.7910/DVN/N4LNZD",
+  "version": 2,
+  "versionMinor": 0,
+  "versionId": 424271,
+  "metadataUrl": "https://dataverse.harvard.edu/api/datasets/:persistentId/versions/2.0?persistentId=doi:10.7910/DVN/N4LNZD",
+  "license": "CC0-1.0",
+  "downloadCapBytes": 2000000000,
+  "totalArchiveBytes": 1390546297,
+  "evidenceFile": "data/vid/review-round2-expanded/official-version-2.0.json",
+  "files": [
+    {
+      "name": "nv_b_02.rar",
+      "id": 10123372,
+      "bytes": 618719884,
+      "md5": "83b1fd04bd4bfe470429700579f7aec6",
+      "publisherCategory": "nonviolent",
+      "restricted": false
+    },
+    {
+      "name": "nv_b_03.rar",
+      "id": 10123400,
+      "bytes": 771826413,
+      "md5": "2b66fff37eac1a100a2cf46ef4e46705",
+      "publisherCategory": "nonviolent",
+      "restricted": false
+    }
+  ],
+  "rightsLimitations": [
+    "CC0 is the released deposit copyright declaration; participant consent is author-reported, not independently verified.",
+    "No claim of complete non-copyright rights clearance or production deployment approval.",
+    "Publisher category is provenance only; training decisions require actual imagery review."
+  ],
+  "accessVerification": {
+    "versionState": "RELEASED",
+    "restrictedFiles": 0,
+    "additionalTerms": {
+      "termsOfUse": null,
+      "restrictions": null,
+      "specialPermissions": null,
+      "conditions": null,
+      "termsOfAccess": null
+    },
+    "accountOrAgreementUsed": false
+  }
+}

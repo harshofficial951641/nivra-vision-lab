@@ -51,6 +51,12 @@ __pycache__/
 .pytest_cache/
 *.pyc
 service/state/
+service/state/plans/
 service/tools/
+service/training/data/
+service/training/runs/
+service/research/cache/
+service/research/runs/
+service/research/venvs/
 nivra-sites.tar.gz
 output/

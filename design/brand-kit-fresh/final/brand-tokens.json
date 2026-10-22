@@ -1,0 +1,25 @@
+{
+  "brand": {
+    "ink": "#172C40",
+    "teal": "#167D8D",
+    "paper": "#F5F4EF",
+    "mist": "#DCECEE",
+    "tealText": "#126F7D"
+  },
+  "status": {
+    "review": "#A65B00",
+    "urgent": "#B63D3D",
+    "resolved": "#23734D"
+  },
+  "typography": {
+    "display": "Bahnschrift",
+    "body": "Segoe UI"
+  },
+  "contrast": {
+    "#172C40 on #F5F4EF": 12.97,
+    "#167D8D on #F5F4EF": 4.38,
+    "#172C40 on #167D8D": 2.96,
+    "#FFFFFF on #167D8D": 4.83,
+    "#126F7D on #F5F4EF": 5.3
+  }
+}

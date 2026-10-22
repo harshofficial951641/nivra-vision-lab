@@ -1,5 +1,11 @@
 # Local physical-interaction AI (experimental)
 
+For the MacBook showcase with phone cameras, use
+[`docs/mac-showcase.md`](../docs/mac-showcase.md). It covers the pinned non-CUDA
+environment, HTTPS trust, local inference/fallback, and venue checks. V2 incident
+replays now retain bounded JPEG clips in RAM for at most 15 minutes; no clip
+footage is written to disk. Dismiss/clear deletes the captured clip immediately.
+
 This optional Windows service runs YOLOX-S, ByteTrack, RTMPose-M, and the
 SlowFast-R50 AVA action detector on the local machine. It is an implemented
 inference pipeline, **not a validated fight-detection release**. It can miss
@@ -169,3 +175,12 @@ service/.venv/Scripts/python.exe service/benchmark_classrooms.py service/evaluat
 The benchmark refuses to replace cameras not named `QA ...`. It reports actual
 processing and transport timings using duplicated public footage. It is not an
 accuracy test or a substitute for four real classroom feeds.
+
+## Offline X3D training candidates
+
+The training tools operate separately from the live service. See
+[`training/README.md`](training/README.md) for pinned public-footage preparation,
+provisional visual labels, the CPU-only candidate trainer and current results.
+The candidate is a fresh binary head on frozen official X3D-M features. It is
+not a replacement checkpoint for the deployed community model, and is never
+promoted automatically.

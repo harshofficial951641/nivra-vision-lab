@@ -1,0 +1,25 @@
+# NIVRA eye subject study
+
+Status: exploratory roughs, no approved identity. 18 sketches across three independent built-in imagegen calls, with a fourth call correcting the A sheet background. All three delivered sheets visually inspected. Apple and Mannat supplied as references for memorable simplicity, not shapes to copy. No letter-derived logo.
+
+This tests one subject in three constructions, not three completed brand-kit directions. No colour system or production asset is implied.
+
+Review: A's connected pupil is legible but ornamental and wave-like. B1 has the most compact silhouette; however the family still resembles familiar eye icons. B5 risks hood/helmet associations; B6 is letter-like. C is immediately readable but generic and drifts toward cosmetics/optician imagery. A and C should not progress as drawn. B1 is at most a refinement hypothesis, not a recommendation to adopt.
+
+Small-size, vector, trademark and reproduction checks remain unperformed. No marks are claimed to be original in a legal or exclusivity sense. Need user feedback on whether the eye subject itself fits before investing in refinement.
+
+## Prompts
+
+### A
+
+Logo design exploration, not presentation mockup. Produce a square white sheet with SIX original black-only symbol sketches arranged in a spacious 3 by 2 grid, labelled only A1 A2 A3 A4 A5 A6 in small neutral sans type. Subject: a single watchful eye for NIVRA, a human-supervised physical-security technology company. Explore an OPEN CONTOUR construction: one confident thick curved stroke traces the upper eyelid and returns inward to become the pupil, a shorter separate lower curve balances it. The distinctive feature is the graceful continuous outer-to-inner stroke, not decoration. Each of the six designs must have a substantially different silhouette, eye proportion, curve relationship and use of negative space. Calm, awake, protective, simple enough to draw from memory. Show real graphic-design judgement, optical balance, smooth deliberate curves and blunt clean terminals. Black flat ink on pure white. No letters within symbols, no NIVRA wordmark, no colour, no gradients, no 3D, no textures, no diagrams, no ornament, no eyelashes, no eyebrows, no mysticism, no shield, no concentric lens, no shutter, no aggressive gaming eye, no copying existing logos. Symbols should look like considered identity sketches, not six identical stock visibility icons. No other text.
+
+### B
+
+Logo design exploration, not a brand board. Square white sheet, SIX original black-only symbols in generous 3 by 2 arrangement. Label only B1 B2 B3 B4 B5 B6 small sans text. Subject a single watchful eye for NIVRA human-supervised security technology. Territory: SOLID SILHOUETTE. Sculpt one substantial soft black eyelid mass with a white eye opening cut into it and an off-centre black pupil connected organically to the lower edge. No floating circle inside a generic almond outline. Each mark uses at most two black connected masses. The recognizable eye remains immediate; character comes from precise figure-ground design, a slightly asymmetric lid and substantial clean counterspace. Explore six genuinely different constructions and silhouettes: compact near-square, broad horizontal, softly arched, gently asymmetric, tall upper lid, near-circular open-side. Calm alertness, strong silhouette, memorable economical shape. Pure flat black on pure white. Avoid masks, helmets, birds, angry eyebrow, sharp corners, teardrops, cosmetics, optician logo, sacred eye, shields, letters, initials, geometric containers, shutters and concentric rings. No colour, mockups, gradients, display typography, brand name, rationales or decorative layout. This is an honest early logo study.
+
+### C
+
+Square plain white logo sketch sheet, SIX original black silhouettes arranged spaciously 3 by 2, labels only C1 C2 C3 C4 C5 C6. NIVRA is human-supervised early intervention through visual awareness. Explore the recognizable human eye in a SIDE-VIEW construction rather than the usual frontal almond icon. A minimal eye looking right, with an upper lid extending slightly forward over the pupil; pupil is shaped as a simple substantial upright oval or softened wedge seen obliquely. Lower lid abbreviated. At most three bold shapes per symbol. Six genuinely different geometric treatments of this same subject, all calm and attentive, memorable, distinct silhouettes, no facial profile or nose, no body, no animals, no threatening eyebrows. Elegant human contours with the simplicity of a well-crafted identity mark, no needless cuts or tiny details. No letters, no brand name, no Apple imagery or bites, no Mannat monogram, no arrows, no wifi, no helmets, no cameras, no lens rings, no shutter, no shield, no gradients, no colour, no shadows, no mockups, no explanatory prose. Flat black ink on pure white, crisp smooth edges.
+
+For B and C an explicit opaque white background instruction was appended. A correction: preserve all symbols and labels, replace the background with solid opaque white and keep marks black.

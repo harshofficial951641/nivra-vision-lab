@@ -1,0 +1,14 @@
+{
+  "id": "/guard",
+  "name": "NIVRA Guard",
+  "short_name": "NIVRA Guard",
+  "start_url": "/guard",
+  "scope": "/guard",
+  "display": "standalone",
+  "theme_color": "#0b0b0c",
+  "background_color": "#0b0b0c",
+  "icons": [
+    { "src": "/guard-icons/guard-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/guard-icons/guard-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

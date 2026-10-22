@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/google/fonts",
+  "families": [
+    "ofl/ibmplexsans",
+    "ofl/ibmplexmono"
+  ],
+  "retrieved": "2026-09-17",
+  "license": "SIL Open Font License 1.1",
+  "files": {
+    "ibmplexmono-OFL.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+    "IBMPlexMono-Regular.ttf": "6a3412f058c7d8dfd9170c41e85ade48e5156ecb89356110ca57a0a27734af46",
+    "IBMPlexSans-400.ttf": "0f1c5c4f964f441daa3ed8b3e424534c6ba83e45cb9b6284776bc312705452fa",
+    "IBMPlexSans-600.ttf": "5b4666ad216136edfa4229efb01aa43b8121ee32bc7e4de768332876fe375049",
+    "IBMPlexSans-700.ttf": "4e742e4821b432066f487796a320306d2a9970deee97be21d722709f0e8e4573",
+    "ibmplexsans-OFL.txt": "7e6b2818edbd8f6a01ae80641cc8f16a51080d08fb4e532be3a0b6f74adb07da",
+    "IBMPlexSans[wdth,wght].ttf": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+  }
+}

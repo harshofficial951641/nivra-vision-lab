@@ -1,0 +1,134 @@
+[
+  {
+    "id": "01",
+    "name": "Keeper",
+    "source": "exec-e910cff3-dbe7-4564-87af-ef72b22ec5b3.png",
+    "font": "Manrope",
+    "fd": "manrope",
+    "colors": [
+      "#EE542F",
+      "#242729",
+      "#DDE3E1",
+      "#FAFBF9"
+    ],
+    "names": [
+      "Vermilion",
+      "Carbon",
+      "Silver",
+      "White"
+    ],
+    "crop": [
+      60,
+      100,
+      550,
+      235
+    ],
+    "idea": "A guardian that stays attentive.",
+    "reason": "A settled watchdog communicates watchfulness and protection through a recognizable subject. Its posture is calm; the identity avoids an attacking animal or a police crest.",
+    "risk": "The guardian is direct, but dogs are familiar security imagery. The final contour would need further differentiation. Recognition is not evidence of originality.",
+    "graphic": "Use a stable baseline, a solid vermilion field and generous white space. Keep the guardian whole on small uses; avoid turning it into an all-over mascot pattern.",
+    "balance": "White 45% / carbon 30% / vermilion 20% / silver 5%",
+    "pairidx": [
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        3,
+        1
+      ]
+    ]
+  },
+  {
+    "id": "02",
+    "name": "Intercept",
+    "source": "exec-ae340765-4d45-4f64-8f30-4074b9a6ecd4.png",
+    "font": "Plus Jakarta Sans",
+    "fd": "plusjakartasans",
+    "colors": [
+      "#073F45",
+      "#52DDC0",
+      "#F2F4EE",
+      "#B5BDBC"
+    ],
+    "names": [
+      "Petrol",
+      "Aqua",
+      "Chalk",
+      "Warm steel"
+    ],
+    "crop": [
+      95,
+      80,
+      835,
+      180
+    ],
+    "idea": "Hold the moment open.",
+    "reason": "Separated solid forms and a small intervening stop express the moment before contact. The system uses visible intervals in its layouts, linking observation with a chance to respond.",
+    "risk": "The mechanical construction is less literal. It must be tested for recognition without an explanation, and the small intervention element needs a one-colour solution.",
+    "graphic": "Stop broad horizontal fields short of each other. Carry one consistent interval through the composition. Avoid chains, hidden initials or decorative technical grids.",
+    "balance": "Chalk 40% / petrol 40% / aqua 15% / steel 5%",
+    "pairidx": [
+      [
+        0,
+        2
+      ],
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        0
+      ]
+    ]
+  },
+  {
+    "id": "03",
+    "name": "Widefield",
+    "source": "exec-eb3111c7-8dc6-45ba-a2d8-3c905d6d1399.png",
+    "font": "DM Sans",
+    "fd": "dmsans",
+    "colors": [
+      "#532C4C",
+      "#FF775B",
+      "#F5E9E9",
+      "#211E25"
+    ],
+    "names": [
+      "Mulberry",
+      "Persimmon",
+      "Blush",
+      "Onyx"
+    ],
+    "crop": [
+      55,
+      58,
+      345,
+      290
+    ],
+    "idea": "Keep the wider situation in view.",
+    "reason": "Three unequal planes spread into a broad field. The associated panoramic image language suggests awareness of a developing situation across space and time.",
+    "risk": "The three-plane mark is abstract and may read as a fan or crown. Its relationship to surveillance needs to survive without the photographic presentation.",
+    "graphic": "Use three unequal vertical crops or fields with clear intervals. Keep their rhythm consistent. A real sequence must never be implied by unrelated imagery.",
+    "balance": "Blush 40% / mulberry 35% / onyx 15% / persimmon 10%",
+    "pairidx": [
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        2,
+        0
+      ]
+    ]
+  }
+]

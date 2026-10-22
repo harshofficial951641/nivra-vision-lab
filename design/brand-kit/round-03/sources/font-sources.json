@@ -1,0 +1,23 @@
+[
+  {
+    "family": "Manrope",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/Manrope%5Bwght%5D.ttf",
+    "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+    "license": "SIL Open Font License 1.1",
+    "google_fonts": "https://fonts.google.com/specimen/Manrope"
+  },
+  {
+    "family": "Plus Jakarta Sans",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/plusjakartasans/PlusJakartaSans%5Bwght%5D.ttf",
+    "sha256": "89b3fb38aa0d275d7a731d0d817a4f1622b316b4d7fbdedcf02ee9099ff68bc8",
+    "license": "SIL Open Font License 1.1",
+    "google_fonts": "https://fonts.google.com/specimen/Plus+Jakarta+Sans"
+  },
+  {
+    "family": "DM Sans",
+    "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/dmsans/DMSans%5Bopsz%2Cwght%5D.ttf",
+    "sha256": "8cd08d97e89c24d0aa92edd2f0f4c8ee6195eee9b7c9f154865a58b02f0c1c0d",
+    "license": "SIL Open Font License 1.1",
+    "google_fonts": "https://fonts.google.com/specimen/DM+Sans"
+  }
+]

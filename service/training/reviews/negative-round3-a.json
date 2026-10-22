@@ -1,0 +1,3981 @@
+{
+  "schemaVersion": 1,
+  "reviewMethod": "Provisional model-blind assistant visual review of 80 previously unreviewed nv_b recordings: 20 evenly spaced eligible numeric-ID positions in each available archive 01,02,03,06, after excluding every prior reviewed ID and known source hash including ambiguous/excluded decisions. Sequential OpenCV FFMPEG decoding, cv2.setNumThreads(1), one decoder and one decoder thread at a time. All timestamps are actual CAP_PROP_POS_MSEC readings checked finite and strictly increasing; nominal FPS never supplies timestamps. Direct view_image inspection of 20 screening contact sheets containing 960 timestamped frames. Nineteen candidate 0-4 s intervals received ordered evidence containing every source frame through the first PTS at or beyond 4 s: 2299 frames visually inspected; fifteen intervals retained. Full-size 320x180 tile pages are saved; five candidates inspected on those pages, fourteen on compact ordered 180x101 tile sheets. All 22 ambiguous recordings received six enlarged 640x360 samples each, 132 further frame presentations, inspected on eleven sheets. Static ordered frames only, no audio or continuous-motion playback. See visual-inspection-log.json and sampling logs for exact files, indices and timestamps.",
+  "limitations": [
+    "Assistant labels are provisional, not human ground truth, continuous-motion playback, intent or impact verification. Every-frame static imagery still has blur, face masking, occlusion and finite spatial detail; fine contact and force may remain unresolved.",
+    "Only explicit 0-4 second source intervals are normal. Unannotated tails, uncertain contact, and all ambiguous/excluded clips remain unknown; an empty events array never means normal. No positive labels were assigned.",
+    "Props/weapons and prop-centred scenes are excluded. Background furniture and unused objects are not action labels. No filename or publisher category alone determined a decision; no classifier scores, model inference or training were used.",
+    "All VID records remain the single unresolved vid-v2-unresolved-session-cohort, training only. Descriptive sceneGroup values do not prove actor/session independence; zero calibration or holdout windows.",
+    "Selection is limited to 20 numeric-ID-stratified eligible clips per available nv_b archive. Visual triage favors visible hard ordinary movement; excluded quiet/prop scenes and unknown contact create selection bias. No target accepted count was imposed.",
+    "Full-clip sequential decoding checks timestamps but does not mean all full-clip frames were visually inspected. Full every-frame visual inspection applies only to the nineteen explicit candidate intervals; overview screening outside them is sparse.",
+    "Provenance uses existing pinned official Dataverse V2 records, matching cached archive byte sizes/MD5, extraction markers, archive member paths and source SHA256 values. No fresh online metadata lookup or independent participant-release audit was performed.",
+    "CC0 and participant consent are publisher/author-reported; complete non-copyright rights clearance is not established. Raw footage/evidence stays local and ignored, with no public exposure, deployment or production-performance claim.",
+    "Present-day RGB staged scenes, modest groups and repeated settings do not validate 50-100-person crowd recall, actual near-IR or real low-light CCTV operation."
+  ],
+  "recordings": [
+    {
+      "id": "nv_b_2",
+      "decision": "train-normal",
+      "sceneGroup": "home-blue-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated lateral steps or hops with arms extending and lowering; vigorous ordinary movement. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-01.jpg",
+        "data/vid/review-round3-neg/nv_b_2-pts.json",
+        "data/vid/review-round3-neg/nv_b_2-coverage.json",
+        "data/vid/review-round3-neg/nv_b_2-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_2-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_2-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_2-allframes-04.jpg"
+      ],
+      "sha256": "c050dd040892d8070a684b997041dcec3b8e94be4fc0bd6527212424e94d1aae",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_2.mp4",
+      "durationSeconds": 6.566666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 197,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.533333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          36,
+          53,
+          71,
+          88,
+          106,
+          124,
+          141,
+          159,
+          176,
+          194
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_2-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_2-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_10",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen-counter",
+      "events": [],
+      "notes": "Two people manipulate countertop utensils/items; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-01.jpg",
+        "data/vid/review-round3-neg/nv_b_10-pts.json"
+      ],
+      "sha256": "ea2cd5e5eb9ce45ad306d1dc9245e628614a0cd57ea084fa5dd664c51d0d96ed",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_10.mp4",
+      "durationSeconds": 5.54054054054054,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 164,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.506756756756757,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          30,
+          44,
+          59,
+          73,
+          88,
+          103,
+          117,
+          132,
+          146,
+          161
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_10-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_21",
+      "decision": "exclude",
+      "sceneGroup": "home-desk-yellow-curtain",
+      "events": [],
+      "notes": "Seated keyboard/desk-item handling; prop-centred and low movement utility.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-01.jpg",
+        "data/vid/review-round3-neg/nv_b_21-pts.json"
+      ],
+      "sha256": "c1c9d40ee1c4f95fc02556c1af9550201df737802d05815ad7c6f43f93d20340",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_21.mp4",
+      "durationSeconds": 6.621621621621621,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 196,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.587837837837839,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          35,
+          53,
+          70,
+          88,
+          105,
+          123,
+          140,
+          158,
+          175,
+          193
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_21-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_32",
+      "decision": "exclude",
+      "sceneGroup": "home-carved-wardrobe",
+      "events": [],
+      "notes": "One person raises a cloth against a wardrobe; prop-centred action excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-01.jpg",
+        "data/vid/review-round3-neg/nv_b_32-pts.json"
+      ],
+      "sha256": "ce445383bab4d1c31a62cd6ce20eb743cabb8599689f6d4c2a17c666806150ff",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_32.mp4",
+      "durationSeconds": 7.333333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 220,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.3,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          20,
+          40,
+          60,
+          79,
+          99,
+          119,
+          138,
+          158,
+          178,
+          197,
+          217
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_32-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_40",
+      "decision": "exclude",
+      "sceneGroup": "home-desk-carved-wardrobe",
+      "events": [],
+      "notes": "Seated writing and small hand/head gestures; low movement utility, not accepted to inflate normal count.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-02.jpg",
+        "data/vid/review-round3-neg/nv_b_40-pts.json"
+      ],
+      "sha256": "7df28b5e0541415b518b730c13992700024a75f2b22d426955d7a89ec236ad68",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_40.mp4",
+      "durationSeconds": 9.033333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 271,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.0,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          25,
+          49,
+          73,
+          98,
+          122,
+          146,
+          171,
+          195,
+          219,
+          244,
+          268
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_40-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_52",
+      "decision": "exclude",
+      "sceneGroup": "campus-counter-railing",
+      "events": [],
+      "notes": "Two people write on a counter; prop-centred and low movement utility.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-02.jpg",
+        "data/vid/review-round3-neg/nv_b_52-pts.json"
+      ],
+      "sha256": "6d161d85520e23331be23c28c86a7e54661dc413cfafe90f42e79eb808653f1e",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_52.mp4",
+      "durationSeconds": 6.764411862712429,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 203,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.731089636787738,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          19,
+          37,
+          55,
+          73,
+          91,
+          109,
+          127,
+          146,
+          164,
+          182,
+          200
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_52-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_65",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-corridor-library",
+      "events": [],
+      "notes": "Two people approach and raise hands near upper bodies; hand/contact mechanics unresolved, no normal span retained. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-02.jpg",
+        "data/vid/review-round3-neg/nv_b_65-pts.json",
+        "data/vid/review-round3-neg/contact-detail-01.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "42fb4ceaaf753872349777030e9e3fb8d4ccdd7e5fbffe418a67c9409079aa5a",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_65.mp4",
+      "durationSeconds": 6.1,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 183,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.066666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          17,
+          33,
+          49,
+          66,
+          82,
+          98,
+          115,
+          131,
+          147,
+          164,
+          180
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_65-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          41,
+          76,
+          111,
+          145,
+          180
+        ]
+      }
+    },
+    {
+      "id": "nv_b_76",
+      "decision": "exclude",
+      "sceneGroup": "home-wooden-door-cabinet",
+      "events": [],
+      "notes": "One person walks while holding a small device/item; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-02.jpg",
+        "data/vid/review-round3-neg/nv_b_76-pts.json"
+      ],
+      "sha256": "91539165260d4137d6ca10dff42683e5abfa1b8e7e6724440717d76fe69ad178",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_76.mp4",
+      "durationSeconds": 9.563478840386537,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 287,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.530156614461847,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          26,
+          52,
+          78,
+          104,
+          129,
+          155,
+          181,
+          207,
+          232,
+          258,
+          284
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_76-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_85",
+      "decision": "ambiguous",
+      "sceneGroup": "home-wooden-door-cabinet",
+      "events": [],
+      "notes": "Two people approach and close arms around upper bodies; contact mechanics unresolved, no benign intent inferred. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-03.jpg",
+        "data/vid/review-round3-neg/nv_b_85-pts.json",
+        "data/vid/review-round3-neg/contact-detail-01.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "3d11712ce9f86c8d152a78301dcd35578986e277011317385b52ac59b72c3e4d",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_85.mp4",
+      "durationSeconds": 6.2312562479173605,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 187,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.197934021992669,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          17,
+          34,
+          51,
+          67,
+          84,
+          101,
+          117,
+          134,
+          151,
+          167,
+          184
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_85-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          7,
+          42,
+          77,
+          113,
+          148,
+          184
+        ]
+      }
+    },
+    {
+      "id": "nv_b_97",
+      "decision": "exclude",
+      "sceneGroup": "campus-covered-court",
+      "events": [],
+      "notes": "Group rapid movement with visible ball; sports/prop scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-03.jpg",
+        "data/vid/review-round3-neg/nv_b_97-pts.json"
+      ],
+      "sha256": "68f2c2e6adb60379fe566dbc1acc65aa1cb110a02094a5064fbe6131e9ecaded",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_97.mp4",
+      "durationSeconds": 8.463845384871709,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 254,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.430523158947018,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          23,
+          46,
+          69,
+          92,
+          114,
+          137,
+          160,
+          183,
+          205,
+          228,
+          251
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_97-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_110",
+      "decision": "ambiguous",
+      "sceneGroup": "white-room-curtained-window-group",
+      "events": [],
+      "notes": "Dense review shows overlapping hands near shoulders/waist among the stepping group. Some contact configurations remain unresolved; no complete normal interval retained. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-03.jpg",
+        "data/vid/review-round3-neg/nv_b_110-pts.json",
+        "data/vid/review-round3-neg/nv_b_110-coverage.json",
+        "data/vid/review-round3-neg/nv_b_110-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_110-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_110-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_110-allframes-04.jpg",
+        "data/vid/review-round3-neg/contact-detail-02.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "bfa22f3b0500f501898bd182e68291e0f9a6f38fb3381a565555b52211c8f596",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_110.mp4",
+      "durationSeconds": 8.033333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 241,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.0,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          22,
+          44,
+          65,
+          87,
+          108,
+          130,
+          152,
+          173,
+          195,
+          216,
+          238
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_110-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_110-coverage.json"
+        },
+        "enlargedSampleFrameIndices": [
+          6,
+          53,
+          99,
+          145,
+          192,
+          238
+        ]
+      }
+    },
+    {
+      "id": "nv_b_119",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-elevator-lobby",
+      "events": [],
+      "notes": "Two people approach and briefly meet raised palms, then separate; unresolved contact mechanics, no normal or positive event. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-03.jpg",
+        "data/vid/review-round3-neg/nv_b_119-pts.json",
+        "data/vid/review-round3-neg/contact-detail-02.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "e08bd99f3979d5d1e6c3cfb50e842c3dc2db650094db9dd5325feb1a295c6c10",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_119.mp4",
+      "durationSeconds": 5.6,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 168,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.566666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          30,
+          45,
+          60,
+          75,
+          90,
+          105,
+          120,
+          135,
+          150,
+          165
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_119-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          38,
+          70,
+          102,
+          133,
+          165
+        ]
+      }
+    },
+    {
+      "id": "nv_b_131",
+      "decision": "exclude",
+      "sceneGroup": "campus-display-tables",
+      "events": [],
+      "notes": "Two people handle small items over display tables; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-04.jpg",
+        "data/vid/review-round3-neg/nv_b_131-pts.json"
+      ],
+      "sha256": "590ad77081f00e9aa4587698592374d2e84f86788bb7ce8023666ba50848f491",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_131.mp4",
+      "durationSeconds": 7.166666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 215,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.133333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          20,
+          39,
+          58,
+          77,
+          97,
+          116,
+          135,
+          154,
+          173,
+          193,
+          212
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_131-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_141",
+      "decision": "exclude",
+      "sceneGroup": "home-blue-curtains",
+      "events": [],
+      "notes": "One person holds an object with hands extended near chest; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-04.jpg",
+        "data/vid/review-round3-neg/nv_b_141-pts.json"
+      ],
+      "sha256": "f1c9bd93e85eed350ac6d737ce87a41049538d4b21b3a763183311a9d99e2eca",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_141.mp4",
+      "durationSeconds": 7.0,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 210,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.966666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          19,
+          38,
+          57,
+          76,
+          94,
+          113,
+          132,
+          151,
+          169,
+          188,
+          207
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_141-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_150",
+      "decision": "train-normal",
+      "sceneGroup": "home-blue-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated knee/torso bending with hands behind head; vigorous ordinary movement. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-04.jpg",
+        "data/vid/review-round3-neg/nv_b_150-pts.json",
+        "data/vid/review-round3-neg/nv_b_150-coverage.json",
+        "data/vid/review-round3-neg/nv_b_150-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_150-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_150-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_150-allframes-04.jpg"
+      ],
+      "sha256": "d105e82522b69c05b67cee114d886f4515e1ea751122eca363d5c69af310334b",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_150.mp4",
+      "durationSeconds": 8.033333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 241,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.0,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          22,
+          44,
+          65,
+          87,
+          108,
+          130,
+          152,
+          173,
+          195,
+          216,
+          238
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_150-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_150-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_164",
+      "decision": "train-normal",
+      "sceneGroup": "outdoor-tree-path",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Two foreground people walk past the low camera; distant group remains behind. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated. Distant background people are small; fine hand detail is limited.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-04.jpg",
+        "data/vid/review-round3-neg/nv_b_164-pts.json",
+        "data/vid/review-round3-neg/nv_b_164-coverage.json",
+        "data/vid/review-round3-neg/nv_b_164-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_164-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_164-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_164-allframes-04.jpg"
+      ],
+      "sha256": "45309e1b632bc518d92b1756e6a1b586d44afa6c65cb9e1d1ff679fb391bda67",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_164.mp4",
+      "durationSeconds": 4.033333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 121,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.0,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          11,
+          22,
+          33,
+          43,
+          54,
+          65,
+          75,
+          86,
+          97,
+          107,
+          118
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_164-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_164-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_175",
+      "decision": "exclude",
+      "sceneGroup": "home-bed-carved-wardrobe",
+      "events": [],
+      "notes": "Seated person opens and handles a bag; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-05.jpg",
+        "data/vid/review-round3-neg/nv_b_175-pts.json"
+      ],
+      "sha256": "54f9334eba15d1332489db7a99be9c6b277e0b8c7742019d3f0667553f1f9f4a",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_175.mp4",
+      "durationSeconds": 5.833333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 175,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.8,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          16,
+          32,
+          47,
+          63,
+          78,
+          94,
+          110,
+          125,
+          141,
+          156,
+          172
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_175-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_183",
+      "decision": "train-normal",
+      "sceneGroup": "home-blue-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated knee and torso bends, hands low in front; vigorous ordinary movement. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-05.jpg",
+        "data/vid/review-round3-neg/nv_b_183-pts.json",
+        "data/vid/review-round3-neg/nv_b_183-coverage.json",
+        "data/vid/review-round3-neg/nv_b_183-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_183-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_183-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_183-allframes-04.jpg"
+      ],
+      "sha256": "b68252656f2094521af8ea799f6d1a72357d910704c32487ac775f4f80100afb",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_183.mp4",
+      "durationSeconds": 8.633333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 259,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.6,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          24,
+          47,
+          70,
+          93,
+          117,
+          140,
+          163,
+          186,
+          209,
+          233,
+          256
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_183-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_183-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_196",
+      "decision": "exclude",
+      "sceneGroup": "home-kitchen-counter",
+      "events": [],
+      "notes": "Two people handle kettles and countertop items; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-05.jpg",
+        "data/vid/review-round3-neg/nv_b_196-pts.json"
+      ],
+      "sha256": "f5f2d948ea3d9fd75bee6aad2cd75c73f68e475754fae17224ddb708985ebd01",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_196.mp4",
+      "durationSeconds": 6.047297297297297,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 179,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.013513513513514,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          16,
+          32,
+          48,
+          64,
+          80,
+          96,
+          112,
+          128,
+          144,
+          160,
+          176
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_196-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_204",
+      "decision": "train-normal",
+      "sceneGroup": "home-doorway-tiled-wall",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "People walk separately through a doorway, no contact apparent in samples. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated. First boundary-crossing frame is at 4.020270 seconds; no FPS-derived timing.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-05.jpg",
+        "data/vid/review-round3-neg/nv_b_204-pts.json",
+        "data/vid/review-round3-neg/nv_b_204-coverage.json",
+        "data/vid/review-round3-neg/nv_b_204-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_204-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_204-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_204-ordered-all.jpg"
+      ],
+      "sha256": "4cde6d69ac07b36f06cda68dc1d43e167fc7413ba358c8ec9f168096bb8776b6",
+      "sourceArchive": "nv_b_01.rar",
+      "sourcePath": "media/nv_b_01/nv_b_01/nv_b_204.mp4",
+      "durationSeconds": 5.878378378378378,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 174,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.844594594594595,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          16,
+          31,
+          47,
+          62,
+          78,
+          93,
+          109,
+          124,
+          140,
+          155,
+          171
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_204-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 120,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.02027027027027,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_204-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_206",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters",
+      "events": [],
+      "notes": "Two people face each other with repeated raised hands and near hand contact; mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-06.jpg",
+        "data/vid/review-round3-neg/nv_b_206-pts.json",
+        "data/vid/review-round3-neg/contact-detail-03.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "9b2feaff660f31c75bbb9ca298084823d43a45266930cf7bf801bd020b99ff3d",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_206.mp4",
+      "durationSeconds": 6.6,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 198,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.566666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          36,
+          54,
+          71,
+          89,
+          107,
+          124,
+          142,
+          160,
+          177,
+          195
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_206-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          44,
+          82,
+          120,
+          157,
+          195
+        ]
+      }
+    },
+    {
+      "id": "nv_b_212",
+      "decision": "exclude",
+      "sceneGroup": "campus-entrance-planters",
+      "events": [],
+      "notes": "Separated group mostly stands with small gestures; low movement utility, no accepted window sought.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-06.jpg",
+        "data/vid/review-round3-neg/nv_b_212-pts.json"
+      ],
+      "sha256": "f9f770253b63bbfe6466a2d9ee2e4438382ea046ace5743995a4930c2377c0c9",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_212.mp4",
+      "durationSeconds": 7.166666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 215,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.133333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          20,
+          39,
+          58,
+          77,
+          97,
+          116,
+          135,
+          154,
+          173,
+          193,
+          212
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_212-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_220",
+      "decision": "ambiguous",
+      "sceneGroup": "white-room-curtained-window-group",
+      "events": [],
+      "notes": "Dense review shows overlapping hands near shoulders/waist among the stepping group. Some contact configurations remain unresolved; no complete normal interval retained. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-06.jpg",
+        "data/vid/review-round3-neg/nv_b_220-pts.json",
+        "data/vid/review-round3-neg/nv_b_220-coverage.json",
+        "data/vid/review-round3-neg/nv_b_220-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_220-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_220-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_220-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_220-ordered-all.jpg",
+        "data/vid/review-round3-neg/contact-detail-03.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "121436e4107c81429967cf001e6e5c1cd1756ea9dd681649dafa68c0da600ebc",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_220.mp4",
+      "durationSeconds": 8.0,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 240,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.966666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          22,
+          43,
+          65,
+          86,
+          108,
+          129,
+          151,
+          172,
+          194,
+          215,
+          237
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_220-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_220-coverage.json"
+        },
+        "enlargedSampleFrameIndices": [
+          6,
+          53,
+          99,
+          145,
+          191,
+          237
+        ]
+      }
+    },
+    {
+      "id": "nv_b_226",
+      "decision": "train-normal",
+      "sceneGroup": "decorated-indoor-stage",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Group makes coordinated stepping and extended-arm movements on decorated platform; fast ordinary movement, no intent assigned. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-06.jpg",
+        "data/vid/review-round3-neg/nv_b_226-pts.json",
+        "data/vid/review-round3-neg/nv_b_226-coverage.json",
+        "data/vid/review-round3-neg/nv_b_226-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_226-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_226-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_226-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_226-ordered-all.jpg"
+      ],
+      "sha256": "14580b2dd2d57c020e457f26569b996df08213a81c345186e026cc8a5c3dc78d",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_226.mp4",
+      "durationSeconds": 8.033333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 241,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.0,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          22,
+          44,
+          65,
+          87,
+          108,
+          130,
+          152,
+          173,
+          195,
+          216,
+          238
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_226-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_226-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_232",
+      "decision": "ambiguous",
+      "sceneGroup": "home-blue-curtains",
+      "events": [],
+      "notes": "Two people approach, join low hands and move close near shoulders; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-07.jpg",
+        "data/vid/review-round3-neg/nv_b_232-pts.json",
+        "data/vid/review-round3-neg/contact-detail-04.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "7d0aedfb004a71004f3b6b60b08098bb2b2692194e898efaaafdbd64ca0edba1",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_232.mp4",
+      "durationSeconds": 8.86371209596801,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 266,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.83038987004332,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          24,
+          48,
+          72,
+          96,
+          120,
+          144,
+          167,
+          191,
+          215,
+          239,
+          263
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_232-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          7,
+          58,
+          109,
+          160,
+          212,
+          263
+        ]
+      }
+    },
+    {
+      "id": "nv_b_240",
+      "decision": "exclude",
+      "sceneGroup": "outdoor-grass-brick-wall",
+      "events": [],
+      "notes": "One seated figure makes small movements; low movement utility, not accepted to inflate count.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-07.jpg",
+        "data/vid/review-round3-neg/nv_b_240-pts.json"
+      ],
+      "sha256": "2573bfdcad69ea345e08b36da0d35b1601d66a8564b3986f0162fb5dd641f1d8",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_240.mp4",
+      "durationSeconds": 9.823509823509823,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 295,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.79020979020979,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          27,
+          53,
+          80,
+          106,
+          133,
+          159,
+          186,
+          212,
+          239,
+          265,
+          292
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_240-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_246",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-planters",
+      "events": [],
+      "notes": "One person approaches from behind and places arm near other shoulder; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-07.jpg",
+        "data/vid/review-round3-neg/nv_b_246-pts.json",
+        "data/vid/review-round3-neg/contact-detail-04.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "47d9ac3c07cdf562c31b5ba0e2ac14ecf8fb2c183b97f758d3fc7f096ae40dbf",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_246.mp4",
+      "durationSeconds": 5.266666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 158,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.233333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          43,
+          57,
+          71,
+          85,
+          99,
+          113,
+          127,
+          141,
+          155
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_246-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          36,
+          66,
+          96,
+          125,
+          155
+        ]
+      }
+    },
+    {
+      "id": "nv_b_252",
+      "decision": "exclude",
+      "sceneGroup": "home-bed-blue-curtain",
+      "events": [],
+      "notes": "One person writes on paper on a bed; prop-centred and low movement utility.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-07.jpg",
+        "data/vid/review-round3-neg/nv_b_252-pts.json"
+      ],
+      "sha256": "00894fc8a2a676e616c9aa67a931d781286879ebc51ab1e0b9377eab66229b23",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_252.mp4",
+      "durationSeconds": 10.266666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 308,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 10.233333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          28,
+          56,
+          84,
+          111,
+          139,
+          167,
+          194,
+          222,
+          250,
+          277,
+          305
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_252-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_260",
+      "decision": "exclude",
+      "sceneGroup": "rooftop-clothesline",
+      "events": [],
+      "notes": "One person handles hanging cloth; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-08.jpg",
+        "data/vid/review-round3-neg/nv_b_260-pts.json"
+      ],
+      "sha256": "7e951abad11b059437d9bacf5ce7e529c2aa5c964e07c1c8cb1292c92e1396f0",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_260.mp4",
+      "durationSeconds": 7.817697937458417,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 235,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.784431137724551,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          22,
+          43,
+          64,
+          85,
+          106,
+          127,
+          148,
+          169,
+          190,
+          211,
+          232
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_260-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_266",
+      "decision": "exclude",
+      "sceneGroup": "home-glass-cabinet",
+      "events": [],
+      "notes": "One person handles cabinet door/objects; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-08.jpg",
+        "data/vid/review-round3-neg/nv_b_266-pts.json"
+      ],
+      "sha256": "f26112c30dbb68e65261ab9f1f5fc48e7ead1a43b2e4f3366a7d00d6cb51be75",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_266.mp4",
+      "durationSeconds": 8.516300731869595,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 256,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.48303393213573,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          23,
+          46,
+          69,
+          92,
+          115,
+          138,
+          161,
+          184,
+          207,
+          230,
+          253
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_266-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_272",
+      "decision": "exclude",
+      "sceneGroup": "outdoor-field-tree",
+      "events": [],
+      "notes": "Group bends and steps around a ball; sports/prop scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-08.jpg",
+        "data/vid/review-round3-neg/nv_b_272-pts.json"
+      ],
+      "sha256": "6f0500aedf670cafb8b719f70239fbd700f4515ba1de7f9899d17c2da8f99ede",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_272.mp4",
+      "durationSeconds": 7.6158940397351,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 230,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.582781456953643,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          21,
+          42,
+          62,
+          83,
+          103,
+          124,
+          145,
+          165,
+          186,
+          206,
+          227
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_272-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_278",
+      "decision": "exclude",
+      "sceneGroup": "portrait-indoor-pair",
+      "events": [],
+      "notes": "Close pair with food/item held near face; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-08.jpg",
+        "data/vid/review-round3-neg/nv_b_278-pts.json"
+      ],
+      "sha256": "a9e70a31e6dfdee9f527da0f49b0a220d4fdd88d430b7d4889bbb90d000c5ce3",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_278.mp4",
+      "durationSeconds": 7.26792203501817,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 220,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.234886025768086,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          20,
+          40,
+          60,
+          79,
+          99,
+          119,
+          138,
+          158,
+          178,
+          197,
+          217
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_278-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_286",
+      "decision": "exclude",
+      "sceneGroup": "coloured-light-stage",
+      "events": [],
+      "notes": "Separated people make large solo arm/torso movements under coloured light; candidate ordinary movement with illumination limitations. Not advanced: coloured lighting and stage clutter limit detail.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-09.jpg",
+        "data/vid/review-round3-neg/nv_b_286-pts.json"
+      ],
+      "sha256": "b52528bfaa02a188cda9ad56ba2aef593b4efb5cfdfcd5a9739f32c94f460c57",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_286.mp4",
+      "durationSeconds": 8.533333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 256,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.5,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          23,
+          46,
+          69,
+          92,
+          115,
+          138,
+          161,
+          184,
+          207,
+          230,
+          253
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_286-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_292",
+      "decision": "train-normal",
+      "sceneGroup": "decorated-indoor-stage",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Separated group steps and rotates with extended arms on decorated platform; fast ordinary group movement. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-09.jpg",
+        "data/vid/review-round3-neg/nv_b_292-pts.json",
+        "data/vid/review-round3-neg/nv_b_292-coverage.json",
+        "data/vid/review-round3-neg/nv_b_292-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_292-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_292-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_292-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_292-ordered-all.jpg"
+      ],
+      "sha256": "6fda0f6606d0932be337c025d0e21a0af5ade9f7c83854068216428590b3996a",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_292.mp4",
+      "durationSeconds": 8.933333333333334,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 268,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.9,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          25,
+          49,
+          73,
+          97,
+          121,
+          145,
+          169,
+          193,
+          217,
+          241,
+          265
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_292-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_292-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_298",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-trees",
+      "events": [],
+      "notes": "Close group with repeated arms near faces/shoulders; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-09.jpg",
+        "data/vid/review-round3-neg/nv_b_298-pts.json",
+        "data/vid/review-round3-neg/contact-detail-05.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "8a27393368e2bd7217565c26f8056711487db1fda66f3d3ebeff2c91c70b3ef6",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_298.mp4",
+      "durationSeconds": 5.366666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 161,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.333333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          43,
+          58,
+          72,
+          86,
+          101,
+          115,
+          129,
+          144,
+          158
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_298-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          37,
+          67,
+          97,
+          128,
+          158
+        ]
+      }
+    },
+    {
+      "id": "nv_b_303",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-trees",
+      "events": [],
+      "notes": "Two people extend arms near each other upper body; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-09.jpg",
+        "data/vid/review-round3-neg/nv_b_303-pts.json",
+        "data/vid/review-round3-neg/contact-detail-05.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "eb1588d04b72dca39403b63347b160ac9a3b9f4ea5bf1993baf38bef2041dc74",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_303.mp4",
+      "durationSeconds": 5.1,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 153,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.066666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          14,
+          28,
+          41,
+          55,
+          68,
+          82,
+          96,
+          109,
+          123,
+          136,
+          150
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_303-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          35,
+          64,
+          93,
+          121,
+          150
+        ]
+      }
+    },
+    {
+      "id": "nv_b_306",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-entrance-trees",
+      "events": [],
+      "notes": "Three people make close hand/upper-body movements; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-10.jpg",
+        "data/vid/review-round3-neg/nv_b_306-pts.json",
+        "data/vid/review-round3-neg/contact-detail-06.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "ca34384f080f777f187f1e3ca1a7e12235580b7f60abbc364a02f0222de1a0dd",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_306.mp4",
+      "durationSeconds": 5.433333333333334,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 163,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.4,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          44,
+          58,
+          73,
+          87,
+          102,
+          116,
+          131,
+          145,
+          160
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_306-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          37,
+          68,
+          99,
+          129,
+          160
+        ]
+      }
+    },
+    {
+      "id": "nv_b_309",
+      "decision": "ambiguous",
+      "sceneGroup": "outdoor-tree-gate",
+      "events": [],
+      "notes": "Group gathers into close shoulder/upper-body contact then separates; mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-10.jpg",
+        "data/vid/review-round3-neg/nv_b_309-pts.json",
+        "data/vid/review-round3-neg/contact-detail-06.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "3d49b11af61518890dc9326e325905c60d2eb568ee21125f16711e79cec74464",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_309.mp4",
+      "durationSeconds": 8.066666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 242,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.033333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          22,
+          44,
+          66,
+          87,
+          109,
+          131,
+          152,
+          174,
+          196,
+          217,
+          239
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_309-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          53,
+          99,
+          146,
+          192,
+          239
+        ]
+      }
+    },
+    {
+      "id": "nv_b_313",
+      "decision": "exclude",
+      "sceneGroup": "home-low-table-camera",
+      "events": [],
+      "notes": "One person repeatedly waves a red fan-like object; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-10.jpg",
+        "data/vid/review-round3-neg/nv_b_313-pts.json"
+      ],
+      "sha256": "2f5e4a1b0c8c278047c007eec02a02d8d3bd4ed9ab7f475d37688d22d2e323ab",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_313.mp4",
+      "durationSeconds": 8.208208208208209,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 246,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.174841508174842,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          23,
+          45,
+          67,
+          89,
+          111,
+          133,
+          155,
+          177,
+          199,
+          221,
+          243
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_313-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_316",
+      "decision": "exclude",
+      "sceneGroup": "indoor-dining-table",
+      "events": [],
+      "notes": "Seated person handles a plate and food near mouth; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-10.jpg",
+        "data/vid/review-round3-neg/nv_b_316-pts.json"
+      ],
+      "sha256": "2180e829e6d46261922008625b4770929ed6ac65909d6a50a54f361dae88f15f",
+      "sourceArchive": "nv_b_02.rar",
+      "sourcePath": "media/nv_b_02/nv_b_02/nv_b_316.mp4",
+      "durationSeconds": 10.133333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 304,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 10.1,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          28,
+          55,
+          82,
+          110,
+          137,
+          164,
+          192,
+          219,
+          246,
+          274,
+          301
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_316-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_318",
+      "decision": "exclude",
+      "sceneGroup": "outdoor-field-path",
+      "events": [],
+      "notes": "People hold small containers/items near faces; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-11.jpg",
+        "data/vid/review-round3-neg/nv_b_318-pts.json"
+      ],
+      "sha256": "96c7faa243693787945ccb080a84b78e22f64ecd1e689583226b845553fc74de",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_318.mp4",
+      "durationSeconds": 5.833333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 175,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.8,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          16,
+          32,
+          47,
+          63,
+          78,
+          94,
+          110,
+          125,
+          141,
+          156,
+          172
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_318-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_333",
+      "decision": "exclude",
+      "sceneGroup": "rooftop-potted-plants",
+      "events": [],
+      "notes": "Foreground person runs toward another while holding a long bat/racket-like object; prop scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-11.jpg",
+        "data/vid/review-round3-neg/nv_b_333-pts.json"
+      ],
+      "sha256": "62c91081bfc27fe28cf8d82ea41e26165ff61b2351af540b995c65554169bea5",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_333.mp4",
+      "durationSeconds": 4.133333333333334,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 124,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.1,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          11,
+          22,
+          33,
+          44,
+          55,
+          66,
+          77,
+          88,
+          99,
+          110,
+          121
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_333-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_344",
+      "decision": "train-normal",
+      "sceneGroup": "rooftop-parapet",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated deep knee/torso bends and rises, no second person visible. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-11.jpg",
+        "data/vid/review-round3-neg/nv_b_344-pts.json",
+        "data/vid/review-round3-neg/nv_b_344-coverage.json",
+        "data/vid/review-round3-neg/nv_b_344-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_344-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_344-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_344-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_344-ordered-all.jpg"
+      ],
+      "sha256": "8d39f2de3ba9acf5e971552a96099b776636826e05730f68c44208c6e57936b7",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_344.mp4",
+      "durationSeconds": 5.4,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 162,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.366666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          44,
+          58,
+          72,
+          87,
+          101,
+          116,
+          130,
+          144,
+          159
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_344-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_344-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_358",
+      "decision": "train-normal",
+      "sceneGroup": "rooftop-water-tank",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated crouching, floor-supported extensions and rising; vigorous movement. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-11.jpg",
+        "data/vid/review-round3-neg/nv_b_358-pts.json",
+        "data/vid/review-round3-neg/nv_b_358-coverage.json",
+        "data/vid/review-round3-neg/nv_b_358-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_358-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_358-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_358-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_358-ordered-all.jpg"
+      ],
+      "sha256": "8b3c0888f246afa892e3c6dc8d98cc0a15034b1405728403884e85407ec0c54e",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_358.mp4",
+      "durationSeconds": 9.966666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 299,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.933333333333334,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          27,
+          54,
+          81,
+          108,
+          135,
+          162,
+          188,
+          215,
+          242,
+          269,
+          296
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_358-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_358-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_372",
+      "decision": "train-normal",
+      "sceneGroup": "home-blue-curtains",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated arm bends while braced against furniture; no interpersonal interaction visible. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-12.jpg",
+        "data/vid/review-round3-neg/nv_b_372-pts.json",
+        "data/vid/review-round3-neg/nv_b_372-coverage.json",
+        "data/vid/review-round3-neg/nv_b_372-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_372-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_372-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_372-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_372-ordered-all.jpg"
+      ],
+      "sha256": "e1c47b7620ca7f3d633b272ad922ef35fdb3547eff5180296a9dba94b91679f5",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_372.mp4",
+      "durationSeconds": 6.8,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 204,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.766666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          19,
+          37,
+          55,
+          73,
+          92,
+          110,
+          128,
+          146,
+          164,
+          183,
+          201
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_372-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_372-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_386",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-blue-seats",
+      "events": [],
+      "notes": "Pair steps near each other with extended arms; brief contact/hand mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-12.jpg",
+        "data/vid/review-round3-neg/nv_b_386-pts.json",
+        "data/vid/review-round3-neg/contact-detail-07.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "ecde406954efcf23b4bfb3ef7ba9bc062048825226f1fe68b19f627ddf92bf3a",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_386.mp4",
+      "durationSeconds": 5.033333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 151,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.0,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          14,
+          27,
+          41,
+          54,
+          67,
+          81,
+          94,
+          108,
+          121,
+          134,
+          148
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_386-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          35,
+          63,
+          91,
+          120,
+          148
+        ]
+      }
+    },
+    {
+      "id": "nv_b_398",
+      "decision": "train-normal",
+      "sceneGroup": "white-wall-paired-movement",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Separated pair makes coordinated arm and torso movements with steps; ordinary movement. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-12.jpg",
+        "data/vid/review-round3-neg/nv_b_398-pts.json",
+        "data/vid/review-round3-neg/nv_b_398-coverage.json",
+        "data/vid/review-round3-neg/nv_b_398-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_398-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_398-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_398-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_398-ordered-all.jpg"
+      ],
+      "sha256": "204fc647241b2d9c17d23871dfd27e2d1f46dbf8cc0b5beb719f739b3e41d0ba",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_398.mp4",
+      "durationSeconds": 9.966666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 299,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.933333333333334,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          27,
+          54,
+          81,
+          108,
+          135,
+          162,
+          188,
+          215,
+          242,
+          269,
+          296
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_398-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_398-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_412",
+      "decision": "ambiguous",
+      "sceneGroup": "home-sofa-window",
+      "events": [],
+      "notes": "Pair faces closely with repeated hands near face and upper body; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-12.jpg",
+        "data/vid/review-round3-neg/nv_b_412-pts.json",
+        "data/vid/review-round3-neg/contact-detail-07.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "68e055b057cf1bd165bab29d6eeadcd6efbca308abab9082533eb36e81c6c661",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_412.mp4",
+      "durationSeconds": 6.166666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 185,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.133333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          17,
+          33,
+          50,
+          66,
+          83,
+          99,
+          116,
+          132,
+          149,
+          165,
+          182
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_412-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          42,
+          77,
+          112,
+          147,
+          182
+        ]
+      }
+    },
+    {
+      "id": "nv_b_425",
+      "decision": "train-normal",
+      "sceneGroup": "classroom-whiteboard-seated-group",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Standing foreground person points and sweeps arms while others sit separately; classroom gestures. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-13.jpg",
+        "data/vid/review-round3-neg/nv_b_425-pts.json",
+        "data/vid/review-round3-neg/nv_b_425-coverage.json",
+        "data/vid/review-round3-neg/nv_b_425-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_425-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_425-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_425-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_425-ordered-all.jpg"
+      ],
+      "sha256": "641bd38601cdc64bb1e1093b684287510a4b22ecd88627c54304b2f2bd58a4ec",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_425.mp4",
+      "durationSeconds": 5.933333333333334,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 178,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.9,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          16,
+          32,
+          48,
+          64,
+          80,
+          96,
+          111,
+          127,
+          143,
+          159,
+          175
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_425-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_425-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_439",
+      "decision": "exclude",
+      "sceneGroup": "home-sofa-blue-wall",
+      "events": [],
+      "notes": "Seated person holds a book, low movement utility and prop-centred.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-13.jpg",
+        "data/vid/review-round3-neg/nv_b_439-pts.json"
+      ],
+      "sha256": "15301a2e53468894344ffbc1edbe0d7e2bc90d87b810a39ff0d9232d965f909f",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_439.mp4",
+      "durationSeconds": 7.666666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 230,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 7.633333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          21,
+          42,
+          62,
+          83,
+          103,
+          124,
+          145,
+          165,
+          186,
+          206,
+          227
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_439-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_451",
+      "decision": "ambiguous",
+      "sceneGroup": "classroom-white-benches",
+      "events": [],
+      "notes": "Group closes together with arms reaching head/shoulder region and bent bodies; unresolved physical contact, no normal or positive event. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-13.jpg",
+        "data/vid/review-round3-neg/nv_b_451-pts.json",
+        "data/vid/review-round3-neg/contact-detail-08.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "62c0731000f0570eec056b960b118def590264cd75630828b16c2337aa418001",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_451.mp4",
+      "durationSeconds": 5.3,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 159,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.266666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          43,
+          57,
+          71,
+          85,
+          99,
+          114,
+          128,
+          142,
+          156
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_451-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          36,
+          66,
+          96,
+          126,
+          156
+        ]
+      }
+    },
+    {
+      "id": "nv_b_465",
+      "decision": "exclude",
+      "sceneGroup": "home-washbasin",
+      "events": [],
+      "notes": "One person handles water and washbasin items near face; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-13.jpg",
+        "data/vid/review-round3-neg/nv_b_465-pts.json"
+      ],
+      "sha256": "68b89bc4a0408de490be40034a433ff7d7048afd866b0ff17f4aca4402e4794d",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_465.mp4",
+      "durationSeconds": 6.266666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 188,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.233333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          17,
+          34,
+          51,
+          68,
+          84,
+          101,
+          118,
+          135,
+          151,
+          168,
+          185
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_465-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_480",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-corridor-railing",
+      "events": [],
+      "notes": "Pair repeatedly raises hands near faces and upper bodies; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-14.jpg",
+        "data/vid/review-round3-neg/nv_b_480-pts.json",
+        "data/vid/review-round3-neg/contact-detail-08.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "cd3610dde196141d07c6698b6d1f658095b863f37fdfae849ba71ca271bb0105",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_480.mp4",
+      "durationSeconds": 6.968989663221074,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 209,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.93564521507169,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          19,
+          38,
+          57,
+          75,
+          94,
+          113,
+          131,
+          150,
+          169,
+          187,
+          206
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_480-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          46,
+          86,
+          126,
+          166,
+          206
+        ]
+      }
+    },
+    {
+      "id": "nv_b_494",
+      "decision": "exclude",
+      "sceneGroup": "campus-corridor-table",
+      "events": [],
+      "notes": "Pair sits at writing table; first source frame black, later samples low movement/prop-centred.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-14.jpg",
+        "data/vid/review-round3-neg/nv_b_494-pts.json"
+      ],
+      "sha256": "9b72b3fdb0bad2e5b77adcf157f68e2f9dc5c22ad837cc6fa89ebe9d9f743d3a",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_494.mp4",
+      "durationSeconds": 4.833333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 145,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.8,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          13,
+          26,
+          39,
+          52,
+          65,
+          78,
+          90,
+          103,
+          116,
+          129,
+          142
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_494-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_506",
+      "decision": "exclude",
+      "sceneGroup": "campus-corridor-table",
+      "events": [],
+      "notes": "Pair sits and writes at table; low movement utility and prop-centred.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-14.jpg",
+        "data/vid/review-round3-neg/nv_b_506-pts.json"
+      ],
+      "sha256": "3ff4da995cc7649e43e5f10bada92dbddb69fcda96629caff42468508f7e65a7",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_506.mp4",
+      "durationSeconds": 4.5,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 135,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.466666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          12,
+          24,
+          36,
+          48,
+          60,
+          72,
+          84,
+          96,
+          108,
+          120,
+          132
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_506-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_520",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-corridor-railing",
+      "events": [],
+      "notes": "Pair makes repeated close hand/arm gestures near upper bodies; mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-14.jpg",
+        "data/vid/review-round3-neg/nv_b_520-pts.json",
+        "data/vid/review-round3-neg/contact-detail-09.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "5b8762ab069023eb01e13001aec11cc9c1398c1983ed4f07b11191eb92241f0f",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_520.mp4",
+      "durationSeconds": 6.635545181727243,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 199,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.602200733577859,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          36,
+          54,
+          72,
+          89,
+          107,
+          125,
+          143,
+          160,
+          178,
+          196
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_520-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          44,
+          82,
+          120,
+          158,
+          196
+        ]
+      }
+    },
+    {
+      "id": "nv_b_534",
+      "decision": "exclude",
+      "sceneGroup": "campus-corridor-bench",
+      "events": [],
+      "notes": "Person handles bag/cloth on bench; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-15.jpg",
+        "data/vid/review-round3-neg/nv_b_534-pts.json"
+      ],
+      "sha256": "f44d4be7dee90f852a4df15c65ea098402ffa468b3f53531fc00029ad915de66",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_534.mp4",
+      "durationSeconds": 5.1,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 153,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.066666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          14,
+          28,
+          41,
+          55,
+          68,
+          82,
+          96,
+          109,
+          123,
+          136,
+          150
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_534-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_551",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-corridor-library",
+      "events": [],
+      "notes": "Pair approaches and meets raised hands near upper bodies; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-15.jpg",
+        "data/vid/review-round3-neg/nv_b_551-pts.json",
+        "data/vid/review-round3-neg/contact-detail-09.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "90dee97ac3655d6456af435e85a0e7ce8229397c1a2e39b1586e7bfb11c593a8",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_551.mp4",
+      "durationSeconds": 6.0,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 180,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.966666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          17,
+          33,
+          49,
+          65,
+          81,
+          97,
+          113,
+          129,
+          145,
+          161,
+          177
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_551-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          41,
+          75,
+          109,
+          143,
+          177
+        ]
+      }
+    },
+    {
+      "id": "nv_b_565",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-corridor-library",
+      "events": [],
+      "notes": "Pair approaches and draws close near shoulders; short samples do not resolve contact mechanics. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-15.jpg",
+        "data/vid/review-round3-neg/nv_b_565-pts.json",
+        "data/vid/review-round3-neg/contact-detail-10.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "76469533932717691ae324b1b388d0d7b05617a9541be7796618f76efb72eaa7",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_565.mp4",
+      "durationSeconds": 6.2,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 186,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.166666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          17,
+          34,
+          50,
+          67,
+          83,
+          100,
+          117,
+          133,
+          150,
+          166,
+          183
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_565-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          42,
+          77,
+          112,
+          148,
+          183
+        ]
+      }
+    },
+    {
+      "id": "nv_b_582",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-open-corridor",
+      "events": [],
+      "notes": "Group walks closely at distance; overlapping arms and shoulders are too small to establish all contact mechanics. No normal interval retained. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-15.jpg",
+        "data/vid/review-round3-neg/nv_b_582-pts.json",
+        "data/vid/review-round3-neg/nv_b_582-coverage.json",
+        "data/vid/review-round3-neg/nv_b_582-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_582-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_582-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_582-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_582-ordered-all.jpg",
+        "data/vid/review-round3-neg/contact-detail-10.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "fb1e24d87e98dfd3446049de47dec6b3914e4d33a3ea337401270f34726ee609",
+      "sourceArchive": "nv_b_03.rar",
+      "sourcePath": "media/nv_b_03/nv_b_03/nv_b_582.mp4",
+      "durationSeconds": 4.7,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 141,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.666666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          13,
+          25,
+          38,
+          50,
+          63,
+          75,
+          88,
+          100,
+          113,
+          125,
+          138
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_582-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_582-coverage.json"
+        },
+        "enlargedSampleFrameIndices": [
+          6,
+          33,
+          59,
+          85,
+          112,
+          138
+        ]
+      }
+    },
+    {
+      "id": "nv_b_1241",
+      "decision": "exclude",
+      "sceneGroup": "home-patterned-sofa",
+      "events": [],
+      "notes": "Seated person handles small item near face; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-16.jpg",
+        "data/vid/review-round3-neg/nv_b_1241-pts.json"
+      ],
+      "sha256": "c9e873740932b810ec19b84e86e70e63a4b6d9d74dde4be302984b8c41612bc0",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1241.mp4",
+      "durationSeconds": 4.498500499833389,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 135,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.465178273908697,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          12,
+          24,
+          36,
+          48,
+          60,
+          72,
+          84,
+          96,
+          108,
+          120,
+          132
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1241-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1247",
+      "decision": "exclude",
+      "sceneGroup": "home-desk-carved-wardrobe",
+      "events": [],
+      "notes": "Seated person uses handheld phone-like item; prop-centred and low movement utility.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-16.jpg",
+        "data/vid/review-round3-neg/nv_b_1247-pts.json"
+      ],
+      "sha256": "a4247ab63df49a02a0ed8757d4587228b915b802bfe30e3bb7f0bba2e6bab9c9",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1247.mp4",
+      "durationSeconds": 6.366666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 191,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.333333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          35,
+          52,
+          69,
+          86,
+          103,
+          120,
+          137,
+          154,
+          171,
+          188
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1247-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1253",
+      "decision": "exclude",
+      "sceneGroup": "home-shelf-orange-wall",
+      "events": [],
+      "notes": "Person handles a bag and shelf items; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-16.jpg",
+        "data/vid/review-round3-neg/nv_b_1253-pts.json"
+      ],
+      "sha256": "a6a9f11488f69bdb58fdeff0d31d1f00e613c05347cdfe569c2398d80116d9da",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1253.mp4",
+      "durationSeconds": 9.533333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 286,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.5,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          26,
+          52,
+          78,
+          103,
+          129,
+          155,
+          180,
+          206,
+          232,
+          257,
+          283
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1253-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1260",
+      "decision": "exclude",
+      "sceneGroup": "home-doorway-shelves",
+      "events": [],
+      "notes": "Person approaches switch and illumination changes; prop/environment-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-16.jpg",
+        "data/vid/review-round3-neg/nv_b_1260-pts.json"
+      ],
+      "sha256": "45bfd95d6bfa89ee6274aa48029ed3842ac15db1a6678844566fe41894278764",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1260.mp4",
+      "durationSeconds": 9.233333333333333,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 277,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.2,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          25,
+          50,
+          75,
+          100,
+          125,
+          150,
+          174,
+          199,
+          224,
+          249,
+          274
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1260-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1268",
+      "decision": "exclude",
+      "sceneGroup": "home-sofa-white-wall",
+      "events": [],
+      "notes": "Person sweeps with visible broom; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-17.jpg",
+        "data/vid/review-round3-neg/nv_b_1268-pts.json"
+      ],
+      "sha256": "5b34ad6b0dd8c3f64fbe392265ca363a5bf8fa3b919e1e0a6a110f931a39d8f7",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1268.mp4",
+      "durationSeconds": 8.7,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 261,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.666666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          24,
+          47,
+          71,
+          94,
+          117,
+          141,
+          164,
+          188,
+          211,
+          234,
+          258
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1268-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1275",
+      "decision": "ambiguous",
+      "sceneGroup": "home-sofa-white-wall",
+      "events": [],
+      "notes": "Pair approaches with close hand/arm motions toward shoulder/face; contact mechanics unresolved. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-17.jpg",
+        "data/vid/review-round3-neg/nv_b_1275-pts.json",
+        "data/vid/review-round3-neg/contact-detail-11.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "b1d643123be9346564d857be57a80d655dc8304fa01fb81ee83294a2904cb43e",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1275.mp4",
+      "durationSeconds": 6.366666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 191,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.333333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          35,
+          52,
+          69,
+          86,
+          103,
+          120,
+          137,
+          154,
+          171,
+          188
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1275-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "enlargedSampleFrameIndices": [
+          6,
+          43,
+          79,
+          115,
+          152,
+          188
+        ]
+      }
+    },
+    {
+      "id": "nv_b_1282",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-doorway",
+      "events": [],
+      "notes": "Person walks while holding small device/item; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-17.jpg",
+        "data/vid/review-round3-neg/nv_b_1282-pts.json"
+      ],
+      "sha256": "63e430603db5c66edae25d6999f1ea242f8ca6765e1b59c1b4ba74aa611c2669",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1282.mp4",
+      "durationSeconds": 9.366666666666667,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 281,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.333333333333334,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          26,
+          51,
+          76,
+          101,
+          127,
+          152,
+          177,
+          202,
+          227,
+          253,
+          278
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1282-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1289",
+      "decision": "train-normal",
+      "sceneGroup": "indoor-stairwell-railing",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "One person walks up stairs, no second person apparent. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-17.jpg",
+        "data/vid/review-round3-neg/nv_b_1289-pts.json",
+        "data/vid/review-round3-neg/nv_b_1289-coverage.json",
+        "data/vid/review-round3-neg/nv_b_1289-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_1289-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_1289-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_1289-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_1289-ordered-all.jpg"
+      ],
+      "sha256": "d5bbe48b573d1ab0d0cc949351ee8c53a8c2525a1f0e41c49235a59758a393b1",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1289.mp4",
+      "durationSeconds": 8.566666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 257,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 8.533333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          24,
+          47,
+          70,
+          93,
+          116,
+          139,
+          162,
+          185,
+          208,
+          231,
+          254
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1289-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_1289-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_1296",
+      "decision": "exclude",
+      "sceneGroup": "home-bedroom-curtain",
+      "events": [],
+      "notes": "Person holds phone-like object at face; prop-centred and low movement utility.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-18.jpg",
+        "data/vid/review-round3-neg/nv_b_1296-pts.json"
+      ],
+      "sha256": "682cce1921763adb842c7bd7245d0a4072134bb597f72163eef91c42db7979b6",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1296.mp4",
+      "durationSeconds": 9.166666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 275,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.133333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          25,
+          50,
+          75,
+          99,
+          124,
+          149,
+          173,
+          198,
+          223,
+          247,
+          272
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1296-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1304",
+      "decision": "exclude",
+      "sceneGroup": "home-bed-curtain",
+      "events": [],
+      "notes": "Person packs papers/items in bag; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-18.jpg",
+        "data/vid/review-round3-neg/nv_b_1304-pts.json"
+      ],
+      "sha256": "2fa72362a732c28abf9dac0f13137ed5ed1481914b1f98ae2ec04cfb09f4ae42",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1304.mp4",
+      "durationSeconds": 9.5,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 285,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 9.466666666666667,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          26,
+          52,
+          77,
+          103,
+          128,
+          154,
+          180,
+          205,
+          231,
+          256,
+          282
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1304-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1312",
+      "decision": "exclude",
+      "sceneGroup": "home-table-carved-wardrobe",
+      "events": [],
+      "notes": "Person folds fabric; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-18.jpg",
+        "data/vid/review-round3-neg/nv_b_1312-pts.json"
+      ],
+      "sha256": "43d1c94da25944dad467ddcb9b8bb21e3d88d21a2dee4ae10f7cb5ba814dd6cf",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1312.mp4",
+      "durationSeconds": 10.96551724137931,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 318,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 10.931034482758621,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          29,
+          58,
+          86,
+          115,
+          143,
+          172,
+          201,
+          229,
+          258,
+          286,
+          315
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1312-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1318",
+      "decision": "exclude",
+      "sceneGroup": "home-sofa-dark-window",
+      "events": [],
+      "notes": "Person handles and folds large garment; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-18.jpg",
+        "data/vid/review-round3-neg/nv_b_1318-pts.json"
+      ],
+      "sha256": "45c8e5541dfaaeadae2abfbea9fa3d8baa85573015b1bf0fcdfdafd4bef09635",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1318.mp4",
+      "durationSeconds": 11.098150308281953,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 666,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 11.08148641893018,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          60,
+          120,
+          180,
+          240,
+          300,
+          360,
+          420,
+          480,
+          540,
+          599,
+          659
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1318-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1324",
+      "decision": "exclude",
+      "sceneGroup": "campus-ivy-brick-wall",
+      "events": [],
+      "notes": "Separated pair makes small hand gestures; not advanced to every-frame review, no temporal label retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-19.jpg",
+        "data/vid/review-round3-neg/nv_b_1324-pts.json"
+      ],
+      "sha256": "8463e154eb80c0598785828aa3e73fd771f5e85cda5d7a1a0dfbd593a6575435",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1324.mp4",
+      "durationSeconds": 5.6,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 168,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.566666666666666,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          30,
+          45,
+          60,
+          75,
+          90,
+          105,
+          120,
+          135,
+          150,
+          165
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1324-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1330",
+      "decision": "exclude",
+      "sceneGroup": "campus-blue-seats",
+      "events": [],
+      "notes": "Seated pair handles small held item; prop-centred and low movement utility.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-19.jpg",
+        "data/vid/review-round3-neg/nv_b_1330-pts.json"
+      ],
+      "sha256": "74296c1c41c24cd29c4a036d1d0aa688ffe1a2d5d3e2d49276117b8612d513dd",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1330.mp4",
+      "durationSeconds": 5.366666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 161,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.333333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          43,
+          58,
+          72,
+          86,
+          101,
+          115,
+          129,
+          144,
+          158
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1330-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1339",
+      "decision": "ambiguous",
+      "sceneGroup": "campus-ivy-brick-wall",
+      "events": [],
+      "notes": "Pair bends toward one another with hands near head/upper body; dense view does not resolve all contact mechanics. Enlarged timestamped samples inspected; uncertainty retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-19.jpg",
+        "data/vid/review-round3-neg/nv_b_1339-pts.json",
+        "data/vid/review-round3-neg/nv_b_1339-coverage.json",
+        "data/vid/review-round3-neg/nv_b_1339-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_1339-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_1339-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_1339-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_1339-ordered-all.jpg",
+        "data/vid/review-round3-neg/contact-detail-11.jpg",
+        "data/vid/review-round3-neg/contact-detail-log.json"
+      ],
+      "sha256": "789ebd01f394a92c8e38b7949ca0934161fb9258ffd718bb8c9dd478eac7ba9a",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1339.mp4",
+      "durationSeconds": 5.164945018327224,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 155,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.131622792402533,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          14,
+          28,
+          42,
+          56,
+          69,
+          83,
+          97,
+          111,
+          124,
+          138,
+          152
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1339-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 122,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.031989336887705,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_1339-coverage.json"
+        },
+        "enlargedSampleFrameIndices": [
+          7,
+          36,
+          65,
+          94,
+          123,
+          152
+        ]
+      }
+    },
+    {
+      "id": "nv_b_1351",
+      "decision": "exclude",
+      "sceneGroup": "campus-blue-seats",
+      "events": [],
+      "notes": "Solo small hand gestures and standing; low movement utility, no temporal label retained.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-19.jpg",
+        "data/vid/review-round3-neg/nv_b_1351-pts.json"
+      ],
+      "sha256": "61e3222533dffdb4e56f1204ab5e290847de20a8379ed34b6d5f65f68b20d168",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1351.mp4",
+      "durationSeconds": 6.631122959013662,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 199,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 6.59780073308897,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          18,
+          36,
+          54,
+          72,
+          89,
+          107,
+          125,
+          143,
+          160,
+          178,
+          196
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1351-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1359",
+      "decision": "exclude",
+      "sceneGroup": "campus-blue-seats",
+      "events": [],
+      "notes": "One seated person wipes seat surface with cloth; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-20.jpg",
+        "data/vid/review-round3-neg/nv_b_1359-pts.json"
+      ],
+      "sha256": "fd1cb8bf4f2a4a404e48624ab990a6e249d6dfe0119594894adee2f3d7e2db6a",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1359.mp4",
+      "durationSeconds": 4.865771812080537,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 145,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 4.832214765100671,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          13,
+          26,
+          39,
+          52,
+          65,
+          78,
+          90,
+          103,
+          116,
+          129,
+          142
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1359-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1366",
+      "decision": "train-normal",
+      "sceneGroup": "indoor-gym-floor",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated floor-supported torso lowering/rising; no second person visible. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-20.jpg",
+        "data/vid/review-round3-neg/nv_b_1366-pts.json",
+        "data/vid/review-round3-neg/nv_b_1366-coverage.json",
+        "data/vid/review-round3-neg/nv_b_1366-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_1366-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_1366-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_1366-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_1366-ordered-all.jpg"
+      ],
+      "sha256": "8c56ac45292e580664d5e0f920b222c0f1a490225b849f7dc1195372fc079d81",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1366.mp4",
+      "durationSeconds": 5.866666666666666,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 176,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.833333333333333,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          16,
+          32,
+          48,
+          63,
+          79,
+          95,
+          110,
+          126,
+          142,
+          157,
+          173
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1366-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_1366-coverage.json"
+        }
+      }
+    },
+    {
+      "id": "nv_b_1374",
+      "decision": "exclude",
+      "sceneGroup": "home-bed-red-cover",
+      "events": [],
+      "notes": "One person handles and folds garment; prop-centred scene excluded.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-20.jpg",
+        "data/vid/review-round3-neg/nv_b_1374-pts.json"
+      ],
+      "sha256": "8861edd68d08e2613fb19755222b95f58c7824c896a9fbfbb3c4dbdd2baab4b1",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1374.mp4",
+      "durationSeconds": 5.431522825724758,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 163,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.398200599800067,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          44,
+          58,
+          73,
+          87,
+          102,
+          116,
+          131,
+          145,
+          160
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1374-pts.json",
+        "fullSourceVisuallyInspected": false
+      }
+    },
+    {
+      "id": "nv_b_1380",
+      "decision": "train-normal",
+      "sceneGroup": "home-bed-red-cover",
+      "events": [
+        {
+          "startSeconds": 0,
+          "endSeconds": 4,
+          "label": 0
+        }
+      ],
+      "notes": "Solo repeated prone arm-supported torso lowering/rising on bed; no second person visible. Every source frame from 0 through the first PTS at or beyond 4 seconds was visually inspected in ordered evidence; no interpersonal strike, shove or grappling visible in 0-4 seconds. Retain only 0-4 seconds; tails unannotated.",
+      "evidenceFiles": [
+        "data/vid/review-round3-neg/screen-20.jpg",
+        "data/vid/review-round3-neg/nv_b_1380-pts.json",
+        "data/vid/review-round3-neg/nv_b_1380-coverage.json",
+        "data/vid/review-round3-neg/nv_b_1380-allframes-01.jpg",
+        "data/vid/review-round3-neg/nv_b_1380-allframes-02.jpg",
+        "data/vid/review-round3-neg/nv_b_1380-allframes-03.jpg",
+        "data/vid/review-round3-neg/nv_b_1380-allframes-04.jpg",
+        "data/vid/review-round3-neg/nv_b_1380-ordered-all.jpg"
+      ],
+      "sha256": "fead164ab67b7fc0d808c115618909aa795dbd3c7f73e750f88d4089aca9ff63",
+      "sourceArchive": "nv_b_06.rar",
+      "sourcePath": "media/nv_b_06/nv_b_06/nv_b_1380.mp4",
+      "durationSeconds": 5.433333333333334,
+      "actualPTScoverage": {
+        "timestampSource": "Sequential OpenCV CAP_PROP_POS_MSEC seconds after each successful read; no nominal-FPS substitution",
+        "sourceSequentialDecode": {
+          "decodedFrames": 163,
+          "firstPTSSeconds": 0.0,
+          "lastPTSSeconds": 5.4,
+          "allFiniteStrictIncreasing": true
+        },
+        "screenedFrameIndices": [
+          0,
+          15,
+          29,
+          44,
+          58,
+          73,
+          87,
+          102,
+          116,
+          131,
+          145,
+          160
+        ],
+        "screenedFrameCount": 12,
+        "timestampsFile": "data/vid/review-round3-neg/nv_b_1380-pts.json",
+        "fullSourceVisuallyInspected": false,
+        "intervalFrameCoverage": {
+          "interval": [
+            0,
+            4
+          ],
+          "frameCount": 121,
+          "firstSeconds": 0.0,
+          "lastSeconds": 4.0,
+          "everySourceFrameIncluded": true,
+          "strictFiniteIncreasing": true,
+          "timestampSource": "sequential CAP_PROP_POS_MSEC",
+          "visuallyInspectedAllFrames": true,
+          "PTSFile": "data/vid/review-round3-neg/nv_b_1380-coverage.json"
+        }
+      }
+    }
+  ]
+}
