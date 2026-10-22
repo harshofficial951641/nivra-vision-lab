@@ -1,0 +1,62 @@
+{
+  "sourceCommit": "50f92f0",
+  "deploymentId": "dpl_U5UDbXzDs9HzBWhHvR89P2nm2d8K",
+  "publicOrigin": "https://nivra.tanishq.work",
+  "started": "2026-10-22T19:06:59.932Z",
+  "status": "passed",
+  "media": "Synthetic moving canvas in an isolated Chromium browser context",
+  "transport": "Actual public API, scoped socket tickets, WSS relay, browser pose worker and JPEG ACKs",
+  "continuous": {
+    "durationSeconds": 60,
+    "acknowledgedFrames": 604,
+    "wallPreviewPackets": 607,
+    "wallFramesReceivedStart": 3,
+    "wallFramesReceivedEnd": 610,
+    "wallFramesAnalyzedStart": 0,
+    "wallFramesAnalyzedEnd": 148,
+    "cameraConnectionsOpened": 1,
+    "cameraConnectionsClosed": 0,
+    "wallConnectionsOpened": 1,
+    "wallConnectionsClosed": 0,
+    "generationUnchanged": true
+  },
+  "forcedRecoveries": [
+    {
+      "cycle": 1,
+      "recoveredMs": 2694,
+      "cameraAndWallClosedDeliberately": true,
+      "freshAnalysisReports": 5
+    },
+    {
+      "cycle": 2,
+      "recoveredMs": 3184,
+      "cameraAndWallClosedDeliberately": true,
+      "freshAnalysisReports": 3
+    },
+    {
+      "cycle": 3,
+      "recoveredMs": 2132,
+      "cameraAndWallClosedDeliberately": true,
+      "freshAnalysisReports": 4
+    }
+  ],
+  "fullModelAssetLoads": 1,
+  "guardHealthyConnectionPreserved": true,
+  "fixtureCleanup": {
+    "status": 204,
+    "complete": true
+  },
+  "automatedChecks": {
+    "webTests": 617,
+    "backendTests": 156,
+    "relayHttpTests": 5,
+    "lint": "passed",
+    "productionBuild": "passed"
+  },
+  "limitations": [
+    "No physical iPhone was driven in this test.",
+    "No multiple-phone throughput or fight-detection accuracy claim.",
+    "The website still requires internet.",
+    "Tunnel automatic recovery is covered by controlled application-probe tests; production internet was not deliberately disconnected."
+  ]
+}

@@ -17,3 +17,20 @@ Changes in this release:
 The original skeleton model and decision rules are unchanged. Detection accuracy and connection reliability are separate checks.
 
 Public browser verification uses a private temporary workspace, synthetic moving canvas media, the actual deployed JavaScript, real socket tickets, WebSocket transport and frame acknowledgements. It tests sixty seconds of continuous streaming and three forced camera/wall connection interruptions. It does not measure a physical iPhone, multiple-phone throughput, or fight-detection accuracy. The fixture's owner, camera and guard sessions are isolated from existing user cookies; its workspace is deleted afterward. Raw credentials and screenshots stay in ignored local test results. Final metadata is recorded after the live test.
+
+
+## Public verification on 23 October 2026
+
+The deployed release `50f92f0` passed the real public-browser test. In sixty seconds the camera added 604 acknowledged frames and the wall received 607 additional preview packets. Camera and wall each kept one open connection with zero closes and an unchanged camera generation. Server analysis advanced from zero to 148 completed reports during that interval.
+
+| Deliberate camera and wall disconnect | Automatic recovery |
+|---|---:|
+| 1 | 2.694 seconds |
+| 2 | 3.184 seconds |
+| 3 | 2.132 seconds |
+
+Fresh analysis reports and live wall previews resumed after all three interruptions without another QR scan or Start action. The Full model was fetched once across the entire run. A guard tab's visibility event preserved its healthy socket. The temporary QA workspace was deleted with HTTP 204; its private credential backup was removed and the test browser closed.
+
+The release passed 617 web tests, 156 backend tests, five relay HTTP tests, lint and the production build. Public JavaScript was checked against the tested local build byte for byte. [Sanitized result metadata](public-results.json) records the exact boundary and limitations. These figures describe this browser test, not physical iPhone performance or a guarantee for every network.
+
+To reproduce, run `NIVRA_QA_RELEASE_READY=1 node scripts/evaluation/public-reliability/run.cjs` from the repository root after a release is ready. It creates and deletes only its own temporary workspace. Private browser state and screenshots are written under ignored `test-results/public-reliability-qa`.
