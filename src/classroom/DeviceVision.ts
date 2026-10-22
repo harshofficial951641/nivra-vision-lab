@@ -1,7 +1,7 @@
 import { ConflictEngine as OriginalConflictEngine } from '../lib/originalConflictEngine'
 import { inferenceSize } from '../lib/inferenceSize'
 import type { PoseLandmarks, VisionDelegate, VisionWorkerResponse } from '../types/vision'
-import { DeviceAnalysis, CROWD_DEVICE_MODEL, DEVICE_POSE_LIMIT, type DeviceResult, type DeviceMotion, type DeviceStatus } from './deviceAnalysis'
+import { DeviceAnalysis, DualLaneConflictAnalysis, DETECTOR_EXPERIMENTS, DEFAULT_DETECTOR_EXPERIMENT, CROWD_DEVICE_MODEL, DEVICE_POSE_LIMIT, type DeviceResult, type DeviceMotion, type DeviceStatus } from './deviceAnalysis'
 import { analysisRegion, DeviceBudget, type AnalysisArea, type DeviceProfile } from './deviceBudget'
 import { PeopleVision, type PersonObservation } from './PeopleVision'
 import { CrowdPoseVision, type CrowdPoseModel } from './CrowdPoseVision'
@@ -18,6 +18,7 @@ export class DeviceVision {
   private crowdFallback = false
   private crowdMediaTime = -Infinity
   private crowdObservationOnly = false
+  private experiment: DualLaneConflictAnalysis | null = null
   private motionStarted = false
   private cachedMotionStatus: DeviceStatus | null = null
   private crowdObserved = false
@@ -44,13 +45,19 @@ export class DeviceVision {
   private onStatus: (status: DeviceStatus) => void
   private onResult: (result: DeviceResult) => void
 
-  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile | 'crowd' = 'balanced', onMotion?: (result: DeviceMotion) => void, onMotionStatus?: (status: DeviceStatus) => void, crowdModel?: CrowdPoseModel) {
+  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile | 'crowd' = 'balanced', onMotion?: (result: DeviceMotion) => void, onMotionStatus?: (status: DeviceStatus) => void, crowdModel?: CrowdPoseModel, options: { experimentalProfile?: string | null } = {}) {
     this.onStatus = onStatus
     this.onResult = onResult
     this.area = area
     this.originalOnly = profile === 'original'
     this.crowdProfile = profile === 'crowd'
     this.crowdModel = crowdModel
+    const experimentalProfile = options.experimentalProfile === undefined ? DEFAULT_DETECTOR_EXPERIMENT : options.experimentalProfile
+    if (this.crowdProfile && experimentalProfile) {
+      const configuration = DETECTOR_EXPERIMENTS.find(profile => profile.name === experimentalProfile)
+      if (!configuration) throw new Error('Unknown detector experiment profile.')
+      this.experiment = new DualLaneConflictAnalysis(configuration)
+    }
     if (this.crowdProfile) {
       this.analysis = new DeviceAnalysis(new OriginalConflictEngine({cooldownScope:'pair'}),CROWD_DEVICE_MODEL)
       this.crowdObservationOnly = !!onMotion
@@ -64,7 +71,10 @@ export class DeviceVision {
         this.cachedMotionStatus = status
         onMotionStatus?.(status)
         if (this.crowdFallback) this.onStatus({...status,detail:`Crowd detection unavailable. ${status.detail}`})
-      },'pair')
+      },'pair',this.experiment ? () => {
+        this.experiment!.resetMotion()
+        return {update:(...args: Parameters<DeviceAnalysis['update']>)=>this.experiment!.update('motion',...args)}
+      } : undefined)
       return
     }
     if (this.originalOnly) {
@@ -137,20 +147,23 @@ export class DeviceVision {
       this.budget.observe(result.inferenceMs)
       if (!this.crowdObserved) {
         this.crowdObserved = true
-        this.onStatus({state:'ready',delegate:'CPU',detail:'RTMO single-pass crowd observation · browser WASM CPU · up to 32 observed people'})
+        this.onStatus({state:'ready',delegate:'CPU',detail:this.experiment?.configuration.crowd ? 'Experimental crowd conflict rules on CPU. Up to 32 observed people.' : 'RTMO single-pass crowd observation · browser WASM CPU · up to 32 observed people'})
       }
       const people = result.people.map(person => ({...person,box:[region.x+person.box[0]*region.width,person.box[1],region.x+person.box[2]*region.width,person.box[3]] as [number,number,number,number]}))
-      const report = this.analysis.update(timestamp,result.inferenceMs,result.poses,width/height,result.delegate ?? crowd.delegate,this.area,people)
+      const report = this.experiment?.configuration.crowd
+        ? this.experiment.update('crowd',timestamp,result.inferenceMs,result.poses,width/height,result.delegate ?? crowd.delegate,this.area,people)
+        : this.analysis.update(timestamp,result.inferenceMs,result.poses,width/height,result.delegate ?? crowd.delegate,this.area,people)
       const interval = timestamp - this.crowdResultTimestamp
       this.crowdResultTimestamp = timestamp
       // Preserve the original rules’ 600ms continuity limit. A slow crowd pass
       // may still observe people, but cannot establish fast arm-motion evidence.
-      if (this.crowdObservationOnly) {
+      if (this.crowdObservationOnly && !this.experiment?.configuration.crowd) {
         this.onResult({...report,usablePeople:0,events:[],conflict:{status:'limited',explanation:'Crowd skeletons show observed people. Fast motion checks run separately on up to 4 poses.'}})
         return
       }
-      this.onResult((result.inferenceMs > 600 || (Number.isFinite(interval) && interval > 600)) && report.conflict.status !== 'alert'
-        ? {...report,conflict:{status:'limited',explanation:'Crowd pose updates exceed the original 600ms motion window. Video and observed people remain available; fast conflict evidence is limited.'}} : report)
+      const continuity = this.experiment?.configuration.crowd ? 1000 : 600
+      this.onResult((result.inferenceMs > continuity || (Number.isFinite(interval) && interval > continuity)) && report.conflict.status !== 'alert'
+        ? {...report,conflict:{status:'limited',explanation:this.experiment?.configuration.crowd ? 'Crowd pose updates exceed the experimental 1000ms motion window. Motion evidence is limited.' : 'Crowd pose updates exceed the original 600ms motion window. Video and observed people remain available; fast conflict evidence is limited.'}} : report)
     } catch { bitmap?.close(); if (!this.disposed && this.crowd === crowd) this.fallbackCrowd() }
     finally { if (this.crowd === crowd) this.busy = false }
   }
@@ -353,7 +366,8 @@ class OriginalMotion {
   private lastCapture = -Infinity
   private lastMediaTime = -Infinity
   private delegate: VisionDelegate = 'GPU'
-  private analysis = new DeviceAnalysis(new OriginalConflictEngine())
+  private analysis: Pick<DeviceAnalysis, 'update'> = new DeviceAnalysis(new OriginalConflictEngine())
+  private analysisFactory?: () => Pick<DeviceAnalysis, 'update'>
   private cooldownScope: 'camera' | 'pair' = 'camera'
   private pending: { timestamp: number; aspect: number; startedAt: number } | null = null
   private timer: ReturnType<typeof setTimeout> | null = null
@@ -362,9 +376,10 @@ class OriginalMotion {
   private onResult: (result: DeviceMotion) => void
   private area: AnalysisArea
   private onStatus?: (status: DeviceStatus) => void
-  constructor(onResult: (result: DeviceMotion) => void, area: AnalysisArea, onStatus?: (status: DeviceStatus) => void, cooldownScope: 'camera' | 'pair' = 'camera') {
+  constructor(onResult: (result: DeviceMotion) => void, area: AnalysisArea, onStatus?: (status: DeviceStatus) => void, cooldownScope: 'camera' | 'pair' = 'camera', analysisFactory?: () => Pick<DeviceAnalysis, 'update'>) {
     this.onResult = onResult; this.area = area; this.onStatus = onStatus
     this.cooldownScope = cooldownScope
+    this.analysisFactory = analysisFactory
     this.analysis = new DeviceAnalysis(new OriginalConflictEngine({cooldownScope}))
   }
 
@@ -383,7 +398,7 @@ class OriginalMotion {
     if (this.timer) clearTimeout(this.timer)
     this.ready = false; this.busy = false; this.pending = null
     this.lastMediaTime = -Infinity
-    this.analysis = new DeviceAnalysis(new OriginalConflictEngine({cooldownScope:this.cooldownScope}))
+    this.analysis = this.analysisFactory?.() ?? new DeviceAnalysis(new OriginalConflictEngine({cooldownScope:this.cooldownScope}))
     const fail = () => {
       if (this.disposed || epoch !== this.epoch) return
       if (preferred === 'GPU') this.initialize('CPU')

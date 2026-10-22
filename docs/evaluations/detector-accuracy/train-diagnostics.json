@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "split": "train",
+  "manifestSHA256": "b69c02316ad4ca1872d93116e0692e6ae4fc5409c759047440df42c3d18ee2fc",
+  "meaning": "Aggregate original-rule diagnostics over admitted motion samples; model observations, not verified people or action ground truth.",
+  "recordings": 132,
+  "motionFrames": 4140,
+  "poseCountHistogram": {
+    "0": 1260,
+    "1": 2541,
+    "2": 332,
+    "3": 7
+  },
+  "usablePeopleHistogram": {
+    "0": 1350,
+    "1": 2481,
+    "2": 305,
+    "3": 4
+  },
+  "reasonHistogram": {
+    "no-poses": 1260,
+    "single-person": 2481,
+    "too-far": 94,
+    "warming": 145,
+    "shoulders-hidden": 90,
+    "arms-hidden": 11,
+    "ready": 59
+  },
+  "framesWithNearbyPair": 215,
+  "framesWithDirectedPulse": 3,
+  "maximumProgress": 0.3333333333333333,
+  "eventIntervals": {
+    "motionFrames": 2536,
+    "poseCountHistogram": {
+      "0": 848,
+      "1": 1506,
+      "2": 180,
+      "3": 2
+    },
+    "usablePeopleHistogram": {
+      "0": 919,
+      "1": 1452,
+      "2": 163,
+      "3": 2
+    },
+    "reasonHistogram": {
+      "no-poses": 848,
+      "single-person": 1452,
+      "too-far": 37,
+      "warming": 88,
+      "ready": 31,
+      "arms-hidden": 9,
+      "shoulders-hidden": 71
+    },
+    "framesWithNearbyPair": 128,
+    "framesWithDirectedPulse": 3,
+    "maximumProgress": 0.3333333333333333
+  }
+}

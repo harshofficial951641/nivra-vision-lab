@@ -86,3 +86,73 @@ export type DeviceStatus = {
   delegate: VisionDelegate | null
   detail: string
 }
+import { ConflictEngine as PublishedConflictEngine, type ExperimentalConflictRules } from '../lib/originalConflictEngine'
+import type { NormalizedBox } from '../types/vision'
+
+export interface DetectorRuleConfiguration { name: string; crowd: boolean; motion: ExperimentalConflictRules }
+/** Explicit opt-in profiles. The publisher default remains null until its full gate passes. */
+export const DETECTOR_EXPERIMENTS: readonly DetectorRuleConfiguration[] = Object.freeze([
+  {name:'baseline',crowd:false,motion:{}},
+  {name:'motion-early',crowd:false,motion:{episodes:2}},
+  {name:'crowd-standard',crowd:true,motion:{}},
+  {name:'crowd-early',crowd:true,motion:{episodes:2}},
+  {name:'crowd-low-speed',crowd:true,motion:{episodes:2,armSpeedScale:.8}},
+  {name:'motion-contact',crowd:false,motion:{contact:'conservative'}},
+  {name:'crowd-contact-conservative',crowd:true,motion:{contact:'conservative'}},
+  {name:'crowd-contact-sensitive',crowd:true,motion:{episodes:2,contact:'sensitive'}},
+])
+export const DEFAULT_DETECTOR_EXPERIMENT: string | null = null
+export function detectorBoxesMatch(a: NormalizedBox, b: NormalizedBox) {
+  const intersection = Math.max(0, Math.min(a.x+a.width,b.x+b.width)-Math.max(a.x,b.x)) *
+    Math.max(0, Math.min(a.y+a.height,b.y+b.height)-Math.max(a.y,b.y))
+  return intersection / Math.max(1e-9,a.width*a.height+b.width*b.height-intersection) >= .25
+}
+const sameDetectorPair = (a: NormalizedBox[], b: NormalizedBox[]) => a.length === 2 && b.length === 2 && (
+  (detectorBoxesMatch(a[0],b[0]) && detectorBoxesMatch(a[1],b[1])) ||
+  (detectorBoxesMatch(a[0],b[1]) && detectorBoxesMatch(a[1],b[0])))
+
+/** Shared live/cache rule coordinator. Each lane keeps its own temporal engine. */
+export class DualLaneConflictAnalysis {
+  readonly configuration: DetectorRuleConfiguration
+  private coverage: NormalizedBox[] = []
+  private motionTimestamp = -Infinity
+  private crowdTimestamp = -Infinity
+  private latestSource = -Infinity
+  private motionEngine: PublishedConflictEngine
+  private crowdEngine: PublishedConflictEngine
+  private motion: DeviceAnalysis
+  private crowd: DeviceAnalysis
+  private recent: { lane: 'motion' | 'crowd'; occurredAtMs: number; regions: NormalizedBox[] }[] = []
+  constructor(configuration: DetectorRuleConfiguration) {
+    this.configuration = configuration
+    this.motionEngine = new PublishedConflictEngine({cooldownScope:'pair',experimental:configuration.motion})
+    this.motion = new DeviceAnalysis(this.motionEngine)
+    this.crowdEngine = new PublishedConflictEngine({cooldownScope:'pair',experimental:{...configuration.motion,maxGapMs:1000},pairAllowed:(a,b)=>{
+      if (Math.abs(this.crowdTimestamp-this.motionTimestamp)>600) return true
+      return !(this.coverage.some(box=>detectorBoxesMatch(a,box)) && this.coverage.some(box=>detectorBoxesMatch(b,box)))
+    }})
+    this.crowd = new DeviceAnalysis(this.crowdEngine,CROWD_DEVICE_MODEL)
+  }
+  resetMotion() {
+    this.coverage=[];this.motionTimestamp=-Infinity
+    this.motionEngine=new PublishedConflictEngine({cooldownScope:'pair',experimental:this.configuration.motion})
+    this.motion=new DeviceAnalysis(this.motionEngine)
+  }
+  update(lane:'motion'|'crowd',timestampMs:number,inferenceMs:number,poses:PoseLandmarks[],aspect:number,delegate:VisionDelegate,area:AnalysisArea='full',people?:readonly PersonObservation[]):DeviceResult {
+    if (lane==='crowd') this.crowdTimestamp=timestampMs
+    const engine=lane==='motion'?this.motionEngine:this.crowdEngine
+    const report=(lane==='motion'?this.motion:this.crowd).update(timestampMs,inferenceMs,poses,aspect,delegate,area,lane==='crowd'?people:undefined)
+    if (lane==='motion') {this.coverage=this.motionEngine.observedTracks().map(track=>track.box);this.motionTimestamp=timestampMs}
+    this.latestSource=Math.max(this.latestSource,timestampMs)
+    this.recent=this.recent.filter(event=>this.latestSource-event.occurredAtMs<8000)
+    const events=report.events.filter(event=>{
+      if (lane==='crowd'&&!this.configuration.crowd) return false
+      const id=event.id.slice(event.id.lastIndexOf('conflict-')),regions=engine.regionsForEvent(id)
+      if (this.recent.some(prior=>prior.lane!==lane&&Math.abs(event.occurredAtMs-prior.occurredAtMs)<8000&&sameDetectorPair(regions,prior.regions)))return false
+      this.recent.push({lane,occurredAtMs:event.occurredAtMs,regions})
+      if(this.recent.length>64)this.recent.shift()
+      return true
+    })
+    return {...report,events}
+  }
+}

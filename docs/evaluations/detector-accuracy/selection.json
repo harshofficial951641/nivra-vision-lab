@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "frozenAt": "2026-10-22T22:27:40.040Z",
+  "ruleSHA256": "f3e358bad151c0f41d2241ec1ffbf1e1f84eaa3a67a0bc755b6cd0447643488b",
+  "candidateSHA256": "91d81435f55b766c91629c80e3f279d8f36d22368d8ffc49f25a02848625008e",
+  "metricsSHA256": "7f916151fec9e8edefc0a974248ad410abaab67c540c608d64e5b4629e3d1ad5",
+  "analysisSHA256": "7b56e9b99217ea82c4b5600f7c5d4d3d69cc0d58614ae53a3dfd1769a4f450dc",
+  "trainManifestSHA256": "b69c02316ad4ca1872d93116e0692e6ae4fc5409c759047440df42c3d18ee2fc",
+  "trainGroups": 40,
+  "trainRecordings": 132,
+  "chosen": "crowd-contact-sensitive",
+  "trainGatePointEstimateEligible": true,
+  "candidates": [
+    {
+      "name": "baseline",
+      "crowd": false,
+      "motion": {}
+    },
+    {
+      "name": "motion-early",
+      "crowd": false,
+      "motion": {
+        "episodes": 2
+      }
+    },
+    {
+      "name": "crowd-standard",
+      "crowd": true,
+      "motion": {}
+    },
+    {
+      "name": "crowd-early",
+      "crowd": true,
+      "motion": {
+        "episodes": 2
+      }
+    },
+    {
+      "name": "crowd-low-speed",
+      "crowd": true,
+      "motion": {
+        "episodes": 2,
+        "armSpeedScale": 0.8
+      }
+    },
+    {
+      "name": "motion-contact",
+      "crowd": false,
+      "motion": {
+        "contact": "conservative"
+      }
+    },
+    {
+      "name": "crowd-contact-conservative",
+      "crowd": true,
+      "motion": {
+        "contact": "conservative"
+      }
+    },
+    {
+      "name": "crowd-contact-sensitive",
+      "crowd": true,
+      "motion": {
+        "episodes": 2,
+        "contact": "sensitive"
+      }
+    }
+  ],
+  "trainPoints": {
+    "baseline": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 0,
+      "eventRecall": 0,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": null,
+      "p90TimeToAlertMs": null,
+      "matchedEventCount": 0,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 0
+    },
+    "motion-early": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 0,
+      "eventRecall": 0,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": null,
+      "p90TimeToAlertMs": null,
+      "matchedEventCount": 0,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 0
+    },
+    "crowd-standard": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 0,
+      "eventRecall": 0,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": null,
+      "p90TimeToAlertMs": null,
+      "matchedEventCount": 0,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 0
+    },
+    "crowd-early": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 2,
+      "eventRecall": 0.023255813953488372,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": 3516.6665,
+      "p90TimeToAlertMs": 3903.3333000000002,
+      "matchedEventCount": 2,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 2
+    },
+    "crowd-low-speed": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 2,
+      "eventRecall": 0.023255813953488372,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": 3516.6665,
+      "p90TimeToAlertMs": 3903.3333000000002,
+      "matchedEventCount": 2,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 2
+    },
+    "motion-contact": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 0,
+      "eventRecall": 0,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": null,
+      "p90TimeToAlertMs": null,
+      "matchedEventCount": 0,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 0
+    },
+    "crowd-contact-conservative": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 1,
+      "eventRecall": 0.011627906976744186,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": 4833.333,
+      "p90TimeToAlertMs": 4833.333,
+      "matchedEventCount": 1,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 1
+    },
+    "crowd-contact-sensitive": {
+      "recordings": 132,
+      "groups": 40,
+      "positiveGroups": 12,
+      "normalGroups": 36,
+      "eventCount": 86,
+      "hits": 7,
+      "eventRecall": 0.08139534883720931,
+      "falseAlerts": 0,
+      "normalHours": 0.09156557395566516,
+      "falseAlertsPerHour": 0,
+      "medianTimeToAlertMs": 3033.3329999999996,
+      "p90TimeToAlertMs": 4333.3332,
+      "matchedEventCount": 7,
+      "ignoredUnknownAlerts": 0,
+      "alertCount": 7
+    }
+  },
+  "selectionRule": "Highest train event recall among candidates with no increase in train false-alert rate; ties: fewer false alerts, then predeclared candidate order. If none qualifies, highest recall is evaluated descriptively and cannot promote."
+}

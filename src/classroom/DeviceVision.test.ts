@@ -415,3 +415,31 @@ describe('verified CPU crowd observation with original fast motion',()=>{
     expect(vi.getTimerCount()).toBe(0)
   })
 })
+
+describe('explicit detector experiment profiles',()=>{
+  it.each([false,true])('routes source-matched crowd candidates only for an uncovered pair (fast coverage: %s)',async covered=>{
+    vi.stubGlobal('createImageBitmap',vi.fn().mockImplementation(()=>Promise.resolve(bitmap())))
+    const model={modelPath:'/models/validated.onnx',sha256:'0'.repeat(64),inputSide:416 as const,preferredDelegate:'CPU' as const}
+    const result=vi.fn(),motion=vi.fn(),device=new DeviceVision(vi.fn(),result,'full','crowd',motion,vi.fn(),model,{experimentalProfile:'crowd-contact-sensitive'})
+    device.start('CPU');const full=WorkerStub.all[0],crowd=WorkerStub.all[1]
+    full.emit({type:'ready',delegate:'CPU'});crowd.emit({type:'ready',delegate:'CPU'});await Promise.resolve()
+    const source={...video,currentTime:0} as HTMLVideoElement
+    for(let t=100;t<=6500;t+=100){
+      source.currentTime=t/1000
+      const capture=device.capture(source,t);await Promise.resolve()
+      const poses=demoFrame(t,'conflict').poses
+      full.emit({type:'pose-result',timestampMs:t,inferenceMs:20,poses:covered?poses:[]})
+      crowd.emit({type:'result',result:{timestampMs:t,inferenceMs:300,delegate:'CPU',poses,people:[{box:[.1,.1,.5,.9],score:.9},{box:[.5,.1,.9,.9],score:.9}]}})
+      await capture
+    }
+    const fastAlerts=motion.mock.calls.flatMap(([report])=>report.events),crowdReports=result.mock.calls.map(([report])=>report),crowdAlerts=crowdReports.flatMap(report=>report.events)
+    expect(fastAlerts.length+crowdAlerts.length).toBe(1)
+    expect(crowdAlerts).toHaveLength(covered?0:1)
+    for(const report of crowdReports)for(const event of report.events){expect(event.occurredAtMs).toBe(report.timestampMs);expect(report.poses).toHaveLength(2);expect(report.model).toBe('nivra-browser-rtmo-t-motion-v1')}
+    device.dispose()
+  })
+  it('rejects an unknown experiment profile without starting a worker',()=>{
+    expect(()=>new DeviceVision(vi.fn(),vi.fn(),'full','crowd',vi.fn(),vi.fn(),undefined,{experimentalProfile:'unapproved'})).toThrow('Unknown detector experiment profile')
+    expect(WorkerStub.all).toHaveLength(0)
+  })
+})

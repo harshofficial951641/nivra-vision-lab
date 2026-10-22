@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "split": "dev",
+  "manifestSHA256": "2750e04e88bf63c3639a1ea91275fc8a4ac40bc1a86581aa38c57954da088514",
+  "profile": "crowd-contact-sensitive",
+  "recordings": 227,
+  "validatedReports": 15853,
+  "rejectedReports": 0,
+  "maxReportBytes": 8406,
+  "errorTypes": {}
+}
