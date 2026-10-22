@@ -128,3 +128,30 @@ describe('operator connection recovery', () => {
     expect(openSocket).toHaveBeenCalledTimes(2)
   })
 })
+
+describe('native compressed operator packets',()=>{
+  it('routes video only to this hook’s active generation and clears it after auth revocation',async()=>{
+    vi.useFakeTimers()
+    api.mockReturnValue(new Promise(()=>{}))
+    const socket={close:vi.fn(),onmessage:null as ((event:{data:string|ArrayBuffer})=>void)|null,onclose:null as ((event:{code:number})=>void)|null}
+    openSocket.mockResolvedValue(socket)
+    const jpeg=vi.fn(),hook=renderHook(()=>useClassroom(true,jpeg,true))
+    await act(async()=>{})
+    const snapshot=(generation:string)=>JSON.stringify({version:3,type:'snapshot',cameras:[{id:'c',feed:'live',generation}],events:[]})
+    act(()=>socket.onmessage?.({data:snapshot('g')}))
+    const received=vi.fn();hook.result.current.nativeVideo.subscribe('c','g',received)
+    const header=new TextEncoder().encode(JSON.stringify({encoding:'h264',cameraId:'c',generation:'g',videoGeneration:'v',width:1280,height:720,codec:'avc1.42001f',description:btoa(String.fromCharCode(1,66,0,31,255,225,0)),frames:[{sequence:0,timestampMs:100,keyframe:true,offset:0,length:6}]}))
+    const data=new Uint8Array(4+header.length+6);new DataView(data.buffer).setUint32(0,header.length,true);data.set(header,4);data.set([0,0,0,2,101,0],4+header.length)
+    act(()=>socket.onmessage?.({data:data.buffer}))
+    expect(received).toHaveBeenCalledOnce();expect(jpeg).not.toHaveBeenCalled()
+    expect(hook.result.current.previews).toEqual({})
+    act(()=>socket.onmessage?.({data:snapshot('new')}))
+    expect(received).toHaveBeenLastCalledWith(null)
+    const calls=received.mock.calls.length
+    act(()=>socket.onmessage?.({data:data.buffer}));expect(received).toHaveBeenCalledTimes(calls)
+    act(()=>socket.onclose?.({code:4403}))
+    expect(hook.result.current.snapshot).toBeNull()
+    expect(received).toHaveBeenLastCalledWith(null)
+    hook.unmount()
+  })
+})

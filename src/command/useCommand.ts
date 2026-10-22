@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { api, type Incident } from '../classroom/contracts'
 import { useClassroom } from '../classroom/useClassroom'
+import type { NativeVideoBus } from '../classroom/nativeVideo'
 import { ClipBuffer } from './clipBuffer'
 import {
   liveCameras,
@@ -27,6 +28,7 @@ export interface CommandData {
   guards: WallGuard[]
   events: Incident[]
   clips: ClipBuffer | null
+  nativeVideo?: NativeVideoBus
   review: (event: Incident, action: ReviewAction, payload?: ReviewPayload) => Promise<void>
   runSample: () => void
   resetSample: () => void
@@ -126,6 +128,7 @@ export function useCommand(sample: boolean): CommandData {
     guards,
     events: sample ? state?.events ?? [] : snapshot?.events ?? [],
     clips: clips.current,
+    nativeVideo: sample ? undefined : live.nativeVideo,
     review,
     runSample: () => store?.runIncident(),
     resetSample: () => store?.reset(),

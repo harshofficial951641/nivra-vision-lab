@@ -180,7 +180,8 @@ list_devices = discovery.list_devices
 
 def phone_get(device, code, path):
     endpoint = from_host(device.get('host'), port=device.get('port', PORT))
-    if path not in ('/v1/status', '/v1/frame'):
+    video = isinstance(path, str) and re.fullmatch(r'/v1/video\?after=[0-9]{1,16}', path) is not None
+    if path not in ('/v1/status', '/v1/frame', '/v1/analysis') and not video:
         raise ValueError('Unsupported camera request.')
     if not isinstance(code, str) or re.fullmatch(r'[A-Z0-9]{8}', code) is None:
         raise ValueError('Enter the eight-character phone code.')
@@ -208,6 +209,8 @@ def phone_get(device, code, path):
         reply.begin()
         if reply.status in (401, 403):
             raise PermissionError('Check the code shown on the phone.')
+        if reply.status == 204 and (video or path == '/v1/analysis'):
+            return dict(reply.getheaders()), b''
         if reply.status != 200:
             raise OSError('Waiting for the phone camera. Keep NIVRA open.')
         lengths = reply.headers.get_all('Content-Length', [])
@@ -215,7 +218,7 @@ def phone_get(device, code, path):
                 or reply.headers.get('Transfer-Encoding') is not None):
             raise OSError('Invalid camera frame size.')
         length = int(lengths[0])
-        if not 0 <= length <= MAX_BODY:
+        if not 0 <= length <= (3_000_000 if video else MAX_BODY):
             raise OSError('Invalid camera frame size.')
         data = reply.read(length)
         if len(data) != length:

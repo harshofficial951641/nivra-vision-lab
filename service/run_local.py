@@ -4,4 +4,4 @@ from run_usb import make_app, PORT
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(make_app(), host='127.0.0.1', port=PORT, access_log=False,
-                ws_max_size=1_500_000)
+                ws_max_size=3_300_000)

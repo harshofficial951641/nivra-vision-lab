@@ -202,6 +202,6 @@ export default function UsbSetup() {
       <button type="submit" disabled={busy || !chosen.connected || !/^[A-Z0-9]{8}$/.test(code.replace(/[\s-]/g, ''))}>{busy ? 'Connecting…' : 'Connect camera'}<ArrowRight aria-hidden /></button><button type="button" className="usb-cancel" disabled={busy} onClick={() => setSelected(null)}>Cancel</button>
     </form></section>}
     {status?.devices.some(device => device.cameraId && device.linked) && <a className="usb-watch" href="/wall">Watch cameras<ArrowRight aria-hidden /></a>}
-    {status && <footer>{status.analysis.status === 'ready' ? <Check aria-hidden size={18} /> : <WifiHigh aria-hidden size={18} />}<span>{status.analysis.status === 'ready' ? 'Detection is ready on this Mac' : status.analysis.status === 'error' ? 'Detection needs attention' : 'Getting detection ready…'}</span>{status.analysis.detail && <details><summary>Details</summary><p>{status.analysis.detail}</p></details>}</footer>}
+    {status && <footer>{status.analysis.status === 'ready' ? <Check aria-hidden size={18} /> : <WifiHigh aria-hidden size={18} />}<span>{status.analysis.status === 'ready' ? 'Detection runs on your camera phone' : status.analysis.status === 'error' ? 'Detection needs attention' : 'Getting detection ready…'}</span>{status.analysis.detail && <details><summary>Details</summary><p>{status.analysis.detail}</p></details>}</footer>}
   </main>
 }

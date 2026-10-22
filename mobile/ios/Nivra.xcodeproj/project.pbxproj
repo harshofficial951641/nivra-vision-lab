@@ -7,16 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01D55C2C73A37BCA6AE65E32 /* provenance.json in Resources */ = {isa = PBXBuildFile; fileRef = E00FC2401D7BF6CC2F65AF3A /* provenance.json */; };
 		041DAADC8F0975AA2F1E9DE1 /* USBFrameStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22ECE58EBEA0AF6A8BAC480 /* USBFrameStore.swift */; };
 		11E45AE358AED6CC5E4B922F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630946E3F2E73A14AED85629 /* HomeView.swift */; };
 		1409CA7EBC669F12E37017F4 /* LocalCameraNetwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6D0284FE6F81731681569C3 /* LocalCameraNetwork.swift */; };
 		153A28760F23B3DE02BE5B09 /* NivraApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D81FFDC95B60735195C4EA5 /* NivraApp.swift */; };
+		27734895369F640186F3E30A /* NativeFightVisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B36E974B7B2A234D62A69679 /* NativeFightVisionTests.swift */; };
 		31BCF287F410677D5EDF63F3 /* WebSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A3B53B18B32355FFFB545D /* WebSession.swift */; };
+		6519DAF91E1AFD3A509B4D4B /* NativePeopleVisionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D68DCEB7CFF1F3659E43F282 /* NativePeopleVisionTests.swift */; };
 		661316463373C6F39A35B009 /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81E1F6E8636D3304D88B8633 /* QRScanner.swift */; };
 		677FB3FDA19455EB34312FA8 /* USBOfflineCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46651329910BC574931A8A48 /* USBOfflineCamera.swift */; };
+		7A7BC6A2F631F5305017E5D5 /* NivraX3D.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = 964D79558E98103AFA628B82 /* NivraX3D.mlpackage */; };
+		806D0E896D88B0EE7B0E4FCD /* LocalVideoEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 743D18EA2B7BA73A1B633DF5 /* LocalVideoEncoder.swift */; };
+		86261333D60A3FFF6DD20C51 /* LocalVideoStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFA5B76520E76A043F3F5F3 /* LocalVideoStore.swift */; };
 		9CA7CC2D1B3E70E1635FC346 /* USBCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4476FCEC2739AA02249AC4FB /* USBCameraView.swift */; };
 		ACDB725DBF7CA4CF3229CE8E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 300557CD4612A7985C9A63AD /* Assets.xcassets */; };
+		B8F4D607153A44B1D3E33F60 /* LocalVideoStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F26BEDEC5623E4FFFB865F9 /* LocalVideoStoreTests.swift */; };
 		C0FCBFB3E0B1116BC5A52ADC /* USBHTTPServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABD7463A66612292AB73355 /* USBHTTPServer.swift */; };
+		C2272376F01C161A31B7653A /* NativePeopleVision.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92297814037348159B0746E8 /* NativePeopleVision.swift */; };
+		F3D543D2904C998F10A5C164 /* NativeFightVision.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EBF6DC3D2B39D5258C3C22 /* NativeFightVision.swift */; };
+		F5C717BCB45212FC4DECB835 /* NativeAnalysisStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADBD25184163187F214CA13 /* NativeAnalysisStore.swift */; };
 		FB74397A8342685CC0A1CC27 /* PairingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2608358AFB7F51A8C540C /* PairingTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -40,10 +50,20 @@
 		5A9A10F6A96C8041D9BB853A /* Nivra.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Nivra.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F3725F6C854D8B70ACFDF78 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		630946E3F2E73A14AED85629 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		743D18EA2B7BA73A1B633DF5 /* LocalVideoEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalVideoEncoder.swift; sourceTree = "<group>"; };
 		81E1F6E8636D3304D88B8633 /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
 		8ABD7463A66612292AB73355 /* USBHTTPServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBHTTPServer.swift; sourceTree = "<group>"; };
+		8BFA5B76520E76A043F3F5F3 /* LocalVideoStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalVideoStore.swift; sourceTree = "<group>"; };
+		8F26BEDEC5623E4FFFB865F9 /* LocalVideoStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalVideoStoreTests.swift; sourceTree = "<group>"; };
+		92297814037348159B0746E8 /* NativePeopleVision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativePeopleVision.swift; sourceTree = "<group>"; };
+		964D79558E98103AFA628B82 /* NivraX3D.mlpackage */ = {isa = PBXFileReference; path = NivraX3D.mlpackage; sourceTree = "<group>"; };
 		9850493FB31C7CC2591AC2EF /* Nivra.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nivra.entitlements; sourceTree = "<group>"; };
 		A6D0284FE6F81731681569C3 /* LocalCameraNetwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalCameraNetwork.swift; sourceTree = "<group>"; };
+		B36E974B7B2A234D62A69679 /* NativeFightVisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFightVisionTests.swift; sourceTree = "<group>"; };
+		C7EBF6DC3D2B39D5258C3C22 /* NativeFightVision.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeFightVision.swift; sourceTree = "<group>"; };
+		D68DCEB7CFF1F3659E43F282 /* NativePeopleVisionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativePeopleVisionTests.swift; sourceTree = "<group>"; };
+		DADBD25184163187F214CA13 /* NativeAnalysisStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeAnalysisStore.swift; sourceTree = "<group>"; };
+		E00FC2401D7BF6CC2F65AF3A /* provenance.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = provenance.json; sourceTree = "<group>"; };
 		E22ECE58EBEA0AF6A8BAC480 /* USBFrameStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBFrameStore.swift; sourceTree = "<group>"; };
 		EA6E7068533E8760817C583C /* NivraTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = NivraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -58,6 +78,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2567F21EF72AB2A8B6B05928 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				964D79558E98103AFA628B82 /* NivraX3D.mlpackage */,
+				E00FC2401D7BF6CC2F65AF3A /* provenance.json */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		9BC4047CEBBDEDD791297FB6 /* Nivra */ = {
 			isa = PBXGroup;
 			children = (
@@ -65,6 +94,11 @@
 				630946E3F2E73A14AED85629 /* HomeView.swift */,
 				5F3725F6C854D8B70ACFDF78 /* Info.plist */,
 				A6D0284FE6F81731681569C3 /* LocalCameraNetwork.swift */,
+				743D18EA2B7BA73A1B633DF5 /* LocalVideoEncoder.swift */,
+				8BFA5B76520E76A043F3F5F3 /* LocalVideoStore.swift */,
+				DADBD25184163187F214CA13 /* NativeAnalysisStore.swift */,
+				C7EBF6DC3D2B39D5258C3C22 /* NativeFightVision.swift */,
+				92297814037348159B0746E8 /* NativePeopleVision.swift */,
 				9850493FB31C7CC2591AC2EF /* Nivra.entitlements */,
 				3D81FFDC95B60735195C4EA5 /* NivraApp.swift */,
 				81E1F6E8636D3304D88B8633 /* QRScanner.swift */,
@@ -80,6 +114,7 @@
 		AAE6F6B5842E0B4F8E1FA09A = {
 			isa = PBXGroup;
 			children = (
+				2567F21EF72AB2A8B6B05928 /* Models */,
 				9BC4047CEBBDEDD791297FB6 /* Nivra */,
 				D96A3B058C7DA6EB26AFEA32 /* NivraTests */,
 				043B0C1A03C5D067CDF11B85 /* Products */,
@@ -89,6 +124,9 @@
 		D96A3B058C7DA6EB26AFEA32 /* NivraTests */ = {
 			isa = PBXGroup;
 			children = (
+				8F26BEDEC5623E4FFFB865F9 /* LocalVideoStoreTests.swift */,
+				B36E974B7B2A234D62A69679 /* NativeFightVisionTests.swift */,
+				D68DCEB7CFF1F3659E43F282 /* NativePeopleVisionTests.swift */,
 				41A2608358AFB7F51A8C540C /* PairingTests.swift */,
 			);
 			path = NivraTests;
@@ -176,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ACDB725DBF7CA4CF3229CE8E /* Assets.xcassets in Resources */,
+				01D55C2C73A37BCA6AE65E32 /* provenance.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -186,6 +225,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8F4D607153A44B1D3E33F60 /* LocalVideoStoreTests.swift in Sources */,
+				27734895369F640186F3E30A /* NativeFightVisionTests.swift in Sources */,
+				6519DAF91E1AFD3A509B4D4B /* NativePeopleVisionTests.swift in Sources */,
 				FB74397A8342685CC0A1CC27 /* PairingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -196,7 +238,13 @@
 			files = (
 				11E45AE358AED6CC5E4B922F /* HomeView.swift in Sources */,
 				1409CA7EBC669F12E37017F4 /* LocalCameraNetwork.swift in Sources */,
+				806D0E896D88B0EE7B0E4FCD /* LocalVideoEncoder.swift in Sources */,
+				86261333D60A3FFF6DD20C51 /* LocalVideoStore.swift in Sources */,
+				F5C717BCB45212FC4DECB835 /* NativeAnalysisStore.swift in Sources */,
+				F3D543D2904C998F10A5C164 /* NativeFightVision.swift in Sources */,
+				C2272376F01C161A31B7653A /* NativePeopleVision.swift in Sources */,
 				153A28760F23B3DE02BE5B09 /* NivraApp.swift in Sources */,
+				7A7BC6A2F631F5305017E5D5 /* NivraX3D.mlpackage in Sources */,
 				661316463373C6F39A35B009 /* QRScanner.swift in Sources */,
 				9CA7CC2D1B3E70E1635FC346 /* USBCameraView.swift in Sources */,
 				041DAADC8F0975AA2F1E9DE1 /* USBFrameStore.swift in Sources */,

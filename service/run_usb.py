@@ -16,7 +16,7 @@ ORIGIN = f'http://127.0.0.1:{PORT}'
 PULL_INTERVAL = .05
 ACK_TIMEOUT = 1
 RECONNECT_DELAYS = (.2, .5, 1, 2)
-# This host never opens a public socket, uses Clerk, or falls back to phone AI.
+# This host keeps local video and phone-computed reports on the private network.
 os.environ.update(NIVRA_ALLOWED_ORIGINS=ORIGIN, NIVRA_AUTH_MODE='dev',
     NIVRA_PUBLIC_ORIGIN='', NIVRA_SOCKET_ORIGIN='', NIVRA_AUTO_RELAY='0',
     NIVRA_DEVICE='cpu', NIVRA_PERSON_MODEL='rtmo', NIVRA_FIGHT_MODEL='x3d')
@@ -135,8 +135,6 @@ class USBPhones:
                 raise HTTPException(404, 'Open the phone camera and join the same hotspot.')
             identity = device['id']
             prior = self.links.get(identity)
-            if prior and prior['task'] and not prior['task'].done():
-                raise HTTPException(409, 'This phone is already connected.')
             try:
                 device, status = await phone_status(device, code)
             except PermissionError:
@@ -148,8 +146,15 @@ class USBPhones:
                 identity = hashlib.sha256(native_id.encode()).hexdigest()[:24]
                 device = {**device, 'id': identity}
                 prior = self.links.get(identity)
-                if prior and prior['task'] and not prior['task'].done():
-                    raise HTTPException(409, 'This phone is already connected.')
+            session = hashlib.sha256(code.encode()).hexdigest()
+            if prior and prior['task'] and not prior['task'].done():
+                if prior.get('session') == session:
+                    return {'cameraId':prior['cameraId'],'name':prior['name']}
+                # The newly verified phone restarted capture with a fresh key.
+                # Replace its stale transport, retaining its camera and history.
+                prior['task'].cancel()
+                with suppress(asyncio.CancelledError): await prior['task']
+                await self.classroom.disconnect_camera(prior['cameraId'],revoke=False)
             name = data.name.strip() or str(status.get('name') or 'Camera')[:60]
             try:
                 camera = self.classroom.store.camera(prior['cameraId']) if prior else None
@@ -159,7 +164,8 @@ class USBPhones:
                     camera = self.classroom.store.add_camera(name, 'This Mac', data.floor.strip() or 'Not set')
             except ValueError:
                 raise HTTPException(409, 'Could not add another camera. Remove an old camera first.') from None
-            link = dict(cameraId=camera['id'], name=name, state='waiting', detail='Starting camera…', device=device)
+            link = dict(cameraId=camera['id'], name=name, state='waiting', detail='Starting camera…', device=device,
+                native=status.get('analysisProtocol') == 'native-analysis-v1',session=session)
             self.links[identity] = link
             with self.classroom.store.db:
                 self.classroom.store.db.execute('INSERT OR REPLACE INTO usb_phones VALUES(?,?)', (identity, camera['id']))
@@ -181,13 +187,17 @@ class USBPhones:
                     if not device:
                         raise OSError('Join the same hotspot and keep NIVRA open on the phone.')
                     if WIRELESS:
-                        device, _ = await phone_status(device, code)
+                        device, status = await phone_status(device, code)
                         link['device'] = device
+                        link['native'] = status.get('analysisProtocol') == 'native-analysis-v1'
                     async with connect(f'ws://127.0.0.1:{PORT}/api/v2/camera/stream',
                             origin=ORIGIN, additional_headers={'Cookie': f'{CAMERA_COOKIE}={credential}'},
-                            open_timeout=4, close_timeout=1, max_size=1_500_000) as peer:
+                            open_timeout=4, close_timeout=1, max_size=3_300_000) as peer:
                         ready = json.loads(await asyncio.wait_for(peer.recv(), 3))
                         if ready.get('type') != 'ready': raise OSError('Camera connection not ready.')
+                        if WIRELESS and link.get('native'):
+                            await self.pump_native(peer,device,code,link)
+                            continue
                         last, last_timestamp = -1, -1
                         while self.classroom.store.camera(link['cameraId']):
                             started = time.monotonic()
@@ -223,10 +233,50 @@ class USBPhones:
             self.classroom.credentials.pop(key, None)
             self.classroom.store.revoke_device_sessions(kind='camera', token_hash=key)
 
+    async def pump_native(self, peer, device, code, link):
+        """Video never waits for inference. Reports contain completed phone work."""
+        await peer.send(json.dumps({'type':'native-hello','version':1}))
+        if json.loads(await asyncio.wait_for(peer.recv(),ACK_TIMEOUT)).get('type') != 'native-ready':
+            raise OSError('Phone processing is not available. Restart NIVRA on this Mac.')
+        cursor,last_jpeg,last_timestamp = 0,-1,-1
+        next_jpeg = next_analysis = 0
+        while self.classroom.store.camera(link['cameraId']):
+            started = time.monotonic()
+            _,encoded = await asyncio.to_thread(phone_get,device,code,f'/v1/video?after={cursor}')
+            if encoded:
+                batch = json.loads(encoded)
+                await asyncio.wait_for(peer.send(json.dumps({**batch,'type':'native-video-v1'})),ACK_TIMEOUT)
+                ack = json.loads(await asyncio.wait_for(peer.recv(),ACK_TIMEOUT))
+                if ack.get('type') != 'video-accepted' or type(ack.get('sequence')) is not int:
+                    raise OSError('Compressed video was not accepted.')
+                cursor = ack['sequence']
+                link.update(state='live',detail='Connected locally · detection on phone')
+            if started >= next_jpeg:
+                next_jpeg = started+.2
+                headers,jpeg = await asyncio.to_thread(phone_get,device,code,'/v1/frame')
+                fields = {k.lower():v for k,v in headers.items()}
+                sequence,timestamp = int(fields['x-nivra-sequence']),float(fields['x-nivra-timestamp'])
+                if sequence > last_jpeg and math.isfinite(timestamp) and timestamp > last_timestamp:
+                    if not jpeg.startswith(b'\xff\xd8') or len(jpeg) > 1_400_000: raise OSError('Invalid review frame')
+                    metadata = json.dumps(dict(version=1,timestampMs=timestamp,streamId=0,maxPeople=32)).encode()
+                    await asyncio.wait_for(peer.send(struct.pack('<I',len(metadata))+metadata+jpeg),ACK_TIMEOUT)
+                    ack = json.loads(await asyncio.wait_for(peer.recv(),ACK_TIMEOUT))
+                    if ack != {'type':'accepted','timestampMs':timestamp}: raise OSError('Review frame was not accepted')
+                    last_jpeg,last_timestamp = sequence,timestamp
+                    link.update(state='live',detail='Connected locally · detection on phone')
+            if started >= next_analysis:
+                next_analysis = started+.25
+                _,report = await asyncio.to_thread(phone_get,device,code,'/v1/analysis')
+                if report:
+                    # The camera websocket owns schema/freshness checks and decisions.
+                    await asyncio.wait_for(peer.send(report.decode('utf-8')),ACK_TIMEOUT)
+            await asyncio.sleep(max(.001,PULL_INTERVAL-(time.monotonic()-started)))
+
 
 def make_app(database=None):
-    app = create_app(database=database or Path(__file__).parent/'state'/('local.sqlite' if WIRELESS else 'usb.sqlite'), static_dir=ROOT/'dist-usb')
+    app = create_app(database=database or Path(__file__).parent/'state'/('local.sqlite' if WIRELESS else 'usb.sqlite'), static_dir=ROOT/'dist-usb', relay_only=True)
     classroom = app.state.classroom
+    classroom.state['nativeCamera'] = True
     phones = USBPhones(classroom)
     app.state.usb = phones
     async def attach_native(host, code):
@@ -309,8 +359,8 @@ def make_app(database=None):
                 connected=identity in found or bool(link and link['state'] == 'live'), linked=bool(link and link['task'] and not link['task'].done()), cameraId=link['cameraId'] if link else None,
                 state=link['state'] if link else 'waiting', detail=link['detail'] if link else 'Open NIVRA on this phone.'))
         state = classroom.state
-        return {'devices': values, 'analysis': {'status': 'error' if state['error'] else 'ready' if state['models'] else 'loading',
-            'detail': 'Analysis unavailable on this Mac.' if state['error'] else 'Analysis runs on this Mac.' if state['models'] else 'Starting detection on this Mac…'}}
+        return {'devices': values, 'analysis': {'status': 'error' if state['error'] else 'ready' if state['models'] or state.get('relayOnly') else 'loading',
+            'detail': 'Detection runs on your camera phone.'}}
 
     @routes.post('/api/usb/connect')
     @routes.post('/api/local/connect')
@@ -336,4 +386,4 @@ def make_app(database=None):
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(make_app(), host='127.0.0.1', port=PORT, access_log=False,
-        ws_max_size=1_500_000)
+        ws_max_size=3_300_000)

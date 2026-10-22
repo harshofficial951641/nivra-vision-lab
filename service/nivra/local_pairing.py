@@ -53,7 +53,11 @@ class PairingBroker:
         if not hosts:
             raise HTTPException(409, 'Join the same Wi-Fi router as your phones, then try again.')
         token = secrets.token_urlsafe(32)
-        self.invites.clear()
+        # Another open dashboard must not invalidate a QR that is still visible.
+        now = self.clock()
+        self.invites = {key: entry for key, entry in self.invites.items() if entry['expires'] > now}
+        while len(self.invites) >= 16:
+            self.invites.pop(next(iter(self.invites)))
         self.invites[hashlib.sha256(token.encode()).hexdigest()] = {'expires': self.clock()+300}
         query = urlencode(dict(host=hosts[0], hosts=','.join(hosts), port=PORT))
         return {'url': f'nivra://local-camera?{query}#pair={token}', 'expiresInSeconds': 300}

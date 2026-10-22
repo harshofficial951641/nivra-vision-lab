@@ -28,6 +28,8 @@ from .push import GuardPush, register_routes as register_push_routes
 from .device_analysis import DeviceStatus, DeviceMotionStatus, DeviceResult, DeviceMotion, result_payload, MODEL as DEVICE_MODEL, MAX_PEOPLE as DEVICE_MAX_PEOPLE, MAX_REPORT_BYTES
 from .clips import Clips, signed_frame_url, valid_frame_signature
 from .auth import require_role
+from .native_camera import NativeAnalysis, FIGHT_MODEL as NATIVE_FIGHT_MODEL, payload as native_payload, video_packet
+from .decision import Decisions
 
 ADMIN_COOKIE = 'nivra_operator'
 CAMERA_COOKIE = 'nivra_publisher'
@@ -351,7 +353,7 @@ class Classroom:
                 'result': live.get('result') if analysis_fresh else None,
                 'motionResult': live.get('motionResult') if motion_fresh else None,
                 'motionStatus': live.get('motionStatus') if live else None,
-                'framesReceived': live['frames'] if live else 0,
+                'framesReceived': live.get('videoFrames',live['frames']) if live else 0,
                 'framesAnalyzed': live.get('analyzedCount',0) if live else 0,
                 'framesReplaced': live['replaced'] if live else 0,
                 'error': live.get('error') if live else None})
@@ -365,6 +367,10 @@ class Classroom:
                 'runtime': self.runtime(),
                 'publicOrigin': self.public or None, 'retention':'event-records-only',
                 'experimental':True, 'maxCameras':self.store.max_cameras, 'activeViewers':len(self.viewers), 'maxViewers':8}
+
+    def broadcast_video(self, camera_id, packet):
+        for socket in tuple(self.viewers):
+            if relay := self.relays.get(socket): relay.offer_video(camera_id,packet)
 
     async def broadcast(self, value, binary=False, camera_id=None):
         # Never await a viewer on the camera capture or GPU scheduling path.
@@ -499,6 +505,9 @@ class Classroom:
         self.wake.set()
 
     def runtime(self):
+        if self.state.get('nativeCamera'):
+            return dict(device='camera-device',compute='camera-device',personModel='Apple Vision (observed joints)',
+                        fightModel=NATIVE_FIGHT_MODEL,maxPeople=DEVICE_MAX_PEOPLE)
         if self.state.get('relayOnly'):
             return dict(device='camera-device', compute='camera-device', personModel='MediaPipe Pose Lite',
                         fightModel=DEVICE_MODEL, maxPeople=DEVICE_MAX_PEOPLE, fallbackReason=self.state.get('fallbackReason'))
@@ -970,6 +979,8 @@ class Classroom:
             self.relays[socket] = relay
             try:
                 relay.offer('snapshot', {**self.snapshot(), 'me': {'role': authentication.principal.role}})
+                for camera_id, live in self.live.items():
+                    for packet in live.get('videoBootstrap',[]): relay.offer_video(camera_id,packet)
                 while True:
                     await authentication.check()
                     try:
@@ -1002,6 +1013,7 @@ class Classroom:
             last_timestamp = -1
             recent_frames = deque()
             recent_reports = deque()
+            recent_video = deque()
             try:
                 await socket.send_json({'type':'ready','cameraId':camera_id,'generation':generation,'maxFps':12})
                 while True:
@@ -1011,11 +1023,70 @@ class Classroom:
                     if message.get('text') is not None:
                         text = message['text']
                         now = time.monotonic()
-                        while recent_reports and now-recent_reports[0] > 1: recent_reports.popleft()
-                        if len(text.encode('utf-8')) > MAX_REPORT_BYTES or len(recent_reports) >= 24: raise ValueError('Invalid device report rate or size')
-                        recent_reports.append(now)
+                        length = len(text.encode('utf-8'))
+                        if length > (3_000_000 if live['compute'] == 'native' else MAX_REPORT_BYTES): raise ValueError('Invalid device report size')
                         data = json.loads(text)
-                        if data.get('type') in ('device-status', 'device-motion-status'):
+                        if not isinstance(data,dict): raise ValueError('Invalid camera message')
+                        video_message = data.get('type') == 'native-video-v1'
+                        recent = recent_video if video_message else recent_reports
+                        while recent and now-recent[0] > 1: recent.popleft()
+                        if len(recent) >= (40 if video_message else 24) or (not video_message and length > MAX_REPORT_BYTES): raise ValueError('Invalid device report rate or size')
+                        recent.append(now)
+                        if data.get('type') == 'native-hello':
+                            if not self.state.get('nativeCamera') or live['frames'] or live.get('nativeHello') or data != {'type':'native-hello','version':1}:
+                                raise ValueError('Native compute negotiation must precede video')
+                            live.update(compute='native',nativeHello=True,decisions=Decisions())
+                            await socket.send_json({'type':'native-ready'})
+                        elif data.get('type') == 'native-video-v1':
+                            if live['compute'] != 'native': raise ValueError('Native video was not negotiated')
+                            changed = live.get('nativeVideoGeneration') != data.get('generation')
+                            if changed and not data.get('frames',[{}])[0].get('keyframe'): raise ValueError('Video must begin at a keyframe')
+                            packet, sequence, timestamp = video_packet({k:v for k,v in data.items() if k != 'type'}, camera_id,generation,
+                                after=-1 if changed else live.get('nativeVideoSequence',-1),
+                                last_timestamp=-1 if changed else live.get('nativeVideoTimestamp',-1))
+                            live.update(nativeVideoGeneration=data['generation'],nativeVideoSequence=sequence,
+                                nativeVideoTimestamp=timestamp,received=now,videoFrames=live.get('videoFrames',0)+len(data['frames']))
+                            keyframes = [i for i,frame in enumerate(data['frames']) if frame['keyframe']]
+                            if changed or keyframes: live['videoBootstrap'] = []
+                            bootstrap = live.setdefault('videoBootstrap',[])
+                            if keyframes:
+                                bootstrap_packet,_,_ = video_packet({k:(v[keyframes[-1]:] if k == 'frames' else v) for k,v in data.items() if k != 'type'},camera_id,generation)
+                                bootstrap.append(bootstrap_packet)
+                            elif bootstrap: bootstrap.append(packet)
+                            if sum(map(len,bootstrap)) > 2_000_000: bootstrap.clear()
+                            self.broadcast_video(camera_id,packet)
+                            self.schedule_snapshot()
+                            await socket.send_json({'type':'video-accepted','sequence':sequence})
+                        elif data.get('type') == 'native-analysis-v1':
+                            if live['compute'] != 'native': raise ValueError('Native analysis was not negotiated')
+                            report = NativeAnalysis.model_validate(data)
+                            live['deviceStatus'] = dict(state=report.state,delegate='iOS',detail=report.detail)
+                            if now-live['received'] > 3:
+                                live['analyzed'],live['result'] = None,None
+                                self.schedule_snapshot()
+                                continue
+                            source = max(last_timestamp,live.get('nativeVideoTimestamp',-1))
+                            people,fight = report.people,report.fight
+                            if people and not -250 <= source-people.timestampMs <= 3000: people = None
+                            if fight and not -250 <= source-fight.timestampMs <= 3000: fight = None
+                            if people or fight:
+                                result = native_payload(people,fight)
+                                if result['timestampMs'] > live.get('lastNativeTimestamp',-1):
+                                    live.update(result=result,analyzed=now,analyzedCount=live.get('analyzedCount',0)+1,lastNativeTimestamp=result['timestampMs'])
+                            if report.state == 'ready' and fight and fight.timestampMs > live.get('lastNativeFight',-1):
+                                live['lastNativeFight'] = fight.timestampMs
+                                observations = [dict(id=t.id,box=t.box,observed=True,ambiguous=True) for t in people.tracks] if people and abs(people.timestampMs-fight.timestampMs) <= 1500 else []
+                                decisions = live['decisions']
+                                # A bridge reconnect does not begin a new incident. Keep
+                                # the existing eight-second review cooldown across sockets.
+                                prior = self.store.db.execute('SELECT 1 FROM events WHERE camera_id=? AND model=? AND received_at>? LIMIT 1',
+                                    (camera_id,NATIVE_FIGHT_MODEL,time.time()*1000-8000)).fetchone()
+                                if not prior and decisions.scene_update(fight.timestampMs,observations,fight.publisherScore,fight.windowStartMs):
+                                    event = {**decisions.events[0],'evidenceModel':NATIVE_FIGHT_MODEL}
+                                    self.record_event(camera_id,generation,event)
+                            live['error'] = report.detail if report.state == 'error' else None
+                            self.schedule_snapshot()
+                        elif data.get('type') in ('device-status', 'device-motion-status'):
                             motion = data['type'] == 'device-motion-status'
                             status = (DeviceMotionStatus if motion else DeviceStatus).model_validate(data)
                             live['motionStatus' if motion else 'deviceStatus'] = status.model_dump(exclude={'type'})

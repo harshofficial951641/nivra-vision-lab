@@ -22,7 +22,7 @@ def health():
     try:
         with OPENER.open('http://127.0.0.1:8870/api/v1/health', timeout=1) as response:
             value = json.load(response)
-        if not isinstance(value, dict) or value.get('backend') != 'local-ai':
+        if not isinstance(value, dict) or value.get('backend') not in ('local-ai','relay-only'):
             return None
         with OPENER.open('http://127.0.0.1:8870/api/local/config', timeout=1) as response:
             config = json.load(response)

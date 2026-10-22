@@ -88,7 +88,7 @@ def test_failed_readiness_is_bounded_and_reports_private_log(tools, monkeypatch)
     ({'backend': 'local-ai', 'status': 'loading'}, {'enabled': True, 'transport': 'wireless'}, True),
     ({'backend': 'local-ai'}, {'enabled': True, 'transport': 'usb'}, False),
     ({'backend': 'local-ai'}, {'enabled': False, 'transport': 'wireless'}, False),
-    ({'backend': 'relay-only'}, {'enabled': True, 'transport': 'wireless'}, False),
+    ({'backend': 'relay-only'}, {'enabled': True, 'transport': 'wireless'}, True),
     ([], {}, False),
     ({'backend': 'local-ai'}, [], False),
 ])

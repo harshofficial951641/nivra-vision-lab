@@ -31,7 +31,7 @@ describe('offline Wi-Fi camera setup', () => {
     expect(screen.getByRole('button',{name:'Add camera'})).toBeVisible()
     expect(screen.queryByText(/Your phone will appear here/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Scan phone QR' }).closest('details')).not.toHaveAttribute('open')
-    expect(screen.getByText('Detection is ready on this Mac')).toBeVisible()
+    expect(screen.getByText('Detection runs on your camera phone')).toBeVisible()
     expect(screen.queryByText(/appear here automatically/i)).not.toBeInTheDocument()
     expect(screen.queryByText('Camera on')).not.toBeInTheDocument()
   })

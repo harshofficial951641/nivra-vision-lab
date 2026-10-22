@@ -32,17 +32,16 @@ def capability(broker):
     return {'token': token, 'code': 'ABCD2345', 'port': 8940}
 
 
-def test_invite_rotation_is_bounded_and_redeem_is_same_session_idempotent(broker):
+def test_two_visible_qrs_remain_valid_and_redeem_is_same_session_idempotent(broker):
     service, clock, calls = broker
     old = capability(service)
     body = capability(service)
-    assert len(service.invites) == 1
+    assert len(service.invites) == 2
     async def verify():
-        with pytest.raises(HTTPException) as expired: await service.redeem('192.168.1.2', old)
-        assert expired.value.status_code == 403
+        assert (await service.redeem('192.168.1.4', old))['cameraId'] == 'camera-one'
         first, retry = await asyncio.gather(service.redeem('192.168.1.2', body), service.redeem('192.168.1.2', body))
         assert first == retry == {'cameraId': 'camera-one', 'name': 'Phone'}
-        assert calls == [('192.168.1.2', 'ABCD2345')]
+        assert calls == [('192.168.1.4', 'ABCD2345'), ('192.168.1.2', 'ABCD2345')]
         for host, changed in [('192.168.1.3', body), ('192.168.1.2', {**body, 'code': 'WXYZ2345'})]:
             with pytest.raises(HTTPException) as used: await service.redeem(host, changed)
             assert used.value.status_code == 403
@@ -50,6 +49,17 @@ def test_invite_rotation_is_bounded_and_redeem_is_same_session_idempotent(broker
         clock[0] += 300
         with pytest.raises(HTTPException): await service.redeem('192.168.1.2', body)
     asyncio.run(verify())
+
+
+def test_invites_prune_expired_and_bound_tabs(broker):
+    service, clock, _ = broker
+    first = capability(service)
+    for _ in range(16): capability(service)
+    assert len(service.invites) == 16
+    assert hashlib.sha256(first['token'].encode()).hexdigest() not in service.invites
+    clock[0] += 301
+    capability(service)
+    assert len(service.invites) == 1
 
 
 def test_failed_phone_verification_does_not_consume_token(broker):

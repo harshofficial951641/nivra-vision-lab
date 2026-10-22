@@ -128,7 +128,7 @@ def test_usb_add_remove_has_no_ghost_camera_and_local_wall_session(usb_server):
     camera_id = response.json()['cameraId']
     assert app.state.classroom.store.camera(camera_id)['floor'] == 'Floor 1'
     assert client.post('/api/usb/connect', headers=origin,
-        json=dict(deviceId=identity, code='ABCD2345')).status_code == 409
+        json=dict(deviceId=identity, code='ABCD2345')).status_code == 200
     assert len(app.state.classroom.store.cameras()) == 1
     assert client.delete('/api/usb/devices/'+identity, headers=origin).status_code == 204
     assert app.state.classroom.store.camera(camera_id) is None
@@ -355,8 +355,21 @@ def test_wireless_stable_phone_identity_prevents_duplicate_cameras_across_interf
     origin = {'origin': run_usb.ORIGIN}
     first = client.post('/api/local/connect', headers=origin, json={'host':'192.168.1.4','code':'ABCD2345'})
     second = client.post('/api/local/connect', headers=origin, json={'host':'172.20.10.2','code':'ABCD2345'})
-    assert first.status_code == 200 and second.status_code == 409
+    assert first.status_code == 200 and second.status_code == 200
+    assert first.json()['cameraId'] == second.json()['cameraId']
     assert len(app.state.classroom.store.cameras()) == 1
+
+
+def test_verified_new_phone_key_replaces_stale_link_without_new_camera(usb_server,monkeypatch):
+    import run_usb
+    client,app,_=usb_server
+    monkeypatch.setattr(run_usb,'phone_get',lambda *args:({},b'{"name":"Phone","deviceId":"NIVRA-123456abcdef"}'))
+    origin={'origin':run_usb.ORIGIN}
+    first=client.post('/api/local/connect',headers=origin,json={'host':'192.168.1.4','code':'ABCD2345'})
+    prior=next(iter(app.state.usb.links.values()))['task']
+    second=client.post('/api/local/connect',headers=origin,json={'host':'192.168.1.4','code':'WXYZ2345'})
+    assert first.status_code==second.status_code==200 and first.json()['cameraId']==second.json()['cameraId']
+    assert prior.cancelled() and len(app.state.classroom.store.cameras())==1
 
 
 def test_mac_invite_creates_one_camera_using_tcp_peer_and_replay_cannot_undo_removal(usb_server, monkeypatch):

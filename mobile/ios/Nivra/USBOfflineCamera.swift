@@ -18,12 +18,18 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
     let capture = AVCaptureSession()
     private let queue = DispatchQueue(label: "work.tanishq.nivra.usb.camera", qos: .userInitiated)
     private let store = USBFrameStore()
-    private lazy var server = USBHTTPServer(store: store)
+    private let videoStore = LocalVideoStore()
+    private let analysisStore = NativeAnalysisStore()
+    private lazy var encoder = LocalVideoEncoder(store: videoStore)
+    private lazy var server = USBHTTPServer(store: store, videoStore: videoStore, analysisStore: analysisStore)
+    private var peopleVision: NativePeopleVision?
+    private var fightVision: NativeFightVision?
+    private var lastPeopleTimestamp = -Double.infinity
     private let context = CIContext(options: [.cacheIntermediates: false])
     private var output: AVCaptureVideoDataOutput?
     private var configured = false
     private var rotationAngle: CGFloat = 90
-    private var pacing = LocalFramePacer()
+    private var pacing = LocalFramePacer(fps: 5)
     private let jpegColorSpace = CGColorSpaceCreateDeviceRGB()
     private var captureKey = "" // Accessed only on the capture queue.
     private var generation = UUID() // Accessed only on the main queue.
@@ -76,7 +82,17 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
                         do {
                             try self.configure()
                             guard self.store.active(key) else { return }
-                            self.captureKey = key; self.pacing = LocalFramePacer()
+                            self.captureKey = key; self.pacing = LocalFramePacer(fps: 5)
+                            self.lastPeopleTimestamp = -Double.infinity
+                            self.encoder.reset(session: key)
+                            self.analysisStore.reset(session: key)
+                            self.peopleVision?.dispose()
+                            self.peopleVision = NativePeopleVision(callbackQueue: self.queue)
+                            self.fightVision?.stop()
+                            self.fightVision = NativeFightVision(callbackQueue: self.queue,
+                                onReport: { [weak self] report in self?.analysisStore.put(report, session: key) },
+                                onStatus: { [weak self] status in self?.analysisStore.status(status, session: key) })
+                            self.fightVision?.start(session: key)
                             self.capture.startRunning()
                             guard self.capture.isRunning else { throw NSError(domain: "NIVRAUSB", code: 2) }
                             self.server.start(session: key)
@@ -108,35 +124,67 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
         guard capture.canAddOutput(output) else { capture.removeInput(input); throw NSError(domain: "NIVRAUSB", code: 5) }
         capture.addOutput(output); self.output = output
         if let connection = output.connection(with: .video), connection.isVideoRotationAngleSupported(rotationAngle) { connection.videoRotationAngle = rotationAngle }
-        if device.activeFormat.videoSupportedFrameRateRanges.contains(where: { $0.minFrameRate <= 30 && $0.maxFrameRate >= 30 }) {
+        let forty = device.formats.first { format in
+            let size = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
+            return size.width == 1280 && size.height == 720 && format.videoSupportedFrameRateRanges.contains { $0.minFrameRate <= 40 && $0.maxFrameRate >= 40 }
+        }
+        if forty != nil || device.activeFormat.videoSupportedFrameRateRanges.contains(where: { $0.minFrameRate <= 30 && $0.maxFrameRate >= 30 }) {
             do {
                 try device.lockForConfiguration()
-                device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: 30)
-                device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: 30)
+                if let forty { device.activeFormat = forty }
+                let fps: Int32 = forty == nil ? 30 : 40
+                device.activeVideoMinFrameDuration = CMTime(value: 1, timescale: fps)
+                device.activeVideoMaxFrameDuration = CMTime(value: 1, timescale: fps)
                 device.unlockForConfiguration()
-            } catch { /* JPEG production remains capped even if sensor pacing is unavailable. */ }
+            } catch { /* The monitor reports received frames, never the requested rate. */ }
         }
         configured = true
     }
     func rotate(to angle: CGFloat) {
         queue.async { [weak self] in
-            self?.rotationAngle = angle
-            guard let connection = self?.output?.connection(with: .video), connection.isVideoRotationAngleSupported(angle) else { return }
+            guard let self, self.rotationAngle != angle,
+                  let connection = self.output?.connection(with: .video), connection.isVideoRotationAngleSupported(angle) else { return }
+            self.rotationAngle = angle
             connection.videoRotationAngle = angle
+            // Pre-rotation joints and video windows cannot describe new pixels.
+            if self.store.active(self.captureKey) {
+                let key = self.captureKey
+                self.encoder.reset(session: key); self.analysisStore.reset(session: key)
+                self.peopleVision?.dispose(); self.peopleVision = NativePeopleVision(callbackQueue: self.queue)
+                self.lastPeopleTimestamp = -Double.infinity
+                self.fightVision?.stop(); self.fightVision?.start(session: key)
+            }
         }
     }
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
         let now = ProcessInfo.processInfo.systemUptime
-        guard store.active(captureKey), let buffer = CMSampleBufferGetImageBuffer(sampleBuffer), pacing.admit(now) else { return }
+        guard store.active(captureKey), let buffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
+        let pts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000
+        guard pts.isFinite, pts >= 0 else { return }
+        let session = captureKey
+        encoder.append(sampleBuffer, session: session)
+        fightVision?.append(sampleBuffer, session: session)
+        if pts-lastPeopleTimestamp >= 200, let peopleVision,
+           peopleVision.submit(buffer, timestampMs: pts, completion: { [weak self] result in
+               if case .success(let report) = result { self?.analysisStore.put(report, session: session) }
+           }) { lastPeopleTimestamp = pts }
+        // JPEGs remain a low-rate review and browser-compatibility fallback.
+        guard pacing.admit(now) else { return }
         autoreleasepool {
             let source = CIImage(cvPixelBuffer: buffer)
             let scale = min(1, 960 / max(source.extent.width, source.extent.height))
             let image = source.transformed(by: CGAffineTransform(scaleX: scale, y: scale))
             let quality = CIImageRepresentationOption(rawValue: kCGImageDestinationLossyCompressionQuality as String)
             guard let jpeg = context.jpegRepresentation(of: image, colorSpace: jpegColorSpace, options: [quality: 0.6]), jpeg.count <= 1_500_000 else { return }
-            let pts = CMTimeGetSeconds(CMSampleBufferGetPresentationTimeStamp(sampleBuffer)) * 1000
             store.put(jpeg: jpeg, width: Int(image.extent.width.rounded()), height: Int(image.extent.height.rounded()), timestampMs: pts.isFinite && pts >= 0 ? pts : now * 1000, session: captureKey)
         }
+    }
+    func pair(with pairing: LocalMacPairing) {
+        // A fresh scan can arrive while capture is already open. Reuse its
+        // active camera key and apply the new invitation immediately.
+        pairingTask?.cancel(); pairingTask = nil
+        macPairing = pairing
+        if running { connectToMac() }
     }
     func connectToMac() {
         guard running, let pairing = macPairing, !code.isEmpty, pairingTask == nil else { return }
@@ -161,12 +209,14 @@ final class USBOfflineCamera: NSObject, ObservableObject, AVCaptureVideoDataOutp
     func stop(message: String = "Camera stopped. Tap Start camera when you are ready.") {
         generation = UUID(); pairingTask?.cancel(); pairingTask = nil; macPairing = nil
         macConnection = ""; macConnectionFailed = false; macNeedsSettings = false
-        store.stop(); server.stop()
+        store.stop(); server.stop(); analysisStore.stop(); videoStore.stop()
         running = false; starting = false; code = ""; lastMacPull = nil; self.message = message
         UIApplication.shared.isIdleTimerDisabled = false
         queue.async { [weak self] in
             guard let self else { return }
             self.captureKey = ""
+            self.encoder.stop(); self.fightVision?.stop(); self.peopleVision?.dispose()
+            self.fightVision = nil; self.peopleVision = nil
             if self.capture.isRunning { self.capture.stopRunning() }
         }
     }

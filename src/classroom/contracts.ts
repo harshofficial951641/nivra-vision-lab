@@ -20,14 +20,14 @@ export interface CameraLocation {
   framesReceived: number
   framesAnalyzed: number
   framesReplaced: number
-  compute?: 'device' | 'pc' | null
-  deviceStatus?: { state: 'loading' | 'ready' | 'error'; delegate: 'GPU' | 'CPU' | null; detail: string } | null
+  compute?: 'device' | 'pc' | 'native' | null
+  deviceStatus?: { state: 'loading' | 'ready' | 'error'; delegate: 'GPU' | 'CPU' | 'iOS' | null; detail: string } | null
   error?: string | null
   motionResult?: CameraLocation['result']
   motionStatus?: CameraLocation['deviceStatus']
   result?: {
     backend?: 'camera-device' | 'local-ai'
-    delegate?: 'GPU' | 'CPU'
+    delegate?: 'GPU' | 'CPU' | 'iOS'
     timestampMs: number
     inferenceMs: number
     evidenceTimestampMs: number

@@ -3,13 +3,14 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import OwnerOnboarding from './OwnerOnboarding'
 import { ApiError, type Snapshot, type CameraLocation } from '../classroom/contracts'
+import { NativeVideoBus } from '../classroom/nativeVideo'
 import type { useClassroom } from '../classroom/useClassroom'
 import type { GuardRecord } from '../command/types'
 const { api, session } = vi.hoisted(() => ({ api: vi.fn(), session: { mode: 'dev' as 'dev' | 'clerk' } }))
 vi.mock('../classroom/contracts', async importOriginal => ({ ...await importOriginal<typeof import('../classroom/contracts')>(), api }))
 vi.mock('../auth/context', () => ({ useSession: () => session }))
 const initial = (): Snapshot => ({ version: 3, type: 'snapshot', cameras: [], events: [], guards: [], site: { id: 's', name: '' }, analytics: { total: 0, pending: 0, resolved: 0 }, service: 'ready', publicOrigin: 'https://nivra.tanishq.work', retention: 'event-records-only', experimental: true, runtime: null })
-const live = (snapshot: Snapshot, connection: 'connected' | 'disconnected' = 'connected'): ReturnType<typeof useClassroom> => ({ snapshot, connection, error: '', previews: {}, analysisPreviews: {}, apiAvailable: connection === 'connected' })
+const live = (snapshot: Snapshot, connection: 'connected' | 'disconnected' = 'connected'): ReturnType<typeof useClassroom> => ({ snapshot, connection, error: '', previews: {}, analysisPreviews: {}, apiAvailable: connection === 'connected', nativeVideo: new NativeVideoBus() })
 const camera = { id: 'c1', name: 'Main entrance', building: 'Workshop', floor: 'Ground', enabled: true, feed: 'waiting', gps: null } as CameraLocation
 const guard: GuardRecord = { id: 'g1', callsign: 'G1', name: 'Asha', floorName: 'Floor 2', userId: null, email: null, floorId: null, post: null, shift: 'off', presence: { online: false, lastSeen: null }, push: false }
 const fill = (name: string, value: string) => fireEvent.change(screen.getByRole('textbox', { name }), { target: { value } })

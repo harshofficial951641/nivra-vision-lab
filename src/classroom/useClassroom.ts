@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { api, openSocket, type Snapshot } from './contracts'
 import { authenticateSocket } from '../auth/session'
+import { NativeVideoBus, nativeVideoPacket } from './nativeVideo'
 import { PreviewHistory, type CameraPreview } from './previewHistory'
 export function useClassroom(
   enabled: boolean,
@@ -20,8 +21,10 @@ export function useClassroom(
   const [apiAvailable, setApiAvailable] = useState(false)
   const [previews, setPreviews] = useState<Record<string, CameraPreview>>({})
   const [analysisPreviews, setAnalysisPreviews] = useState<Record<string, CameraPreview>>({})
+  const [nativeVideo] = useState(() => new NativeVideoBus())
   const latest = useRef<Snapshot | null>(null)
   useEffect(() => {
+    nativeVideo.clear()
     if (!enabled) { latest.current = null; setSnapshot(null); setPreviews({}); setAnalysisPreviews({}); setApiAvailable(false); setConnection('disconnected'); return }
     latest.current = null
     setSnapshot(null); setApiAvailable(false); setPreviews({}); setAnalysisPreviews({})
@@ -68,6 +71,7 @@ export function useClassroom(
       if (Object.keys(batch).length) setPreviews(old => ({ ...old, ...batch }))
     }
     const clearFrames = () => {
+      nativeVideo.clear()
       clearTimeout(paintTimer)
       paintTimer = 0
       pending.clear()
@@ -89,6 +93,7 @@ export function useClassroom(
           .filter((camera) => camera.feed === 'live')
           .map((camera) => [camera.id, camera.generation] as const),
       )
+      nativeVideo.retain(active)
       urls.forEach((url, id) => {
         if (active.get(id) !== previewGenerations.get(id)) {
           URL.revokeObjectURL(url)
@@ -162,18 +167,17 @@ export function useClassroom(
               setError('')
               applySnapshot(data)
             } else {
-              const bytes = event.data as ArrayBuffer,
-                size = new DataView(bytes).getUint32(0, true)
-              if (size > 1024 || size + 4 >= bytes.byteLength) return
-              const meta = JSON.parse(
-                new TextDecoder().decode(bytes.slice(4, 4 + size)),
-              ) as {
-                cameraId: string
-                generation: string
-                timestampMs: number
-                width: number
-                height: number
+              const bytes = event.data as ArrayBuffer
+              if (bytes.byteLength < 5) return
+              const size = new DataView(bytes).getUint32(0, true)
+              if (size > 24576 || size + 4 >= bytes.byteLength) return
+              const meta = JSON.parse(new TextDecoder().decode(bytes.slice(4, 4 + size)))
+              if (meta.encoding === 'h264') {
+                const packet = nativeVideoPacket(bytes)
+                if (packet) nativeVideo.publish(packet)
+                return
               }
+              if (size > 1024) return
               if (!latest.current?.cameras.some((c) => c.id === meta.cameraId))
                 return
               // Coalesce cameras into one paint and decode only the newest
@@ -244,6 +248,7 @@ export function useClassroom(
     void connect()
     return () => {
       stopped = true
+      nativeVideo.clear()
       epoch++
       requests.abort()
       window.removeEventListener('online', resume)
@@ -257,6 +262,6 @@ export function useClassroom(
       urls.forEach((url) => URL.revokeObjectURL(url))
       history.clear()
     }
-  }, [enabled, tokenAuth])
-  return { snapshot, connection, error, previews, analysisPreviews, apiAvailable }
+  }, [enabled, tokenAuth, nativeVideo])
+  return { snapshot, connection, error, previews, analysisPreviews, apiAvailable, nativeVideo }
 }

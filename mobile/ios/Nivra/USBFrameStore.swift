@@ -49,7 +49,7 @@ final class USBFrameStore {
     func status(session: String) -> Data? {
         lock.lock(); defer { lock.unlock() }
         guard key == session, !key.isEmpty else { return nil }
-        let object: [String: Any] = ["deviceId": LocalCameraNetwork.serviceName(), "name": name, "width": frame?.width ?? 0, "height": frame?.height ?? 0,
+        let object: [String: Any] = ["deviceId": LocalCameraNetwork.serviceName(), "name": name, "videoEncoding": "h264", "analysisProtocol": "native-analysis-v1", "width": frame?.width ?? 0, "height": frame?.height ?? 0,
             "sequence": frame?.sequence ?? 0, "timestampMs": frame?.timestampMs ?? 0,
             "lastMacPullAt": lastPull.map { $0.timeIntervalSince1970 * 1000 } as Any? ?? NSNull()]
         return try? JSONSerialization.data(withJSONObject: object)
@@ -62,10 +62,11 @@ final class USBFrameStore {
 }
 
 
-/// Select current sensor frames at 20 Hz without accumulating delayed work.
+/// Select current sensor frames without accumulating delayed work.
 struct LocalFramePacer {
     private var nextDue: Double?
-    private let interval = 1.0 / 20.0
+    private let interval: Double
+    init(fps: Double = 20) { interval = 1.0 / max(1, min(60, fps)) }
     mutating func admit(_ now: Double) -> Bool {
         guard now.isFinite, now >= 0 else { return false }
         guard let deadline = nextDue else { nextDue = now + interval; return true }

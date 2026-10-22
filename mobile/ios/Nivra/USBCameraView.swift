@@ -112,6 +112,12 @@ struct USBCameraView: View {
             camera.start(name: name, pairing: pairing)
         }
         .onDisappear { camera.stop() }
+        .onChange(of: pairing) { _, next in
+            if let next {
+                if camera.running || camera.starting { camera.pair(with: next) }
+                else { camera.start(name: name, pairing: next) }
+            }
+        }
         .onChange(of: phase) { _, next in
             if next == .background { camera.stop(message: "Camera paused. Tap Start camera to resume."); onPairingConsumed?() }
         }

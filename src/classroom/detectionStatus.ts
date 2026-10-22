@@ -3,14 +3,15 @@ import type { DeviceResult, DeviceStatus } from './deviceAnalysis'
 export type DetectionObservation = Pick<DeviceResult, 'timestampMs' | 'inferenceMs' | 'observedPeople' | 'usablePeople' | 'conflict'>
 
 export type DetectionPhase = 'idle' | 'starting' | 'live' | 'stopped' | 'reconnecting'
+type DetectionHealth = Pick<DeviceStatus, 'state' | 'detail'> & { delegate?: string | null }
 export interface DetectionStatusInput {
   phase: DetectionPhase
   /** Use the same monotonic clock as the reports' camera-source timestampMs. */
   now: number
   crowd?: DetectionObservation | null
-  crowdStatus?: DeviceStatus | null
+  crowdStatus?: DetectionHealth | null
   motion?: DetectionObservation | null
-  motionStatus?: DeviceStatus | null
+  motionStatus?: DetectionHealth | null
 }
 export interface DetectionStatusSummary {
   state: 'starting' | 'monitoring' | 'review' | 'limited' | 'unavailable'
@@ -27,7 +28,7 @@ function fresh<T extends DetectionObservation>(report: T | null | undefined, now
   // Total source age includes model computation; slow work cannot extend freshness.
   return age >= 0 && age <= ageLimit ? report : null
 }
-const usable = (report: DetectionObservation | null, status?: DeviceStatus | null) =>
+const usable = (report: DetectionObservation | null, status?: DetectionHealth | null) =>
   !!report && status?.state !== 'error' && report.conflict.status !== 'limited' && report.conflict.status !== 'warming' && count(report.usablePeople) >= 2
 
 /** One camera status, without merging identities or replaying stale alerts. */

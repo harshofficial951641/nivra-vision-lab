@@ -93,6 +93,7 @@ function Modal({ title, close, children, full, navigate }: { title: string; clos
 }
 
 interface CameraFocusProps {
+  nativeVideo?: import('../classroom/nativeVideo').NativeVideoBus
   cameras: WallCamera[]
   cameraId: string
   events: Incident[]
@@ -104,7 +105,7 @@ interface CameraFocusProps {
   close: () => void
 }
 
-export function CameraFocus({ cameras, cameraId, events, now, pinned, change, togglePin, openMap, close }: CameraFocusProps) {
+export function CameraFocus({ cameras, cameraId, events, now, pinned, change, togglePin, openMap, close, nativeVideo }: CameraFocusProps) {
   const start = useRef<{ x: number; y: number } | null>(null)
   const frame = useRef<HTMLDivElement>(null)
   const index = cameras.findIndex(camera => camera.id === cameraId)
@@ -131,7 +132,7 @@ export function CameraFocus({ cameras, cameraId, events, now, pinned, change, to
         if (Math.abs(dx) >= 64 && Math.abs(dx) > Math.abs(dy) * 1.5) navigate(dx < 0 ? 1 : -1)
       }}>
       <div className="cm-focus-frame" key={camera.id} ref={frame}>
-        <CameraTile camera={camera} events={events} now={now} size="hero" pinned={pinned.includes(camera.id)} />
+        <CameraTile nativeVideo={nativeVideo} camera={camera} events={events} now={now} size="hero" pinned={pinned.includes(camera.id)} />
       </div>
     </div>
     <footer className="cm-full-actions">
@@ -443,7 +444,7 @@ export default function CommandWall() {
                       <X aria-hidden />
                     </button>
                   </header>
-                  <CameraTile camera={selectedCamera} events={events} now={now} size="hero" pinned={pinned.includes(selectedCamera.id)} />
+                  <CameraTile nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo} camera={selectedCamera} events={events} now={now} size="hero" pinned={pinned.includes(selectedCamera.id)} />
                   <div className="cm-selected-foot">
                     <span className="cm-muted">
                       {cameraPlace(selectedCamera)} · {gpsStatus(selectedCamera.gps, now)}
@@ -459,6 +460,7 @@ export default function CommandWall() {
                     {ordered.slice(0, 4).map((camera) => (
                       <div role="listitem" key={camera.id}>
                         <CameraTile
+                          nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo}
                           camera={camera}
                           events={events}
                           now={now}
@@ -481,6 +483,7 @@ export default function CommandWall() {
                   <div className="cm-grid4">
                     {ordered.slice(0, 4).map((camera) => (
                       <CameraTile
+                        nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo}
                         key={camera.id}
                         camera={camera}
                         events={events}
@@ -511,6 +514,7 @@ export default function CommandWall() {
             <div className="cm-grid-all" style={{ '--camera-columns': ordered.length <= 1 ? 1 : ordered.length <= 4 ? 2 : ordered.length <= 9 ? 3 : 4, '--camera-rows': Math.ceil(ordered.length / (ordered.length <= 1 ? 1 : ordered.length <= 4 ? 2 : ordered.length <= 9 ? 3 : 4)) || 1 } as CSSProperties}>
               {ordered.map((camera: WallCamera) => (
                 <CameraTile
+                  nativeVideo={modal || reviewEvent ? undefined : data.nativeVideo}
                   key={camera.id}
                   camera={camera}
                   events={events}
@@ -547,7 +551,7 @@ export default function CommandWall() {
           <GuardRoster guards={guards} sample={sample} admin={admin} now={now} />
         </Modal>
       )}
-      {modal && typeof modal === 'object' && <CameraFocus cameras={ordered} cameraId={modal.full} events={events} now={now} pinned={pinned}
+      {modal && typeof modal === 'object' && <CameraFocus nativeVideo={data.nativeVideo} cameras={ordered} cameraId={modal.full} events={events} now={now} pinned={pinned}
         change={id => { setSelected(id); setModal({ full: id }) }} togglePin={togglePin}
         openMap={id => { setModal(null); setSelected(id); setSelectedGuard(null); setMode('map') }} close={() => setModal(null)} />}
 

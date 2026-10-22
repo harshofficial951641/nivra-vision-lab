@@ -8,10 +8,14 @@ final class USBHTTPServer {
     private var clients: [UUID: (NWConnection, DispatchWorkItem)] = [:]
     private var generation = UUID()
     private let store: USBFrameStore
+    private let videoStore: LocalVideoStore?
+    private let analysisStore: NativeAnalysisStore?
     var onReady: (() -> Void)?
     var onFailure: (() -> Void)?
     var onPull: ((Date) -> Void)?
-    init(store: USBFrameStore) { self.store = store }
+    init(store: USBFrameStore, videoStore: LocalVideoStore? = nil, analysisStore: NativeAnalysisStore? = nil) {
+        self.store = store; self.videoStore = videoStore; self.analysisStore = analysisStore
+    }
 
     func start(session: String, transport: LocalCameraTransport = .wireless) {
         queue.async { [weak self] in
@@ -104,7 +108,23 @@ final class USBHTTPServer {
             headers["content-length"] == nil || headers["content-length"] == "0",
             text[end.upperBound...].isEmpty else { send(connection, id: id, status: 400, body: Data()); return }
         guard first[0] == "GET" else { send(connection, id: id, status: 405, body: Data()); return }
+        if first[1].hasPrefix("/v1/video") {
+            guard let target = URLComponents(string: String(first[1])), target.path == "/v1/video", target.fragment == nil,
+                  target.scheme == nil, target.host == nil,
+                  (target.queryItems ?? []).count <= 1,
+                  (target.queryItems ?? []).allSatisfy({ $0.name == "after" && $0.value?.range(of: "^[0-9]{1,20}$", options: .regularExpression) != nil && UInt64($0.value!) != nil }) else {
+                send(connection, id: id, status: 400, body: Data()); return
+            }
+            let after = target.queryItems?.first?.value.flatMap(UInt64.init)
+            if let date = store.pulled(session: session) { onPull?(date) }
+            guard let body = videoStore?.response(after: after, session: session) else { send(connection, id: id, status: 204, body: Data()); return }
+            send(connection, id: id, status: 200, body: body, type: "application/json")
+            return
+        }
         switch first[1] {
+        case "/v1/analysis":
+            guard let body = analysisStore?.response(session: session), body.count <= 3_000_000 else { send(connection, id: id, status: 204, body: Data()); return }
+            send(connection, id: id, status: 200, body: body, type: "application/json")
         case "/v1/status":
             guard let body = store.status(session: session) else { finish(id); return }
             send(connection, id: id, status: 200, body: body, type: "application/json")
@@ -117,7 +137,7 @@ final class USBHTTPServer {
         }
     }
     private func send(_ connection: NWConnection, id: UUID, status: Int, body: Data, type: String = "application/octet-stream", extra: [String: String] = [:]) {
-        let reason = [200:"OK", 400:"Bad Request", 401:"Unauthorized", 404:"Not Found", 405:"Method Not Allowed", 431:"Request Header Fields Too Large", 503:"Service Unavailable"][status] ?? "Error"
+        let reason = [200:"OK", 204:"No Content", 400:"Bad Request", 401:"Unauthorized", 404:"Not Found", 405:"Method Not Allowed", 431:"Request Header Fields Too Large", 503:"Service Unavailable"][status] ?? "Error"
         var header = "HTTP/1.1 \(status) \(reason)\r\nContent-Length: \(body.count)\r\nContent-Type: \(type)\r\nCache-Control: no-store\r\nConnection: close\r\n"
         for (key, value) in extra { header += "\(key): \(value)\r\n" }
         header += "\r\n"

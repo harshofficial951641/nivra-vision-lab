@@ -14,6 +14,8 @@ targets:
     platform: iOS
     sources:
       - path: Nivra
+      - path: Models/NivraX3D.mlpackage
+      - path: Models/provenance.json
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: work.tanishq.nivra.ios
