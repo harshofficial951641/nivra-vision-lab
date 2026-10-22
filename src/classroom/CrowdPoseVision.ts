@@ -33,7 +33,7 @@ export class CrowdPoseVision {
         if(data.type==='ready'){this.delegate=data.delegate??'CPU';clearTimeout(this.timer);this.ready=true;this.resolveReady?.();this.resolveReady=this.rejectReady=null}
         if(data.type==='result'&&data.result.timestampMs===this.pending?.timestamp){clearTimeout(this.timer);this.inferred=true;const pending=this.pending;this.pending=null;pending.resolve(data.result)}
       }
-      this.timer=setTimeout(()=>this.fail(new Error('Crowd model loading timed out.')),30000)
+      this.timer=setTimeout(()=>this.fail(new Error('Crowd model loading timed out.')),90000)
       worker.postMessage({type:'init',model:this.model})
     }catch(error){this.fail(error instanceof Error?error:new Error('Crowd model unavailable.'))}
     return this.initialization
@@ -47,6 +47,10 @@ export class CrowdPoseVision {
     })
   }
   private fail(error:Error){
+    if(!this.disposed&&error.message!=='Crowd detection stopped.'){
+      const category=error.message==='Crowd model loading timed out.'?'loading-timeout':/inference exceeded/.test(error.message)?'inference-timeout':'runtime'
+      console.warn('[NIVRA crowd detection]',category)
+    }
     this.disposed=true;this.ready=false;clearTimeout(this.timer);this.worker?.terminate();this.worker=null
     this.rejectReady?.(error);this.resolveReady=this.rejectReady=null
     this.pending?.reject(error);this.pending=null

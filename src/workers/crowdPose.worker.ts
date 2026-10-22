@@ -12,7 +12,7 @@ self.onmessage=async({data}:{data:{type:'init';model:CrowdPoseModel}|{type:'fram
       if(url.origin!==self.location.origin)throw new Error('Crowd model must use this site.')
       ort.env.wasm.wasmPaths=new URL(`${import.meta.env.BASE_URL}onnxruntime/`,self.location.origin).href
       ort.env.wasm.numThreads=typeof crossOriginIsolated!=='undefined'&&crossOriginIsolated?Math.min(2,navigator.hardwareConcurrency||1):1
-      const response=await fetch(url)
+      const response=await fetch(url,{cache:'force-cache'})
       if(!response.ok)throw new Error('Could not load crowd detection.')
       const bytes=await response.arrayBuffer()
       if(bytes.byteLength>64*1024*1024)throw new Error('Crowd model exceeds its size limit.')

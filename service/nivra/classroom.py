@@ -18,7 +18,7 @@ from urllib.parse import urlsplit
 from pathlib import Path
 from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Path as PathParam, Request, Response, WebSocket, WebSocketDisconnect
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
 from .classroom_store import Store
 from .socket_tickets import SocketTickets
 from .auth import AuthService, Principal, SocketAuth, allowed_origins, install_routes
@@ -35,6 +35,47 @@ ADMIN_COOKIE = 'nivra_operator'
 CAMERA_COOKIE = 'nivra_publisher'
 GUARD_COOKIE = 'nivra_guard'
 GUARD_SNAPSHOT_SECONDS = 10
+
+
+def camera_failure_reason(error):
+    """Expose a bounded protocol category, never validation inputs or secrets."""
+    if isinstance(error, asyncio.TimeoutError):
+        return 'Camera message timeout'
+    if isinstance(error, ValidationError):
+        return 'Camera message schema rejected'
+    if isinstance(error, json.JSONDecodeError):
+        return 'Camera message JSON rejected'
+    reasons = {
+        'Camera session expired or revoked': 'Camera session expired or revoked',
+        'Invalid device report size': 'Camera metadata size exceeded',
+        'Camera metadata rate exceeded': 'Camera metadata rate exceeded',
+        'Camera video rate exceeded': 'Camera video rate exceeded',
+        'Invalid camera message': 'Camera message object required',
+        'Device analysis not ready': 'Camera analysis not ready',
+        'Unexpected compute delegate': 'Camera analysis delegate mismatch',
+        'Device timestamps must increase': 'Camera analysis timestamp repeated',
+        'Source timestamps must increase': 'Camera frame timestamp repeated',
+        'Frame rate exceeded': 'Camera JPEG rate exceeded',
+        'Video must begin at a keyframe': 'Camera video keyframe required',
+        'Video clocks must increase': 'Camera video timestamp or sequence repeated',
+        'Invalid video clock': 'Camera video clock rejected',
+        'Invalid video batch': 'Camera video batch rejected',
+        'Video batch too large': 'Camera video batch size exceeded',
+        'Video metadata too large': 'Camera video metadata size exceeded',
+        'Invalid encoded video size': 'Camera encoded video size rejected',
+        'Invalid encoded video': 'Camera encoded video rejected',
+        'Invalid video size': 'Camera video size rejected',
+        'Video codec differs from configuration': 'Camera video codec mismatch',
+        'Truncated AVCC length': 'Camera video length truncated',
+        'Truncated AVCC NAL': 'Camera video payload truncated',
+        'Unknown device message': 'Camera message type rejected',
+        'Native compute negotiation must precede video': 'Camera native negotiation rejected',
+        'Browser video requires the paired device stream': 'Camera browser negotiation rejected',
+        'Browser video was not negotiated': 'Camera browser video not negotiated',
+        'Native video was not negotiated': 'Camera native video not negotiated',
+        'Native analysis was not negotiated': 'Camera native analysis not negotiated',
+    }
+    return reasons.get(str(error), 'Camera packet rejected')
 
 
 def pc_pose_payload(poses):
@@ -1030,7 +1071,9 @@ class Classroom:
                         video_message = data.get('type') in ('native-video-v1','browser-video-v1')
                         recent = recent_video if video_message else recent_reports
                         while recent and now-recent[0] > 1: recent.popleft()
-                        if len(recent) >= (40 if video_message else 24) or (not video_message and length > MAX_REPORT_BYTES): raise ValueError('Invalid device report rate or size')
+                        if not video_message and length > MAX_REPORT_BYTES: raise ValueError('Invalid device report size')
+                        if len(recent) >= (40 if video_message else 24):
+                            raise ValueError('Camera video rate exceeded' if video_message else 'Camera metadata rate exceeded')
                         recent.append(now)
                         if data.get('type') == 'native-hello':
                             if not self.state.get('nativeCamera') or live['frames'] or live.get('nativeHello') or data != {'type':'native-hello','version':1}:
@@ -1164,8 +1207,8 @@ class Classroom:
                     metadata = json.dumps({'cameraId':camera_id,'generation':generation,'timestampMs':header.timestampMs,'width':frame.shape[1],'height':frame.shape[0]}).encode()
                     await self.broadcast(struct.pack('<I',len(metadata))+metadata+packet[4+length:],binary=True,camera_id=camera_id)
             except (WebSocketDisconnect,RuntimeError): pass
-            except (ValueError,asyncio.TimeoutError):
-                try: await socket.close(code=1008,reason='Invalid frame or camera timed out')
+            except (ValueError,asyncio.TimeoutError) as error:
+                try: await socket.close(code=1008,reason=camera_failure_reason(error))
                 except Exception: pass
             except Exception:
                 # Invalid text/image packets must not log payloads or leave a

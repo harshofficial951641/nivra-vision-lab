@@ -9,7 +9,7 @@ from fastapi.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 from nivra.server import create_app
 from nivra.classroom_store import Store
-from nivra.classroom import digest, GUARD_COOKIE
+from nivra.classroom import camera_failure_reason, digest, GUARD_COOKIE
 from test_server import FakeModels, FakePipeline, packet
 
 ORIGIN = {'origin':'http://127.0.0.1:8765'}
@@ -31,6 +31,67 @@ def pair(client, camera_id):
     response = client.post('/api/v2/camera/pair',json={'token':token},headers=ORIGIN)
     assert response.status_code == 200
     return token
+
+
+@pytest.mark.parametrize('message,reason', [
+    ({'type':'device-result','privateDiagnostic':'secret-value'}, 'Camera message schema rejected'),
+    ({'type':'unrecognized-secret-value'}, 'Camera message type rejected'),
+])
+def test_camera_failure_categories_do_not_echo_input(tmp_path, message, reason):
+    app=create_app(database=tmp_path/'diagnostic.sqlite',relay_only=True)
+    with TestClient(app,base_url=ORIGIN['origin']) as client:
+        operator(client);cam=camera(client);pair(client,cam['id'])
+        with client.websocket_connect('ws://127.0.0.1:8765/api/v2/camera/stream',headers=ORIGIN) as ws:
+            ws.receive_json()
+            ws.send_json(dict(type='device-status',state='ready',delegate='GPU',detail='Ready'))
+            ws.send_json(message)
+            with pytest.raises(WebSocketDisconnect) as closed: ws.receive_json()
+            assert closed.value.code==1008
+            assert closed.value.reason==reason
+            assert 'secret' not in closed.value.reason
+
+
+def test_camera_failure_unknown_details_and_timeout_are_bounded():
+    assert camera_failure_reason(ValueError('private input '+('secret'*10000)))=='Camera packet rejected'
+    assert camera_failure_reason(asyncio.TimeoutError())=='Camera message timeout'
+
+
+def test_camera_metadata_rate_has_distinct_safe_close_reason(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import nivra.classroom as classroom_module
+    monkeypatch.setattr(classroom_module,'time',SimpleNamespace(monotonic=lambda:100.,time=time.time))
+    app=create_app(database=tmp_path/'rate.sqlite',relay_only=True)
+    with TestClient(app,base_url=ORIGIN['origin']) as client:
+        operator(client);cam=camera(client);pair(client,cam['id'])
+        with client.websocket_connect('ws://127.0.0.1:8765/api/v2/camera/stream',headers=ORIGIN) as ws:
+            ws.receive_json()
+            for _ in range(25):
+                ws.send_json(dict(type='device-status',state='ready',delegate='GPU',detail='Ready'))
+            with pytest.raises(WebSocketDisconnect) as closed: ws.receive_json()
+            assert closed.value.code==1008
+            assert closed.value.reason=='Camera metadata rate exceeded'
+
+
+def test_camera_same_model_and_timestamp_allowed_across_lanes_but_not_within_lane(tmp_path):
+    app=create_app(database=tmp_path/'lanes.sqlite',relay_only=True)
+    with TestClient(app,base_url=ORIGIN['origin']) as client:
+        operator(client);cam=camera(client);pair(client,cam['id'])
+        with client.websocket_connect('ws://127.0.0.1:8765/api/v2/camera/stream',headers=ORIGIN) as ws:
+            ws.receive_json()
+            for kind in ('device-status','device-motion-status'):
+                ws.send_json(dict(type=kind,state='ready',delegate='CPU',detail='Ready'))
+            ws.send_bytes(packet(1000));ws.receive_json()
+            report=dict(model='nivra-browser-motion-v1',delegate='CPU',timestampMs=1000,
+                inferenceMs=25,observedPeople=0,usablePeople=0,tracks=[],events=[],
+                conflict=dict(status='clear',explanation='No people observed'))
+            ws.send_json(dict(type='device-result',**report))
+            ws.send_json(dict(type='device-motion',**report))
+            ws.send_bytes(packet(1100));ws.receive_json()
+            live=app.state.classroom.live[cam['id']]
+            assert live['lastDeviceTimestamp']==live['lastMotionTimestamp']==1000
+            ws.send_json(dict(type='device-motion',**report))
+            with pytest.raises(WebSocketDisconnect) as closed: ws.receive_json()
+            assert closed.value.reason=='Camera analysis timestamp repeated'
 
 
 def test_distinct_device_interactions_are_saved_without_camera_global_cooldown(tmp_path):
