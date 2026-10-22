@@ -285,6 +285,12 @@ export default function Publisher() {
           const peer = await openSocket('/camera/stream', { signal: attempt.signal })
           if (current !== generation.current) { peer.close(); return }
           socket.current = peer
+          // close() may remain CLOSING on a dead connection. Detach and retry
+          // immediately on our own deadlines instead of waiting for onclose.
+          const recover = (reason: string) => {
+            if (current === generation.current && socket.current === peer)
+              retryConnection(new Error(reason))
+          }
           const canvas = document.createElement('canvas')
           const flow = new FrameWindow()
           const encodedFlow = new FrameWindow()
@@ -345,7 +351,7 @@ export default function Publisher() {
             const startedAt = performance.now()
             report()
             if (flow.timedOut(startedAt)) {
-              peer.close()
+              recover('Camera acknowledgement timed out.')
               return
             }
             if (flow.canSend(startedAt, peer.bufferedAmount) && peer.readyState === WebSocket.OPEN && video.current) {
@@ -360,7 +366,7 @@ export default function Publisher() {
                   }),
                 ])
               } catch {
-                if (!compressed) { peer.close(); return }
+                if (!compressed) { recover('Camera preview interrupted.'); return }
                 packet = null
               } finally {
                 clearTimeout(deadline)
@@ -380,7 +386,7 @@ export default function Publisher() {
             if (current === generation.current && socket.current === peer)
               timeout.current = window.setTimeout(() => void send(), Math.max(0, (compressed ? 1000 : detector.current?.budget.previewInterval ?? 84) - (performance.now() - startedAt)))
           }
-          connectionDeadline.current = window.setTimeout(() => { if (current === generation.current && !sending) peer.close() }, 15000)
+          connectionDeadline.current = window.setTimeout(() => { if (!sending) recover('Camera handshake timed out.') }, 15000)
           peer.onmessage = (event) => {
             if (current !== generation.current || socket.current !== peer) return
             let data: { type: string; timestampMs?: number; browserVideo?: boolean; version?: number }
@@ -399,7 +405,7 @@ export default function Publisher() {
               if (data.browserVideo) peer.send(JSON.stringify({ type: 'browser-video-hello', version: 1 }))
               clearInterval(transportWatchdog.current)
               transportWatchdog.current = window.setInterval(() => {
-                if (current === generation.current && socket.current === peer && (performance.now()-lastAcknowledgedAt > 8000 || flow.timedOut(performance.now()) || encodedFlow.timedOut(performance.now()))) peer.close()
+                if (current === generation.current && socket.current === peer && (performance.now()-lastAcknowledgedAt > 8000 || flow.timedOut(performance.now()) || encodedFlow.timedOut(performance.now()))) recover('Camera acknowledgement timed out.')
               }, 500)
               void send()
             }

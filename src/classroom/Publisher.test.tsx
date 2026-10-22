@@ -277,6 +277,43 @@ describe('Camera phone GPS pairing', () => {
 })
 
 describe('camera LAN recovery',()=>{
+  it.each(['handshake', 'acknowledgement'] as const)('recovers a %s timeout even when the old socket never emits close',async phase=>{
+    vi.useFakeTimers()
+    api.mockResolvedValue({id:'C1',name:'Gate',gps:null})
+    framePacket.mockResolvedValue(new ArrayBuffer(8))
+    const makePeer=()=>({readyState:WebSocket.OPEN as number,bufferedAmount:0,send:vi.fn(),close:vi.fn(),onclose:null as (()=>void)|null,onmessage:null as ((event:{data:string})=>void)|null})
+    const first=makePeer(),second=makePeer()
+    // A blackholed close handshake must not be the application's retry clock.
+    first.close.mockImplementation(()=>{first.readyState=WebSocket.CLOSING})
+    openSocket.mockResolvedValueOnce(first).mockResolvedValueOnce(second)
+    const track={stop:vi.fn(),addEventListener:vi.fn()}
+    const getUserMedia=vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})
+    vi.stubGlobal('isSecureContext',true)
+    vi.stubGlobal('navigator',{mediaDevices:{getUserMedia}})
+    vi.spyOn(HTMLMediaElement.prototype,'play').mockResolvedValue()
+    await act(async()=>render(<Publisher />))
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Allow camera & start'})))
+    if(phase==='acknowledgement') await act(async()=>first.onmessage?.({data:'{"type":"ready"}'}))
+    await act(async()=>{await vi.advanceTimersByTimeAsync(phase==='handshake'?15000:8500)})
+    expect(first.close).toHaveBeenCalledOnce()
+    expect(first.onclose).toBeNull()
+    expect(screen.getByText('Reconnecting…')).toBeInTheDocument()
+    await act(async()=>{await vi.advanceTimersByTimeAsync(500)})
+    expect(openSocket).toHaveBeenCalledTimes(2)
+    // Late callbacks from the retired peer cannot start an extra stream or retry.
+    act(()=>first.onmessage?.({data:'{"type":"ready"}'}))
+    await act(async()=>second.onmessage?.({data:'{"type":"ready"}'}))
+    const stamp=framePacket.mock.calls.at(-1)![2]
+    act(()=>second.onmessage?.({data:JSON.stringify({type:'accepted',timestampMs:stamp})}))
+    expect(screen.getByText('Live',{exact:true})).toBeInTheDocument()
+    expect(getUserMedia).toHaveBeenCalledOnce()
+    expect(createDetector).toHaveBeenCalledOnce()
+    expect(track.stop).not.toHaveBeenCalled()
+    fireEvent.click(screen.getByRole('button',{name:'Stop camera'}))
+    await act(async()=>{await vi.advanceTimersByTimeAsync(20000)})
+    expect(openSocket).toHaveBeenCalledTimes(2)
+    expect(vi.getTimerCount()).toBe(0)
+  })
   it('connects and retries despite an offline network hint, preserves a healthy peer, and never restarts after Stop',async()=>{
     vi.useFakeTimers()
     api.mockResolvedValue({id:'C1',name:'Gate',gps:null})
