@@ -1053,7 +1053,10 @@ class Classroom:
             self.live[camera_id] = live
             last_timestamp = -1
             recent_frames = deque()
-            recent_reports = deque()
+            # A network may deliver two seconds of paced metadata together.
+            # Bound that burst while retaining a sustained 24-message/s budget.
+            metadata_tokens = 48.0
+            metadata_refilled = time.monotonic()
             recent_video = deque()
             try:
                 await socket.send_json({'type':'ready','cameraId':camera_id,'generation':generation,'maxFps':12,'browserVideo':live['compute'] == 'device'})
@@ -1069,12 +1072,16 @@ class Classroom:
                         data = json.loads(text)
                         if not isinstance(data,dict): raise ValueError('Invalid camera message')
                         video_message = data.get('type') in ('native-video-v1','browser-video-v1')
-                        recent = recent_video if video_message else recent_reports
-                        while recent and now-recent[0] > 1: recent.popleft()
                         if not video_message and length > MAX_REPORT_BYTES: raise ValueError('Invalid device report size')
-                        if len(recent) >= (40 if video_message else 24):
-                            raise ValueError('Camera video rate exceeded' if video_message else 'Camera metadata rate exceeded')
-                        recent.append(now)
+                        if video_message:
+                            while recent_video and now-recent_video[0] > 1: recent_video.popleft()
+                            if len(recent_video) >= 40: raise ValueError('Camera video rate exceeded')
+                            recent_video.append(now)
+                        else:
+                            metadata_tokens = min(48.0, metadata_tokens + max(0,now-metadata_refilled)*24)
+                            metadata_refilled = now
+                            if metadata_tokens < 1: raise ValueError('Camera metadata rate exceeded')
+                            metadata_tokens -= 1
                         if data.get('type') == 'native-hello':
                             if not self.state.get('nativeCamera') or live['frames'] or live.get('nativeHello') or data != {'type':'native-hello','version':1}:
                                 raise ValueError('Native compute negotiation must precede video')

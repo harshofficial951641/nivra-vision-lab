@@ -65,10 +65,44 @@ def test_camera_metadata_rate_has_distinct_safe_close_reason(tmp_path, monkeypat
         operator(client);cam=camera(client);pair(client,cam['id'])
         with client.websocket_connect('ws://127.0.0.1:8765/api/v2/camera/stream',headers=ORIGIN) as ws:
             ws.receive_json()
-            for _ in range(25):
+            for _ in range(49):
                 ws.send_json(dict(type='device-status',state='ready',delegate='GPU',detail='Ready'))
             with pytest.raises(WebSocketDisconnect) as closed: ws.receive_json()
             assert closed.value.code==1008
+            assert closed.value.reason=='Camera metadata rate exceeded'
+
+
+def test_camera_paced_metadata_can_arrive_in_two_second_batches(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import nivra.classroom as classroom_module
+    clock=[100.]
+    monkeypatch.setattr(classroom_module,'time',SimpleNamespace(monotonic=lambda:clock[0],time=time.time))
+    app=create_app(database=tmp_path/'batched.sqlite',relay_only=True)
+    with TestClient(app,base_url=ORIGIN['origin']) as client:
+        operator(client);cam=camera(client);pair(client,cam['id'])
+        with client.websocket_connect('ws://127.0.0.1:8765/api/v2/camera/stream',headers=ORIGIN) as ws:
+            ws.receive_json()
+            ws.send_json(dict(type='device-status',state='ready',delegate='CPU',detail='Ready'))
+            def batch(source):
+                ws.send_bytes(packet(source));ws.receive_json()
+                for timestamp in range(source+1,source+31):
+                    ws.send_json(dict(type='device-result',model='nivra-browser-motion-v1',
+                        delegate='CPU',timestampMs=timestamp,inferenceMs=25,observedPeople=0,
+                        usablePeople=0,tracks=[],events=[],
+                        conflict=dict(status='clear',explanation='No people observed')))
+                ws.send_bytes(packet(source+31));ws.receive_json()
+                assert app.state.classroom.live[cam['id']]['lastDeviceTimestamp']==source+30
+            batch(1000)
+            # Thirty reports represent nominal 15 Hz reporting coalesced for 2s.
+            # Repeated coalesced delivery must refill, rather than disconnect.
+            for index in range(1,4):
+                clock[0]+=2
+                batch(1000+index*1000)
+            # The bucket remains bounded. Sustained extra traffic consumes its
+            # remaining capacity and closes instead of accumulating a queue.
+            for _ in range(19):
+                ws.send_json(dict(type='device-status',state='ready',delegate='CPU',detail='Ready'))
+            with pytest.raises(WebSocketDisconnect) as closed: ws.receive_json()
             assert closed.value.reason=='Camera metadata rate exceeded'
 
 
