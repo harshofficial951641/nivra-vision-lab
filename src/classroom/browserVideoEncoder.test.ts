@@ -142,7 +142,11 @@ it('keeps an idle encoder warm through source or transport pauses and resumes re
   expect(onFailure).not.toHaveBeenCalled()
   expect(FakeEncoder.last.close).not.toHaveBeenCalled()
   available = true
-  tick(18200); FakeEncoder.last.emit(18200)
+  tick(18200)
+  // The first new input after an idle period gets its own output deadline.
+  await vi.advanceTimersByTimeAsync(200)
+  expect(onFailure).not.toHaveBeenCalled()
+  FakeEncoder.last.emit(18200)
   await vi.advanceTimersByTimeAsync(100)
   expect(onBatch).toHaveBeenCalledTimes(2)
   client.dispose()

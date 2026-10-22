@@ -100,8 +100,8 @@ export class BrowserVideoEncoder {
     let frame: VideoFrame | undefined
     try {
       frame = new VideoFrame(video, { timestamp: Math.round(now * 1000) })
+      if (this.submitted === this.encoded) this.firstInputAt = performance.now()
       encoder.encode(frame, { keyFrame })
-      if (!this.submitted) this.firstInputAt = performance.now()
       this.submitted++; this.lastCapture = now
       this.nextCapture = Number.isFinite(this.nextCapture) ? Math.max(this.nextCapture + 25, now) : now + 25
       if (keyFrame) { this.forceKey = false; this.lastKey = now }
