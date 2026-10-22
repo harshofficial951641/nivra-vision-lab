@@ -48,7 +48,14 @@ export interface CameraLocation {
     conflict?: { status: string; explanation: string }
   } | null
 }
+export interface PoliceContactRecord {
+  at: number
+  by: string
+  method: 'call' | 'text'
+  count: number
+}
 export interface Incident {
+  police?: PoliceContactRecord | null
   gps?: GPSLocation | null
   id: string
   camera_id: string
@@ -114,7 +121,7 @@ export async function api<T>(
   path: string,
   method = 'GET',
   body?: unknown,
-  options: { signal?: AbortSignal; timeoutMs?: number } = {},
+  options: { signal?: AbortSignal; timeoutMs?: number; keepalive?: boolean } = {},
 ): Promise<T> {
   const token = await sessionToken()
   const headers: Record<string, string> = {}
@@ -132,6 +139,7 @@ export async function api<T>(
   const response = await fetch(`/api/v2${path}`, {
     method,
     credentials: 'same-origin',
+    ...(options.keepalive ? { keepalive: true } : {}),
     headers,
     signal: controller.signal,
     ...(method === 'GET' ? { cache: 'no-store' as const } : {}),

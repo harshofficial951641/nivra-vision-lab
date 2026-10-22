@@ -4,6 +4,7 @@ import { api, type Incident } from '../classroom/contracts'
 import type { ClipBuffer } from './clipBuffer'
 import { ClipPlayer, type PlayerFrame } from './ClipPlayer'
 import { GoogleMap } from '../location/GoogleMap'
+import { PoliceContact, PoliceContactStatus } from '../emergency/PoliceContact'
 import {
   REASONS,
   rankGPSGuards,
@@ -266,6 +267,9 @@ export function ReviewWindow({ event, cameras, now, clips, guards, siteName, sam
 
         <section className="cm-review-map" aria-label="Location">
           <h3>Location & guards</h3>
+          {deciding || isActiveResponse(event)
+            ? <PoliceContact key={event.id} incidentId={event.id} cameraName={event.camera_name} location={event.location} police={event.police} role="reviewer" sample={sample} />
+            : <PoliceContactStatus police={event.police} />}
           <details className="cm-review-details"><summary>View location on map</summary>
           <GoogleMap point={event.gps} label={event.camera_name} sample={sample} />
           <p className="cm-muted cm-small">This is the camera location when the alert started. Check the camera name and floor for indoor directions.</p></details>

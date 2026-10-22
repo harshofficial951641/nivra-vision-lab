@@ -33,6 +33,16 @@ beforeEach(()=>{
 afterEach(()=>{cleanup();vi.restoreAllMocks()})
 
 describe('calm wall alerts',()=>{
+  it('shows the latest police contact on the wall camera incident status', () => {
+    state.data = { ...state.data, events: [{ ...alert(), police: { at: new Date(2026, 9, 23, 14, 32).getTime(), by: 'guard:G2', method: 'call', count: 1 } }] }
+    render(<CommandWall />)
+    expect(screen.getByText('Police contacted (call) by G2 at 14:32')).toBeVisible()
+  })
+  it('does not label a new incident with police contact from an older closed incident', () => {
+    state.data = { ...state.data, events: [alert(), { ...alert('old'), status: 'resolved', police: { at: Date.now(), by: 'guard:G2', method: 'call', count: 1 } }] }
+    render(<CommandWall />)
+    expect(screen.queryByText(/Police contacted/)).not.toBeInTheDocument()
+  })
   it('keeps arriving alerts on their camera without moving tiles, opening review, or taking focus',()=>{
     const view=render(<CommandWall />)
     const first=cameraButtons()[0]

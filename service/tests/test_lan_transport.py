@@ -120,6 +120,7 @@ def test_discovery_close_clears_and_late_callback_cannot_restore():
 
 
 def test_discovery_explicit_start_is_idempotent_and_closes_browser(monkeypatch):
+    monkeypatch.setattr(transport, 'interface_addresses', lambda: ('192.168.1.100',))
     events = []
     zc = SimpleNamespace(close=lambda: events.append('close'))
     def zeroconf(**kwargs):

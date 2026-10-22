@@ -10,6 +10,7 @@ import { RING_MS, RingPlayer, shouldRing } from './ringPlayer'
 import { enablePush, useGuard, type GuardAlert } from './useGuard'
 import '../command/command.css'
 import { Brand } from '../ui/Brand'
+import { PoliceContact } from '../emergency/PoliceContact'
 import './guard.css'
 
 const ringing = (a: GuardAlert) =>
@@ -279,6 +280,7 @@ export default function GuardApp() {
         </p>
         {incoming.note && <p className="gd-alert-note">“{incoming.note}”</p>}
         <p className="gd-alert-time">Alerted {formatElapsed(now - (incoming.alerted_at ?? now))} ago</p>
+        <PoliceContact key={`police-${incoming.id}`} incidentId={incoming.id} cameraName={incoming.camera_name} location={incoming.location} police={incoming.police} role="guard" sample={sample} />
         {error && (
           <p className="gd-error" role="alert">
             {error}
@@ -301,6 +303,7 @@ export default function GuardApp() {
         </p>
         <h1>Go to {responding.camera_name}</h1>
         <p className="gd-muted">{responding.location}</p>
+        <PoliceContact key={`police-${responding.id}`} incidentId={responding.id} cameraName={responding.camera_name} location={responding.location} police={responding.police} role="guard" sample={sample} />
         {ownLocation}
         <div className="gd-map"><GoogleMap point={responding.gps} label={responding.camera_name} sample={sample} /></div>
         {validGPS(responding.gps) && <a className="gd-btn gd-btn--light" href={googleMapsURL(responding.gps, true)} target="_blank" rel="noreferrer">Navigate with Google Maps ↗</a>}

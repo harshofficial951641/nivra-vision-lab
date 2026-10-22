@@ -8,6 +8,8 @@ import struct
 import threading
 import tempfile
 import time
+from types import SimpleNamespace
+from unittest.mock import Mock
 
 import pytest
 from fastapi.testclient import TestClient
@@ -25,12 +27,22 @@ def test_usb_discovery_ignores_wifi_and_hides_serial(monkeypatch):
     assert len(devices[0]['id']) == 24 and 'private-device' not in str(devices)
 
 
-def test_mux_framing_and_raw_connection_survives_response(tmp_path):
-    folder = tempfile.TemporaryDirectory(prefix='nvusb-', dir='/tmp')
+def test_mux_framing_and_raw_connection_survives_response(tmp_path, monkeypatch):
+    folder = tempfile.TemporaryDirectory(prefix='nvusb-', dir=tmp_path)
     path = folder.name+'/mux'
-    server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-    server.bind(path)
-    server.listen()
+    if hasattr(socket, 'AF_UNIX'):
+        server = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        server.bind(path)
+        server.listen()
+    else:
+        # Windows Python may lack AF_UNIX. Keep real byte transport while
+        # replacing only the unavailable Unix socket connection adapter.
+        connected, peer = socket.socketpair()
+        adapter = Mock(wraps=connected)
+        adapter.connect = Mock()
+        monkeypatch.setattr(transport, 'socket', SimpleNamespace(AF_UNIX='unix',
+            SOCK_STREAM=socket.SOCK_STREAM, socket=lambda *_: adapter))
+        server = SimpleNamespace(accept=lambda: (peer, None), close=lambda: None)
     received = []
     def serve():
         peer, _ = server.accept()
@@ -46,6 +58,7 @@ def test_mux_framing_and_raw_connection_survives_response(tmp_path):
         assert response == {'Number': 0}
         assert transport.read_exact(stream, 4) == b'live'
         assert received[0]['MessageType'] == 'Connect'
+        if not hasattr(socket, 'AF_UNIX'): adapter.connect.assert_called_once_with(path)
     finally:
         stream.close()
         thread.join(2)

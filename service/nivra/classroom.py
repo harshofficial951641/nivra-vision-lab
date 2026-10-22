@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Path as PathParam, Request, Response, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, field_validator, model_validator
-from .classroom_store import Store
+from .classroom_store import Store, PoliceContactRateLimit
 from .socket_tickets import SocketTickets
 from .auth import AuthService, Principal, SocketAuth, allowed_origins, install_routes
 from .sites import CameraPatch, GPS, GuardProfile, Name, camera_payload, floor_payload, guard_payload, role_dependency, store_call
@@ -184,6 +184,11 @@ class GuardActionInput(BaseModel):
     model_config = ConfigDict(extra='forbid')
     action: Literal['ack', 'decline', 'on_scene', 'clear']
     revision: int = Field(ge=0)
+
+
+class PoliceContactInput(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    method: Literal['call', 'text']
 
 
 def public_origin():
@@ -891,6 +896,24 @@ class Classroom:
             response.delete_cookie(GUARD_COOKIE, path='/api/v2/guard')
             return response
 
+        async def record_police(event_id, method, actor, guard=None):
+            try: police = self.store.contact_police(event_id, method, actor, guard=guard)
+            except KeyError as error: raise HTTPException(404, 'Event not found') from error
+            except PoliceContactRateLimit as error:
+                raise HTTPException(429, str(error), headers={'Retry-After': '10'}) from error
+            await self.broadcast(self.snapshot())
+            return {'police': police}
+
+        @router.post('/guard/events/{event_id}/police')
+        async def guard_police(event_id: str, data: PoliceContactInput, request: Request):
+            guard = self.require_guard(request)
+            return await record_police(event_id, data.method, 'guard:'+guard, guard)
+
+        @router.post('/events/{event_id}/police')
+        async def reviewer_police(event_id: str, data: PoliceContactInput, request: Request):
+            principal = self.require_reviewer(request)
+            return await record_police(event_id, data.method, principal.user_id)
+
         @router.post('/guard/events/{event_id}')
         async def guard_action(event_id: str, data: GuardActionInput, request: Request):
             guard = self.require_guard(request)
@@ -965,8 +988,8 @@ class Classroom:
                 evidenceModel='test',
                 detail='Test alert — not a real incident. Confirm and alert a guard to check their phone rings.'))
             self.last_test_event_at = now
-            event = dict(self.store.db.execute('SELECT * FROM events WHERE camera_id=? AND generation=? AND source_id=?',
-                                              (data.cameraId, 'test', source_id)).fetchone())
+            event = self.store.with_police(self.store.db.execute('SELECT * FROM events WHERE camera_id=? AND generation=? AND source_id=?',
+                                              (data.cameraId, 'test', source_id)))[0]
             await self.broadcast(self.snapshot())
             return event
 

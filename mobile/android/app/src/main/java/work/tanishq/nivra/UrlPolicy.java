@@ -7,6 +7,18 @@ import java.net.URISyntaxException;
 final class UrlPolicy {
     static final String ORIGIN = "https://nivra.tanishq.work";
 
+    static String externalScheme(String value) {
+        if (value == null) return null;
+        try {
+            URI uri = new URI(value);
+            String scheme = uri.getScheme();
+            if ("tel".equalsIgnoreCase(scheme)) return "dial";
+            if ("sms".equalsIgnoreCase(scheme)) return "sms";
+            if ("https".equalsIgnoreCase(scheme)) return "https";
+            return null;
+        } catch (URISyntaxException error) { return null; }
+    }
+
     static boolean trusted(String value) {
         if (value == null) return false;
         try {

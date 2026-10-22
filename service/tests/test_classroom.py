@@ -340,7 +340,9 @@ def test_migrate_v1_database_preserves_rows_and_reopens(tmp_path):
     assert {key: store.camera('camera')[key] for key in old_camera} == old_camera
     assert store.camera('camera')['label'] == 'CAM-01'
     added = {'reviewed_at','decision','reason','note','guard','decided_at','alerted_at','on_scene_at','guard_ack_at','guard_declined_at','floor_id','reviewer_id','escalated_at','gps'}
-    assert event.keys() - old_event.keys() == added
+    assert event.keys() - old_event.keys() == added | {'police'}
+    assert event['police'] is None
+    assert 'police' not in {row[1] for row in store.db.execute('PRAGMA table_info(events)')}
     assert all(event[key] is None for key in added)
     assert dict(store.db.execute('SELECT * FROM event_audit').fetchone()) == dict(
         event_id='event', status='acknowledged', revision=1, changed_at=200, action=None, actor=None)
@@ -416,7 +418,7 @@ def test_review_audit_failure_rolls_back_event(review_client):
 
 GUARD_FIELDS = {'id', 'camera_id', 'camera_name', 'location', 'detail', 'note',
                 'received_at', 'alerted_at', 'guard_ack_at', 'guard_declined_at',
-                'on_scene_at', 'status', 'revision', 'gps'}
+                'on_scene_at', 'status', 'revision', 'gps', 'police'}
 
 
 def guard_pair_token(client, guard='G2'):
@@ -446,6 +448,13 @@ def guard_action(phone, event, action, **extra):
 
 
 def test_guard_stream_alert_and_full_lifecycle(review_client):
+    def receive_revision(socket, field, revision):
+        # Snapshots may repeat (presence/heartbeat updates). Drain older ones
+        # before asserting the exact action result, as the UI does.
+        for _ in range(10):
+            record = socket.receive_json()[field][0]
+            if record['revision'] >= revision: return record
+        pytest.fail('The action revision was not broadcast.')
     client, store, event = review_client
     phone = guard_phone(client)
     with phone.websocket_connect('ws://127.0.0.1:8765/api/v2/guard/stream', headers=ORIGIN) as socket:
@@ -468,8 +477,8 @@ def test_guard_stream_alert_and_full_lifecycle(review_client):
                 updated = response.json()
                 assert set(updated) == GUARD_FIELDS
                 assert updated['revision'] == alert['revision']+1
-                assert socket.receive_json()['alerts'][0] == {**updated, 'placement': None, 'floorId': None}
-                assert operator_socket.receive_json()['events'][0]['revision'] == updated['revision']
+                assert receive_revision(socket, 'alerts', updated['revision']) == {**updated, 'placement': None, 'floorId': None}
+                assert receive_revision(operator_socket, 'events', updated['revision'])['revision'] == updated['revision']
                 alert = updated
         assert alert['status'] == 'resolved'
         assert event['alerted_at'] <= alert['guard_ack_at'] <= alert['on_scene_at']

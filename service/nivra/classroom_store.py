@@ -9,7 +9,11 @@ from pathlib import Path
 
 GUARD_ALERT_FIELDS = ('id', 'camera_id', 'camera_name', 'location', 'detail', 'note',
                       'received_at', 'alerted_at', 'guard_ack_at', 'guard_declined_at',
-                      'on_scene_at', 'status', 'revision', 'gps')
+                      'on_scene_at', 'status', 'revision', 'gps', 'police')
+
+
+class PoliceContactRateLimit(ValueError):
+    pass
 
 
 def gps_record(row):
@@ -176,7 +180,39 @@ class Store:
         return self.camera(camera_id)
 
     def events(self):
-        return [gps_record(r) for r in self.db.execute('SELECT * FROM events ORDER BY received_at DESC LIMIT 500')]
+        return self.with_police(self.db.execute('SELECT * FROM events ORDER BY received_at DESC LIMIT 500'))
+
+    def with_police(self, rows):
+        """Derive contact summaries in one query; police is never an events column."""
+        records = [gps_record(row) for row in rows]
+        if not records: return records
+        ids = [row['id'] for row in records]
+        contacts = {row['event_id']: dict(at=row['changed_at'], by=row['actor'],
+                    method=row['action'][7:], count=row['contacts'])
+            for row in self.db.execute(f'''SELECT * FROM (
+                SELECT event_id,changed_at,actor,action,
+                    COUNT(*) OVER (PARTITION BY event_id) AS contacts,
+                    ROW_NUMBER() OVER (PARTITION BY event_id ORDER BY changed_at DESC,rowid DESC) AS latest
+                FROM event_audit WHERE action IN ('police:call','police:text')
+                    AND event_id IN ({','.join('?' for _ in ids)})
+            ) WHERE latest=1''', ids)}
+        return [{**row, 'police': contacts.get(row['id'])} for row in records]
+
+    def contact_police(self, event_id, method, actor, *, guard=None):
+        if method not in ('call', 'text'): raise ValueError('Invalid police contact method.')
+        with self.db:
+            # Assignment, duplicate suppression and insert are atomic across connections.
+            self.db.execute('BEGIN IMMEDIATE')
+            row = self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone()
+            if row is None or (guard is not None and row['guard'] != guard): raise KeyError(event_id)
+            now = time.time()*1000
+            action = 'police:'+method
+            if self.db.execute('''SELECT 1 FROM event_audit WHERE event_id=? AND actor=?
+                AND action=? AND changed_at>? LIMIT 1''', (event_id,actor,action,now-10_000)).fetchone():
+                raise PoliceContactRateLimit('Wait 10 seconds before recording this contact again.')
+            self.db.execute('''INSERT INTO event_audit(event_id,status,revision,changed_at,action,actor)
+                VALUES(?,?,?,?,?,?)''', (event_id,row['status'],row['revision'],now,action,actor))
+            return self.with_police([row])[0]['police']
 
     def analytics(self):
         return dict(self.db.execute("""SELECT COUNT(*) total,
@@ -208,7 +244,7 @@ class Store:
             if status not in allowed[row['status']]: raise ValueError('Invalid event transition.')
             self.db.execute('UPDATE events SET status=?,revision=revision+1,updated_at=? WHERE id=?', (status,now,event_id))
             self.db.execute('INSERT INTO event_audit(event_id,status,revision,changed_at) VALUES(?,?,?,?)', (event_id,status,revision+1,now))
-        return gps_record(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
+        return self.with_police(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)))[0]
 
     def review(self, event_id, action, revision, *, reason=None, note=None, guard=None, actor=None) -> dict:
         with self.db:
@@ -217,7 +253,7 @@ class Store:
             row = self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone()
             if row is None: raise KeyError(event_id)
             if action == 'view' and row['status'] in ('acknowledged', 'resolved'):
-                return gps_record(row)
+                return self.with_police([row])[0]
             if row['revision'] != revision: raise ValueError('Event changed. Refresh and try again.')
             now = time.time()*1000
             changes = {}
@@ -253,15 +289,15 @@ class Store:
             self.db.execute(f'UPDATE events SET {columns} WHERE id=?', (*changes.values(), event_id))
             self.db.execute('''INSERT INTO event_audit(event_id,status,revision,changed_at,action,actor)
                 VALUES(?,?,?,?,?,?)''', (event_id, changes.get('status', row['status']), revision+1, now, action, actor))
-            result = gps_record(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
+            result = self.with_police(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)))[0]
         return result
 
     def guard_alerts(self, guard, now=None):
         now = time.time()*1000 if now is None else now
-        return [gps_record(row) for row in self.db.execute(f'''SELECT {','.join(GUARD_ALERT_FIELDS)}
+        return self.with_police(self.db.execute(f'''SELECT {','.join(key for key in GUARD_ALERT_FIELDS if key != 'police')}
             FROM events WHERE guard=? AND decision='confirmed' AND alerted_at IS NOT NULL
             AND (status!='resolved' OR updated_at>=?) ORDER BY alerted_at DESC, id DESC LIMIT 10''',
-            (guard, now-30*60*1000))]
+            (guard, now-30*60*1000)))
 
     def guard_action(self, event_id, guard, action, revision, *, actor=None):
         with self.db:
@@ -287,7 +323,7 @@ class Store:
             self.db.execute('''INSERT INTO event_audit(event_id,status,revision,changed_at,action,actor)
                 VALUES(?,?,?,?,?,?)''', (event_id, changes.get('status', row['status']), revision+1, now, 'guard:'+action, actor))
             result = self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone()
-            return gps_record({key: result[key] for key in GUARD_ALERT_FIELDS})
+            return self.with_police([{key: result[key] for key in GUARD_ALERT_FIELDS if key != 'police'}])[0]
 
     def site(self):
         return dict(self.db.execute('SELECT * FROM site LIMIT 1').fetchone())

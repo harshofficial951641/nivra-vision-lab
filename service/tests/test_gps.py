@@ -125,7 +125,8 @@ def test_guard_cookie_tracks_only_own_location_and_floor(gps_site, monkeypatch):
     assert response.status_code == 200 and response.json()['gps'] == GPS
     changed = {**GPS, 'latitude': 29, 'capturedAt': GPS['capturedAt']+1000}
     assert phone.post('/api/v2/guard/location', json=changed).json()['gps'] == changed
-    assert snapshots[-1]['guards'][0]['gps'] == changed
+    snapshot_guard = next(row for row in snapshots[-1]['guards'] if row['id'] == guard['id'])
+    assert snapshot_guard['gps'] == changed
     assert phone.patch('/api/v2/guard/profile', json={'floorName': ' Third '}).json()['floorName'] == 'Third'
     assert phone.patch('/api/v2/guard/profile', json={'floorName': 'Third', 'name': 'Imposter'}).status_code == 422
     assert phone.patch('/api/v2/guard/profile', json={'floorName': ''}).status_code == 422

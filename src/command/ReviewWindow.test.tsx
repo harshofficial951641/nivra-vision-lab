@@ -25,6 +25,14 @@ function review() {
   return { act, close }
 }
 describe('clear and explicit review decisions', () => {
+  it.each([false, true])('renders police contact for undecided and active-response incidents (%s)', active => {
+    const incident: Incident = { ...event, ...(active ? { status: 'acknowledged' as const, decision: 'confirmed' as const, guard: 'G1', alerted_at: 1000 } : {}), police: { at: new Date(2026, 9, 23, 14, 32).getTime(), by: 'guard:G2', method: 'text', count: 2 } }
+    render(<ReviewWindow event={incident} events={[incident]} cameras={[]} now={2000} clips={null} floors={[]} guards={guards} sample={false} queue={1} act={vi.fn()} close={vi.fn()} />)
+    expect(screen.getByRole('group', { name: 'Contact police' })).toBeVisible()
+    expect(screen.getByText('Police contacted (text) by G2 at 14:32')).toBeVisible()
+    fireEvent.click(screen.getByRole('button', { name: 'Police' }))
+    expect(screen.getByRole('link', { name: 'Call 112' })).toHaveAttribute('href', 'tel:112')
+  })
   it('closes an undecided alert without requiring a false-alarm reason',async()=>{
     const {act,close}=review()
     fireEvent.click(screen.getByRole('button',{name:'Close alert'}))

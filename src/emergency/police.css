@@ -1,0 +1,8 @@
+.police-contact { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-block: 12px; }
+.police-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.police-contact .cm-btn, .police-contact .gd-btn { min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+.police-status { display: block; font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.police-contact > .police-status, .police-contact > p { flex-basis: 100%; margin: 0; }
+.police-contact :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+.cm-police { position: absolute; left: 12px; right: 12px; bottom: 40px; padding: 6px 8px; background: #fff; color: #111; text-align: left; }
+.gd-alert .police-contact .gd-btn--outline { color: #000; border-color: #000; }

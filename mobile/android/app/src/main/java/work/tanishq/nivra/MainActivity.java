@@ -226,7 +226,21 @@ public final class MainActivity extends Activity {
                 if (!request.isForMainFrame()) return false;
                 String url = request.getUrl().toString();
                 if (UrlPolicy.trusted(url)) return false;
-                if ("https".equalsIgnoreCase(request.getUrl().getScheme())) openExternal(request.getUrl());
+                String external = UrlPolicy.externalScheme(url);
+                if ("https".equals(external)) openExternal(request.getUrl());
+                else if ("dial".equals(external) || "sms".equals(external)) {
+                    Intent intent = new Intent("dial".equals(external) ? Intent.ACTION_DIAL : Intent.ACTION_SENDTO);
+                    // sms: is opaque to Android Uri; parse its query separately.
+                    String target = url.split("\\?", 2)[0];
+                    intent.setData(Uri.parse(target));
+                    if ("sms".equals(external)) {
+                        int query = url.indexOf('?');
+                        String body = query < 0 ? null : Uri.parse("https://sms.invalid/" + url.substring(query)).getQueryParameter("body");
+                        if (body != null) intent.putExtra("sms_body", body);
+                    }
+                    try { startActivity(intent); }
+                    catch (ActivityNotFoundException error) { Toast.makeText(MainActivity.this, "No app can open this link.", Toast.LENGTH_SHORT).show(); }
+                }
                 return true;
             }
             @Override public void onPageStarted(WebView view, String url, android.graphics.Bitmap icon) {

@@ -1,4 +1,5 @@
 import type { Incident } from '../classroom/contracts'
+import { PoliceContactStatus } from '../emergency/PoliceContact'
 import { formatClock, responseSteps, type WallCamera } from './model'
 
 export function ResponseClock({
@@ -32,6 +33,7 @@ export function ResponseClock({
           </li>
         ))}
       </ol>
+      <PoliceContactStatus police={event.police} />
     </section>
   )
 }

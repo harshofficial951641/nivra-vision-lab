@@ -21,6 +21,7 @@ import { GoogleMap } from '../location/GoogleMap'
 import { coordinates, googleMapsURL, validGPS } from '../location/gps'
 import { ResponseClock } from './ResponseClock'
 import { ReviewWindow } from './ReviewWindow'
+import { PoliceContactStatus } from '../emergency/PoliceContact'
 import {
   focusIncident,
   cameraPlace,
@@ -535,6 +536,7 @@ export default function CommandWall() {
                   {[...queue, ...active].map((event) => (
                     <button key={event.id} type="button" className="cm-btn" onClick={() => openReview(event.id)}>
                       {incidentRef(event)} · {needsDecision(event) ? 'Review' : 'Response'}
+                      <PoliceContactStatus police={event.police} />
                     </button>
                   ))}
                 </section>

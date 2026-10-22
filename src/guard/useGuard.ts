@@ -23,6 +23,7 @@ export type GuardAlert = Pick<
   | 'on_scene_at'
   | 'status'
   | 'revision'
+  | 'police'
 > & { gps?: Incident['gps']; placement?: Placement | null; floorId?: string | null }
 
 export interface GuardView {

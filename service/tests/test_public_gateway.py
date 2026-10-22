@@ -103,6 +103,10 @@ def test_public_guard_pairing_and_actions(monkeypatch, tmp_path):
                 response = phone.post(f'/api/v2/guard/events/{event["id"]}', headers=headers,
                                       json=dict(action='ack',revision=1))
                 assert response.status_code == 200
-                assert socket.receive_json()['alerts'][0]['guard_ack_at'] is not None
+                for _ in range(10):
+                    alert = socket.receive_json()['alerts'][0]
+                    if alert['revision'] >= response.json()['revision']: break
+                assert alert['revision'] == response.json()['revision']
+                assert alert['guard_ack_at'] is not None
         finally:
             phone.close()

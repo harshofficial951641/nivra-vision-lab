@@ -3,11 +3,12 @@ import { NativeVideo } from '../classroom/NativeVideoCanvas'
 import type { NativeVideoBus, NativeRenderedFrame } from '../classroom/nativeVideo'
 import { PushPin, VideoCameraSlash } from '@phosphor-icons/react'
 import type { Incident } from '../classroom/contracts'
+import { PoliceContactStatus } from '../emergency/PoliceContact'
 import { validGPS } from '../location/gps'
 import { TrackingOverlay } from './TrackingOverlay'
 import { NativePoseHistory, nativeOverlayAligned } from './nativeTracking'
 import { observedTracks, wallDetection, wallTracking } from './tracking'
-import { alertLevel, cameraPlace, formatClock, formatElapsed, needsDecision, type WallCamera } from './model'
+import { alertLevel, cameraPlace, formatClock, formatElapsed, isActiveResponse, needsDecision, type WallCamera } from './model'
 
 interface Props {
   nativeVideo?: NativeVideoBus
@@ -39,6 +40,8 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
   const nativeCamera={...camera,result:nativeResult}
   const level = alertLevel(camera.id, events)
   const flagged = events.find((e) => e.camera_id === camera.id && needsDecision(e))
+  const incident = flagged ?? events.find(e => e.camera_id === camera.id && isActiveResponse(e)) ?? events.find(e => e.camera_id === camera.id)
+  const police = incident?.police
   const title = `${camera.label} ${camera.name}`
   const tracking = wallTracking(camera, now)
   const detection = wallDetection(nativePlaying && nativeFrame ? { ...nativeCamera, preview: { timestampMs:nativeFrame.timestampMs, received:nativeFrame.renderedAt, width:nativeFrame.width, height:nativeFrame.height, generation:nativeFrame.generation } } : camera, now)
@@ -89,6 +92,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
           </span>
         )}
         {level === 'confirmed' && size !== 'thumb' && <span className="cm-flag cm-flag--confirmed">Confirmed incident</span>}
+        {size !== 'thumb' && police && <span className="cm-police"><PoliceContactStatus police={police} /></span>}
         {size !== 'thumb' && camera.image && camera.status === 'live' && (
           <span className="cm-stamp" title="Current monitor time">{formatClock(now)} <span className="cm-sr-only">monitor time</span></span>
         )}

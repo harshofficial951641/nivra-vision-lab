@@ -4,6 +4,18 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class UrlPolicyTest {
+    @Test public void routesEmergencySchemesWithoutPlacingACall() {
+        assertEquals("dial", UrlPolicy.externalScheme("tel:112"));
+        assertEquals("dial", UrlPolicy.externalScheme("TEL:+91112"));
+        assertEquals("sms", UrlPolicy.externalScheme("sms:112?&body=NIVRA%20alert%3A%20Entrance%2C%20Floor%202"));
+        assertEquals("sms", UrlPolicy.externalScheme("SMS:112"));
+        assertEquals("https", UrlPolicy.externalScheme("https://maps.google.com/"));
+    }
+    @Test public void rejectsUnsupportedAndMalformedExternalSchemes() {
+        for (String value : new String[]{null, "", "/guard", "javascript:alert(1)", "intent:112", "file:///tmp/x", "http://example.test", "tel:bad number", "sms:112?body=%oops"}) {
+            assertNull(value, UrlPolicy.externalScheme(value));
+        }
+    }
     private final String token = "aB_1234567890123456789012345678901234567890-x";
 
     @Test public void cameraAndGuardLinksPreservePairingFragment() {

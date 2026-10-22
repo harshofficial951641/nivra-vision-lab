@@ -55,3 +55,41 @@ Fresh checks:
 Evidence: desktop completed grappling screenshot `C:/Users/harsh.DESKTOP-VE90R6D/.t3codex/userdata/browser-artifacts/browser-screenshot-nivra-vision-lab-topperly-chatgpt-site-mviv9rg7-6245665c.png`; mobile `browser-screenshot-nivra-vision-lab-topperly-chatgpt-site-mvivagg7-a0b448bb.png`; final desktop `browser-screenshot-nivra-vision-lab-topperly-chatgpt-site-mvivcjse-dab8aa17.png` in the same directory.
 
 final result: passed
+
+---
+
+# Police contact QA â€” 23 October 2026
+
+Scope: contact-police extension to the established black/white guard and review flows.
+Route: universal-design-router â†’ design-preflight-orchestrator; React best-practices review supports verification. No new visual direction, assets, stack, or services.
+Source contract: the owner's supplied two-step Police / Call 112 / Text police / Cancel specification, existing `gd-btn` / `cm-btn` styles, and unchanged guard/review journeys. Small in-system change; concept gate waived explicitly by owner.
+
+## Browser evidence
+
+Used the T3 collaborative preview against a synthetic relay-only app on `127.0.0.1:5184`; no public host or model inference. Inspected actual desktop (1280Ã—800) and mobile (390Ã—844) screenshots.
+
+- Reviewer: disclosure starts closed; Call and Text expose the exact URI contracts; camera and location are encoded in the SMS message. Each click reached the real audit API. A QA-only document listener intercepted OS navigation after the component handler and verified `defaultPrevented === false`; no emergency call or message was placed.
+- Reviewer: latest contact updates from the response/snapshot. Simulated fetch rejection renders the required error. Cancel restores focus; Enter reopens the disclosure. Dialog scrolling reaches the controls on mobile without horizontal overflow.
+- Guard incoming and responding: checked both screenshots and interactions. Controls are 54 px high, with black text on white incoming UI and white text on black response UI. Reviewer links are 44 px high. Labelled groups, focus outlines, wrapping and native anchors retained.
+- Real guard Text request records `guard:G2`, renders as G2, then keyboard acknowledgement succeeds. Contact remains visible on the response screen and through snapshots.
+- Wall: the incident status displays its contact. A new incident cannot inherit an older closed incident's contact label; integration regression test added.
+- QA caught a duplicate React sibling key shared with the acknowledgement slider. Fixed with a police-specific key, added clock-advance regression coverage, rebuilt, and verified one control remains through repeated clock ticks.
+- Console inspection: no uncaught component errors in the corrected flows. Earlier expected 403 responses came from unauthenticated/role-switch probes; the abandoned Vite preview failed because its watcher scanned Windows pytest temporary links. Production static preview was used successfully.
+
+## Automated evidence
+
+- `npm run lint`: passed without warnings.
+- `npm run test -- --pool=threads --maxWorkers=2`: final shared-checkout run 701 passed, 77 files. Default fork workers timed out on this machine; thread workers complete successfully.
+- `npm run build`: passed after the final web changes.
+- Backend final full suite: 1,170 passed, 5 skipped, 1 existing Starlette/anyio deprecation warning in 299.02 seconds. Run from `service` with `NIVRA_RUN_CUDA_TRAINING_TEST=0`, `--ignore=tests/test_public_host_tools.py --ignore=tests/test_local_host_tools.py`, and an isolated `--basetemp`. No other files excluded.
+- `node --test sites/worker.test.mjs`: 7 passed. Existing relays forward both police endpoints; no relay changes needed.
+- Full-suite validation exposed two fixture portability issues: the discovery lifecycle test now mocks interface enumeration; the USB framing test uses the pytest temporary directory and real socketpair bytes with only the unavailable Unix connection adapter mocked on Windows. Two lifecycle tests now wait for the requested event revision while allowing repeated snapshots; exact result assertions remain.
+- `git diff --check`: passed. No commits, pushes, branch changes, public hosts, or forbidden listeners. Isolated browser server/database and task-created test temporary directories cleaned up.
+
+## Native boundaries
+
+Android: URL policy and JUnit cases added; ACTION_DIAL / ACTION_SENDTO with `sms_body` implemented. No Android SDK; `where java` and `where javac` found neither executable, and checked standard installation locations contained no JDK. Java compilation, JUnit execution, and device handoff remain unverified.
+
+iOS Swift unchanged as requested; the final handoff supplies the exact `UIApplication.shared.open` scheme change. No actual emergency services contacted. No commit, push, branch switch, deployment or secret handling.
+
+final result: passed
