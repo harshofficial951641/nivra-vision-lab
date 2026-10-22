@@ -6,14 +6,17 @@ import { DEVICE_POSE_LIMIT } from './capacity'
 import type { ReviewEvent } from '../lib/sceneEngine'
 
 export const DEVICE_MODEL = 'nivra-browser-motion-v1'
+export const CROWD_DEVICE_MODEL = 'nivra-browser-rtmo-t-motion-v1'
 export { DEVICE_PEOPLE_LIMIT, DEVICE_POSE_LIMIT } from './capacity'
 export type ObservedJoint = [number, number, number] | null
 
 /** Camera-device arm-motion rules; review signals are not a trained fight classification. */
 export class DeviceAnalysis {
   private engine: Pick<ConflictEngine, 'update' | 'observedTracks'>
-  constructor(engine: Pick<ConflictEngine, 'update' | 'observedTracks'> = new ConflictEngine({ minBodyScale: .035, minShoulderWidth: .0275, maxGapMs: 3000 })) {
+  private model: typeof DEVICE_MODEL | typeof CROWD_DEVICE_MODEL
+  constructor(engine: Pick<ConflictEngine, 'update' | 'observedTracks'> = new ConflictEngine({ minBodyScale: .035, minShoulderWidth: .0275, maxGapMs: 3000 }), model: typeof DEVICE_MODEL | typeof CROWD_DEVICE_MODEL = DEVICE_MODEL) {
     this.engine = engine
+    this.model = model
   }
   private runId = crypto.randomUUID()
   private people = new PersonTracker()
@@ -57,7 +60,7 @@ export class DeviceAnalysis {
     while (this.emittedEvents.size > 64) this.emittedEvents.delete(this.emittedEvents.keys().next().value!)
     return {
       type: 'device-result' as const,
-      model: DEVICE_MODEL,
+      model: this.model,
       delegate,
       timestampMs,
       inferenceMs,

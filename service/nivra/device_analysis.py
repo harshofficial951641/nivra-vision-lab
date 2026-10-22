@@ -3,6 +3,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 MODEL = 'nivra-browser-motion-v1'
+CROWD_MODEL = 'nivra-browser-rtmo-t-motion-v1'
 MAX_PEOPLE = 32
 MAX_REPORT_BYTES = 65536
 Coordinate = Annotated[float, Field(ge=0, le=1)]
@@ -50,7 +51,7 @@ class Event(Message):
 
 class DeviceResult(Message):
     type: Literal['device-result']
-    model: Literal['nivra-browser-motion-v1']
+    model: Literal['nivra-browser-motion-v1', 'nivra-browser-rtmo-t-motion-v1']
     delegate: Literal['GPU', 'CPU']
     timestampMs: float = Field(ge=0)
     inferenceMs: float = Field(ge=0, le=30000)
@@ -78,7 +79,7 @@ class DeviceMotion(DeviceResult):
 
 def result_payload(report):
     return dict(timestampMs=report.timestampMs, evidenceTimestampMs=report.timestampMs,
-        inferenceMs=report.inferenceMs, backend='camera-device', model=MODEL,
+        inferenceMs=report.inferenceMs, backend='camera-device', model=report.model,
         delegate=report.delegate,
         # This detector does not measure whole-classroom visibility.
         coverage=dict(observedPeople=report.observedPeople, analyzedPeople=report.usablePeople,

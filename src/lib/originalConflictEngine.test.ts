@@ -725,3 +725,32 @@ describe('ConflictEngine', () => {
     expect(quiet.events).toHaveLength(1)
   })
 })
+
+
+describe('opt-in crowd cooldown scope',()=>{
+  const twoPairs=(time:number)=>[0.02,0.52].flatMap(offset=>[person(.35,extensionAt(time)),person(.65)].map(pose=>pose.map(point=>({...point,x:point.x*.42+offset,y:point.y*.42+.2}))))
+  it('preserves the published camera-wide cooldown by default',()=>{
+    const implicit=run(new ConflictEngine(),3000,twoPairs)
+    const explicit=run(new ConflictEngine({cooldownScope:'camera'}),3000,twoPairs)
+    expect(implicit).toEqual(explicit)
+    expect(implicit.events).toHaveLength(1)
+  })
+  it('allows two independent observed interactions while retaining same-pair repetition and cooldown',()=>{
+    const engine=new ConflictEngine({cooldownScope:'pair'})
+    expect(run(engine,800,twoPairs).events).toHaveLength(0)
+    const result=run(engine,3000,twoPairs,100,900)
+    expect(result.events).toHaveLength(2)
+    expect(new Set(result.events.map(event=>event.id)).size).toBe(2)
+    expect(result.events.every(event=>event.detail.startsWith('3 distinct'))).toBe(true)
+    expect(run(engine,7000,twoPairs,100,3100).events).toHaveLength(2)
+  })
+  it('retains nine independent pair incidents from eighteen observed bodies in one update',()=>{
+    const frames=(time:number)=>Array.from({length:9},(_,index)=>[person(.35,extensionAt(time)),person(.65)].map(pose=>pose.map(point=>({...point,x:point.x*.3+(index%3)/3,y:point.y*.3+Math.floor(index/3)/3})))).flat()
+    const result=run(new ConflictEngine({cooldownScope:'pair'}),3000,frames)
+    expect(result.people).toBe(18)
+    expect(result.events).toHaveLength(9)
+    expect(new Set(result.events.map(event=>event.id)).size).toBe(9)
+    expect(result.events.every(event=>event.detail.startsWith('3 distinct'))).toBe(true)
+  })
+
+})

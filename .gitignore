@@ -70,4 +70,5 @@ public/downloads/
 .vercel
 .env*
 dist-usb/
+public/onnxruntime/
 !.env.usb

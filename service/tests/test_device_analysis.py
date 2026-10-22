@@ -6,7 +6,7 @@ import pytest
 from fastapi.testclient import TestClient
 from starlette.websockets import WebSocketDisconnect
 from nivra.server import create_app
-from nivra.device_analysis import DeviceResult, DeviceMotion, MAX_REPORT_BYTES
+from nivra.device_analysis import DeviceResult, DeviceMotion, MAX_REPORT_BYTES, result_payload
 from test_classroom import operator, camera, pair, ORIGIN
 from test_server import packet
 
@@ -42,6 +42,13 @@ def test_thirty_two_people_allowed():
     data.update(observedPeople=32,usablePeople=32,
         tracks=[dict(id=i,box=[.01,.01,.2,.4]) for i in range(32)])
     assert len(DeviceResult.model_validate(data).tracks)==32
+
+
+def test_crowd_model_keeps_its_own_evidence_version():
+    data=report();data['model']='nivra-browser-rtmo-t-motion-v1'
+    assert result_payload(DeviceResult.model_validate(data))['model']==data['model']
+    data['model']='unvalidated-model'
+    with pytest.raises(ValueError): DeviceResult.model_validate(data)
 
 
 @pytest.mark.parametrize('field', ['observedPeople', 'usablePeople', 'tracks'])

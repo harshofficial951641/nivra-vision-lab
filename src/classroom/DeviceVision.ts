@@ -1,9 +1,10 @@
 import { ConflictEngine as OriginalConflictEngine } from '../lib/originalConflictEngine'
 import { inferenceSize } from '../lib/inferenceSize'
 import type { PoseLandmarks, VisionDelegate, VisionWorkerResponse } from '../types/vision'
-import { DeviceAnalysis, DEVICE_POSE_LIMIT, type DeviceResult, type DeviceMotion, type DeviceStatus } from './deviceAnalysis'
+import { DeviceAnalysis, CROWD_DEVICE_MODEL, DEVICE_POSE_LIMIT, type DeviceResult, type DeviceMotion, type DeviceStatus } from './deviceAnalysis'
 import { analysisRegion, DeviceBudget, type AnalysisArea, type DeviceProfile } from './deviceBudget'
 import { PeopleVision, type PersonObservation } from './PeopleVision'
+import { CrowdPoseVision, type CrowdPoseModel } from './CrowdPoseVision'
 
 const RETRY_DELAYS = [500, 1500, 3000] as const
 
@@ -11,6 +12,17 @@ const RETRY_DELAYS = [500, 1500, 3000] as const
 export class DeviceVision {
   private motion: OriginalMotion | null = null
   private originalOnly = false
+  private crowd: CrowdPoseVision | null = null
+  private crowdProfile = false
+  private crowdModel?: CrowdPoseModel
+  private crowdFallback = false
+  private crowdMediaTime = -Infinity
+  private crowdObservationOnly = false
+  private motionStarted = false
+  private cachedMotionStatus: DeviceStatus | null = null
+  private crowdObserved = false
+  private crowdResultTimestamp = -Infinity
+  private crowdPreferred: VisionDelegate = 'GPU'
   private worker: Worker | null = null
   private people: PeopleVision | null = null
   private analysis = new DeviceAnalysis()
@@ -32,11 +44,29 @@ export class DeviceVision {
   private onStatus: (status: DeviceStatus) => void
   private onResult: (result: DeviceResult) => void
 
-  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile = 'balanced', onMotion?: (result: DeviceMotion) => void, onMotionStatus?: (status: DeviceStatus) => void) {
+  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile | 'crowd' = 'balanced', onMotion?: (result: DeviceMotion) => void, onMotionStatus?: (status: DeviceStatus) => void, crowdModel?: CrowdPoseModel) {
     this.onStatus = onStatus
     this.onResult = onResult
     this.area = area
     this.originalOnly = profile === 'original'
+    this.crowdProfile = profile === 'crowd'
+    this.crowdModel = crowdModel
+    if (this.crowdProfile) {
+      this.analysis = new DeviceAnalysis(new OriginalConflictEngine({cooldownScope:'pair'}),CROWD_DEVICE_MODEL)
+      this.crowdObservationOnly = !!onMotion
+      if (onMotion) this.motion = new OriginalMotion(result => {
+        onMotion(result)
+        if (this.crowdFallback) {
+          this.budget.observe(result.inferenceMs)
+          this.onResult({...result,type:'device-result'})
+        }
+      },area,status => {
+        this.cachedMotionStatus = status
+        onMotionStatus?.(status)
+        if (this.crowdFallback) this.onStatus({...status,detail:`Crowd detection unavailable. ${status.detail}`})
+      },'pair')
+      return
+    }
     if (this.originalOnly) {
       this.motion = new OriginalMotion(result => {
         this.budget.observe(result.inferenceMs)
@@ -47,11 +77,82 @@ export class DeviceVision {
 
   start(preferred: VisionDelegate = 'GPU') {
     if (this.disposed) return
+    if (this.crowdProfile) {
+      if (this.motion && !this.motionStarted) { this.motionStarted = true; this.motion.start(preferred) }
+      this.crowdPreferred = preferred; void this.startCrowd(); return
+    }
     this.cpuRetries = 0
     if (this.retryTimer) clearTimeout(this.retryTimer)
     this.retryTimer = null
     if (this.motion) { this.motion.start(preferred); preferred = 'CPU' }
     if (!this.originalOnly) this.initialize(preferred)
+  }
+
+  private async startCrowd() {
+    if (this.crowd || this.crowdFallback) return
+    this.onStatus({state:'loading',delegate:null,detail:'Loading multi-person pose detection on this device…'})
+    if (!this.crowdModel) { this.fallbackCrowd(); return }
+    const crowd = new CrowdPoseVision({...this.crowdModel,preferredDelegate:this.crowdModel.preferredDelegate ?? this.crowdPreferred})
+    this.crowd = crowd
+    try {
+      await crowd.start()
+      if (this.disposed || this.crowd !== crowd) return
+      this.ready = true
+      this.onStatus({state:'loading',delegate:crowd.delegate,detail:'Starting crowd detection. Preparing the first real camera frame…'})
+    } catch { if (!this.disposed && this.crowd === crowd) this.fallbackCrowd() }
+  }
+
+  private fallbackCrowd() {
+    if (this.disposed || this.crowdFallback) return
+    this.crowdFallback = true; this.ready = false; this.busy = false
+    this.crowd?.dispose(); this.crowd = null
+    if (this.motion) {
+      const status = this.cachedMotionStatus ?? {state:'loading' as const,delegate:null,detail:'Starting original full-model motion tracking…'}
+      this.onStatus({...status,detail:`Crowd detection unavailable. ${status.detail}`})
+      return
+    }
+    this.motion = new OriginalMotion(result => {
+      this.budget.observe(result.inferenceMs)
+      this.onResult({...result,type:'device-result'})
+    }, this.area, status => this.onStatus({...status,detail:`Crowd detection unavailable. ${status.detail}`}))
+    this.motion.start(this.crowdModel?.preferredDelegate ?? this.crowdPreferred)
+  }
+
+  private async captureCrowd(video: HTMLVideoElement, timestamp: number) {
+    const crowd = this.crowd
+    if (this.disposed || !this.ready || !crowd || this.busy || timestamp - this.lastCapture < 50 || video.readyState < 2 || !video.videoWidth) return
+    if (typeof video.currentTime === 'number' && video.currentTime === this.crowdMediaTime) return
+    this.crowdMediaTime = video.currentTime
+    this.busy = true; this.lastCapture = timestamp
+    let bitmap: ImageBitmap | null = null
+    try {
+      const region = analysisRegion(this.area)
+      const x = Math.round(video.videoWidth * region.x), width = Math.max(1,Math.round(video.videoWidth * region.width)), height = video.videoHeight
+      const size = inferenceSize({width,height},1280)
+      bitmap = await createImageBitmap(video,x,0,width,height,{resizeWidth:size.width,resizeHeight:size.height,resizeQuality:'high'})
+      if (this.disposed || this.crowd !== crowd) { bitmap.close(); return }
+      const owned = bitmap; bitmap = null
+      const result = await crowd.analyze(owned,timestamp)
+      if (this.disposed || this.crowd !== crowd) return
+      this.budget.observe(result.inferenceMs)
+      if (!this.crowdObserved) {
+        this.crowdObserved = true
+        this.onStatus({state:'ready',delegate:'CPU',detail:'RTMO single-pass crowd observation · browser WASM CPU · up to 32 observed people'})
+      }
+      const people = result.people.map(person => ({...person,box:[region.x+person.box[0]*region.width,person.box[1],region.x+person.box[2]*region.width,person.box[3]] as [number,number,number,number]}))
+      const report = this.analysis.update(timestamp,result.inferenceMs,result.poses,width/height,result.delegate ?? crowd.delegate,this.area,people)
+      const interval = timestamp - this.crowdResultTimestamp
+      this.crowdResultTimestamp = timestamp
+      // Preserve the original rules’ 600ms continuity limit. A slow crowd pass
+      // may still observe people, but cannot establish fast arm-motion evidence.
+      if (this.crowdObservationOnly) {
+        this.onResult({...report,usablePeople:0,events:[],conflict:{status:'limited',explanation:'Crowd skeletons show observed people. Fast motion checks run separately on up to 4 poses.'}})
+        return
+      }
+      this.onResult((result.inferenceMs > 600 || (Number.isFinite(interval) && interval > 600)) && report.conflict.status !== 'alert'
+        ? {...report,conflict:{status:'limited',explanation:'Crowd pose updates exceed the original 600ms motion window. Video and observed people remain available; fast conflict evidence is limited.'}} : report)
+    } catch { bitmap?.close(); if (!this.disposed && this.crowd === crowd) this.fallbackCrowd() }
+    finally { if (this.crowd === crowd) this.busy = false }
   }
 
   private initialize(preferred: VisionDelegate) {
@@ -151,6 +252,7 @@ export class DeviceVision {
 
   async capture(video: HTMLVideoElement, timestamp: number) {
     void this.motion?.capture(video, timestamp)
+    if (this.crowdProfile) { if (!this.crowdFallback) await this.captureCrowd(video,timestamp); return }
     if (this.originalOnly) return
     if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < 50 || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return
     this.busy = true
@@ -224,6 +326,7 @@ export class DeviceVision {
 
   dispose() {
     this.motion?.dispose()
+    this.crowd?.dispose(); this.crowd = null
     if (this.retryTimer) clearTimeout(this.retryTimer)
     this.retryTimer = null
     this.disposed = true
@@ -251,6 +354,7 @@ class OriginalMotion {
   private lastMediaTime = -Infinity
   private delegate: VisionDelegate = 'GPU'
   private analysis = new DeviceAnalysis(new OriginalConflictEngine())
+  private cooldownScope: 'camera' | 'pair' = 'camera'
   private pending: { timestamp: number; aspect: number; startedAt: number } | null = null
   private timer: ReturnType<typeof setTimeout> | null = null
   private retryTimer: ReturnType<typeof setTimeout> | null = null
@@ -258,8 +362,10 @@ class OriginalMotion {
   private onResult: (result: DeviceMotion) => void
   private area: AnalysisArea
   private onStatus?: (status: DeviceStatus) => void
-  constructor(onResult: (result: DeviceMotion) => void, area: AnalysisArea, onStatus?: (status: DeviceStatus) => void) {
+  constructor(onResult: (result: DeviceMotion) => void, area: AnalysisArea, onStatus?: (status: DeviceStatus) => void, cooldownScope: 'camera' | 'pair' = 'camera') {
     this.onResult = onResult; this.area = area; this.onStatus = onStatus
+    this.cooldownScope = cooldownScope
+    this.analysis = new DeviceAnalysis(new OriginalConflictEngine({cooldownScope}))
   }
 
   start(preferred: VisionDelegate) {
@@ -277,7 +383,7 @@ class OriginalMotion {
     if (this.timer) clearTimeout(this.timer)
     this.ready = false; this.busy = false; this.pending = null
     this.lastMediaTime = -Infinity
-    this.analysis = new DeviceAnalysis(new OriginalConflictEngine())
+    this.analysis = new DeviceAnalysis(new OriginalConflictEngine({cooldownScope:this.cooldownScope}))
     const fail = () => {
       if (this.disposed || epoch !== this.epoch) return
       if (preferred === 'GPU') this.initialize('CPU')

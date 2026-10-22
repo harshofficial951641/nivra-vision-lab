@@ -227,6 +227,10 @@ function shoulderCalibration(body: Body): number | null {
 
 /** Observable 2D arm-motion rules. This is not a trained fight classifier. */
 export class ConflictEngine {
+  private cooldownScope: 'camera' | 'pair'
+  constructor(options: { cooldownScope?: 'camera' | 'pair' } = {}) {
+    this.cooldownScope = options.cooldownScope ?? 'camera'
+  }
   private tracks = new Map<number, BodyTrack>()
   private pairs = new Map<string, PairState>()
   private sequence = 0
@@ -316,7 +320,7 @@ export class ConflictEngine {
         const repeated = pair.pulses.length >= pair.requiredPulses && timestampMs - pair.pulses[0] >=
           (pair.requiredPulses === 4 ? 1_200 : 800)
         if (repeated && pairWarm && pair.lastPulseMs === timestampMs && !pair.alerted && timestampMs - pair.lastEventMs >= EVENT_COOLDOWN_MS &&
-          timestampMs - this.lastAlertAtMs >= EVENT_COOLDOWN_MS) {
+          (this.cooldownScope === 'pair' || timestampMs - this.lastAlertAtMs >= EVENT_COOLDOWN_MS)) {
           pair.alerted = true
           pair.lastEventMs = timestampMs
           this.lastAlertAtMs = timestampMs
@@ -324,7 +328,7 @@ export class ConflictEngine {
             title: 'Possible physical conflict', objectName: 'Two-person interaction', occurredAtMs: timestampMs,
             detail: `${pair.requiredPulses} distinct fast arm-motion episodes toward another person's upper body were observed. A person must review the interaction before responding.`,
           }
-          this.events = [event, ...this.events].slice(0, 6)
+          this.events = [event, ...this.events].slice(0, this.cooldownScope === 'pair' ? 32 : 6)
         }
       }
     }

@@ -3,7 +3,7 @@ import type { DeviceMotion, DeviceResult, DeviceStatus } from './deviceAnalysis'
 import { detectionStatus } from './detectionStatus'
 const ready: DeviceStatus = { state: 'ready', delegate: 'CPU', detail: '' }
 const error: DeviceStatus = { state: 'error', delegate: null, detail: 'failed' }
-const result = (patch: Partial<DeviceResult> = {}): DeviceResult => ({ type: 'device-result', model: 'test', delegate: 'CPU', timestampMs: 1000, inferenceMs: 100, observedPeople: 2, usablePeople: 2, tracks: [], poses: [], conflict: { status: 'clear', explanation: '' }, events: [], ...patch })
+const result = (patch: Partial<DeviceResult> = {}): DeviceResult => ({ type: 'device-result', model: 'nivra-browser-motion-v1', delegate: 'CPU', timestampMs: 1000, inferenceMs: 100, observedPeople: 2, usablePeople: 2, tracks: [], poses: [], conflict: { status: 'clear', explanation: '' }, events: [], ...patch })
 const motion = (patch: Partial<DeviceMotion> = {}): DeviceMotion => ({ ...result(), type: 'device-motion', ...patch })
 const live = { phase: 'live' as const, now: 1500, crowdStatus: ready, motionStatus: ready }
 describe('unified camera detection status', () => {

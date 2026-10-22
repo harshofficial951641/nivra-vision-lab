@@ -1,0 +1,12 @@
+{
+  "scope": "Mac T3 browser, production encoder and decoder modules, local synthetic video, no network or person-model load",
+  "source": "1280x720 moving canvas, captureStream60",
+  "sampleSeconds": 5.00636,
+  "displayedFPS": 40,
+  "encodedFPS": 40.2,
+  "decodeErrors": 0,
+  "displayDrops": 0,
+  "sequenceGaps": 0,
+  "clockCorrections": 0,
+  "physicalIPhone": false
+}

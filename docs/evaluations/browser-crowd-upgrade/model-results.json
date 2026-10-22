@@ -1,0 +1,104 @@
+{
+  "scope": "Mac T3 browser, actual model worker and DeviceAnalysis reports, prerecorded frames; not an iPhone or independent accuracy benchmark",
+  "providers": {
+    "wasm-cpu": {
+      "initializationMs": 893.94,
+      "reportsValidated": 53,
+      "clips": {
+        "C01": {
+          "samples": 25,
+          "observedPeopleMin": 0,
+          "observedPeopleMedian": 7,
+          "observedPeopleMax": 8,
+          "reportedSkeletonCounts": [
+            0,
+            6,
+            7,
+            8
+          ],
+          "inferenceMedianMs": 280.27,
+          "reviewEventIds": 0
+        },
+        "F07": {
+          "samples": 25,
+          "observedPeopleMin": 3,
+          "observedPeopleMedian": 6,
+          "observedPeopleMax": 8,
+          "reportedSkeletonCounts": [
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "inferenceMedianMs": 295.19,
+          "reviewEventIds": 0
+        },
+        "synthetic20": {
+          "samples": 3,
+          "observedPeopleMin": 20,
+          "observedPeopleMedian": 20,
+          "observedPeopleMax": 20,
+          "reportedSkeletonCounts": [
+            20
+          ],
+          "inferenceMedianMs": 331.86,
+          "reviewEventIds": 0
+        }
+      }
+    },
+    "webgpu-rejected": {
+      "initializationMs": 2629.91,
+      "reportsValidated": 53,
+      "clips": {
+        "C01": {
+          "samples": 25,
+          "observedPeopleMin": 0,
+          "observedPeopleMedian": 32,
+          "observedPeopleMax": 32,
+          "reportedSkeletonCounts": [
+            0,
+            27,
+            32
+          ],
+          "inferenceMedianMs": 68.02,
+          "reviewEventIds": 0
+        },
+        "F07": {
+          "samples": 25,
+          "observedPeopleMin": 11,
+          "observedPeopleMedian": 20,
+          "observedPeopleMax": 26,
+          "reportedSkeletonCounts": [
+            11,
+            12,
+            14,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            26
+          ],
+          "inferenceMedianMs": 66.25,
+          "reviewEventIds": 0
+        },
+        "synthetic20": {
+          "samples": 3,
+          "observedPeopleMin": 32,
+          "observedPeopleMedian": 32,
+          "observedPeopleMax": 32,
+          "reportedSkeletonCounts": [
+            32
+          ],
+          "inferenceMedianMs": 56.27,
+          "reviewEventIds": 0
+        }
+      }
+    }
+  }
+}

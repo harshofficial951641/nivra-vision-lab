@@ -1,0 +1,42 @@
+{
+  "id": "rtmo-t-body7-416",
+  "modelPath": "/models/rtmo-t-body7-416-20aad6e2.onnx",
+  "sha256": "20aad6e2e42359cac1c5b4a0b2da00e29bfe91a72a782fdcf287d273a04c1b24",
+  "bytes": 27342008,
+  "inputSide": 416,
+  "input": {
+    "name": "input",
+    "shape": [
+      1,
+      3,
+      416,
+      416
+    ],
+    "dtype": "float32",
+    "channels": "BGR",
+    "range": [
+      0,
+      255
+    ],
+    "resize": "aspect fit, top-left anchored, floor resized dimensions, pad114"
+  },
+  "outputs": {
+    "dets": [
+      "batch",
+      "N",
+      5
+    ],
+    "keypoints": [
+      "batch",
+      "N",
+      17,
+      3
+    ]
+  },
+  "officialScoreThreshold": 0.1,
+  "officialNmsThreshold": 0.65,
+  "productScoreThreshold": 0.25,
+  "source": "https://download.openmmlab.com/mmpose/v1/projects/rtmo/onnx_sdk/rtmo-t_8xb32-600e_body7-416x416-f48f75cb_20231219.zip",
+  "archiveSHA256": "6c71dea1d9d948917f2c562d58c881e4a11d7c8ce335d2920bcaa73d75e7c898",
+  "runtime": "onnxruntime-web1.30.0"
+}

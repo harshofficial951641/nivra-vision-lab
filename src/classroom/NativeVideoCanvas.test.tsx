@@ -6,6 +6,20 @@ const { state }=vi.hoisted(()=>({state:{draw:null as ((timestamp:number)=>void)|
 vi.mock('./nativeVideo',async original=>({...await original<typeof import('./nativeVideo')>(),NativeVideoDecoder:class { constructor(canvas:HTMLCanvasElement,draw:(timestamp:number)=>void){canvas.width=1280;canvas.height=720;state.draw=draw}push=vi.fn();reset=state.reset;dispose=state.dispose}}))
 afterEach(()=>{cleanup();vi.clearAllMocks();vi.unstubAllGlobals();vi.useRealTimers();state.draw=null})
 describe('native canvas fallback lifecycle',()=>{
+  it('reports actual displayed fps and clears the number when playback stops',async()=>{
+    vi.useFakeTimers();vi.stubGlobal('VideoDecoder',class {})
+    const fps=vi.fn(),bus=new NativeVideoBus()
+    bus.retain(new Map([['c','g']]))
+    render(<NativeVideo bus={bus} cameraId="c" generation="g" onPlaying={vi.fn()} onFPS={fps}/>)
+    act(()=>state.draw!(0))
+    for(let i=1;i<=40;i++)await act(async()=>{await vi.advanceTimersByTimeAsync(25);state.draw!(i*25)})
+    expect(fps).toHaveBeenLastCalledWith(40)
+    // A burst at the same wall time is not another second of40fps playback.
+    act(()=>{for(let i=0;i<40;i++)state.draw!(1025+i*25)})
+    expect(fps).toHaveBeenCalledTimes(1)
+    await act(async()=>{await vi.advanceTimersByTimeAsync(1000)})
+    expect(fps).toHaveBeenLastCalledWith(null)
+  })
   it('keeps JPEG visible when WebCodecs is unsupported',()=>{
     vi.stubGlobal('VideoDecoder',undefined)
     const playing=vi.fn(),view=render(<NativeVideo bus={new NativeVideoBus()} cameraId="c" generation="g" onPlaying={playing}/>)

@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build && node scripts/build-sites.mjs",
-    "build:usb": "tsc -b && vite build --mode usb --outDir dist-usb",
+    "dev": "node scripts/prepare-browser-runtime.mjs && vite",
+    "build": "node scripts/prepare-browser-runtime.mjs && tsc -b && vite build && node scripts/build-sites.mjs",
+    "build:usb": "node scripts/prepare-browser-runtime.mjs && tsc -b && vite build --mode usb --outDir dist-usb",
     "build:local": "npm run build:usb",
     "lint": "oxlint",
     "preview": "vite preview",
@@ -24,6 +24,7 @@
     "@mediapipe/tasks-vision": "1.0.1",
     "@phosphor-icons/react": "^2.1.10",
     "@zxing/browser": "^0.2.1",
+    "onnxruntime-web": "1.30.0",
     "qrcode.react": "4.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"

@@ -31,6 +31,7 @@ const statusText = {
 
 export function CameraTile({ camera, events, now, pinned, selected, size = 'tile', onOpen, onRemove, removing, nativeVideo }: Props) {
   const [nativePlaying, setNativePlaying] = useState(false)
+  const [nativeFPS, setNativeFPS] = useState<number|null>(null)
   const [nativeFrame, setNativeFrame] = useState<NativeRenderedFrame|null>(null)
   const [poseHistory] = useState(() => new NativePoseHistory())
   if(nativeVideo && size !== 'thumb')poseHistory.add(camera,Date.now());else poseHistory.clear()
@@ -58,7 +59,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
           <span className={`cm-status cm-status--${camera.status}`}>
             <i aria-hidden /> {statusText[camera.status]}
           </span>
-          {camera.fps != null && <span className="cm-fps">{camera.fps} fps</span>}
+          {(nativePlaying ? nativeFPS : camera.fps) != null && <span className="cm-fps" title="Video frames displayed per second">{nativePlaying ? nativeFPS : camera.fps} fps</span>}
         </header>
       )}
       {size !== 'thumb' && <span className="cm-location-stamp">{cameraPlace(camera) || 'Location not set'}{size === 'hero' && <small>{validGPS(camera.gps) ? 'Last shared location' : 'Location not shared'}</small>}</span>}
@@ -77,7 +78,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
         ) : (
           <img src={camera.image} alt="" draggable={false} />
         )}
-        {size !== 'thumb' && nativeVideo && camera.generation && camera.status === 'live' && !camera.preview?.analysisFrame && <NativeVideo bus={nativeVideo} cameraId={camera.id} generation={camera.generation} onPlaying={setNativePlaying} onFrame={setNativeFrame} overlayMatches={frame => nativeOverlayAligned(nativeCamera,frame,nativeFrame,Date.now())}>
+        {size !== 'thumb' && nativeVideo && camera.generation && camera.status === 'live' && !camera.preview?.analysisFrame && <NativeVideo bus={nativeVideo} cameraId={camera.id} generation={camera.generation} onPlaying={setNativePlaying} onFrame={setNativeFrame} onFPS={setNativeFPS} overlayMatches={frame => nativeOverlayAligned(nativeCamera,frame,nativeFrame,Date.now())}>
           {nativeFrame && nativeResult && <TrackingOverlay tracks={observedTracks(nativeResult.tracks)} poses={nativeResult.poses} width={nativeFrame.width} height={nativeFrame.height} />}
         </NativeVideo>}
         {!nativePlaying && (tracking.tracks.length > 0 || tracking.poses.length > 0) && camera.preview?.width && camera.preview?.height && <TrackingOverlay tracks={tracking.tracks} poses={tracking.poses} width={camera.preview.width} height={camera.preview.height} />}

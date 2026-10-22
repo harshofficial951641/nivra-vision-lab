@@ -1015,7 +1015,7 @@ class Classroom:
             recent_reports = deque()
             recent_video = deque()
             try:
-                await socket.send_json({'type':'ready','cameraId':camera_id,'generation':generation,'maxFps':12})
+                await socket.send_json({'type':'ready','cameraId':camera_id,'generation':generation,'maxFps':12,'browserVideo':live['compute'] == 'device'})
                 while True:
                     message = await asyncio.wait_for(socket.receive(),15)
                     if message['type'] == 'websocket.disconnect': break
@@ -1024,10 +1024,10 @@ class Classroom:
                         text = message['text']
                         now = time.monotonic()
                         length = len(text.encode('utf-8'))
-                        if length > (3_000_000 if live['compute'] == 'native' else MAX_REPORT_BYTES): raise ValueError('Invalid device report size')
+                        if length > (3_000_000 if live['compute'] == 'native' or live.get('browserVideo') else MAX_REPORT_BYTES): raise ValueError('Invalid device report size')
                         data = json.loads(text)
                         if not isinstance(data,dict): raise ValueError('Invalid camera message')
-                        video_message = data.get('type') == 'native-video-v1'
+                        video_message = data.get('type') in ('native-video-v1','browser-video-v1')
                         recent = recent_video if video_message else recent_reports
                         while recent and now-recent[0] > 1: recent.popleft()
                         if len(recent) >= (40 if video_message else 24) or (not video_message and length > MAX_REPORT_BYTES): raise ValueError('Invalid device report rate or size')
@@ -1037,8 +1037,16 @@ class Classroom:
                                 raise ValueError('Native compute negotiation must precede video')
                             live.update(compute='native',nativeHello=True,decisions=Decisions())
                             await socket.send_json({'type':'native-ready'})
-                        elif data.get('type') == 'native-video-v1':
-                            if live['compute'] != 'native': raise ValueError('Native video was not negotiated')
+                        elif data.get('type') == 'browser-video-hello':
+                            if live['compute'] != 'device' or live.get('browserVideo') or data != {'type':'browser-video-hello','version':1}:
+                                raise ValueError('Browser video requires the paired device stream')
+                            live['browserVideo'] = True
+                            await socket.send_json({'type':'browser-video-ready','version':1})
+                        elif data.get('type') in ('native-video-v1','browser-video-v1'):
+                            browser_video = data['type'] == 'browser-video-v1'
+                            if browser_video:
+                                if live['compute'] != 'device' or not live.get('browserVideo'): raise ValueError('Browser video was not negotiated')
+                            elif live['compute'] != 'native': raise ValueError('Native video was not negotiated')
                             changed = live.get('nativeVideoGeneration') != data.get('generation')
                             if changed and not data.get('frames',[{}])[0].get('keyframe'): raise ValueError('Video must begin at a keyframe')
                             packet, sequence, timestamp = video_packet({k:v for k,v in data.items() if k != 'type'}, camera_id,generation,
@@ -1056,7 +1064,7 @@ class Classroom:
                             if sum(map(len,bootstrap)) > 2_000_000: bootstrap.clear()
                             self.broadcast_video(camera_id,packet)
                             self.schedule_snapshot()
-                            await socket.send_json({'type':'video-accepted','sequence':sequence})
+                            await socket.send_json({'type':'video-accepted','sequence':sequence, **({'timestampMs':timestamp} if browser_video else {})})
                         elif data.get('type') == 'native-analysis-v1':
                             if live['compute'] != 'native': raise ValueError('Native analysis was not negotiated')
                             report = NativeAnalysis.model_validate(data)
@@ -1107,7 +1115,8 @@ class Classroom:
                             timestamp_key = 'lastMotionTimestamp' if motion else 'lastDeviceTimestamp'
                             if report.timestampMs <= live[timestamp_key]: raise ValueError('Device timestamps must increase')
                             window = 3000 if motion else 6000
-                            if not live['frames'] or now-live['received'] > window / 1000 or not -2000 <= last_timestamp-report.timestampMs <= window:
+                            source_timestamp = max(last_timestamp,live.get('nativeVideoTimestamp',-1))
+                            if not (live['frames'] or live.get('videoFrames')) or now-live['received'] > window / 1000 or not -2000 <= source_timestamp-report.timestampMs <= window:
                                 continue
                             live[timestamp_key] = report.timestampMs
                             if motion:
@@ -1118,7 +1127,7 @@ class Classroom:
                                 live['result'] = result_payload(report)
                             new_event = False
                             for event in report.events:
-                                payload = dict(id=event.id,occurredAtMs=event.occurredAtMs,evidenceTimestampMs=event.occurredAtMs,detail=event.detail,evidenceModel=DEVICE_MODEL)
+                                payload = dict(id=event.id,occurredAtMs=event.occurredAtMs,evidenceTimestampMs=event.occurredAtMs,detail=event.detail,evidenceModel=report.model)
                                 if self.record_event(camera_id,generation,payload):
                                     new_event = True
                             if new_event: await self.broadcast(self.snapshot())

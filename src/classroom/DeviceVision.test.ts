@@ -312,3 +312,106 @@ describe('published browser skeleton profile', () => {
     device.dispose()
   })
 })
+
+describe('guarded one-pass crowd profile',()=>{
+  const model={modelPath:'/models/validated.onnx',sha256:'0'.repeat(64),inputSide:416 as const}
+  it('uses only one graph and carries same-source32 boxes without serial person crops',async()=>{
+    vi.stubGlobal('createImageBitmap',vi.fn().mockResolvedValue(bitmap()))
+    const status=vi.fn(),result=vi.fn(),device=new DeviceVision(status,result,'full','crowd',undefined,undefined,model)
+    device.start()
+    expect(WorkerStub.all).toHaveLength(1)
+    WorkerStub.all[0].emit({type:'ready'});await Promise.resolve()
+    const capture = device.capture(video,100)
+    await Promise.resolve()
+    await device.capture(video,200)
+    expect(createImageBitmap).toHaveBeenCalledOnce()
+    const boxes=Array.from({length:32},(_,i)=>({box:[i/40,0,(i+1)/40,.5],score:.9}))
+    WorkerStub.all[0].emit({type:'result',result:{timestampMs:100,inferenceMs:50,people:boxes,poses:[]}})
+    await capture
+    expect(result).toHaveBeenCalledExactlyOnceWith(expect.objectContaining({timestampMs:100,delegate:'CPU',observedPeople:32,poses:[]}))
+    expect(WorkerStub.all).toHaveLength(1)
+    device.dispose();expect(WorkerStub.all[0].terminate).toHaveBeenCalledOnce()
+  })
+  it('stops an over-three-second crowd pass and loads one original Full fallback, with no late result',async()=>{
+    vi.stubGlobal('createImageBitmap',vi.fn().mockResolvedValue(bitmap()))
+    const status=vi.fn(),result=vi.fn(),device=new DeviceVision(status,result,'full','crowd',undefined,undefined,model)
+    device.start();WorkerStub.all[0].emit({type:'ready'});await Promise.resolve()
+    const first = device.capture(video,100)
+    await Promise.resolve()
+    WorkerStub.all[0].emit({type:'result',result:{timestampMs:100,inferenceMs:50,people:[],poses:[]}})
+    await first
+    const capture = device.capture(video,200)
+    await Promise.resolve()
+    await vi.advanceTimersByTimeAsync(3000)
+    await capture
+    expect(WorkerStub.all[0].terminate).toHaveBeenCalledOnce()
+    expect(WorkerStub.all).toHaveLength(2)
+    expect(WorkerStub.all[1].postMessage).toHaveBeenCalledWith(expect.objectContaining({modelPath:expect.stringContaining('pose_landmarker_full'),maxPoses:4}))
+    WorkerStub.all[0].emit({type:'result',result:{timestampMs:200,inferenceMs:50,people:[],poses:[]}})
+    await Promise.resolve();expect(result).toHaveBeenCalledOnce()
+    device.dispose();expect(WorkerStub.all[1].terminate).toHaveBeenCalledOnce()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+  it('allows first-frame compilation while staying visibly loading, then bounds a permanent first stall',async()=>{
+    vi.stubGlobal('createImageBitmap',vi.fn().mockResolvedValue(bitmap()))
+    const status=vi.fn(),result=vi.fn(),device=new DeviceVision(status,result,'full','crowd',undefined,undefined,model)
+    device.start();WorkerStub.all[0].emit({type:'ready',delegate:'CPU'});await Promise.resolve()
+    const capture=device.capture(video,100)
+    await Promise.resolve()
+    await vi.advanceTimersByTimeAsync(5500)
+    expect(status).not.toHaveBeenCalledWith(expect.objectContaining({state:'ready'}))
+    expect(WorkerStub.all).toHaveLength(1)
+    WorkerStub.all[0].emit({type:'result',result:{timestampMs:100,inferenceMs:5500,delegate:'CPU',people:[],poses:[]}})
+    await capture
+    expect(status).toHaveBeenLastCalledWith(expect.objectContaining({state:'ready',delegate:'CPU'}))
+    expect(result).toHaveBeenLastCalledWith(expect.objectContaining({conflict:expect.objectContaining({status:'limited',explanation:expect.stringContaining('600ms')})}))
+    device.dispose()
+    const stalled=new DeviceVision(vi.fn(),vi.fn(),'full','crowd',undefined,undefined,model)
+    stalled.start();WorkerStub.all[1].emit({type:'ready'});await Promise.resolve()
+    const first=stalled.capture(video,100)
+    await Promise.resolve()
+    await vi.advanceTimersByTimeAsync(11999)
+    expect(WorkerStub.all[1].terminate).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(1);await first
+    expect(WorkerStub.all[1].terminate).toHaveBeenCalledOnce()
+    expect(WorkerStub.all).toHaveLength(3)
+    stalled.dispose();expect(vi.getTimerCount()).toBe(0)
+  })
+
+})
+
+describe('verified CPU crowd observation with original fast motion',()=>{
+  it('keeps crowd reports observational and reuses the existing Full worker after crowd failure with the same event IDs',async()=>{
+    vi.stubGlobal('createImageBitmap',vi.fn().mockImplementation(()=>Promise.resolve(bitmap())))
+    const model={modelPath:'/models/validated.onnx',sha256:'0'.repeat(64),inputSide:416 as const,preferredDelegate:'CPU' as const}
+    const status=vi.fn(),result=vi.fn(),motion=vi.fn(),motionStatus=vi.fn()
+    const device=new DeviceVision(status,result,'full','crowd',motion,motionStatus,model)
+    device.start()
+    expect(WorkerStub.all).toHaveLength(2)
+    const full=WorkerStub.all[0],crowd=WorkerStub.all[1]
+    expect(full.postMessage).toHaveBeenCalledWith(expect.objectContaining({modelPath:expect.stringContaining('pose_landmarker_full'),poseDelegate:'GPU',maxPoses:4}))
+    full.emit({type:'ready',delegate:'GPU'});crowd.emit({type:'ready',delegate:'CPU'});await Promise.resolve()
+    const first=device.capture(video,100);await Promise.resolve()
+    full.emit({type:'pose-result',timestampMs:100,inferenceMs:20,poses:[]})
+    crowd.emit({type:'result',result:{timestampMs:100,inferenceMs:300,delegate:'CPU',people:[{box:[.1,.1,.3,.8],score:.9}],poses:[]}})
+    await first
+    expect(result).toHaveBeenLastCalledWith(expect.objectContaining({delegate:'CPU',observedPeople:1,usablePeople:0,events:[],conflict:expect.objectContaining({status:'limited',explanation:expect.stringContaining('Fast motion checks run separately')})}))
+    expect(motion).toHaveBeenCalledOnce()
+    const second=device.capture(video,200);await Promise.resolve()
+    await vi.advanceTimersByTimeAsync(3000);await second
+    expect(crowd.terminate).toHaveBeenCalledOnce()
+    expect(full.terminate).not.toHaveBeenCalled()
+    expect(WorkerStub.all).toHaveLength(2)
+    full.emit({type:'pose-result',timestampMs:200,inferenceMs:20,poses:[]})
+    for(let t=300;t<=6500;t+=100){
+      await device.capture(video,t)
+      full.emit({type:'pose-result',timestampMs:t,inferenceMs:20,poses:demoFrame(t,'conflict').poses})
+    }
+    const fast=motion.mock.calls.map(call=>call[0]).find(report=>report.events.length>0)
+    expect(fast).toBeDefined()
+    expect(result.mock.calls.map(call=>call[0]).some(report=>report.events.some((event:{id:string})=>event.id===fast.events[0].id))).toBe(true)
+    device.dispose()
+    expect(full.terminate).toHaveBeenCalledOnce()
+    expect(vi.getTimerCount()).toBe(0)
+  })
+})

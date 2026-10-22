@@ -2,6 +2,15 @@ import { act, cleanup, fireEvent, render, screen, within } from '@testing-librar
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Publisher from './Publisher'
 import type { DeviceMotion, DeviceResult, DeviceStatus } from './deviceAnalysis'
+import type { BrowserVideoOptions } from './browserVideoEncoder'
+
+const encoded = vi.hoisted(() => ({ start: vi.fn(), dispose: vi.fn(), reset: vi.fn(), create: vi.fn(), options: null as BrowserVideoOptions | null }))
+vi.mock('./browserVideoEncoder', () => ({ BrowserVideoEncoder: class {
+  constructor(options: BrowserVideoOptions) { encoded.options = options; encoded.create() }
+  start = encoded.start
+  dispose = encoded.dispose
+  resetTransport = encoded.reset
+} }))
 
 const { api, openSocket, framePacket, capture, dispose, resultCallback, motionCallback, statusCallback, createDetector } = vi.hoisted(() => ({ api: vi.fn(), openSocket: vi.fn(), framePacket: vi.fn(), capture: vi.fn(), dispose: vi.fn(), resultCallback: { current: null as ((result: DeviceResult) => void) | null }, motionCallback: { current: null as ((result: DeviceMotion) => void) | null }, statusCallback: { current: null as ((status: DeviceStatus) => void) | null }, createDetector: vi.fn() }))
 vi.mock('./contracts', async importOriginal => ({ ...await importOriginal<typeof import('./contracts')>(), api, framePacket, openSocket }))
@@ -14,6 +23,7 @@ vi.mock('./DeviceVision', () => ({ DeviceVision: class {
   start() { this.onStatus({ state: 'ready', delegate: 'GPU', detail: 'Ready' }) }
 } }))
 beforeEach(() => {
+  encoded.start.mockReset().mockResolvedValue(false); encoded.dispose.mockClear(); encoded.reset.mockClear(); encoded.create.mockClear(); encoded.options = null
   api.mockReset(); openSocket.mockReset(); framePacket.mockReset(); capture.mockClear(); dispose.mockClear(); createDetector.mockClear()
   framePacket.mockReturnValue(new Promise(() => {}))
 })
@@ -298,6 +308,68 @@ describe('camera LAN recovery',()=>{
 })
 
 describe('camera-session detector lifetime',()=>{
+  it('recovers JPEG fallback after a hung preview capture and a failed encoder without restarting detection',async()=>{
+    vi.useFakeTimers();encoded.start.mockResolvedValue(true)
+    api.mockResolvedValue({id:'C1',name:'Gate',gps:null})
+    framePacket.mockReturnValueOnce(new Promise(()=>{})).mockResolvedValue(new ArrayBuffer(8))
+    const peer={readyState:WebSocket.OPEN,bufferedAmount:0,send:vi.fn(),close:vi.fn(),onmessage:null as ((event:{data:string})=>void)|null}
+    openSocket.mockResolvedValue(peer)
+    const track={stop:vi.fn(),addEventListener:vi.fn()}
+    vi.stubGlobal('isSecureContext',true)
+    vi.stubGlobal('navigator',{mediaDevices:{getUserMedia:vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})}})
+    vi.spyOn(HTMLMediaElement.prototype,'play').mockResolvedValue()
+    await act(async()=>render(<Publisher />))
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Allow camera & start'})))
+    await act(async()=>peer.onmessage?.({data:'{"type":"ready","browserVideo":true}'}))
+    await act(async()=>peer.onmessage?.({data:'{"type":"browser-video-ready","version":1}'}))
+    act(()=>encoded.options!.onFailure())
+    await act(async()=>{await vi.advanceTimersByTimeAsync(1501)})
+    expect(framePacket.mock.calls.length).toBeGreaterThanOrEqual(2)
+    const stamp=framePacket.mock.calls.at(-1)![2]
+    act(()=>peer.onmessage?.({data:JSON.stringify({type:'accepted',timestampMs:stamp})}))
+    expect(screen.getByText('Live',{exact:true})).toBeInTheDocument()
+    expect(openSocket).toHaveBeenCalledOnce();expect(createDetector).toHaveBeenCalledOnce()
+    expect(peer.close).not.toHaveBeenCalled();expect(track.stop).not.toHaveBeenCalled()
+  })
+  it('negotiates fast video, keeps its encoder warm across reconnects, and ignores output after Stop',async()=>{
+    vi.useFakeTimers();encoded.start.mockResolvedValue(true)
+    api.mockResolvedValue({id:'C1',name:'Gate',gps:null})
+    framePacket.mockResolvedValue(new ArrayBuffer(8))
+    const peers=Array.from({length:2},()=>({readyState:WebSocket.OPEN,bufferedAmount:0,send:vi.fn(),close:vi.fn(),onmessage:null as ((event:{data:string})=>void)|null,onclose:null as (()=>void)|null}))
+    peers.forEach(peer=>openSocket.mockResolvedValueOnce(peer))
+    const track={stop:vi.fn(),addEventListener:vi.fn()}
+    vi.stubGlobal('isSecureContext',true)
+    vi.stubGlobal('navigator',{mediaDevices:{getUserMedia:vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})}})
+    vi.spyOn(HTMLMediaElement.prototype,'play').mockResolvedValue()
+    await act(async()=>render(<Publisher />))
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Allow camera & start'})))
+    await act(async()=>peers[0].onmessage?.({data:'{"type":"ready","browserVideo":true}'}))
+    expect(peers[0].send).toHaveBeenCalledWith('{"type":"browser-video-hello","version":1}')
+    expect(encoded.start).not.toHaveBeenCalled()
+    await act(async()=>peers[0].onmessage?.({data:'{"type":"browser-video-ready","version":1}'}))
+    expect(encoded.start).toHaveBeenCalledOnce()
+    const batch={type:'browser-video-v1' as const,version:1 as const,generation:'v1',codec:'avc1.42002a',description:'config',width:1280,height:720,frames:[{sequence:1,timestampMs:10,keyframe:true,data:'frame'}]}
+    act(()=>encoded.options!.onBatch(batch))
+    expect(peers[0].send).toHaveBeenCalledWith(JSON.stringify(batch))
+    act(()=>peers[0].onmessage?.({data:'{"type":"video-accepted","timestampMs":10}'}))
+    expect(screen.getByText('Live',{exact:true})).toBeInTheDocument()
+    act(()=>peers[0].onclose?.())
+    expect(encoded.options!.canSend()).toBe(false)
+    await act(async()=>{await vi.advanceTimersByTimeAsync(500)})
+    await act(async()=>peers[1].onmessage?.({data:'{"type":"ready","browserVideo":true}'}))
+    await act(async()=>peers[1].onmessage?.({data:'{"type":"browser-video-ready","version":1}'}))
+    expect(encoded.create).toHaveBeenCalledOnce();expect(encoded.start).toHaveBeenCalledOnce()
+    expect(encoded.reset).toHaveBeenCalledTimes(2)
+    expect(createDetector).toHaveBeenCalledOnce()
+    act(()=>encoded.options!.onBatch({...batch,generation:'v2',frames:[{...batch.frames[0],sequence:2,timestampMs:600}]}))
+    expect(peers[1].send).toHaveBeenCalledWith(expect.stringContaining('"generation":"v2"'))
+    act(()=>fireEvent.click(screen.getByRole('button',{name:'Stop camera'})))
+    const sent=peers[1].send.mock.calls.length
+    act(()=>encoded.options!.onBatch(batch))
+    expect(peers[1].send).toHaveBeenCalledTimes(sent)
+    expect(encoded.dispose).toHaveBeenCalledOnce()
+    expect(vi.getTimerCount()).toBe(0)
+  })
   it('keeps one Full detector and one capture loop across three reconnects, gates new peers until ready, and disposes on Stop',async()=>{
     vi.useFakeTimers()
     api.mockResolvedValue({id:'C1',name:'Gate',gps:null})

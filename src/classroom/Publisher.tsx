@@ -11,6 +11,8 @@ import { FrameWindow } from './frameWindow'
 import { DeviceReportQueue } from './deviceReportQueue'
 import { TrackOverlay } from './TrackOverlay'
 import { DeviceVision } from './DeviceVision'
+import { BrowserVideoEncoder } from './browserVideoEncoder'
+import { RTMO_T_MODEL } from './CrowdPoseVision'
 import type { DeviceMotion, DeviceResult, DeviceStatus } from './deviceAnalysis'
 import { analysisRegion, type AnalysisArea } from './deviceBudget'
 import { detectionStatus } from './detectionStatus'
@@ -57,6 +59,9 @@ export default function Publisher() {
   const [motion, setMotion] = useState<DeviceMotion | null>(null)
   const [motionStatus, setMotionStatus] = useState<DeviceStatus | null>(null)
   const detector = useRef<DeviceVision | null>(null)
+  const encoder = useRef<BrowserVideoEncoder | null>(null)
+  const transportWatchdog = useRef(0)
+  const frameDeadlines = useRef(new Set<number>())
   const [status, setStatus] = useState<
       'idle' | 'starting' | 'reconnecting' | 'live' | 'stopped'
     >('idle'),
@@ -74,6 +79,7 @@ export default function Publisher() {
   const generation = useRef(0),
     timeout = useRef(0),
     analysisTimeout = useRef(0)
+  const analysisCallback = useRef(0)
   const stop = () => {
     generation.current++
     connectionAttempt.current?.abort()
@@ -83,6 +89,13 @@ export default function Publisher() {
     detectionRetry.current = () => {}
     resumeConnection.current = () => {}
     clearTimeout(analysisTimeout.current)
+    if (analysisCallback.current) video.current?.cancelVideoFrameCallback?.(analysisCallback.current)
+    analysisCallback.current = 0
+    clearInterval(transportWatchdog.current)
+    frameDeadlines.current.forEach(clearTimeout)
+    frameDeadlines.current.clear()
+    encoder.current?.dispose()
+    encoder.current = null
     detector.current?.dispose()
     detector.current = null
     const peer = socket.current
@@ -136,6 +149,7 @@ export default function Publisher() {
           facingMode: { ideal: lens },
           width: { ideal: 1280 },
           height: { ideal: 720 },
+          frameRate: { ideal: 60, max: 60 },
         },
       })
       if (current !== generation.current) {
@@ -158,6 +172,10 @@ export default function Publisher() {
       let connecting = false
       let readyPeer: WebSocket | null = null
       let acknowledgedPeer: WebSocket | null = null
+      let encodedTransport: { peer: WebSocket; flow: FrameWindow; batches: Map<number, number> } | null = null
+      let compressed = false
+      let startingEncoder = false
+      let encoderReady = false
       let analyzing = false
       let lastStatus: DeviceStatus | null = null, lastMotionStatus: DeviceStatus | null = null
       const sendStatus = (type: string, value: DeviceStatus | null) => {
@@ -183,7 +201,9 @@ export default function Publisher() {
         if (current !== generation.current) return
         report()
         if (video.current) void detector.current?.capture(video.current, performance.now())
-        analysisTimeout.current = window.setTimeout(analyze, 50)
+        if (video.current?.requestVideoFrameCallback)
+          analysisCallback.current = video.current.requestVideoFrameCallback(analyze)
+        else analysisTimeout.current = window.setTimeout(analyze, 50)
       }
       const startDetection = () => {
         if (current !== generation.current) return
@@ -204,17 +224,17 @@ export default function Publisher() {
             if (current !== generation.current || detector.current !== client) return
             resultQueue.push(result)
             report()
-            if (performance.now() - shownAt > 500 || result.conflict.status === 'alert') {
+            if (performance.now() - shownAt >= 100 || result.conflict.status === 'alert') {
               shownAt = performance.now()
               setObservation(result)
             }
           },
-          area, 'original',
+          area, 'crowd',
           (result) => {
             if (current !== generation.current || detector.current !== client) return
             motionQueue.push(result)
             report()
-            if (performance.now() - motionShownAt >= 250 || result.conflict.status === 'alert') {
+            if (performance.now() - motionShownAt >= 100 || result.conflict.status === 'alert') {
               motionShownAt = performance.now()
               setMotion(result)
             }
@@ -226,6 +246,7 @@ export default function Publisher() {
             lastMotionStatus = next
             sendStatus('device-motion-status', next)
           },
+          RTMO_T_MODEL,
         )
         detector.current = client
         client.start()
@@ -236,6 +257,9 @@ export default function Publisher() {
         connectionAttempt.current?.abort()
         clearTimeout(timeout.current); clearTimeout(connectionDeadline.current)
         readyPeer = null; acknowledgedPeer = null
+        encodedTransport = null; compressed = false
+        encoder.current?.resetTransport()
+        clearInterval(transportWatchdog.current)
         resultQueue.clear(); motionQueue.clear()
         setSent(0)
         const peer = socket.current
@@ -263,8 +287,59 @@ export default function Publisher() {
           socket.current = peer
           const canvas = document.createElement('canvas')
           const flow = new FrameWindow()
+          const encodedFlow = new FrameWindow()
+          const batches = new Map<number, number>()
           let sending = false
           let acknowledged = 0, countShownAt = -Infinity
+          let lastAcknowledgedAt = performance.now()
+          const accepted = (count: number) => {
+            lastAcknowledgedAt = performance.now()
+            acknowledged += count
+            acknowledgedPeer = peer
+            if (acknowledged >= 30) reconnects = 0
+            report()
+            if (performance.now() - countShownAt >= 500) {
+              countShownAt = performance.now()
+              setSent(acknowledged)
+            }
+          }
+          const startVideo = async () => {
+            if (current !== generation.current || socket.current !== peer || !video.current) return
+            encodedTransport = { peer, flow: encodedFlow, batches }
+            if (encoder.current) { encoder.current.resetTransport(); compressed = encoderReady; return }
+            if (startingEncoder) return
+            startingEncoder = true
+            const client = new BrowserVideoEncoder({
+              canSend: () => {
+                const active = encodedTransport
+                return current === generation.current && !!active && readyPeer === active.peer && socket.current === active.peer && active.peer.readyState === WebSocket.OPEN && active.flow.canSend(performance.now(), active.peer.bufferedAmount)
+              },
+              onBatch: batch => {
+                const active = encodedTransport
+                if (current !== generation.current || !active || readyPeer !== active.peer || socket.current !== active.peer || active.peer.readyState !== WebSocket.OPEN) return
+                const payload = JSON.stringify(batch)
+                const bytes = new TextEncoder().encode(payload).byteLength
+                if (!active.flow.canSend(performance.now(), active.peer.bufferedAmount, bytes)) { client.resetTransport(); return }
+                const timestamp = batch.frames.at(-1)!.timestampMs
+                active.peer.send(payload)
+                active.flow.sent(timestamp, performance.now(), bytes)
+                active.batches.set(timestamp, batch.frames.length)
+              },
+              onFailure: () => {
+                if (current === generation.current && encoder.current === client) {
+                  encoder.current = null; compressed = false; encoderReady = false
+                }
+              },
+            })
+            encoder.current = client
+            try {
+              const supported = await client.start(video.current)
+              if (current !== generation.current || encoder.current !== client) { client.dispose(); return }
+              encoderReady = supported
+              compressed = supported && encodedTransport?.peer === socket.current
+              if (!supported) { client.dispose(); encoder.current = null }
+            } finally { startingEncoder = false }
+          }
           const send = async () => {
             if (current !== generation.current || socket.current !== peer) return
             const startedAt = performance.now()
@@ -275,11 +350,21 @@ export default function Publisher() {
             }
             if (flow.canSend(startedAt, peer.bufferedAmount) && peer.readyState === WebSocket.OPEN && video.current) {
               let packet: ArrayBuffer | null
+              let deadline = 0
               try {
-                packet = await framePacket(video.current, canvas, startedAt, detector.current?.budget.previewSide)
+                packet = await Promise.race([
+                  framePacket(video.current, canvas, startedAt, detector.current?.budget.previewSide),
+                  new Promise<null>(resolve => {
+                    deadline = window.setTimeout(() => resolve(null), 1500)
+                    frameDeadlines.current.add(deadline)
+                  }),
+                ])
               } catch {
-                peer.close()
-                return
+                if (!compressed) { peer.close(); return }
+                packet = null
+              } finally {
+                clearTimeout(deadline)
+                frameDeadlines.current.delete(deadline)
               }
               if (
                 packet &&
@@ -293,12 +378,12 @@ export default function Publisher() {
             }
             report()
             if (current === generation.current && socket.current === peer)
-              timeout.current = window.setTimeout(() => void send(), Math.max(0, (detector.current?.budget.previewInterval ?? 84) - (performance.now() - startedAt)))
+              timeout.current = window.setTimeout(() => void send(), Math.max(0, (compressed ? 1000 : detector.current?.budget.previewInterval ?? 84) - (performance.now() - startedAt)))
           }
           connectionDeadline.current = window.setTimeout(() => { if (current === generation.current && !sending) peer.close() }, 15000)
           peer.onmessage = (event) => {
             if (current !== generation.current || socket.current !== peer) return
-            let data: { type: string; timestampMs?: number }
+            let data: { type: string; timestampMs?: number; browserVideo?: boolean; version?: number }
             try { data = JSON.parse(event.data) as typeof data }
             catch { retryConnection(new Error('Connection interrupted.')); return }
             if (data.type === 'ready' && !sending) {
@@ -311,17 +396,20 @@ export default function Publisher() {
               sendStatus('device-motion-status', lastMotionStatus)
               if (!detector.current) startDetection()
               if (!analyzing) { analyzing = true; analyze() }
+              if (data.browserVideo) peer.send(JSON.stringify({ type: 'browser-video-hello', version: 1 }))
+              clearInterval(transportWatchdog.current)
+              transportWatchdog.current = window.setInterval(() => {
+                if (current === generation.current && socket.current === peer && (performance.now()-lastAcknowledgedAt > 8000 || flow.timedOut(performance.now()) || encodedFlow.timedOut(performance.now()))) peer.close()
+              }, 500)
               void send()
             }
+            if (data.type === 'browser-video-ready' && data.version === 1) void startVideo()
+            if (data.type === 'video-accepted' && typeof data.timestampMs === 'number' && encodedFlow.acknowledge(data.timestampMs)) {
+              accepted(batches.get(data.timestampMs) ?? 0)
+              batches.delete(data.timestampMs)
+            }
             if (data.type === 'accepted' && typeof data.timestampMs === 'number' && flow.acknowledge(data.timestampMs)) {
-              acknowledged++
-              acknowledgedPeer = peer
-              if (acknowledged === 30) reconnects = 0
-              report()
-              if (performance.now() - countShownAt >= 500) {
-                countShownAt = performance.now()
-                setSent(acknowledged)
-              }
+              accepted(1)
             }
           }
           peer.onclose = event => { if (socket.current === peer) retryConnection(event?.code === 4401 || event?.code === 4403 ? new ApiError('Camera pairing expired.', 403) : new Error('Connection lost.')) }
@@ -374,7 +462,7 @@ export default function Publisher() {
         {running && <section className="nv-detection-summary" data-state={summary.state} aria-label="Detection status">
           <div><strong role={summary.state === 'review' ? 'alert' : 'status'}>{summary.label}</strong><span>{summary.people} {summary.people === 1 ? 'person' : 'people'} detected</span></div>
           <p>{summary.action}</p>
-          {summary.state === 'unavailable' && <button type="button" className="nv-secondary" onClick={() => detectionRetry.current()}>Retry detection</button>}
+          {(summary.state === 'unavailable' || analysis?.state === 'error' || motionStatus?.state === 'error') && <button type="button" className="nv-secondary" onClick={() => detectionRetry.current()}>Retry detection</button>}
         </section>}
         <div className="nv-actions nv-camera-primary">
           {running ? <button className="nv-primary" onClick={() => { stop(); setStatus('stopped'); setError('') }}><Stop />Stop camera</button>
@@ -409,8 +497,8 @@ export default function Publisher() {
         <details className="nv-camera-details">
           <summary>Detection details</summary>
           <section aria-label="Device fight detection">
-            <p>{analysis?.detail || 'Skeleton detection starts with the camera. Up to 4 skeletons per view.'}</p>
-            <p>Shows up to 4 skeletons per view. Keep people and their arms visible.</p>
+            <p>{analysis?.detail || 'Skeleton detection starts with the camera.'}</p>
+            <p>Crowd skeletons and fast motion checks run separately. Keep people and their arms visible.</p>
             {observation && <p>{observation.conflict.explanation} · {Math.round(observation.inferenceMs)} ms</p>}
             {motion && <p>{motion.conflict.explanation} · {Math.round(motion.inferenceMs)} ms</p>}
             <p>{sent} preview frames sent. Motion checks flag possible conflicts for a person to review. Hidden people and fast movements can be missed.</p>
