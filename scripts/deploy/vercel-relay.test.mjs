@@ -72,3 +72,40 @@ test('missing credentials and non Cloudflare upstream fail closed', async () => 
     finally { await relay.close() }
   }
 })
+
+test('a stalled upstream fails within the relay budget and cancels its request', async () => {
+  let disconnected = false
+  const upstream = await server((_req, res) => { res.on('close', () => { disconnected = true }) })
+  const relay = await server(createRelay({ env, upstreamTimeoutMs: 150,
+    fetchImpl: (target, options) => fetch(upstream.url + target.pathname, options) }))
+  try {
+    const began = Date.now()
+    const response = await fetch(relay.url + '/api/v2/state')
+    assert.equal(response.status, 503)
+    assert.ok(Date.now() - began < 2000)
+    await response.arrayBuffer()
+    for (let n = 0; n < 20 && !disconnected; n++) await new Promise(resolve => setTimeout(resolve, 10))
+    assert.equal(disconnected, true)
+  } finally { await relay.close(); await upstream.close() }
+})
+
+test('disconnecting a browser cancels the old upstream ticket attempt', async () => {
+  let markStarted
+  const started = new Promise(resolve => { markStarted = resolve })
+  let disconnected = false
+  const upstream = await server((_req, res) => { res.on('close', () => { disconnected = true }); markStarted() })
+  const relay = await server(createRelay({ env,
+    fetchImpl: (target, options) => fetch(upstream.url + target.pathname, options) }))
+  let request
+  try {
+    request = http.request(relay.url + '/api/v2/camera/socket-ticket', {
+      method: 'POST', headers: { Origin: 'https://nivra.tanishq.work', 'Content-Type': 'application/json' },
+    })
+    request.on('error', () => {})
+    request.end('{}')
+    await started
+    request.destroy()
+    for (let n = 0; n < 50 && !disconnected; n++) await new Promise(resolve => setTimeout(resolve, 10))
+    assert.equal(disconnected, true)
+  } finally { request?.destroy(); await relay.close(); await upstream.close() }
+})

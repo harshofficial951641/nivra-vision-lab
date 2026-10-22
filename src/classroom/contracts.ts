@@ -160,7 +160,8 @@ export function socketUrl(path: string) {
   return `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/api/v2${path}`
 }
 /** Public static hosting uses one-use socket tickets. Cookies remain on the API origin. */
-export async function openSocket(path: string): Promise<WebSocket> {
+export async function openSocket(path: string, options: { signal?: AbortSignal } = {}): Promise<WebSocket> {
+  options.signal?.throwIfAborted()
   if (import.meta.env.VITE_NIVRA_DIRECT_SOCKET_RELAY !== '1') return new WebSocket(socketUrl(path))
   const endpoints: Record<string, string> = {
     '/operator': '/operator/socket-ticket',
@@ -169,7 +170,8 @@ export async function openSocket(path: string): Promise<WebSocket> {
   }
   const endpoint = endpoints[path]
   if (!endpoint) throw new Error('Unsupported socket destination.')
-  const result = await api<{ url: string; ticket: string }>(endpoint, 'POST', {})
+  const result = await api<{ url: string; ticket: string }>(endpoint, 'POST', {}, { signal: options.signal })
+  options.signal?.throwIfAborted()
   let url: URL
   try { url = new URL(result.url) } catch { throw new Error('Invalid socket relay response.') }
   if (url.protocol !== 'wss:' || url.pathname !== `/api/v2${path}` || url.search || url.hash ||

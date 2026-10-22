@@ -5,6 +5,8 @@ import json
 import struct
 import time
 
+SEND_TIMEOUT_SECONDS = 2
+
 
 class PreviewRelay:
     def __init__(self, socket, on_failure):
@@ -91,7 +93,7 @@ class PreviewRelay:
                         self.video_waiting.add(key)
                     continue
                 await asyncio.wait_for(
-                    self.socket.send_bytes(value) if binary else self.socket.send_json(value), .5)
+                    self.socket.send_bytes(value) if binary else self.socket.send_json(value), SEND_TIMEOUT_SECONDS)
         except asyncio.CancelledError:
             raise
         except Exception:

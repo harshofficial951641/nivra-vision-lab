@@ -46,3 +46,29 @@ describe('socket factory', () => {
     expect(construct).not.toHaveBeenCalled()
   })
 })
+
+
+it('never opens a socket for a cancelled attempt, even when its late ticket response resolves', async () => {
+  vi.stubEnv('VITE_NIVRA_DIRECT_SOCKET_RELAY', '1')
+  const construct = socketStub(), controller = new AbortController()
+  let finish!: (response: unknown) => void
+  vi.stubGlobal('fetch', vi.fn().mockImplementation(() => new Promise(resolve => { finish = resolve })))
+  const pending = openSocket('/operator', { signal: controller.signal })
+  await vi.waitFor(() => expect(fetch).toHaveBeenCalledOnce())
+  const request = vi.mocked(fetch).mock.calls[0][1]!
+  expect(request.signal?.aborted).toBe(false)
+  controller.abort()
+  expect(request.signal?.aborted).toBe(true)
+  finish({ ok: true, status: 200, json: async () => ({ url: 'wss://relay.example/api/v2/operator', ticket }) })
+  await expect(pending).rejects.toThrow()
+  expect(construct).not.toHaveBeenCalled()
+})
+
+it('does not request a ticket or create a local socket when already cancelled', async () => {
+  const construct = socketStub(), fetch = vi.fn(), controller = new AbortController()
+  vi.stubGlobal('fetch', fetch)
+  controller.abort()
+  await expect(openSocket('/operator', { signal: controller.signal })).rejects.toThrow()
+  expect(fetch).not.toHaveBeenCalled()
+  expect(construct).not.toHaveBeenCalled()
+})

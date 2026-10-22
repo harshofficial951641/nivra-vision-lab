@@ -133,18 +133,23 @@ export function useClassroom(
         if (!stopped) pollTimer = window.setTimeout(() => void poll(), 5000)
       }
     }
+    let lastSnapshot = -Infinity
+    let attemptAbort: AbortController | null = null
     const connect = async () => {
       const current = ++epoch
       healthy = false
       clearTimeout(deadline)
-      deadline = window.setTimeout(() => { if (!stopped && current === epoch) { setError('Live connection timed out. Retrying…'); retry() } }, 12000)
+      attemptAbort?.abort()
+      const attempt = new AbortController()
+      attemptAbort = attempt
       setConnection('connecting')
       try {
-        if (!tokenAuth) await api('/session', 'POST')
+        if (!tokenAuth) await api('/session', 'POST', undefined, { signal: attempt.signal, timeoutMs: 10000 })
         if (stopped || current !== epoch) return
-        const peer = await openSocket('/operator')
+        const peer = await openSocket('/operator', { signal: attempt.signal })
         if (stopped || current !== epoch) { peer.close(); return }
         socket = peer
+        deadline = window.setTimeout(() => { if (!stopped && current === epoch) { setError('Live connection timed out. Retrying…'); retry() } }, 12000)
         if (tokenAuth) authenticateSocket(socket)
         socket.binaryType = 'arraybuffer'
         socket.onopen = () => { /* Wait for an authenticated snapshot. */ }
@@ -162,6 +167,7 @@ export function useClassroom(
                 throw new Error('Unsupported service response')
               clearTimeout(deadline)
               healthy = true
+              lastSnapshot = Date.now()
               attempts = 0
               setConnection('connected')
               setError('')
@@ -216,6 +222,7 @@ export function useClassroom(
     }
     const retry = () => {
       epoch++
+      attemptAbort?.abort()
       healthy = false
       clearTimeout(deadline)
       const previous = socket
@@ -232,9 +239,11 @@ export function useClassroom(
     }
     const resume = () => {
       if (stopped || document.visibilityState === 'hidden') return
+      if (healthy && socket?.readyState === 1 && Date.now() - lastSnapshot < 15000) return
       clearTimeout(timer)
       clearTimeout(deadline)
       epoch++
+      attemptAbort?.abort()
       const previous = socket; socket = null
       if (previous) { previous.onclose = null; previous.close() }
       clearFrames()
@@ -242,6 +251,12 @@ export function useClassroom(
       void poll()
       void connect()
     }
+    const silenceTimer = window.setInterval(() => {
+      if (!stopped && healthy && Date.now() - lastSnapshot >= 15000) {
+        setError('Live updates stopped. Reconnecting…')
+        retry()
+      }
+    }, 3000)
     window.addEventListener('online', resume)
     document.addEventListener('visibilitychange', resume)
     void poll()
@@ -251,6 +266,8 @@ export function useClassroom(
       nativeVideo.clear()
       epoch++
       requests.abort()
+      attemptAbort?.abort()
+      clearInterval(silenceTimer)
       window.removeEventListener('online', resume)
       document.removeEventListener('visibilitychange', resume)
       clearTimeout(deadline)

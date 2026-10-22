@@ -58,7 +58,7 @@ def test_stalled_viewer_is_removed_without_blocking_healthy_viewer():
         fast.offer('a', b'frame', True)
         await asyncio.wait_for(delivered.wait(), .1)
         assert not removed.is_set()
-        await asyncio.wait_for(closed.wait(), 1)
+        await asyncio.wait_for(closed.wait(), 3)
         assert removed.is_set()
         await slow.close()
         await fast.close()
@@ -82,5 +82,36 @@ def test_compressed_video_preserves_order_but_bounds_and_revokes_slow_viewer():
         assert [value[-1] for value in sent]==list(range(40,50))
         relay.offer_video('camera',b'revoked');relay.discard('camera')
         assert not relay.video
+        await relay.close()
+    asyncio.run(run())
+
+
+def test_brief_mobile_backpressure_keeps_the_connection_and_drops_old_preview_work():
+    async def run():
+        started, release, fresh = asyncio.Event(), asyncio.Event(), asyncio.Event()
+        removed = []
+        sent = []
+
+        class Socket:
+            async def send_bytes(self, value):
+                sent.append(value)
+                if value == b'first':
+                    started.set()
+                    await release.wait()
+                elif value == b'fresh': fresh.set()
+
+        relay = PreviewRelay(Socket(), lambda: removed.append(True))
+        relay.offer('camera', b'first', True)
+        await started.wait()
+        # A healthy cellular socket may take longer than the previous 500ms.
+        for n in range(30): relay.offer('camera', str(n).encode(), True)
+        await asyncio.sleep(.65)
+        assert not removed and len(relay.pending) == 1
+        release.set()
+        await asyncio.sleep(.02)
+        relay.offer('camera', b'fresh', True)
+        await asyncio.wait_for(fresh.wait(), .5)
+        assert sent == [b'first', b'fresh']
+        assert not removed
         await relay.close()
     asyncio.run(run())

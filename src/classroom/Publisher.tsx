@@ -65,6 +65,7 @@ export default function Publisher() {
     media = useRef<MediaStream | null>(null),
     socket = useRef<WebSocket | null>(null)
   const reconnectTimeout = useRef(0), connectionDeadline = useRef(0)
+  const connectionAttempt = useRef<AbortController | null>(null)
   const detectionRetry = useRef<() => void>(() => {})
   const resumeConnection = useRef<() => void>(() => {})
   const [pairingAttempt, setPairingAttempt] = useState(0)
@@ -75,6 +76,7 @@ export default function Publisher() {
     analysisTimeout = useRef(0)
   const stop = () => {
     generation.current++
+    connectionAttempt.current?.abort()
     clearTimeout(timeout.current)
     clearTimeout(reconnectTimeout.current)
     clearTimeout(connectionDeadline.current)
@@ -154,11 +156,88 @@ export default function Publisher() {
       })
       let reconnects = 0
       let connecting = false
+      let readyPeer: WebSocket | null = null
+      let acknowledgedPeer: WebSocket | null = null
+      let analyzing = false
+      let lastStatus: DeviceStatus | null = null, lastMotionStatus: DeviceStatus | null = null
+      const sendStatus = (type: string, value: DeviceStatus | null) => {
+        const peer = readyPeer
+        if (value && current === generation.current && peer && socket.current === peer && peer.readyState === WebSocket.OPEN) peer.send(JSON.stringify({type, ...value}))
+      }
+      const resultQueue = new DeviceReportQueue<DeviceResult>(200)
+      const motionQueue = new DeviceReportQueue<DeviceMotion>(100)
+      let shownAt = -Infinity
+      let motionShownAt = -Infinity
+      const report = () => {
+        const peer = readyPeer
+        if (current === generation.current && peer && acknowledgedPeer === peer && socket.current === peer && peer.readyState === WebSocket.OPEN && peer.bufferedAmount < 128 * 1024) {
+          for (const queue of [motionQueue, resultQueue]) {
+            const next = queue.take(performance.now())
+            const now = performance.now()
+            if (next && now - next.timestampMs <= 2000) peer.send(JSON.stringify({...next, events: next.events.filter(event => now - event.occurredAtMs <= 5000)}))
+          }
+        }
+      }
+      // Preview JPEG work can be slow on phones. It must not pace motion sampling.
+      const analyze = () => {
+        if (current !== generation.current) return
+        report()
+        if (video.current) void detector.current?.capture(video.current, performance.now())
+        analysisTimeout.current = window.setTimeout(analyze, 50)
+      }
+      const startDetection = () => {
+        if (current !== generation.current) return
+        detector.current?.dispose()
+        resultQueue.clear(); motionQueue.clear()
+        setObservation(null); setMotion(null)
+        lastStatus = null; lastMotionStatus = null
+        const client = new DeviceVision(
+          (next) => {
+            if (current !== generation.current || detector.current !== client) return
+            setAnalysis(next)
+            resultQueue.clear()
+            if (next.state !== 'ready') setObservation(null)
+            lastStatus = next
+            sendStatus('device-status', next)
+          },
+          (result) => {
+            if (current !== generation.current || detector.current !== client) return
+            resultQueue.push(result)
+            report()
+            if (performance.now() - shownAt > 500 || result.conflict.status === 'alert') {
+              shownAt = performance.now()
+              setObservation(result)
+            }
+          },
+          area, 'original',
+          (result) => {
+            if (current !== generation.current || detector.current !== client) return
+            motionQueue.push(result)
+            report()
+            if (performance.now() - motionShownAt >= 250 || result.conflict.status === 'alert') {
+              motionShownAt = performance.now()
+              setMotion(result)
+            }
+          },
+          (next) => {
+            if (current !== generation.current || detector.current !== client) return
+            setMotionStatus(next)
+            if (next.state !== 'ready') { motionQueue.clear(); setMotion(null) }
+            lastMotionStatus = next
+            sendStatus('device-motion-status', next)
+          },
+        )
+        detector.current = client
+        client.start()
+      }
+      detectionRetry.current = startDetection
       const retryConnection = (reason: unknown) => {
         if (current !== generation.current) return
-        clearTimeout(timeout.current); clearTimeout(analysisTimeout.current); clearTimeout(connectionDeadline.current)
-        detector.current?.dispose(); detector.current = null
-        setObservation(null); setMotion(null); setSent(0)
+        connectionAttempt.current?.abort()
+        clearTimeout(timeout.current); clearTimeout(connectionDeadline.current)
+        readyPeer = null; acknowledgedPeer = null
+        resultQueue.clear(); motionQueue.clear()
+        setSent(0)
         const peer = socket.current
         socket.current = null
         if (peer) { peer.onclose = null; peer.close() }
@@ -170,39 +249,22 @@ export default function Publisher() {
         }
         setStatus('reconnecting'); setError('')
         const delay = [500, 1500, 3000, 5000][Math.min(reconnects++, 3)]
-        if (navigator.onLine !== false) reconnectTimeout.current = window.setTimeout(() => { if (current === generation.current) void connect() }, delay)
+        reconnectTimeout.current = window.setTimeout(() => { if (current === generation.current) void connect() }, delay)
       }
       const connect = async () => {
         if (connecting || current !== generation.current) return
-        if (navigator.onLine === false) { setStatus('reconnecting'); return }
         connecting = true
+        connectionAttempt.current?.abort()
+        const attempt = new AbortController()
+        connectionAttempt.current = attempt
         try {
-          const peer = await openSocket('/camera/stream')
+          const peer = await openSocket('/camera/stream', { signal: attempt.signal })
           if (current !== generation.current) { peer.close(); return }
           socket.current = peer
           const canvas = document.createElement('canvas')
           const flow = new FrameWindow()
           let sending = false
-          const resultQueue = new DeviceReportQueue<DeviceResult>(200)
-          const motionQueue = new DeviceReportQueue<DeviceMotion>(100)
-          let shownAt = -Infinity
-          let motionShownAt = -Infinity
           let acknowledged = 0, countShownAt = -Infinity
-          const report = () => {
-            if (current === generation.current && socket.current === peer && peer.readyState === WebSocket.OPEN && peer.bufferedAmount < 128 * 1024) {
-              for (const queue of [motionQueue, resultQueue]) {
-                const next = queue.take(performance.now())
-                if (next) peer.send(JSON.stringify(next))
-              }
-            }
-          }
-          // Preview JPEG work can be slow on phones. It must not pace motion sampling.
-          const analyze = () => {
-            if (current !== generation.current || socket.current !== peer) return
-            report()
-            if (video.current) void detector.current?.capture(video.current, performance.now())
-            analysisTimeout.current = window.setTimeout(analyze, 50)
-          }
           const send = async () => {
             if (current !== generation.current || socket.current !== peer) return
             const startedAt = performance.now()
@@ -221,7 +283,7 @@ export default function Publisher() {
               }
               if (
                 packet &&
-                current === generation.current &&
+                current === generation.current && socket.current === peer &&
                 peer.readyState === WebSocket.OPEN &&
                 flow.canSend(performance.now(), peer.bufferedAmount, packet.byteLength)
               ) {
@@ -233,49 +295,6 @@ export default function Publisher() {
             if (current === generation.current && socket.current === peer)
               timeout.current = window.setTimeout(() => void send(), Math.max(0, (detector.current?.budget.previewInterval ?? 84) - (performance.now() - startedAt)))
           }
-          const startDetection = () => {
-            if (current !== generation.current || peer.readyState !== WebSocket.OPEN) return
-            detector.current?.dispose()
-            resultQueue.clear(); motionQueue.clear()
-            setObservation(null); setMotion(null); setSent(0)
-            const client = new DeviceVision(
-              (next) => {
-                if (current !== generation.current || peer.readyState !== WebSocket.OPEN) return
-                setAnalysis(next)
-                resultQueue.clear()
-                if (next.state !== 'ready') setObservation(null)
-                peer.send(JSON.stringify({ type: 'device-status', ...next }))
-              },
-              (result) => {
-                if (current !== generation.current || socket.current !== peer) return
-                resultQueue.push(result)
-                report()
-                if (performance.now() - shownAt > 500 || result.conflict.status === 'alert') {
-                  shownAt = performance.now()
-                  setObservation(result)
-                }
-              },
-              area, 'original',
-              (result) => {
-                if (current !== generation.current || socket.current !== peer) return
-                motionQueue.push(result)
-                report()
-                if (performance.now() - motionShownAt >= 250 || result.conflict.status === 'alert') {
-                  motionShownAt = performance.now()
-                  setMotion(result)
-                }
-              },
-              (next) => {
-                if (current !== generation.current || peer.readyState !== WebSocket.OPEN) return
-                setMotionStatus(next)
-                if (next.state !== 'ready') { motionQueue.clear(); setMotion(null) }
-                peer.send(JSON.stringify({ type: 'device-motion-status', ...next }))
-              },
-            )
-            detector.current = client
-            client.start()
-          }
-          detectionRetry.current = startDetection
           connectionDeadline.current = window.setTimeout(() => { if (current === generation.current && !sending) peer.close() }, 15000)
           peer.onmessage = (event) => {
             if (current !== generation.current || socket.current !== peer) return
@@ -286,19 +305,26 @@ export default function Publisher() {
               sending = true
               clearTimeout(connectionDeadline.current)
               setStatus('live')
-              startDetection()
-              analyze()
+              readyPeer = peer
+              resultQueue.clear(); motionQueue.clear()
+              sendStatus('device-status', lastStatus)
+              sendStatus('device-motion-status', lastMotionStatus)
+              if (!detector.current) startDetection()
+              if (!analyzing) { analyzing = true; analyze() }
               void send()
             }
             if (data.type === 'accepted' && typeof data.timestampMs === 'number' && flow.acknowledge(data.timestampMs)) {
               acknowledged++
+              acknowledgedPeer = peer
+              if (acknowledged === 30) reconnects = 0
+              report()
               if (performance.now() - countShownAt >= 500) {
                 countShownAt = performance.now()
                 setSent(acknowledged)
               }
             }
           }
-          peer.onclose = () => { if (socket.current === peer) retryConnection(new Error('Connection lost.')) }
+          peer.onclose = event => { if (socket.current === peer) retryConnection(event?.code === 4401 || event?.code === 4403 ? new ApiError('Camera pairing expired.', 403) : new Error('Connection lost.')) }
         } catch (reason) { retryConnection(reason) }
         finally { connecting = false }
           }

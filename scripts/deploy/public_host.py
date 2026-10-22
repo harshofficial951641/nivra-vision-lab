@@ -44,35 +44,95 @@ class RetryBudget:
         return len(self.failures) < self.limit
 
 
-def dns_status(hostname):
+# This worker has no credentials in its arguments. A separate process gives DNS,
+# TLS, headers and body reads one hard deadline, including resolver hangs.
+_HTTP_PROBE_SCRIPT = r"""
+import json, sys
+from urllib.request import Request, build_opener, ProxyHandler, HTTPRedirectHandler
+from urllib.error import HTTPError
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, *args, **kwargs):
+        return None
+response = None
+healthy = False
+try:
+    config = json.loads(sys.stdin.read(8192))
+    headers = {'Accept': 'application/json'}
+    if config.get('secret'):
+        headers['X-Nivra-Relay'] = config['secret']
+    request = Request(config['url'], headers=headers)
+    opener = build_opener(ProxyHandler({}), NoRedirect())
     try:
-        return 'resolved' if socket.getaddrinfo(hostname, 443, type=socket.SOCK_STREAM) else 'unavailable'
-    except socket.gaierror as error:
-        missing = {socket.EAI_NONAME, getattr(socket, 'EAI_NODATA', socket.EAI_NONAME)}
-        return 'missing' if error.errno in missing else 'unavailable'
-    except OSError:
-        return 'unavailable'
+        response = opener.open(request, timeout=3)
+    except HTTPError as error:
+        response = error
+    if config['application']:
+        body = response.read(4097)
+        healthy = (response.status == 403 and len(body) <= 4096
+            and response.headers.get_content_type() == 'application/json'
+            and json.loads(body) == {'detail': 'Create a workspace or pair this phone to continue.'})
+    else:
+        healthy = response.status in (200, 400, 403, 404, 405)
+except Exception:
+    pass
+finally:
+    if response is not None:
+        response.close()
+print('healthy' if healthy else 'unavailable')
+"""
 
 
-class TunnelDNSMonitor:
-    """Detect an expired Quick Tunnel without treating lost internet as expiry."""
-    def __init__(self, upstream, *, resolve=dns_status, interval=20):
-        hostname = urlsplit(upstream).hostname or ''
-        if not re.fullmatch(r'[a-z0-9-]+\.trycloudflare\.com', hostname):
-            raise ValueError('Invalid public tunnel hostname')
-        self.hostname, self.resolve, self.interval = hostname, resolve, interval
+def application_probe(url, *, secret='', application=True, timeout=4):
+    """No cookies, redirects, proxy inheritance, payload logs or surviving worker."""
+    try:
+        result = subprocess.run(
+            [sys.executable, '-c', _HTTP_PROBE_SCRIPT],
+            input=json.dumps(dict(url=url, secret=secret, application=application)),
+            text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            timeout=timeout, check=False,
+        )
+        return result.returncode == 0 and result.stdout.strip() == 'healthy'
+    except (OSError, subprocess.TimeoutExpired):
+        # subprocess.run kills and reaps the child before returning on timeout.
+        return False
+
+
+class TunnelHealthMonitor:
+    """Recover a dead tunnel only when the application and internet still work."""
+    def __init__(self, upstream, secret, *, probe=application_probe, interval=20):
+        url = urlsplit(upstream)
+        if (url.scheme != 'https' or not re.fullmatch(r'[a-z0-9-]+\.trycloudflare\.com', url.hostname or '')
+                or url.username or url.password or url.port or url.path not in ('', '/')
+                or url.query or url.fragment):
+            raise ValueError('Invalid public tunnel address')
+        self.upstream, self.secret = upstream.rstrip('/'), secret
+        self.probe, self.interval = probe, interval
         self.next_check, self.failures = 0, 0
+        self._check_lock = threading.Lock()
 
     def check(self, now):
-        if now < self.next_check: return
-        self.next_check = now+self.interval
-        if self.resolve(self.hostname) == 'missing' and self.resolve('api.trycloudflare.com') == 'resolved':
-            self.failures += 1
-        else:
-            self.failures = 0
-        if self.failures >= 3:
-            # Never print the hostname, relay credential or request details.
-            raise RuntimeError('The public tunnel DNS expired; restarting the relay.')
+        # A caller cannot stack probes while a previous resolver is stalled.
+        if not self._check_lock.acquire(blocking=False):
+            return
+        try:
+            if now < self.next_check:
+                return
+            self.next_check = now+self.interval
+            if not self.probe('http://127.0.0.1:8766/api/v2/state', secret=self.secret):
+                self.failures = 0
+                return
+            if not self.probe('https://api.trycloudflare.com/', application=False):
+                self.failures = 0
+                return
+            if self.probe(self.upstream+'/api/v2/state', secret=self.secret):
+                self.failures = 0
+            else:
+                self.failures += 1
+            if self.failures >= 3:
+                # Fixed text only; no hostname, request data or credential.
+                raise RuntimeError('The public tunnel stopped responding; restarting the relay.')
+        finally:
+            self._check_lock.release()
 
 
 def private_state():
@@ -269,7 +329,7 @@ def run():
         # paired phones. Keep its tunnel stable for a manual frontend retry.
         print(json.dumps({'published': None if deploy_pending else ORIGIN,
             'relayReady': True, 'hostPid': os.getpid(), 'frontendDeployPending': deploy_pending}), flush=True)
-        monitor = TunnelDNSMonitor(upstream)
+        monitor = TunnelHealthMonitor(upstream, secret)
         while tunnel.poll() is None and backend.poll() is None:
             monitor.check(time.monotonic())
             time.sleep(2)

@@ -6,9 +6,10 @@ const ROUTE_KEY = '__nivra_path'
 const HOP_HEADERS = ['host', 'content-length', 'connection', 'forwarded', 'x-forwarded-host', 'x-forwarded-for', 'x-forwarded-proto', 'x-nivra-relay', 'transfer-encoding', 'keep-alive', 'proxy-authenticate', 'proxy-authorization', 'te', 'trailer']
 
 // Runtime environment only. No credentials are copied into the deployment artifact.
-export function createRelay({ env = process.env, fetchImpl = fetch } = {}) {
+export function createRelay({ env = process.env, fetchImpl = fetch, upstreamTimeoutMs = 8000 } = {}) {
   return async function relay(request, output) {
     const fail = (detail, status) => {
+      if (output.destroyed || output.writableEnded) return
       output.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' })
       output.end(JSON.stringify({ detail }))
     }
@@ -57,8 +58,17 @@ export function createRelay({ env = process.env, fetchImpl = fetch } = {}) {
       } catch { return fail('Request interrupted.', 400) }
       body = Buffer.concat(chunks)
     }
+    const controller = new AbortController()
+    const disconnected = () => controller.abort()
+    const closed = () => { if (!output.writableFinished) disconnected() }
+    request.once('aborted', disconnected)
+    output.once('close', closed)
+    if (request.aborted || output.destroyed) disconnected()
+    // Finish before the browser's 12-second ticket deadline. An abandoned
+    // request must not keep a stale upstream attempt running in parallel.
+    const deadline = setTimeout(() => controller.abort(), upstreamTimeoutMs)
     try {
-      const response = await fetchImpl(target, { method: request.method, headers, body, redirect: 'manual', signal: AbortSignal.timeout(25000) })
+      const response = await fetchImpl(target, { method: request.method, headers, body, redirect: 'manual', signal: controller.signal })
       const responseHeaders = {}
       response.headers.forEach((value, name) => {
         if (!HOP_HEADERS.includes(name) && !['set-cookie', 'content-encoding'].includes(name)) responseHeaders[name] = value
@@ -69,11 +79,15 @@ export function createRelay({ env = process.env, fetchImpl = fetch } = {}) {
       responseHeaders['referrer-policy'] = 'no-referrer'
       responseHeaders['x-content-type-options'] = 'nosniff'
       output.writeHead(response.status, responseHeaders)
-      if (response.body && request.method !== 'HEAD') await pipeline(Readable.fromWeb(response.body), output)
+      if (response.body && request.method !== 'HEAD') await pipeline(Readable.fromWeb(response.body), output, { signal: controller.signal })
       else output.end()
     } catch {
       if (output.headersSent) output.destroy()
       else fail('The NIVRA relay is offline. Keep the host service running.', 503)
+    } finally {
+      clearTimeout(deadline)
+      request.removeListener('aborted', disconnected)
+      output.removeListener('close', closed)
     }
   }
 }

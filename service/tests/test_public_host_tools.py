@@ -9,57 +9,140 @@ import public_host_service
 import vercel_environment
 
 
-def test_tunnel_dns_expiry_requires_three_separate_confirmed_checks():
+def tunnel_monitor(state, calls=None):
+    def probe(url, **kwargs):
+        label = 'local' if url.startswith('http://127.0.0.1') else 'control' if 'api.trycloudflare.com' in url else 'tunnel'
+        if calls is not None:
+            calls.append((label, kwargs))
+        return state[label]
+    return public_host.TunnelHealthMonitor('https://qa-test.trycloudflare.com', 'private-test-secret', probe=probe)
+
+
+def test_resolving_but_http_blackholed_tunnel_requires_three_confirmed_checks():
     import pytest
-    calls=[]
-    def resolve(host):
-        calls.append(host)
-        return 'resolved' if host=='api.trycloudflare.com' else 'missing'
-    monitor=public_host.TunnelDNSMonitor('https://qa-test.trycloudflare.com',resolve=resolve)
+    calls = []
+    monitor = tunnel_monitor(dict(local=True, control=True, tunnel=False), calls)
     monitor.check(0)
-    for moment in (1,2,19): monitor.check(moment)
-    assert monitor.failures==1 and len(calls)==2
+    for moment in (1, 2, 19):
+        monitor.check(moment)
+    assert monitor.failures == 1 and len(calls) == 3
     monitor.check(20)
-    assert monitor.failures==2
-    with pytest.raises(RuntimeError,match='DNS expired'): monitor.check(40)
-    assert len(calls)==6
+    assert monitor.failures == 2
+    with pytest.raises(RuntimeError, match='stopped responding') as error:
+        monitor.check(40)
+    assert 'qa-test' not in str(error.value) and 'private-test-secret' not in str(error.value)
+    assert len(calls) == 9
+    assert all('secret' not in options for label, options in calls if label == 'control')
 
 
-def test_tunnel_dns_healthy_response_resets_prior_failures():
-    state={'current':'missing','control':'resolved'}
-    monitor=public_host.TunnelDNSMonitor('https://qa-test.trycloudflare.com',resolve=lambda host:state['control' if host=='api.trycloudflare.com' else 'current'])
-    monitor.check(0);monitor.check(20)
-    state['current']='resolved';monitor.check(40)
-    assert monitor.failures==0
-    state['current']='missing';monitor.check(60)
-    assert monitor.failures==1
+def test_healthy_tunnel_resets_transient_failures():
+    state = dict(local=True, control=True, tunnel=False)
+    monitor = tunnel_monitor(state)
+    monitor.check(0)
+    monitor.check(20)
+    state['tunnel'] = True
+    monitor.check(40)
+    assert monitor.failures == 0
+    state['tunnel'] = False
+    monitor.check(60)
+    assert monitor.failures == 1
 
 
-def test_total_offline_or_temporary_resolver_errors_do_not_trigger_tunnel_restarts():
-    state={'current':'missing','control':'resolved'}
-    monitor=public_host.TunnelDNSMonitor('https://qa-test.trycloudflare.com',resolve=lambda host:state['control' if host=='api.trycloudflare.com' else 'current'])
-    monitor.check(0);monitor.check(20)
-    state['control']='unavailable'
-    for moment in range(40,400,20): monitor.check(moment)
-    assert monitor.failures==0
-    state.update(current='unavailable',control='resolved')
-    monitor.check(400)
-    assert monitor.failures==0
-    state['current']='missing';monitor.check(420)
-    assert monitor.failures==1
+def test_offline_or_unhealthy_local_application_never_restarts_tunnel():
+    for failed_dependency in ('control', 'local'):
+        state = dict(local=True, control=True, tunnel=False)
+        monitor = tunnel_monitor(state)
+        monitor.check(0)
+        monitor.check(20)
+        state[failed_dependency] = False
+        for moment in range(40, 400, 20):
+            monitor.check(moment)
+        assert monitor.failures == 0
+        state[failed_dependency] = True
+        monitor.check(400)
+        assert monitor.failures == 1
 
 
-def test_dns_status_distinguishes_missing_names_from_temporary_failure(monkeypatch):
-    import socket
-    def fail(code):
-        def lookup(*args,**kwargs): raise socket.gaierror(code,'Test DNS result')
-        return lookup
-    monkeypatch.setattr(public_host.socket,'getaddrinfo',fail(socket.EAI_NONAME))
-    assert public_host.dns_status('qa.example')=='missing'
-    monkeypatch.setattr(public_host.socket,'getaddrinfo',fail(socket.EAI_AGAIN))
-    assert public_host.dns_status('qa.example')=='unavailable'
-    monkeypatch.setattr(public_host.socket,'getaddrinfo',lambda *args,**kwargs:[('resolved',)])
-    assert public_host.dns_status('qa.example')=='resolved'
+def test_monitor_has_only_one_inflight_check_even_for_concurrent_callers():
+    import threading
+    entered, release = threading.Event(), threading.Event()
+    calls = []
+    def probe(url, **kwargs):
+        calls.append(url)
+        if len(calls) == 1:
+            entered.set()
+            assert release.wait(2)
+        return True
+    monitor = public_host.TunnelHealthMonitor('https://qa-test.trycloudflare.com', 'test', probe=probe)
+    worker = threading.Thread(target=monitor.check, args=(0,))
+    worker.start()
+    try:
+        assert entered.wait(2)
+        for moment in (20, 40, 60):
+            monitor.check(moment)
+        assert len(calls) == 1
+    finally:
+        release.set()
+        worker.join(2)
+    assert not worker.is_alive() and len(calls) == 3
+
+
+def test_application_probe_accepts_backend_json_but_rejects_cloudflare_html():
+    import json
+    import threading
+    from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+    seen = []
+    class Handler(BaseHTTPRequestHandler):
+        def log_message(self, *args):
+            pass
+        def do_GET(self):
+            seen.append((self.path, self.headers.get('X-Nivra-Relay')))
+            if self.path == '/redirect':
+                self.send_response(302)
+                self.send_header('Location', '/must-not-follow')
+                self.end_headers()
+                return
+            body = (b'<html>Forbidden</html>' if self.path == '/html' else
+                    json.dumps({'detail': 'Create a workspace or pair this phone to continue.'}).encode())
+            self.send_response(403)
+            self.send_header('Content-Type', 'text/html' if self.path == '/html' else 'application/json')
+            self.send_header('Content-Length', str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+    server = ThreadingHTTPServer(('127.0.0.1', 0), Handler)
+    worker = threading.Thread(target=server.serve_forever, daemon=True)
+    worker.start()
+    base = 'http://127.0.0.1:'+str(server.server_port)
+    try:
+        assert public_host.application_probe(base+'/application', secret='private-test-secret')
+        assert not public_host.application_probe(base+'/html', secret='private-test-secret')
+        assert not public_host.application_probe(base+'/redirect', secret='private-test-secret')
+        assert public_host.application_probe(base+'/html', application=False)
+        assert not any(path == '/must-not-follow' for path, _ in seen)
+        assert seen[-1][1] is None
+    finally:
+        server.shutdown()
+        server.server_close()
+        worker.join(2)
+
+
+def test_probe_hard_deadline_kills_and_reaps_each_stuck_dns_worker(monkeypatch):
+    import time
+    children = []
+    original = public_host.subprocess.Popen
+    def record(arguments, **kwargs):
+        assert 'private-test-secret' not in str(arguments)
+        child = original(arguments, **kwargs)
+        children.append(child)
+        return child
+    monkeypatch.setattr(public_host.subprocess, 'Popen', record)
+    monkeypatch.setattr(public_host, '_HTTP_PROBE_SCRIPT', 'import time; time.sleep(60)')
+    began = time.monotonic()
+    for _ in range(3):
+        assert not public_host.application_probe('https://qa-test.trycloudflare.com/api/v2/state',
+            secret='private-test-secret', timeout=.05)
+        assert all(child.poll() is not None for child in children)
+    assert len(children) == 3 and time.monotonic()-began < 2
 
 
 def test_timed_out_deploy_exits_before_a_retry():

@@ -29,7 +29,8 @@ describe('bounded camera transport', () => {
     expect(flow.canSend(10, 0, 60000)).toBe(true)
     expect(flow.canSend(751, 0)).toBe(false)
     expect(flow.timedOut(2500)).toBe(false)
-    expect(flow.timedOut(3002)).toBe(true)
+    expect(flow.timedOut(3002)).toBe(false)
+    expect(flow.timedOut(8002)).toBe(true)
   })
 
   it('ignores duplicate/old acknowledgements and starts clean on reconnect', () => {
@@ -52,4 +53,15 @@ describe('bounded camera transport', () => {
     flow.acknowledge(0)
     expect(flow.canSend(2, 0, 1500001)).toBe(false)
   })
+})
+
+
+it('recovers a brief mobile-data stall without reconnecting or growing the old-frame queue', () => {
+  const flow = new FrameWindow()
+  for (let n = 0; n < 8; n++) flow.sent(n * 84, n * 84, 60000)
+  expect(flow.canSend(4000, 0, 60000)).toBe(false)
+  expect(flow.timedOut(4000)).toBe(false)
+  for (let n = 0; n < 8; n++) expect(flow.acknowledge(n * 84)).toBe(true)
+  expect(flow.canSend(4100, 0, 60000)).toBe(true)
+  expect(flow.timedOut(9000)).toBe(false)
 })

@@ -36,7 +36,7 @@ describe('Guard QR pairing', () => {
     const { result, unmount } = renderHook(() => useGuard(false, null), {
       wrapper: ({ children }: { children: ReactNode }) => <StrictMode>{children}</StrictMode>,
     })
-    expect(api).toHaveBeenCalledExactlyOnceWith('/guard/pair', 'POST', { token: 'one-use-token-01234567890123456789' })
+    expect(api).toHaveBeenCalledExactlyOnceWith('/guard/pair', 'POST', { token: 'one-use-token-01234567890123456789' }, { timeoutMs: 10000 })
     expect(location.hash).toBe('')
     expect(sockets).toHaveLength(0)
     await act(async () => { redeem({ guard: 'G1' }) })
@@ -61,7 +61,7 @@ describe('Guard QR pairing', () => {
     await act(async () => { renderHook(() => useGuard(false, null), {
       wrapper: ({ children }: { children: ReactNode }) => <StrictMode>{children}</StrictMode>,
     }) })
-    expect(api).toHaveBeenCalledExactlyOnceWith('/guard/pair', 'POST', { token })
+    expect(api).toHaveBeenCalledExactlyOnceWith('/guard/pair', 'POST', { token }, { timeoutMs: 10000 })
     expect(sessionStorage.getItem('nivra.guard.pendingPair')).toBeNull()
     expect(location.search).toBe('')
   })
@@ -73,8 +73,10 @@ describe('Guard QR pairing', () => {
     history.replaceState(null, '', '/guard')
     const hook = renderHook(() => useGuard(false, null))
     await act(async () => {})
-    expect(openSocket).toHaveBeenCalledWith('/guard/stream')
+    expect(openSocket).toHaveBeenCalledWith('/guard/stream', { signal: expect.any(AbortSignal) })
+    const signal = openSocket.mock.calls[0][1].signal as AbortSignal
     hook.unmount()
+    expect(signal.aborted).toBe(true)
     const peer = { close: vi.fn() }
     await act(async () => { finish(peer) })
     expect(peer.close).toHaveBeenCalledOnce()
@@ -124,5 +126,21 @@ describe('guard connection recovery', () => {
     await act(async () => { window.dispatchEvent(new Event('online')); await vi.advanceTimersByTimeAsync(30000) })
     expect(openSocket).toHaveBeenCalledTimes(2)
     expect(second.close).toHaveBeenCalledOnce()
+  })
+})
+
+describe('healthy guard resume',()=>{
+  it('keeps recent authenticated updates on the same open channel when returning to the page',async()=>{
+    vi.useFakeTimers();api.mockResolvedValue({guard:'G1'})
+    const socket={...guardPeer(),readyState:1};openSocket.mockResolvedValue(socket)
+    const hook=renderHook(()=>useGuard(false,null))
+    await act(async()=>{})
+    act(()=>socket.onmessage?.({data:guardSnapshot()}))
+    await act(async()=>{await vi.advanceTimersByTimeAsync(5000);window.dispatchEvent(new Event('online'));document.dispatchEvent(new Event('visibilitychange'))})
+    expect(openSocket).toHaveBeenCalledOnce()
+    expect(socket.close).not.toHaveBeenCalled()
+    expect(hook.result.current.connection).toBe('connected')
+    hook.unmount()
+    expect(vi.getTimerCount()).toBe(0)
   })
 })

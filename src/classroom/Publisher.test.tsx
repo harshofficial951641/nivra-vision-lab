@@ -3,18 +3,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import Publisher from './Publisher'
 import type { DeviceMotion, DeviceResult, DeviceStatus } from './deviceAnalysis'
 
-const { api, openSocket, framePacket, capture, dispose, resultCallback, motionCallback, statusCallback } = vi.hoisted(() => ({ api: vi.fn(), openSocket: vi.fn(), framePacket: vi.fn(), capture: vi.fn(), dispose: vi.fn(), resultCallback: { current: null as ((result: DeviceResult) => void) | null }, motionCallback: { current: null as ((result: DeviceMotion) => void) | null }, statusCallback: { current: null as ((status: DeviceStatus) => void) | null } }))
+const { api, openSocket, framePacket, capture, dispose, resultCallback, motionCallback, statusCallback, createDetector } = vi.hoisted(() => ({ api: vi.fn(), openSocket: vi.fn(), framePacket: vi.fn(), capture: vi.fn(), dispose: vi.fn(), resultCallback: { current: null as ((result: DeviceResult) => void) | null }, motionCallback: { current: null as ((result: DeviceMotion) => void) | null }, statusCallback: { current: null as ((status: DeviceStatus) => void) | null }, createDetector: vi.fn() }))
 vi.mock('./contracts', async importOriginal => ({ ...await importOriginal<typeof import('./contracts')>(), api, framePacket, openSocket }))
 vi.mock('./DeviceVision', () => ({ DeviceVision: class {
   budget = { previewSide: 960, previewInterval: 84 }
   capture = capture
   dispose = dispose
   onStatus: (status: DeviceStatus) => void
-  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, _area: unknown, _profile: unknown, onMotion: (result: DeviceMotion) => void) { this.onStatus = onStatus; resultCallback.current = onResult; motionCallback.current = onMotion; statusCallback.current = onStatus }
+  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, _area: unknown, _profile: unknown, onMotion: (result: DeviceMotion) => void) { createDetector(); this.onStatus = onStatus; resultCallback.current = onResult; motionCallback.current = onMotion; statusCallback.current = onStatus }
   start() { this.onStatus({ state: 'ready', delegate: 'GPU', detail: 'Ready' }) }
 } }))
 beforeEach(() => {
-  api.mockReset(); openSocket.mockReset(); framePacket.mockReset(); capture.mockClear(); dispose.mockClear()
+  api.mockReset(); openSocket.mockReset(); framePacket.mockReset(); capture.mockClear(); dispose.mockClear(); createDetector.mockClear()
   framePacket.mockReturnValue(new Promise(() => {}))
 })
 afterEach(() => {
@@ -142,8 +142,10 @@ describe('Camera phone GPS pairing', () => {
     vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue()
     await act(async () => { render(<Publisher />) })
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: 'Allow camera & start' })) })
-    expect(openSocket).toHaveBeenCalledWith('/camera/stream')
+    expect(openSocket).toHaveBeenCalledWith('/camera/stream', { signal: expect.any(AbortSignal) })
+    const signal = openSocket.mock.calls[0][1].signal as AbortSignal
     act(() => { fireEvent.click(screen.getByRole('button', { name: 'Stop camera' })) })
+    expect(signal.aborted).toBe(true)
     const peer = { close: vi.fn() }
     await act(async () => { finish(peer) })
     expect(track.stop).toHaveBeenCalledOnce()
@@ -172,6 +174,7 @@ describe('Camera phone GPS pairing', () => {
     await act(async () => { await vi.advanceTimersByTimeAsync(250) })
     expect(framePacket).toHaveBeenCalledTimes(2)
     expect(capture.mock.calls.length).toBeGreaterThanOrEqual(5)
+    act(() => peer.onmessage?.({ data: JSON.stringify({ type: 'accepted', timestampMs: framePacket.mock.calls[0][2] }) }))
     const result: DeviceResult = { type: 'device-result', model: 'nivra-browser-motion-v1', delegate: 'GPU', timestampMs: 250, inferenceMs: 20, observedPeople: 2, usablePeople: 2, tracks: [], poses: [], conflict: { status: 'alert', explanation: 'Possible conflict' }, events: [{ id: 'event-1', occurredAtMs: 250, detail: 'Review interaction' }] }
     act(() => { resultCallback.current?.(result) })
     expect(peer.send).toHaveBeenCalledWith(JSON.stringify(result))
@@ -261,4 +264,99 @@ describe('Camera phone GPS pairing', () => {
     expect(openSocket).toHaveBeenCalledOnce()
   })
 
+})
+
+describe('camera LAN recovery',()=>{
+  it('connects and retries despite an offline network hint, preserves a healthy peer, and never restarts after Stop',async()=>{
+    vi.useFakeTimers()
+    api.mockResolvedValue({id:'C1',name:'Gate',gps:null})
+    const makePeer=()=>({readyState:WebSocket.OPEN,bufferedAmount:0,send:vi.fn(),close:vi.fn(),onclose:null as (()=>void)|null,onmessage:null as ((event:{data:string})=>void)|null})
+    const first=makePeer(),second=makePeer()
+    openSocket.mockResolvedValueOnce(first).mockResolvedValueOnce(second)
+    const track={stop:vi.fn(),addEventListener:vi.fn()}
+    const getUserMedia=vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})
+    vi.stubGlobal('isSecureContext',true)
+    vi.stubGlobal('navigator',{onLine:false,mediaDevices:{getUserMedia}})
+    vi.spyOn(HTMLMediaElement.prototype,'play').mockResolvedValue()
+    await act(async()=>{render(<Publisher />)})
+    await act(async()=>{fireEvent.click(screen.getByRole('button',{name:'Allow camera & start'}))})
+    expect(openSocket).toHaveBeenCalledOnce()
+    act(()=>first.onmessage?.({data:'{"type":"ready"}'}))
+    const disposed=dispose.mock.calls.length
+    await act(async()=>{window.dispatchEvent(new Event('online'));document.dispatchEvent(new Event('visibilitychange'))})
+    expect(first.close).not.toHaveBeenCalled()
+    expect(dispose).toHaveBeenCalledTimes(disposed)
+    act(()=>first.onclose?.())
+    await act(async()=>{await vi.advanceTimersByTimeAsync(500)})
+    expect(openSocket).toHaveBeenCalledTimes(2)
+    fireEvent.click(screen.getByRole('button',{name:'Stop camera'}))
+    await act(async()=>{window.dispatchEvent(new Event('online'));document.dispatchEvent(new Event('visibilitychange'));await vi.advanceTimersByTimeAsync(20000)})
+    expect(openSocket).toHaveBeenCalledTimes(2)
+    expect(getUserMedia).toHaveBeenCalledOnce()
+    expect(track.stop).toHaveBeenCalledOnce()
+  })
+})
+
+describe('camera-session detector lifetime',()=>{
+  it('keeps one Full detector and one capture loop across three reconnects, gates new peers until ready, and disposes on Stop',async()=>{
+    vi.useFakeTimers()
+    api.mockResolvedValue({id:'C1',name:'Gate',gps:null})
+    framePacket.mockResolvedValue(new ArrayBuffer(8))
+    const peers=Array.from({length:5},()=>({readyState:WebSocket.OPEN,bufferedAmount:0,send:vi.fn(),close:vi.fn(),onmessage:null as ((event:{data:string})=>void)|null,onclose:null as ((event?:{code:number})=>void)|null}))
+    peers.forEach(peer=>openSocket.mockResolvedValueOnce(peer))
+    const track={stop:vi.fn(),addEventListener:vi.fn()}
+    const getUserMedia=vi.fn().mockResolvedValue({getTracks:()=>[track],getVideoTracks:()=>[track]})
+    vi.stubGlobal('isSecureContext',true)
+    vi.stubGlobal('navigator',{mediaDevices:{getUserMedia}})
+    vi.spyOn(HTMLMediaElement.prototype,'play').mockResolvedValue()
+    const makeResult=(id:string):DeviceResult=>({type:'device-result',model:'nivra-browser-motion-v1',delegate:'GPU',timestampMs:performance.now(),inferenceMs:20,observedPeople:2,usablePeople:2,tracks:[],poses:[],conflict:{status:'clear',explanation:'Observed'},events:[{id,occurredAtMs:performance.now(),detail:'Review'}]})
+    await act(async()=>{render(<Publisher />)})
+    await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Allow camera & start'})))
+    act(()=>peers[0].onmessage?.({data:'{"type":"ready"}'}))
+    expect(createDetector).toHaveBeenCalledOnce()
+    for(let round=0;round<3;round++){
+      const prior=peers[round],next=peers[round+1]
+      act(()=>prior.onclose?.())
+      const captures=capture.mock.calls.length,priorMessages=prior.send.mock.calls.length
+      await act(async()=>{await vi.advanceTimersByTimeAsync([500,1500,3000][round])})
+      expect(capture.mock.calls.length - captures).toBe([10,30,60][round])
+      act(()=>resultCallback.current?.(makeResult(`disconnected-${round}`)))
+      expect(prior.send).toHaveBeenCalledTimes(priorMessages)
+      expect(next.send).not.toHaveBeenCalled()
+      act(()=>next.onmessage?.({data:'{"type":"ready"}'}))
+      expect(next.send.mock.calls.filter(call=>typeof call[0]==='string').map(call=>call[0])).toEqual([JSON.stringify({type:'device-status',state:'ready',delegate:'GPU',detail:'Ready'})])
+      await act(async()=>{await vi.advanceTimersByTimeAsync(50)})
+      const fresh=makeResult(`fresh-${round}`)
+      act(()=>resultCallback.current?.({...fresh,events:[...fresh.events,{id:`stale-${round}`,occurredAtMs:performance.now()-6000,detail:'Expired'}]}))
+      expect(JSON.parse(next.send.mock.calls.find(call=>typeof call[0]==='string')![0]).type).toBe('device-status')
+      expect(next.send.mock.calls.filter(call=>typeof call[0]==='string')).toHaveLength(1)
+      act(()=>next.onmessage?.({data:JSON.stringify({type:'accepted',timestampMs:framePacket.mock.calls.at(-1)![2]})}))
+      expect(next.send).toHaveBeenLastCalledWith(JSON.stringify(fresh))
+      expect(prior.send).toHaveBeenCalledTimes(priorMessages)
+      expect(createDetector).toHaveBeenCalledOnce()
+      expect(dispose).not.toHaveBeenCalled()
+    }
+    // A sustained healthy connection resets historical backoff; READY alone
+    // above did not reset the500/1500/3000ms reconnect progression.
+    for(let i=0;i<29;i++){
+      await act(async()=>{await vi.advanceTimersByTimeAsync(84)})
+      act(()=>peers[3].onmessage?.({data:JSON.stringify({type:'accepted',timestampMs:framePacket.mock.calls.at(-1)![2]})}))
+    }
+    act(()=>peers[3].onclose?.())
+    await act(async()=>{await vi.advanceTimersByTimeAsync(499)})
+    expect(openSocket).toHaveBeenCalledTimes(4)
+    await act(async()=>{await vi.advanceTimersByTimeAsync(1)})
+    expect(openSocket).toHaveBeenCalledTimes(5)
+    act(()=>peers[4].onmessage?.({data:'{"type":"ready"}'}))
+    expect(createDetector).toHaveBeenCalledOnce()
+    expect(getUserMedia).toHaveBeenCalledOnce()
+    act(()=>fireEvent.click(screen.getByRole('button',{name:'Stop camera'})))
+    const captures=capture.mock.calls.length,messages=peers[4].send.mock.calls.length
+    act(()=>resultCallback.current?.(makeResult('after-stop')))
+    await act(async()=>{await vi.advanceTimersByTimeAsync(1000)})
+    expect(capture).toHaveBeenCalledTimes(captures)
+    expect(peers[4].send).toHaveBeenCalledTimes(messages)
+    expect(dispose).toHaveBeenCalledOnce()
+    expect(track.stop).toHaveBeenCalledOnce()
+  })
 })

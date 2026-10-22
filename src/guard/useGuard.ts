@@ -62,7 +62,7 @@ function samplePlacement(cameraId: string): Placement | null {
 // A QR token is single-use. Share the exchange across StrictMode's effect replay.
 let pairingRequest: Promise<unknown> | null = null
 let pairingToken: string | null = null
-function guardSession() {
+function guardSession(signal?: AbortSignal) {
   let token = new URLSearchParams(location.hash.slice(1)).get('pair')
   try {
     const pending = JSON.parse(sessionStorage.getItem('nivra.guard.pendingPair') ?? 'null')
@@ -74,14 +74,14 @@ function guardSession() {
     if (!pairingRequest || token !== pairingToken) {
       history.replaceState(null, '', location.pathname + location.search)
       pairingToken = token
-      const request = api('/guard/pair', 'POST', { token })
+      const request = api('/guard/pair', 'POST', { token }, { timeoutMs: 10000 })
       pairingRequest = request
       const release = () => { if (pairingRequest === request) { pairingRequest = null; pairingToken = null } }
       void request.then(release, release)
     }
     return pairingRequest
   }
-  return pairingRequest ?? api('/guard/session')
+  return pairingRequest ?? api('/guard/session', 'GET', undefined, { signal })
 }
 
 export function useGuard(sample: boolean, sampleCallsign: string | null) {
@@ -100,13 +100,15 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
     if (sample) return
     let stopped = false, epoch = 0, attempts = 0, timer = 0, deadline = 0, heartbeat = 0
     let socket: WebSocket | null = null
-    let lastSnapshot = 0
+    let lastSnapshot = -Infinity
+    let attemptAbort: AbortController | null = null
     const detach = () => {
       const previous = socket; socket = null
       if (previous) { previous.onclose = null; previous.onmessage = null; previous.onerror = null; previous.onopen = null; previous.close() }
     }
     const retry = () => {
       epoch++
+      attemptAbort?.abort()
       clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0; clearTimeout(timer)
       detach()
       setConnection('disconnected')
@@ -114,16 +116,20 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
     }
     const connect = async () => {
       const current = ++epoch
+      lastSnapshot = -Infinity
       setConnection('connecting')
-      deadline = window.setTimeout(() => {
-        if (!stopped && current === epoch) { setProblem('Connection timed out. Retrying…'); retry() }
-      }, 12000)
+      attemptAbort?.abort()
+      const attempt = new AbortController()
+      attemptAbort = attempt
       try {
-        await guardSession()
+        await guardSession(attempt.signal)
         if (stopped || current !== epoch) return
-        const peer = await openSocket('/guard/stream')
+        const peer = await openSocket('/guard/stream', { signal: attempt.signal })
         if (stopped || current !== epoch) { peer.close(); return }
         socket = peer
+        deadline = window.setTimeout(() => {
+          if (!stopped && current === epoch) { setProblem('Connection timed out. Retrying…'); retry() }
+        }, 12000)
         authenticateSocket(peer)
         peer.onopen = () => { /* Wait for an authenticated guard snapshot. */ }
         peer.onmessage = message => {
@@ -152,7 +158,7 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
         peer.onclose = event => {
           if (stopped || current !== epoch || socket !== peer) return
           if (event.code === 4403 || event.code === 4401) {
-            epoch++; clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0
+            epoch++; attemptAbort?.abort(); clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0
             socket = null
             setLiveGuard(null); setLiveAlerts([]); setLiveFloor(null)
             setConnection('disconnected')
@@ -165,7 +171,7 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
         if (stopped || current !== epoch) return
         setProblem(reason instanceof Error ? reason.message : 'Could not connect this guard phone.')
         if (reason && typeof reason === 'object' && 'status' in reason && [401, 403].includes(Number(reason.status))) {
-          clearTimeout(deadline); setLiveGuard(null); setLiveAlerts([]); setLiveFloor(null); setConnection('disconnected')
+          attemptAbort?.abort(); clearTimeout(deadline); setLiveGuard(null); setLiveAlerts([]); setLiveFloor(null); setConnection('disconnected')
           return
         }
         retry()
@@ -173,14 +179,16 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
     }
     const resume = () => {
       if (stopped || document.visibilityState === 'hidden') return
+      if (socket?.readyState === 1 && Date.now() - lastSnapshot < 15000) return
       clearTimeout(timer); clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0
-      epoch++; detach(); void connect()
+      epoch++; attemptAbort?.abort(); detach(); void connect()
     }
     window.addEventListener('online', resume)
     document.addEventListener('visibilitychange', resume)
     void connect()
     return () => {
       stopped = true; epoch++
+      attemptAbort?.abort()
       clearTimeout(timer); clearTimeout(deadline); clearInterval(heartbeat)
       window.removeEventListener('online', resume)
       document.removeEventListener('visibilitychange', resume)
