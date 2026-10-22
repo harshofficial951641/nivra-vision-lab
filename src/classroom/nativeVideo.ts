@@ -91,8 +91,8 @@ export class NativeVideoDecoder {
   private failed=false
   private failures=0
   private epoch=0
-  private metrics={inputs:0,decoded:0,drawn:0,sequenceGaps:0,backlogResets:0,decodeErrors:0,oldOutputs:0,lateOutputs:0,displayDrops:0,clockRebases:0,lastDrawnSourceMs:-1}
-  private readMetrics=()=>({...this.metrics,bufferedFrames:this.frames.length,decodeQueue:this.decoder?.decodeQueueSize ?? 0,waitingKey:this.waitingKey,failed:this.failed})
+  private metrics={inputs:0,decoded:0,drawn:0,sequenceGaps:0,backlogResets:0,decodeErrors:0,oldOutputs:0,lateOutputs:0,displayDrops:0,clockRebases:0,clockCorrections:0,lastDrawnSourceMs:-1}
+  private readMetrics=()=>({...this.metrics,bufferedFrames:this.frames.length,decodeQueue:this.decoder?.decodeQueueSize ?? 0,waitingKey:this.waitingKey,failed:this.failed,latestInputSourceMs:this.latestInputTimestamp,baseSourceMs:this.baseSource,baseWallMs:this.baseWall,headDueInMs:this.frames.length?this.frames[0].due-performance.now():0,tailDueInMs:this.frames.length?this.frames.at(-1)!.due-performance.now():0})
   private canvas:HTMLCanvasElement
   private drawn:(timestampMs:number)=>void
   constructor(canvas:HTMLCanvasElement,drawn:(timestampMs:number)=>void) {this.canvas=canvas;this.drawn=drawn;(canvas as VideoCanvas).__nivraVideoMetrics=this.readMetrics}
@@ -103,6 +103,17 @@ export class NativeVideoDecoder {
     if(this.failed)return
     this.metrics.inputs+=packet.frames.length
     this.latestInputTimestamp=packet.frames.at(-1)!.timestampMs
+    // Source and viewer clocks can drift. Keep source-time presentation bounded
+    // against arrival time rather than letting every queued frame move into the
+    // future forever. A small margin avoids chasing ordinary packet jitter.
+    if(this.decoder){
+      const excess=this.baseWall+this.latestInputTimestamp-this.baseSource-performance.now()-NATIVE_PLAYBACK_DELAY_MS
+      if(excess>100){
+        this.metrics.clockCorrections++;this.baseWall-=excess
+        for(const item of this.frames)item.due-=excess
+        clearTimeout(this.timer);this.timer=undefined;this.schedule()
+      }
+    }
     let start=0
     if(this.waitingKey) for(let i=packet.frames.length-1;i>=0;i--) if(packet.frames[i].keyframe){start=i;break}
     for(const frame of packet.frames.slice(start)) {
@@ -122,7 +133,7 @@ export class NativeVideoDecoder {
             if(timestamp<this.latestInputTimestamp-NATIVE_PLAYBACK_DELAY_MS){this.metrics.oldOutputs++;decoded.close();return}
             let due=this.baseWall+timestamp-this.baseSource
             if(due<performance.now()-150){this.metrics.lateOutputs++;this.rebaseClock();due=this.baseWall+timestamp-this.baseSource}
-            if(this.frames.length>=NATIVE_MAX_DECODED_FRAMES){this.metrics.displayDrops++;this.frames.shift()!.frame.close();clearTimeout(this.timer);this.timer=undefined}
+            if(this.frames.length>=NATIVE_MAX_DECODED_FRAMES){this.metrics.displayDrops++;this.frames.shift()!.frame.close()}
             this.frames.push({frame:decoded,due});this.schedule()
           },error:()=>{if(epoch===this.epoch)this.decodeFailed()}})
           this.decoder.configure({codec:packet.codec,description:packet.description as Uint8Array<ArrayBuffer>,hardwareAcceleration:'prefer-hardware',optimizeForLatency:true})
@@ -146,8 +157,15 @@ export class NativeVideoDecoder {
     if(this.timer!==undefined || !this.frames.length) return
     this.timer=setTimeout(()=>{
       this.timer=undefined
-      const next=this.frames.shift()
+      const now=performance.now()
+      // Overflow can replace the scheduled head. Never display its successor
+      // early, or keep postponing the clock every time another output arrives.
+      if(this.frames[0]?.due>now+1){this.schedule();return}
+      let next=this.frames.shift()
       if(!next)return
+      // After a delayed timer, present the newest observed frame already due.
+      // Closing superseded output catches up without inventing video frames.
+      while(this.frames.length && this.frames[0].due<=now){next.frame.close();this.metrics.displayDrops++;next=this.frames.shift()!}
       try {
         if(this.canvas.width!==next.frame.displayWidth)this.canvas.width=next.frame.displayWidth
         if(this.canvas.height!==next.frame.displayHeight)this.canvas.height=next.frame.displayHeight

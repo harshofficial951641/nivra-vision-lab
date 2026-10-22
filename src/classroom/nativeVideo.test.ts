@@ -175,4 +175,52 @@ describe('bounded native playback',()=>{
     expect(h.outputs.every(frame=>frame.close.mock.calls.length===1)).toBe(true)
   })
 
+  it('catches up to the newest due observation after delayed presentation without drawing a future frame',async()=>{
+    vi.useFakeTimers()
+    let clock=0
+    vi.spyOn(performance,'now').mockImplementation(()=>clock)
+    const h=decoderHarness(),base=packet(),source=base.frames[0]
+    h.decoder.push(base)
+    // Decoder output continues while the presentation callback is delayed.
+    for(let sequence=1;sequence<=80;sequence++){
+      clock=sequence*25
+      h.decoder.push({...base,frames:[{...source,sequence,timestampMs:100+sequence*25,keyframe:false}]})
+    }
+    expect(h.drawn).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(750)
+    expect(h.drawn).toHaveBeenLastCalledWith(1350)
+    expect(h.drawn).toHaveBeenCalledOnce()
+    clock=2025
+    h.decoder.push({...base,frames:[{...source,sequence:81,timestampMs:2125,keyframe:false}]})
+    await vi.advanceTimersByTimeAsync(25)
+    expect(h.drawn).toHaveBeenLastCalledWith(1375)
+    expect(h.drawn).toHaveBeenCalledTimes(2)
+    h.decoder.dispose()
+    expect(h.outputs.every(frame=>frame.close.mock.calls.length===1)).toBe(true)
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
+  it('bounds source clock drift without starving continuous playback or resetting the codec',async()=>{
+    vi.useFakeTimers()
+    const h=decoderHarness(),base=packet(),source=base.frames[0]
+    let drewFuture=false
+    const read=()=>(h.canvas as HTMLCanvasElement & {__nivraVideoMetrics:()=>Record<string,number>}).__nivraVideoMetrics()
+    h.drawn.mockImplementation(timestamp=>{const m=read();if(m.baseWallMs+timestamp-m.baseSourceMs>performance.now()+1)drewFuture=true})
+    h.decoder.push(base)
+    for(let sequence=1;sequence<=800;sequence++){
+      await vi.advanceTimersByTimeAsync(24)
+      h.decoder.push({...base,frames:[{...source,sequence,timestampMs:100+sequence*25,keyframe:sequence%40===0}]})
+      expect(read().bufferedFrames).toBeLessThanOrEqual(40)
+    }
+    expect(drewFuture).toBe(false)
+    const metrics=(h.canvas as HTMLCanvasElement & {__nivraVideoMetrics:()=>Record<string,number>}).__nivraVideoMetrics()
+    expect(metrics.clockCorrections).toBeGreaterThan(0)
+    expect(metrics.tailDueInMs).toBeLessThanOrEqual(851)
+    expect(h.drawn.mock.calls.length).toBeGreaterThan(700)
+    expect(h.decoders).toHaveLength(1)
+    h.decoder.dispose()
+    expect(h.outputs.every(frame=>frame.close.mock.calls.length===1)).toBe(true)
+    expect(vi.getTimerCount()).toBe(0)
+  })
+
 })
