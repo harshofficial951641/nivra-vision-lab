@@ -61,6 +61,7 @@ export default function Publisher() {
   const detector = useRef<DeviceVision | null>(null)
   const encoder = useRef<BrowserVideoEncoder | null>(null)
   const transportWatchdog = useRef(0)
+  const encoderRetryTimeout = useRef(0)
   const frameDeadlines = useRef(new Set<number>())
   const [status, setStatus] = useState<
       'idle' | 'starting' | 'reconnecting' | 'live' | 'stopped'
@@ -92,6 +93,8 @@ export default function Publisher() {
     if (analysisCallback.current) video.current?.cancelVideoFrameCallback?.(analysisCallback.current)
     analysisCallback.current = 0
     clearInterval(transportWatchdog.current)
+    clearTimeout(encoderRetryTimeout.current)
+    encoderRetryTimeout.current = 0
     frameDeadlines.current.forEach(clearTimeout)
     frameDeadlines.current.clear()
     encoder.current?.dispose()
@@ -174,6 +177,16 @@ export default function Publisher() {
       let acknowledgedPeer: WebSocket | null = null
       let encodedTransport: { peer: WebSocket; flow: FrameWindow; batches: Map<number, number> } | null = null
       let compressed = false
+      let startActiveVideo: (() => Promise<void>) | null = null
+      let encoderRetries = 0
+      const retryEncoder = () => {
+        if (current !== generation.current || !startActiveVideo || encoderRetryTimeout.current || encoderRetries >= 3) return
+        encoderRetryTimeout.current = window.setTimeout(() => {
+          encoderRetryTimeout.current = 0
+          if (current === generation.current && startActiveVideo && readyPeer && socket.current === readyPeer && readyPeer.readyState === WebSocket.OPEN)
+            void startActiveVideo()
+        }, [1500, 3000, 6000][encoderRetries++])
+      }
       let startingEncoder = false
       let encoderReady = false
       let analyzing = false
@@ -258,6 +271,8 @@ export default function Publisher() {
         clearTimeout(timeout.current); clearTimeout(connectionDeadline.current)
         readyPeer = null; acknowledgedPeer = null
         encodedTransport = null; compressed = false
+        startActiveVideo = null
+        clearTimeout(encoderRetryTimeout.current); encoderRetryTimeout.current = 0
         encoder.current?.resetTransport()
         clearInterval(transportWatchdog.current)
         resultQueue.clear(); motionQueue.clear()
@@ -334,6 +349,7 @@ export default function Publisher() {
               onFailure: () => {
                 if (current === generation.current && encoder.current === client) {
                   encoder.current = null; compressed = false; encoderReady = false
+                  retryEncoder()
                 }
               },
             })
@@ -343,7 +359,7 @@ export default function Publisher() {
               if (current !== generation.current || encoder.current !== client) { client.dispose(); return }
               encoderReady = supported
               compressed = supported && encodedTransport?.peer === socket.current
-              if (!supported) { client.dispose(); encoder.current = null }
+              if (!supported) { client.dispose(); encoder.current = null; retryEncoder() }
             } finally { startingEncoder = false }
           }
           const send = async () => {
@@ -409,7 +425,10 @@ export default function Publisher() {
               }, 500)
               void send()
             }
-            if (data.type === 'browser-video-ready' && data.version === 1) void startVideo()
+            if (data.type === 'browser-video-ready' && data.version === 1 && readyPeer === peer) {
+              startActiveVideo = startVideo
+              void startVideo()
+            }
             if (data.type === 'video-accepted' && typeof data.timestampMs === 'number' && encodedFlow.acknowledge(data.timestampMs)) {
               accepted(batches.get(data.timestampMs) ?? 0)
               batches.delete(data.timestampMs)

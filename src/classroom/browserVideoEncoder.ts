@@ -75,8 +75,13 @@ export class BrowserVideoEncoder {
       this.firstInputAt = performance.now()
       this.timer = setInterval(() => {
         this.flush()
-        // A configured encoder that never outputs cannot silently suppress JPEG.
-        if (performance.now() - Math.max(this.firstInputAt, this.lastOutputAt) > 3000) this.fail()
+        const now = performance.now()
+        // Camera/GPU startup can delay the first source frame. Only queued
+        // encoder work uses the short output deadline; transport/source pauses
+        // must not destroy a healthy, idle encoder.
+        const noSource = this.submitted === 0 && now - this.firstInputAt > 15000
+        const stalledOutput = this.submitted > this.encoded && now - Math.max(this.firstInputAt, this.lastOutputAt) > 3000
+        if (noSource || stalledOutput) this.fail()
       }, 100)
       this.schedule()
       return true

@@ -100,10 +100,12 @@ it('bounds a stalled capability check and cancels pending initialization on Stop
   expect(await started).toBe(false)
   expect(vi.getTimerCount()).toBe(0)
 })
-it('falls back when the browser never provides its first camera frame', async () => {
+it('allows slow first camera frames but still bounds a permanently missing source', async () => {
   const onFailure = vi.fn(), client = new BrowserVideoEncoder({ onBatch: vi.fn(), onFailure, canSend: () => true })
   await client.start(video)
-  await vi.advanceTimersByTimeAsync(3200)
+  await vi.advanceTimersByTimeAsync(10000)
+  expect(onFailure).not.toHaveBeenCalled()
+  await vi.advanceTimersByTimeAsync(5200)
   expect(onFailure).toHaveBeenCalledOnce()
   expect(FakeEncoder.last.encode).not.toHaveBeenCalled()
   expect(vi.getTimerCount()).toBe(0)
@@ -122,4 +124,27 @@ it('never labels queued pre-reconnect keyframes as fresh transport video', async
   expect(onBatch).toHaveBeenCalledOnce()
   expect(onBatch.mock.calls[0][0].frames[0].timestampMs).toBe(150)
   client.dispose()
+})
+
+it('keeps an idle encoder warm through source or transport pauses and resumes real frames', async () => {
+  let available = true
+  const onBatch = vi.fn(), onFailure = vi.fn()
+  const client = new BrowserVideoEncoder({onBatch,onFailure,canSend:()=>available})
+  await client.start(video)
+  await vi.advanceTimersByTimeAsync(8000)
+  expect(onFailure).not.toHaveBeenCalled()
+  tick(8000); FakeEncoder.last.emit(8000)
+  await vi.advanceTimersByTimeAsync(100)
+  expect(onBatch).toHaveBeenCalledOnce()
+  available = false
+  tick(8100)
+  await vi.advanceTimersByTimeAsync(10000)
+  expect(onFailure).not.toHaveBeenCalled()
+  expect(FakeEncoder.last.close).not.toHaveBeenCalled()
+  available = true
+  tick(18200); FakeEncoder.last.emit(18200)
+  await vi.advanceTimersByTimeAsync(100)
+  expect(onBatch).toHaveBeenCalledTimes(2)
+  client.dispose()
+  expect(vi.getTimerCount()).toBe(0)
 })
