@@ -1,6 +1,9 @@
 import { PushPin, VideoCameraSlash } from '@phosphor-icons/react'
 import type { Incident } from '../classroom/contracts'
-import { alertLevel, formatClock, formatElapsed, needsDecision, type WallCamera } from './model'
+import { validGPS } from '../location/gps'
+import { TrackingOverlay } from './TrackingOverlay'
+import { wallDetection, wallTracking } from './tracking'
+import { alertLevel, cameraPlace, formatClock, formatElapsed, needsDecision, type WallCamera } from './model'
 
 interface Props {
   camera: WallCamera
@@ -23,14 +26,17 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
   const level = alertLevel(camera.id, events)
   const flagged = events.find((e) => e.camera_id === camera.id && needsDecision(e))
   const title = `${camera.label} ${camera.name}`
+  const tracking = wallTracking(camera, now)
+  const detection = wallDetection(camera, now)
+  const detectionLabel = camera.sample ? 'Sample footage' : `${detection.people ? `${detection.people} ${detection.people === 1 ? 'person' : 'people'} · ` : ''}${detection.label}`
   const body = (
     <>
       {size !== 'thumb' && (
         <header className="cm-tile-head">
           <strong>
-            {camera.label} <span>{camera.name}</span>
+            <span className="cm-camera-name">{camera.name}</span><small>{camera.label}</small>
           </strong>
-          <span className="cm-tag">Phone</span>
+          {camera.sample && <span className="cm-tag">Sample</span>}
           {pinned && (
             <span className="cm-pinned">
               <PushPin weight="fill" aria-hidden /> Pinned
@@ -42,6 +48,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
           {camera.fps != null && <span className="cm-fps">{camera.fps} fps</span>}
         </header>
       )}
+      {size !== 'thumb' && <span className="cm-location-stamp">{cameraPlace(camera) || 'Location not set'}{size === 'hero' && <small>{validGPS(camera.gps) ? 'Last shared location' : 'Location not shared'}</small>}</span>}
       <div className="cm-feed">
         {camera.status === 'offline' || !camera.image ? (
           <div className="cm-feed-empty">
@@ -49,9 +56,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
             {size !== 'thumb' && (
               <span>
                 {camera.status === 'offline'
-                  ? camera.sample
-                    ? 'Camera offline · Last seen 2m ago'
-                    : 'Camera offline'
+                  ? 'Camera offline'
                   : 'Waiting for video'}
               </span>
             )}
@@ -59,14 +64,16 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
         ) : (
           <img src={camera.image} alt="" draggable={false} />
         )}
+        {(tracking.tracks.length > 0 || tracking.poses.length > 0) && camera.preview?.width && camera.preview?.height && <TrackingOverlay tracks={tracking.tracks} poses={tracking.poses} width={camera.preview.width} height={camera.preview.height} />}
+        {size !== 'thumb' && <span className="cm-ai-state" title={tracking.detail || detection.action}>{detectionLabel}{camera.preview?.analysisFrame && <small>Earlier frame · {Math.max(0, (now - (camera.preview.received ?? now)) / 1000).toFixed(1)}s ago</small>}{!camera.sample && detection.state === 'limited' && <small>{detection.action}</small>}{tracking.label === 'AI delayed · boxes hidden' && <small>Video is ahead. Markings paused.</small>}</span>}
         {level === 'review' && flagged && size !== 'thumb' && (
           <span className="cm-flag">
-            {flagged.model === 'test' ? 'Test alert' : 'Possible physical conflict'} · {formatElapsed(now - flagged.received_at)}
+            {flagged.model === 'test' ? 'Test alert' : 'Check this camera'} · {formatElapsed(now - flagged.received_at)}
           </span>
         )}
         {level === 'confirmed' && size !== 'thumb' && <span className="cm-flag cm-flag--confirmed">Confirmed incident</span>}
         {size !== 'thumb' && camera.image && camera.status === 'live' && (
-          <span className="cm-stamp">{formatClock(now)}</span>
+          <span className="cm-stamp" title="Current monitor time">{formatClock(now)} <span className="cm-sr-only">monitor time</span></span>
         )}
       </div>
       {size === 'thumb' && <span className="cm-thumb-label">{camera.label}</span>}
@@ -79,7 +86,7 @@ export function CameraTile({ camera, events, now, pinned, selected, size = 'tile
       className={className}
       data-alert={level ?? undefined}
       onClick={onOpen}
-      aria-label={`${title}${level === 'review' ? ', possible physical conflict' : level === 'confirmed' ? ', confirmed incident' : ''}. Open on map`}
+      aria-label={`${title}${level === 'review' ? ', needs review' : level === 'confirmed' ? ', confirmed incident' : ''}. ${level === 'review' || level === 'confirmed' ? 'Open incident review' : 'Open full camera view'}`}
       aria-pressed={selected || undefined}
     >
       {body}

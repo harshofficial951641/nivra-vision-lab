@@ -309,7 +309,7 @@ def test_vapid_persists_and_env_pair_validation(tmp_path, monkeypatch):
 def test_push_schema_migration_reopens_preserves_subscriptions(tmp_path):
     path = tmp_path / 'metadata.sqlite'
     store = Store(path)
-    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 4
+    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 7
     guard = store.add_guard('G2', 'Guard Two')
     push, other, _ = make_push(tmp_path, path=path)
     push.subscribe(guard['id'], subscription())

@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from 'react'
-import { api, socketUrl, type Incident } from '../classroom/contracts'
+import { api, openSocket, type Incident } from '../classroom/contracts'
 import { authenticateSocket } from '../auth/session'
 import { sampleStore } from '../command/sampleStore'
 import { CAMERA_SLOTS, PLAN, SAMPLE_FLOOR, SAMPLE_GUARDS, mapFloor } from '../command/siteMap'
 import type { GuardAction } from '../command/model'
 import type { FloorRecord, GuardRecord, MapFloor, Placement } from '../command/types'
+import type { GPSLocation } from '../location/gps'
 
 /** Fields the service sends to a guard phone (contract §6). */
 export type GuardAlert = Pick<
@@ -22,12 +23,14 @@ export type GuardAlert = Pick<
   | 'on_scene_at'
   | 'status'
   | 'revision'
-> & { placement?: Placement | null; floorId?: string | null }
+> & { gps?: Incident['gps']; placement?: Placement | null; floorId?: string | null }
 
 export interface GuardView {
   callsign: string
   name: string
   shift: GuardRecord['shift']
+  gps?: GPSLocation | null
+  floorName?: string | null
   /** Post in plan units of `floor`. */
   post: { x: number; y: number } | null
   floor: MapFloor | null
@@ -56,6 +59,31 @@ function samplePlacement(cameraId: string): Placement | null {
     : null
 }
 
+// A QR token is single-use. Share the exchange across StrictMode's effect replay.
+let pairingRequest: Promise<unknown> | null = null
+let pairingToken: string | null = null
+function guardSession() {
+  let token = new URLSearchParams(location.hash.slice(1)).get('pair')
+  try {
+    const pending = JSON.parse(sessionStorage.getItem('nivra.guard.pendingPair') ?? 'null')
+    if (!token && pending && Number.isFinite(pending.expiresAt) && pending.expiresAt > Date.now()) token = pending.token
+    sessionStorage.removeItem('nivra.guard.pendingPair')
+  } catch { /* Storage may be unavailable. Direct QR pairing still works. */ }
+  if (token) {
+    if (typeof token !== 'string' || !/^[A-Za-z0-9_-]{30,100}$/.test(token)) return Promise.reject(new Error('This guard pairing link is invalid. Ask Command for a new QR code.'))
+    if (!pairingRequest || token !== pairingToken) {
+      history.replaceState(null, '', location.pathname + location.search)
+      pairingToken = token
+      const request = api('/guard/pair', 'POST', { token })
+      pairingRequest = request
+      const release = () => { if (pairingRequest === request) { pairingRequest = null; pairingToken = null } }
+      void request.then(release, release)
+    }
+    return pairingRequest
+  }
+  return pairingRequest ?? api('/guard/session')
+}
+
 export function useGuard(sample: boolean, sampleCallsign: string | null) {
   const store = sample ? sampleStore() : null
   const state = useSyncExternalStore(store?.subscribe ?? noop, store?.getState ?? empty)
@@ -70,46 +98,93 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
 
   useEffect(() => {
     if (sample) return
-    let stopped = false
+    let stopped = false, epoch = 0, attempts = 0, timer = 0, deadline = 0, heartbeat = 0
     let socket: WebSocket | null = null
-    let timer = 0
-    let attempts = 0
-    const connect = () => {
+    let lastSnapshot = 0
+    const detach = () => {
+      const previous = socket; socket = null
+      if (previous) { previous.onclose = null; previous.onmessage = null; previous.onerror = null; previous.onopen = null; previous.close() }
+    }
+    const retry = () => {
+      epoch++
+      clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0; clearTimeout(timer)
+      detach()
+      setConnection('disconnected')
+      timer = window.setTimeout(() => void connect(), Math.min(10000, 1000 * 2 ** Math.min(attempts++, 3)))
+    }
+    const connect = async () => {
+      const current = ++epoch
       setConnection('connecting')
-      socket = new WebSocket(socketUrl('/guard/stream'))
-      authenticateSocket(socket)
-      socket.onopen = () => {
-        attempts = 0
-        setConnection('connected')
-        setProblem('')
-      }
-      socket.onmessage = (message) => {
-        try {
-          const data = JSON.parse(message.data)
-          if (data?.type !== 'guard-snapshot' || !Array.isArray(data.alerts)) return
-          setLiveAlerts(data.alerts)
-          if (data.guard && typeof data.guard === 'object') setLiveGuard(data.guard)
-          setLiveFloor(data.floor ?? null)
-        } catch {
-          // The next snapshot replaces state.
+      deadline = window.setTimeout(() => {
+        if (!stopped && current === epoch) { setProblem('Connection timed out. Retrying…'); retry() }
+      }, 12000)
+      try {
+        await guardSession()
+        if (stopped || current !== epoch) return
+        const peer = await openSocket('/guard/stream')
+        if (stopped || current !== epoch) { peer.close(); return }
+        socket = peer
+        authenticateSocket(peer)
+        peer.onopen = () => { /* Wait for an authenticated guard snapshot. */ }
+        peer.onmessage = message => {
+          if (stopped || current !== epoch || socket !== peer) return
+          try {
+            const data = JSON.parse(message.data)
+            if (data?.type !== 'guard-snapshot' || !Array.isArray(data.alerts) || !data.guard ||
+              typeof data.guard.callsign !== 'string' || typeof data.guard.name !== 'string' ||
+              !['on_shift', 'break', 'off'].includes(data.guard.shift)) throw new Error('Invalid guard response')
+            clearTimeout(deadline)
+            lastSnapshot = Date.now()
+            attempts = 0
+            setConnection('connected'); setProblem('')
+            setLiveAlerts(data.alerts); setLiveGuard(data.guard); setLiveFloor(data.floor ?? null)
+            if (!heartbeat) heartbeat = window.setInterval(() => {
+              if (stopped || current !== epoch || socket !== peer) return
+              if (Date.now() - lastSnapshot > 25000) { setProblem('Connection interrupted. Retrying…'); retry(); return }
+              if (peer.readyState === 1) peer.send('ping')
+            }, 5000)
+          } catch { setProblem('Could not read the guard update. Reconnecting…'); retry() }
         }
-      }
-      socket.onclose = (event) => {
-        if (stopped) return
-        setConnection('disconnected')
-        if (event.code === 4403) {
-          setProblem('This account is not linked to a guard yet. Ask an admin to add you in Setup → Guards.')
+        peer.onerror = () => {
+          if (stopped || current !== epoch || socket !== peer) return
+          setProblem('Connection interrupted. Retrying…'); retry()
+        }
+        peer.onclose = event => {
+          if (stopped || current !== epoch || socket !== peer) return
+          if (event.code === 4403 || event.code === 4401) {
+            epoch++; clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0
+            socket = null
+            setLiveGuard(null); setLiveAlerts([]); setLiveFloor(null)
+            setConnection('disconnected')
+            setProblem(event.code === 4403 ? 'This phone is not linked to a guard. Ask your owner for a new QR or code.' : 'Your sign-in expired. Sign in again.')
+            return
+          }
+          setProblem('Connection lost. Retrying…'); retry()
+        }
+      } catch (reason) {
+        if (stopped || current !== epoch) return
+        setProblem(reason instanceof Error ? reason.message : 'Could not connect this guard phone.')
+        if (reason && typeof reason === 'object' && 'status' in reason && [401, 403].includes(Number(reason.status))) {
+          clearTimeout(deadline); setLiveGuard(null); setLiveAlerts([]); setLiveFloor(null); setConnection('disconnected')
           return
         }
-        if (event.code === 4401) setProblem('Your sign-in expired. Reconnecting…')
-        timer = window.setTimeout(connect, Math.min(10_000, 1000 * 2 ** Math.min(attempts++, 3)))
+        retry()
       }
     }
-    connect()
+    const resume = () => {
+      if (stopped || document.visibilityState === 'hidden') return
+      clearTimeout(timer); clearTimeout(deadline); clearInterval(heartbeat); heartbeat = 0
+      epoch++; detach(); void connect()
+    }
+    window.addEventListener('online', resume)
+    document.addEventListener('visibilitychange', resume)
+    void connect()
     return () => {
-      stopped = true
-      clearTimeout(timer)
-      socket?.close()
+      stopped = true; epoch++
+      clearTimeout(timer); clearTimeout(deadline); clearInterval(heartbeat)
+      window.removeEventListener('online', resume)
+      document.removeEventListener('visibilitychange', resume)
+      detach()
     }
   }, [sample])
 
@@ -124,6 +199,8 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
       callsign: liveGuard.callsign,
       name: liveGuard.name,
       shift: liveGuard.shift,
+      gps: liveGuard.gps,
+      floorName: liveGuard.floorName,
       post: liveGuard.post && floor ? { x: liveGuard.post.x * floor.width, y: liveGuard.post.y * floor.height } : null,
       floor,
     }
@@ -170,11 +247,23 @@ export function useGuard(sample: boolean, sampleCallsign: string | null) {
     [sample],
   )
 
-  return { view, alerts, connection, problem, act, setShift }
+  const saveGPS = useCallback(async (point: GPSLocation) => {
+    if (sample) return
+    const updated = await api<GuardRecord>('/guard/location', 'POST', point)
+    setLiveGuard(old => old ? { ...old, ...updated } : updated)
+  }, [sample])
+  const saveFloor = useCallback(async (floorName: string | null) => {
+    if (sample) return
+    const updated = await api<GuardRecord>('/guard/profile', 'PATCH', { floorName })
+    setLiveGuard(old => old ? { ...old, ...updated } : updated)
+  }, [sample])
+
+  return { view, alerts, connection, problem, act, setShift, saveGPS, saveFloor }
 }
 
 /** Register this phone for Web Push (contract §6). Returns a user-facing status. */
 export async function enablePush(): Promise<'on' | 'denied' | 'unsupported' | 'install' | 'error'> {
+  if (navigator.userAgent.includes('NIVRA-Native')) return 'unsupported'
   if (!('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
     const iOS = /iPhone|iPad|iPod/.test(navigator.userAgent)
     return iOS ? 'install' : 'unsupported'

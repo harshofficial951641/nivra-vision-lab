@@ -13,6 +13,6 @@ export class DeviceBudget {
   }
   get previewSide() { return this.averageMs > 140 ? 640 : 960 }
   get previewInterval() { return this.averageMs > 140 ? 125 : 84 }
-  get analysisInterval() { return Math.max(100, Math.min(500, this.averageMs * 1.2)) }
+  get analysisInterval() { return Math.max(50, Math.min(500, this.averageMs * 1.2)) }
   get inferenceMs() { return this.averageMs }
 }

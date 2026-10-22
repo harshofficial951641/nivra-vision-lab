@@ -29,6 +29,6 @@ export class FrameWindow {
 
   timedOut(now: number) {
     const oldest = this.pending.values().next().value
-    return !!oldest && now - oldest.sentAt > 10000
+    return !!oldest && now - oldest.sentAt > 3000
   }
 }

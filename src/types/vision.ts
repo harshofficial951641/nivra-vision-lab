@@ -46,8 +46,10 @@ export type VisionWorkerRequest =
       poseConfidence: number
       objectConfidence: number
       poseDelegate?: VisionDelegate
+      portraitMultiPerson?: boolean
+      personProposalPose?: boolean
     }
-  | { type: 'frame'; bitmap: ImageBitmap; timestampMs: number }
+  | { type: 'frame'; bitmap: ImageBitmap; timestampMs: number; personRegions?: [number, number, number, number][] }
   | {
       type: 'configure'
       maxPoses: number

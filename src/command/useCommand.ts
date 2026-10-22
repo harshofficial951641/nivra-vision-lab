@@ -45,7 +45,7 @@ export function useCommand(sample: boolean): CommandData {
   const live = useClassroom(!sample, sample ? undefined : onFrame, true)
   const snapshot = live.snapshot
 
-  // Analysis rate per camera from consecutive snapshot counters.
+  // Show the video receive rate. Inference has its own slower cadence.
   const counters = useRef(new Map<string, { frames: number; at: number }>())
   const [fps, setFps] = useState<Record<string, number>>({})
   useEffect(() => {
@@ -54,10 +54,10 @@ export function useCommand(sample: boolean): CommandData {
     const next: Record<string, number> = {}
     for (const camera of snapshot.cameras) {
       const previous = counters.current.get(camera.id)
-      if (previous && now - previous.at >= 900 && camera.framesAnalyzed >= previous.frames) {
-        next[camera.id] = Math.round(((camera.framesAnalyzed - previous.frames) / ((now - previous.at) / 1000)) * 10) / 10
-        counters.current.set(camera.id, { frames: camera.framesAnalyzed, at: now })
-      } else if (!previous) counters.current.set(camera.id, { frames: camera.framesAnalyzed, at: now })
+      if (previous && now - previous.at >= 900 && camera.framesReceived >= previous.frames) {
+        next[camera.id] = Math.round(((camera.framesReceived - previous.frames) / ((now - previous.at) / 1000)) * 10) / 10
+        counters.current.set(camera.id, { frames: camera.framesReceived, at: now })
+      } else if (!previous || camera.framesReceived < previous.frames) counters.current.set(camera.id, { frames: camera.framesReceived, at: now })
     }
     if (Object.keys(next).length) setFps((old) => ({ ...old, ...next }))
   }, [snapshot])
@@ -82,8 +82,8 @@ export function useCommand(sample: boolean): CommandData {
   )
   const floorMap = useMemo(() => new Map(floors.map((f) => [f.id, f])), [floors])
   const cameras = useMemo(
-    () => (sample ? sampleCameras() : liveCameras(snapshot?.cameras ?? [], floorMap, live.previews, fps)),
-    [sample, snapshot?.cameras, floorMap, live.previews, fps],
+    () => (sample ? sampleCameras() : liveCameras(snapshot?.cameras ?? [], floorMap, live.previews, fps, live.analysisPreviews)),
+    [sample, snapshot?.cameras, floorMap, live.previews, fps, live.analysisPreviews],
   )
   const guards = useMemo(
     () => (sample ? SAMPLE_GUARDS : liveGuards(snapshot?.guards ?? [], floorMap)),
@@ -94,6 +94,12 @@ export function useCommand(sample: boolean): CommandData {
     async (event: Incident, action: ReviewAction, payload: ReviewPayload = {}) => {
       if (store) {
         store.review(event.id, action, payload)
+        return
+      }
+      if (action === 'close') {
+        if (!needsDecision(event)) throw new Error('This alert has already changed. Review its current status.')
+        await api(`/events/${event.id}`, 'PATCH', { status: 'resolved', revision: event.revision })
+        clips.current?.release(event.id)
         return
       }
       await api(`/events/${event.id}/review`, 'POST', {

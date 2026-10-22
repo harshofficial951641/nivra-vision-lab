@@ -1,8 +1,14 @@
 :root {
+  --nv-forest: #000000;
+  --nv-lime: #ffffff;
+  --nv-paper: #ffffff;
+  --nv-muted: #555555;
+  --nv-line: #bcbcbc;
+  --nv-ease: cubic-bezier(.22, 1, .36, 1);
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
-  color: #101820;
-  background: #f4f5f7;
+  color: var(--nv-forest);
+  background: var(--nv-paper);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,7 +22,7 @@
 html {
   min-width: 320px;
   min-height: 100%;
-  background: #f4f5f7;
+  background: var(--nv-paper);
 }
 
 body {
@@ -30,6 +36,22 @@ select,
 input {
   font-family: inherit;
 }
+button, a, summary { touch-action: manipulation; }
+button, a, summary, input, select { -webkit-tap-highlight-color: transparent; }
+button, summary { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+button, a, input, select, summary { transition: background-color 180ms var(--nv-ease), color 180ms var(--nv-ease), border-color 180ms var(--nv-ease), transform 180ms var(--nv-ease); }
+button:not(:disabled):active, a:active { transform: scale(.98); }
+:focus-visible { outline: 3px solid #555555; outline-offset: 4px; }
+.nv-identity { display: inline-flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 850; letter-spacing: -.03em; line-height: 1; white-space: nowrap; }
+.nv-identity > img { display: block; width: 40px; height: 40px; padding: 3px; border-radius: 11px; background: var(--nv-paper); object-fit: contain; }
+.nv-identity--compact > img { width: 34px; height: 34px; border-radius: 9px; }
+.nv-loading { display: grid; align-content: center; justify-items: center; gap: 24px; min-height: 100dvh; color: var(--nv-forest); background: var(--nv-paper); }
+.nv-loading p { margin: 0; color: var(--nv-muted); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  button:not(:disabled):active, a:active { transform: none; }
+}
 
 button,
 select {
@@ -37,5 +59,8 @@ select {
 }
 
 ::selection {
-  background: rgba(49, 87, 246, 0.18);
+  background: var(--nv-lime);
+  color: var(--nv-forest);
 }
+/* Keep the shared logo separate from the older lab header styles. */
+.nv-identity.nv-identity > img { background: #fff; mix-blend-mode: normal; filter: grayscale(1); }

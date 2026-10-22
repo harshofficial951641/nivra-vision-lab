@@ -8,6 +8,7 @@ export interface Me {
   email: string | null
   role: Role
   guard: { callsign: string } | null
+  workspace?: { id: string; name: string; ownerVerification: 'unverified' }
   authMode: 'clerk' | 'dev'
 }
 

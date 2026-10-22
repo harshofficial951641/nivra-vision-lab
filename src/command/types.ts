@@ -1,3 +1,5 @@
+import type { GPSLocation } from '../location/gps'
+
 // Shapes shared by the Command wall, Setup portal and Guard app.
 // Server shapes follow docs/command-system-contract.md (snapshot v3).
 
@@ -23,6 +25,8 @@ export interface FloorRecord {
 }
 
 export interface GuardRecord {
+  gps?: GPSLocation | null
+  floorName?: string | null
   id: string
   callsign: string
   name: string
@@ -62,6 +66,8 @@ export interface CameraSlot {
 }
 
 export interface WallGuard {
+  gps?: GPSLocation | null
+  floorName?: string | null
   /** Call sign, e.g. G2. */
   id: string
   name: string

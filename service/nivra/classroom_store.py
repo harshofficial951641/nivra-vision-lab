@@ -1,6 +1,7 @@
 """Versioned, local metadata store. Never accepts image or video fields."""
 import json
 import os
+import re
 import sqlite3
 import time
 import uuid
@@ -8,7 +9,14 @@ from pathlib import Path
 
 GUARD_ALERT_FIELDS = ('id', 'camera_id', 'camera_name', 'location', 'detail', 'note',
                       'received_at', 'alerted_at', 'guard_ack_at', 'guard_declined_at',
-                      'on_scene_at', 'status', 'revision')
+                      'on_scene_at', 'status', 'revision', 'gps')
+
+
+def gps_record(row):
+    result = dict(row)
+    if 'gps' in result:
+        result['gps'] = json.loads(result['gps']) if result['gps'] else None
+    return result
 
 
 class Store:
@@ -24,7 +32,7 @@ class Store:
                 self.db.execute('BEGIN IMMEDIATE')
                 self.db.execute('CREATE TABLE IF NOT EXISTS schema_version(version INTEGER NOT NULL)')
                 version = self.db.execute('SELECT version FROM schema_version').fetchone()
-                if version is not None and version[0] not in (1, 2, 3, 4):
+                if version is not None and version[0] not in (1, 2, 3, 4, 5, 6, 7):
                     raise ValueError('Unsupported classroom metadata schema')
                 if version is None:
                     self.db.execute('INSERT INTO schema_version VALUES(3)')
@@ -73,6 +81,19 @@ class Store:
                         self.db.execute(f'ALTER TABLE events ADD COLUMN {column}')
                     self.db.execute('ALTER TABLE event_audit ADD COLUMN actor TEXT')
                     self.db.execute('UPDATE schema_version SET version=4')
+                if version is None or version[0] < 5:
+                    self.db.execute('ALTER TABLE cameras ADD COLUMN gps TEXT')
+                    self.db.execute('ALTER TABLE events ADD COLUMN gps TEXT')
+                    self.db.execute('UPDATE schema_version SET version=5')
+                if version is None or version[0] < 6:
+                    self.db.execute('ALTER TABLE guards ADD COLUMN floor_name TEXT')
+                    self.db.execute('ALTER TABLE guards ADD COLUMN gps TEXT')
+                    self.db.execute('UPDATE schema_version SET version=6')
+                self.db.execute('''CREATE TABLE IF NOT EXISTS device_sessions(
+                    token_hash TEXT PRIMARY KEY, kind TEXT NOT NULL CHECK(kind IN ('camera','guard')),
+                    subject_id TEXT NOT NULL, expires REAL NOT NULL)''')
+                self.db.execute('CREATE INDEX IF NOT EXISTS device_session_subject ON device_sessions(kind,subject_id)')
+                self.db.execute('UPDATE schema_version SET version=7')
                 # H2 owns all DDL. H4 push storage participates in the same v4
                 # transaction; IF NOT EXISTS also supports early v4 dev databases.
                 self.db.execute('''CREATE TABLE IF NOT EXISTS guard_push_subscriptions(
@@ -86,11 +107,40 @@ class Store:
             raise
 
     def cameras(self):
-        return [dict(r) for r in self.db.execute('SELECT * FROM cameras ORDER BY created')]
+        return [gps_record(r) for r in self.db.execute('SELECT * FROM cameras ORDER BY created')]
+
+    def device_session(self, token_hash, kind):
+        if kind not in ('camera', 'guard') or not re.fullmatch(r'[a-f0-9]{64}', token_hash): return None
+        table = 'cameras' if kind == 'camera' else 'guards'
+        extra = ' AND subject.enabled=1' if kind == 'camera' else ''
+        row = self.db.execute(f'''SELECT session.*,subject.id AS valid_subject
+            FROM device_sessions session JOIN {table} subject ON subject.id=session.subject_id
+            WHERE session.token_hash=? AND session.kind=? AND session.expires>?{extra}''',
+            (token_hash,kind,time.time())).fetchone()
+        return dict(row) if row else None
+
+    def device_sessions(self):
+        return [session for row in self.db.execute('SELECT token_hash,kind FROM device_sessions').fetchall()
+                if (session := self.device_session(row['token_hash'],row['kind'])) is not None]
+
+    def save_device_session(self, token_hash, kind, subject_id, expires):
+        if not re.fullmatch(r'[a-f0-9]{64}', token_hash) or kind not in ('camera','guard') or expires <= time.time():
+            raise ValueError('Invalid device session')
+        subject = self.camera(subject_id) if kind == 'camera' else self.guard(subject_id)
+        if not subject or (kind == 'camera' and not subject['enabled']): raise ValueError('Device subject unavailable')
+        with self.db:
+            self.db.execute('DELETE FROM device_sessions WHERE expires<=?', (time.time(),))
+            self.db.execute('INSERT INTO device_sessions VALUES(?,?,?,?)', (token_hash,kind,subject_id,expires))
+
+    def revoke_device_sessions(self, *, kind, subject_id=None, token_hash=None):
+        if kind not in ('camera','guard'): raise ValueError('Invalid device kind')
+        if subject_id is None and token_hash is None: raise ValueError('Device subject required')
+        field,value = ('subject_id',subject_id) if subject_id is not None else ('token_hash',token_hash)
+        with self.db: self.db.execute(f'DELETE FROM device_sessions WHERE kind=? AND {field}=?', (kind,value))
 
     def camera(self, camera_id):
         r = self.db.execute('SELECT * FROM cameras WHERE id=?', (camera_id,)).fetchone()
-        return dict(r) if r else None
+        return gps_record(r) if r else None
 
     def add_camera(self, name, building, floor):
         camera_id = str(uuid.uuid4())
@@ -106,6 +156,15 @@ class Store:
                             (camera_id, name, building, floor, time.time()*1000, f'CAM-{number:02d}'))
         return self.camera(camera_id)
 
+    def delete_camera(self, camera_id):
+        """Remove a device and its access, retaining immutable event/audit history."""
+        with self.db:
+            camera = self.camera(camera_id)
+            if camera is None: raise KeyError(camera_id)
+            self.db.execute("DELETE FROM device_sessions WHERE kind='camera' AND subject_id=?", (camera_id,))
+            self.db.execute('DELETE FROM cameras WHERE id=?', (camera_id,))
+        return camera
+
     @property
     def max_cameras(self):
         return max(1, int(os.environ.get('NIVRA_MAX_CAMERAS', '12')))
@@ -117,7 +176,7 @@ class Store:
         return self.camera(camera_id)
 
     def events(self):
-        return [dict(r) for r in self.db.execute('SELECT * FROM events ORDER BY received_at DESC LIMIT 500')]
+        return [gps_record(r) for r in self.db.execute('SELECT * FROM events ORDER BY received_at DESC LIMIT 500')]
 
     def analytics(self):
         return dict(self.db.execute("""SELECT COUNT(*) total,
@@ -131,12 +190,12 @@ class Store:
         with self.db:
             cursor = self.db.execute('''INSERT OR IGNORE INTO events
                 (id,camera_id,generation,source_id,received_at,camera_name,location,source_ms,
-                 evidence_ms,model,detail,status,revision,updated_at,floor_id)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?, 'open',0,?,?)''',
+                 evidence_ms,model,detail,status,revision,updated_at,floor_id,gps)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?, 'open',0,?,?,?)''',
                 (str(uuid.uuid4()), camera_id, generation, str(event['id'])[:120], now,
                  camera['name'], camera['building']+' · '+camera['floor'],
                  float(event['occurredAtMs']), float(event.get('evidenceTimestampMs', event['occurredAtMs'])),
-                 str(event.get('evidenceModel','slowfast-ava'))[:100], str(event.get('detail','Review the live scene.'))[:600], now, camera['floor_id']))
+                 str(event.get('evidenceModel','slowfast-ava'))[:100], str(event.get('detail','Review the live scene.'))[:600], now, camera['floor_id'], json.dumps(camera['gps']) if camera['gps'] else None))
         return cursor.rowcount == 1
 
     def transition(self, event_id, status, revision):
@@ -149,7 +208,7 @@ class Store:
             if status not in allowed[row['status']]: raise ValueError('Invalid event transition.')
             self.db.execute('UPDATE events SET status=?,revision=revision+1,updated_at=? WHERE id=?', (status,now,event_id))
             self.db.execute('INSERT INTO event_audit(event_id,status,revision,changed_at) VALUES(?,?,?,?)', (event_id,status,revision+1,now))
-        return dict(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
+        return gps_record(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
 
     def review(self, event_id, action, revision, *, reason=None, note=None, guard=None, actor=None) -> dict:
         with self.db:
@@ -158,7 +217,7 @@ class Store:
             row = self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone()
             if row is None: raise KeyError(event_id)
             if action == 'view' and row['status'] in ('acknowledged', 'resolved'):
-                return dict(row)
+                return gps_record(row)
             if row['revision'] != revision: raise ValueError('Event changed. Refresh and try again.')
             now = time.time()*1000
             changes = {}
@@ -194,12 +253,12 @@ class Store:
             self.db.execute(f'UPDATE events SET {columns} WHERE id=?', (*changes.values(), event_id))
             self.db.execute('''INSERT INTO event_audit(event_id,status,revision,changed_at,action,actor)
                 VALUES(?,?,?,?,?,?)''', (event_id, changes.get('status', row['status']), revision+1, now, action, actor))
-            result = dict(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
+            result = gps_record(self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
         return result
 
     def guard_alerts(self, guard, now=None):
         now = time.time()*1000 if now is None else now
-        return [dict(row) for row in self.db.execute(f'''SELECT {','.join(GUARD_ALERT_FIELDS)}
+        return [gps_record(row) for row in self.db.execute(f'''SELECT {','.join(GUARD_ALERT_FIELDS)}
             FROM events WHERE guard=? AND decision='confirmed' AND alerted_at IS NOT NULL
             AND (status!='resolved' OR updated_at>=?) ORDER BY alerted_at DESC, id DESC LIMIT 10''',
             (guard, now-30*60*1000))]
@@ -228,7 +287,7 @@ class Store:
             self.db.execute('''INSERT INTO event_audit(event_id,status,revision,changed_at,action,actor)
                 VALUES(?,?,?,?,?,?)''', (event_id, changes.get('status', row['status']), revision+1, now, 'guard:'+action, actor))
             result = self.db.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone()
-            return {key: result[key] for key in GUARD_ALERT_FIELDS}
+            return gps_record({key: result[key] for key in GUARD_ALERT_FIELDS})
 
     def site(self):
         return dict(self.db.execute('SELECT * FROM site LIMIT 1').fetchone())
@@ -279,11 +338,13 @@ class Store:
         return row
 
     def patch_camera(self, camera_id, **changes):
-        if not changes.keys() <= {'name', 'building', 'floor', 'enabled', 'label', 'placement'}:
+        if not changes.keys() <= {'name', 'building', 'floor', 'enabled', 'label', 'placement', 'gps'}:
             raise ValueError('Unsupported camera field')
         with self.db:
             self.db.execute('BEGIN IMMEDIATE')
             if self.camera(camera_id) is None: raise KeyError(camera_id)
+            if 'gps' in changes:
+                changes['gps'] = json.dumps(changes['gps']) if changes['gps'] else None
             if 'placement' in changes:
                 placement = changes.pop('placement')
                 self._require_floor(placement['floorId'] if placement else None)
@@ -292,45 +353,49 @@ class Store:
             if changes:
                 columns = ','.join(f'{key}=?' for key in changes)
                 self.db.execute(f'UPDATE cameras SET {columns} WHERE id=?', (*changes.values(), camera_id))
+                if 'enabled' in changes and not changes['enabled']:
+                    self.db.execute("DELETE FROM device_sessions WHERE kind='camera' AND subject_id=?", (camera_id,))
         return self.camera(camera_id)
 
     def guards(self):
-        return [dict(row) for row in self.db.execute('SELECT * FROM guards ORDER BY created,id')]
+        return [gps_record(row) for row in self.db.execute('SELECT * FROM guards ORDER BY created,id')]
 
     def guard(self, guard_id):
         row = self.db.execute('SELECT * FROM guards WHERE id=?', (guard_id,)).fetchone()
-        return dict(row) if row else None
+        return gps_record(row) if row else None
 
     def guard_by_callsign(self, callsign):
         row = self.db.execute('SELECT * FROM guards WHERE callsign=?', (callsign,)).fetchone()
-        return dict(row) if row else None
+        return gps_record(row) if row else None
 
     def guard_by_user(self, user_id):
         row = self.db.execute('SELECT * FROM guards WHERE user_id=?', (user_id,)).fetchone()
-        return dict(row) if row else None
+        return gps_record(row) if row else None
 
     def guard_by_email(self, email):
         row = self.db.execute('SELECT * FROM guards WHERE email=?', (email.strip().lower(),)).fetchone()
-        return dict(row) if row else None
+        return gps_record(row) if row else None
 
-    def add_guard(self, callsign, name, email=None, floor_id=None, post=None):
+    def add_guard(self, callsign, name, email=None, floor_id=None, post=None, floor_name=None):
         guard_id = str(uuid.uuid4())
         with self.db:
             self.db.execute('BEGIN IMMEDIATE')
             self._require_floor(floor_id)
             if post is not None and floor_id is None: raise ValueError('A guard post requires a floor.')
-            self.db.execute('''INSERT INTO guards(id,callsign,name,email,floor_id,post_x,post_y,created)
-                VALUES(?,?,?,?,?,?,?,?)''', (guard_id, callsign, name, email.strip().lower() if email else None,
-                floor_id, post['x'] if post else None, post['y'] if post else None, time.time()*1000))
+            self.db.execute('''INSERT INTO guards(id,callsign,name,email,floor_id,post_x,post_y,created,floor_name)
+                VALUES(?,?,?,?,?,?,?,?,?)''', (guard_id, callsign, name, email.strip().lower() if email else None,
+                floor_id, post['x'] if post else None, post['y'] if post else None, time.time()*1000, floor_name))
         return self.guard(guard_id)
 
     def update_guard(self, guard_id, **changes):
-        if not changes.keys() <= {'callsign', 'name', 'email', 'floor_id', 'post', 'shift', 'user_id'}:
+        if not changes.keys() <= {'callsign', 'name', 'email', 'floor_id', 'post', 'shift', 'user_id', 'floor_name', 'gps'}:
             raise ValueError('Unsupported guard field')
         with self.db:
             self.db.execute('BEGIN IMMEDIATE')
             guard = self.guard(guard_id)
             if guard is None: raise KeyError(guard_id)
+            if 'gps' in changes:
+                changes['gps'] = json.dumps(changes['gps']) if changes['gps'] else None
             floor_id = changes.get('floor_id', guard['floor_id'])
             self._require_floor(floor_id)
             if changes.get('email'): changes['email'] = changes['email'].strip().lower()
@@ -368,6 +433,7 @@ class Store:
             guard = self.guard(guard_id)
             if guard is None: raise KeyError(guard_id)
             self.db.execute('DELETE FROM guard_push_subscriptions WHERE guard_id=?', (guard_id,))
+            self.db.execute("DELETE FROM device_sessions WHERE kind='guard' AND subject_id=?", (guard_id,))
             self.db.execute('DELETE FROM guards WHERE id=?', (guard_id,))
         return guard
 

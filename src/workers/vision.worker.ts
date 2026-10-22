@@ -11,6 +11,8 @@ import {
   objectDisplayName,
   objectRole,
 } from '../lib/objectCatalog'
+import { expandedPersonRegion, matchesPersonRegion, remapPersonPose } from './personPoses'
+import { PORTRAIT_POSE_REGIONS, mergeCropPoses, ownsPortraitPose, remapCropPose } from './portraitPoses'
 import { isSoftwareWebGlRenderer } from '../lib/gpuDelegate'
 import type {
   ObjectObservation,
@@ -28,6 +30,10 @@ let poseLandmarker: PoseLandmarker | null = null
 let objectDetector: ObjectDetector | null = null
 let delegate: VisionDelegate = 'CPU'
 let operation = Promise.resolve()
+let portraitMultiPerson = false
+let poseMode: 'VIDEO' | 'IMAGE' = 'VIDEO'
+let maxPoses = 10
+let cropCanvas: OffscreenCanvas | null = null
 
 function respond(message: VisionWorkerResponse): void {
   workerScope.postMessage(message)
@@ -149,12 +155,15 @@ async function createObjectTask(
 
 async function initialize(message: Extract<VisionWorkerRequest, { type: 'init' }>) {
   task = message.task
+  portraitMultiPerson = message.portraitMultiPerson === true
+  maxPoses = message.maxPoses
+  poseMode = 'VIDEO'
   const model = await fetchModel(message.modelPath)
   if (task === 'pose') {
     await createPoseTask(
       model,
       message.wasmRoot,
-      message.maxPoses,
+      message.personProposalPose ? 1 : message.maxPoses,
       message.poseConfidence,
       message.poseDelegate ?? 'GPU',
     )
@@ -178,12 +187,49 @@ async function handleMessage(message: VisionWorkerRequest): Promise<void> {
     const startedAt = performance.now()
     try {
       if (task === 'pose' && poseLandmarker) {
-        const result = poseLandmarker.detectForVideo(message.bitmap, message.timestampMs)
+        const portrait = portraitMultiPerson && message.bitmap.width / message.bitmap.height < .85
+        const mode = message.personRegions !== undefined || portrait ? 'IMAGE' : 'VIDEO'
+        if (poseMode !== mode) {
+          await poseLandmarker.setOptions({ runningMode: mode })
+          poseMode = mode
+        }
+        let poses: PoseLandmarks[]
+        if (message.personRegions !== undefined) {
+          poses = []
+          for (const box of message.personRegions.slice(0, maxPoses)) {
+            const region = expandedPersonRegion(box)
+            const width = Math.max(1, Math.round((region[2] - region[0]) * message.bitmap.width))
+            const height = Math.max(1, Math.round((region[3] - region[1]) * message.bitmap.height))
+            if (!cropCanvas) cropCanvas = new OffscreenCanvas(width, height)
+            cropCanvas.width = width; cropCanvas.height = height
+            const context = cropCanvas.getContext('2d')
+            if (!context) throw new Error('Person analysis canvas unavailable.')
+            context.drawImage(message.bitmap, region[0] * message.bitmap.width, region[1] * message.bitmap.height, width, height, 0, 0, width, height)
+            const candidates = toPlainPoses(poseLandmarker.detect(cropCanvas).landmarks)
+              .map(pose => remapPersonPose(pose, region)).filter(pose => matchesPersonRegion(pose, box))
+            if (candidates[0]) poses.push(candidates[0])
+          }
+        } else if (portrait) {
+          const groups: PoseLandmarks[][] = []
+          const width = Math.max(1, Math.round(message.bitmap.width * .65))
+          if (!cropCanvas) cropCanvas = new OffscreenCanvas(width, message.bitmap.height)
+          cropCanvas.width = width
+          cropCanvas.height = message.bitmap.height
+          const context = cropCanvas.getContext('2d')
+          if (!context) throw new Error('Portrait analysis canvas unavailable.')
+          for (const [tile, region] of PORTRAIT_POSE_REGIONS.entries()) {
+            context.drawImage(message.bitmap, message.bitmap.width * region.x, 0, message.bitmap.width * region.width, message.bitmap.height, 0, 0, width, message.bitmap.height)
+            const result = poseLandmarker.detect(cropCanvas)
+            groups.push(toPlainPoses(result.landmarks).map(pose => remapCropPose(pose, region)).filter(pose => ownsPortraitPose(pose, tile)))
+          }
+          poses = mergeCropPoses(groups, message.bitmap.width / message.bitmap.height, maxPoses)
+        } else poses = toPlainPoses(poseLandmarker.detectForVideo(message.bitmap, message.timestampMs).landmarks)
         respond({
           type: 'pose-result',
           timestampMs: message.timestampMs,
+          // Include both portrait passes and mode changes in pacing feedback.
           inferenceMs: performance.now() - startedAt,
-          poses: toPlainPoses(result.landmarks),
+          poses,
         })
       } else if (task === 'objects' && objectDetector) {
         const result = objectDetector.detectForVideo(message.bitmap, message.timestampMs)
@@ -207,6 +253,7 @@ async function handleMessage(message: VisionWorkerRequest): Promise<void> {
   if (message.type === 'configure') {
     try {
       if (task === 'pose') {
+        maxPoses = message.maxPoses
         await poseLandmarker?.setOptions({
           numPoses: message.maxPoses,
           minPoseDetectionConfidence: message.poseConfidence,
@@ -226,6 +273,7 @@ async function handleMessage(message: VisionWorkerRequest): Promise<void> {
   objectDetector?.close()
   poseLandmarker = null
   objectDetector = null
+  cropCanvas = null
   workerScope.close()
 }
 

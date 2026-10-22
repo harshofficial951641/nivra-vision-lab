@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/build-sites.mjs",
+    "build:usb": "tsc -b && vite build --mode usb --outDir dist-usb",
+    "build:local": "npm run build:usb",
     "lint": "oxlint",
     "preview": "vite preview",
     "models:prepare": "node scripts/prepare-models.mjs",
@@ -21,6 +23,7 @@
     "@clerk/clerk-react": "5.61.3",
     "@mediapipe/tasks-vision": "1.0.1",
     "@phosphor-icons/react": "^2.1.10",
+    "@zxing/browser": "^0.2.1",
     "qrcode.react": "4.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"

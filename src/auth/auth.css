@@ -179,3 +179,21 @@
   outline: 3px solid currentColor;
   outline-offset: 2px;
 }
+
+/* The same quiet controls used by the phone and owner screens. */
+.au-page { background: var(--nv-paper); color: var(--nv-forest); }
+.au-page--dark { background: var(--nv-forest); color: var(--nv-paper); }
+.au-panel { gap: 16px; }
+.au-brand { margin-bottom: 16px !important; }
+.au-eyebrow { color: var(--nv-muted); text-transform: none; letter-spacing: 0; font-size: 15px; }
+.au-panel h1 { font-size: 32px; letter-spacing: -.025em; }
+.au-lead { color: var(--nv-muted); line-height: 1.6; }
+.au-page--dark .au-lead, .au-page--dark .au-eyebrow { color: #dddddd; }
+.au-submit, .au-secondary { min-height: 54px; border-radius: 32px; background: var(--nv-forest); color: var(--nv-paper); border-color: var(--nv-forest); }
+.au-page--dark .au-submit { background: var(--nv-lime); color: var(--nv-forest); border-color: var(--nv-lime); }
+.au-secondary { background: transparent; color: inherit; border-color: var(--nv-line); }
+.au-field input { min-height: 54px; border-radius: 14px; }
+.au-dev { border-radius: 18px; }
+.au-page--dark .au-dev { background: #000000; border-color: #bcbcbc; }
+.au-page--dark .au-field input { background: var(--nv-forest); color: var(--nv-paper); border-color: #bcbcbc; }
+.au-page--dark .au-error { color: #ffc7b6; }

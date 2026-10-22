@@ -1,21 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Bell, CheckCircle, WarningCircle } from '@phosphor-icons/react'
-import type { Incident } from '../classroom/contracts'
 import { useOptionalSession } from '../auth/context'
-import { FloorMap } from '../command/FloorMap'
-import { formatElapsed, type GuardAction, type WallCamera } from '../command/model'
-import {
-  SAMPLE_GUARDS,
-  distanceMeters,
-  incidentPoint,
-  routeView,
-  slotFromPlacement,
-  walkSeconds,
-} from '../command/siteMap'
-import type { WallGuard } from '../command/types'
+import { GoogleMap } from '../location/GoogleMap'
+import { googleMapsURL, validGPS } from '../location/gps'
+import { useLiveGPS } from '../location/useLiveGPS'
+import { formatElapsed, type GuardAction } from '../command/model'
+import { SAMPLE_GUARDS } from '../command/siteMap'
 import { RING_MS, RingPlayer, shouldRing } from './ringPlayer'
 import { enablePush, useGuard, type GuardAlert } from './useGuard'
 import '../command/command.css'
+import { Brand } from '../ui/Brand'
 import './guard.css'
 
 const ringing = (a: GuardAlert) =>
@@ -60,14 +54,19 @@ function useWakeLock(enabled: boolean) {
   return held
 }
 
-function SlideToAcknowledge({ onDone, disabled }: { onDone: () => void; disabled: boolean }) {
+function SlideToAcknowledge({ onDone, disabled }: { onDone: () => Promise<boolean>; disabled: boolean }) {
   const [value, setValue] = useState(0)
   const done = useRef(false)
   const finish = (next: number) => {
     setValue(next)
     if (next >= 92 && !done.current) {
       done.current = true
-      onDone()
+      void onDone().then(success => {
+        if (!success) {
+          done.current = false
+          setValue(0)
+        }
+      })
     }
   }
   return (
@@ -97,11 +96,13 @@ function SlideToAcknowledge({ onDone, disabled }: { onDone: () => void; disabled
 export default function GuardApp() {
   const params = new URLSearchParams(location.search)
   const sample = params.get('demo') === '1'
+  const nativeApp = navigator.userAgent.includes('NIVRA-Native')
   const sampleGuard = /^G[0-9]{1,2}$/.test(params.get('guard') ?? '') ? params.get('guard') : null
   const session = useOptionalSession()
-  const { view, alerts, connection, problem, act, setShift } = useGuard(sample, sampleGuard)
+  const { view, alerts, connection, problem, act, setShift, saveGPS, saveFloor } = useGuard(sample, sampleGuard)
   const now = useClock()
   const [started, setStarted] = useState(false)
+  const [startingShift, setStartingShift] = useState(false)
   const [audio, setAudio] = useState<'ok' | 'blocked' | null>(null)
   const [push, setPush] = useState<'on' | 'denied' | 'unsupported' | 'install' | 'error' | null>(null)
   const [busy, setBusy] = useState(false)
@@ -109,10 +110,42 @@ export default function GuardApp() {
   const player = useRef<RingPlayer | null>(null)
   const rings = useRef(new Map<string, { count: number; last: number; alertedAt: number }>())
   const awake = useWakeLock(started)
+  const tracking = started && view?.shift === 'on_shift' && !sample
+  const gps = useLiveGPS(tracking, saveGPS)
+  const [floorName, setFloorName] = useState('')
+  const [floorBusy, setFloorBusy] = useState(false)
+  useEffect(() => { setFloorName(view?.floorName ?? '') }, [view?.floorName])
+  const updateFloor = async () => {
+    if (floorBusy || !floorName.trim()) return
+    setFloorBusy(true)
+    setError('')
+    try { await saveFloor(floorName.trim() || null) }
+    catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not save your floor.') }
+    finally { setFloorBusy(false) }
+  }
+  const ownLocation = (
+    <section className="gd-location" aria-label="Your live location">
+      <p>{view?.name} · {view?.callsign}{view?.floorName ? ` · ${view.floorName}` : ''}</p>
+      <p role="status">{sample ? 'Sample guard. Live GPS is off.' : tracking
+        ? gps.point ? `Live GPS · shared ${gps.age}s ago · accuracy ±${Math.ceil(gps.point.accuracy)} m` : 'Getting your live GPS location…'
+        : started ? 'Location is paused. Choose On shift to share it.' : 'Location is paused. Tap Start shift to share it.'}</p>
+      {tracking && gps.error && <><p role="alert">{gps.error}</p><button type="button" className="gd-text-btn" onClick={gps.retry}>Retry GPS location</button></>}
+      {!sample && <details className="gd-tools"><summary>Change floor</summary><form onSubmit={event => { event.preventDefault(); void updateFloor() }}>
+        <label htmlFor="guard-floor">Current floor</label>
+        <div><input id="guard-floor" required value={floorName} maxLength={60} placeholder="e.g. Ground floor" onChange={event => setFloorName(event.target.value)} />
+          <button type="submit" disabled={floorBusy || !floorName.trim() || floorName.trim() === (view?.floorName ?? '')}>{floorBusy ? 'Saving…' : 'Save floor'}</button></div>
+        <p>Set your floor yourself. GPS cannot tell which indoor floor you are on.</p>
+      </form></details>}
+    </section>
+  )
 
   const incoming = alerts.find(ringing) ?? null
   const responding = alerts.find((a) => a.status !== 'resolved' && a.guard_ack_at) ?? null
   const last = alerts[0] ?? null
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [incoming?.id, responding?.id, started])
 
   useEffect(() => () => player.current?.dispose(), [])
 
@@ -149,11 +182,17 @@ export default function GuardApp() {
   }, [started, incoming, now])
 
   const startShift = async () => {
-    player.current ??= new RingPlayer()
-    const ok = await player.current.prime()
-    setAudio(ok ? 'ok' : 'blocked')
-    setStarted(true)
-    if (view?.shift === 'off') void setShift('on_shift').catch(() => undefined)
+    if (startingShift) return
+    setStartingShift(true)
+    setError('')
+    try {
+      player.current ??= new RingPlayer()
+      const ok = await player.current.prime()
+      setAudio(ok ? 'ok' : 'blocked')
+      if (view?.shift !== 'on_shift') await setShift('on_shift')
+      setStarted(true)
+    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not start your shift. Try again.') }
+    finally { setStartingShift(false) }
   }
   const testRing = async () => {
     player.current ??= new RingPlayer()
@@ -166,8 +205,10 @@ export default function GuardApp() {
     player.current?.stop()
     try {
       await act(alert, action)
+      return true
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Update failed. Check the connection and try again.')
+      return false
     } finally {
       setBusy(false)
     }
@@ -188,26 +229,11 @@ export default function GuardApp() {
     setPush(await enablePush())
   }
 
-  const route = useMemo(() => {
-    const alert = incoming ?? responding
-    const floor = view?.floor ?? null
-    if (!alert?.placement || !floor || alert.placement.floorId !== floor.id) return null
-    const slot = slotFromPlacement({ id: alert.camera_id, name: alert.camera_name }, alert.placement, floor)
-    const target = incidentPoint(slot)
-    const meters = view?.post ? distanceMeters(view.post, target, floor.metersPerUnit) : null
-    return {
-      slot,
-      floor,
-      target,
-      meters: meters == null ? null : Math.round(meters),
-      seconds: meters == null ? null : walkSeconds(meters),
-    }
-  }, [incoming, responding, view])
 
   if (sample && !sampleGuard)
     return (
       <main className="gd-app gd-dark gd-center">
-        <p className="gd-brand">NIVRA Guard</p>
+        <div className="gd-brand"><Brand compact /><span>Guard</span></div>
         <h1>Choose a sample guard</h1>
         <p className="gd-muted">Sample workspace. Pick whose phone this tab is.</p>
         <div className="gd-guard-pick">
@@ -223,10 +249,12 @@ export default function GuardApp() {
   if (!sample && !view)
     return (
       <main className="gd-app gd-dark gd-center">
-        <p className="gd-brand">NIVRA Guard</p>
+        <div className="gd-brand"><Brand compact /><span>Guard</span></div>
         <p role="status" className={problem ? 'gd-error' : 'gd-muted'}>
-          {problem || (connection === 'connected' ? 'Loading your post…' : 'Connecting to NIVRA…')}
+          {problem || (connection === 'connected' ? 'Loading your guard profile…' : 'Connecting to NIVRA…')}
         </p>
+        {problem && <p className="gd-muted gd-small">Ask your team for a new guard QR and scan it. If your site uses accounts, sign in with the guard account assigned to you.</p>}
+        {problem && <a className="gd-btn gd-btn--outline" href="/login?next=/guard">Sign in to NIVRA</a>}
         {problem && session && (
           <button type="button" className="gd-text-btn" onClick={() => void session.signOut()}>
             Sign out
@@ -235,7 +263,6 @@ export default function GuardApp() {
       </main>
     )
 
-  const distanceText = route?.meters != null ? `${route.meters} m · about ${route.seconds} s walk` : null
 
   if (incoming && started)
     return (
@@ -248,9 +275,8 @@ export default function GuardApp() {
         </div>
         <h1>Go to {incoming.camera_name}</h1>
         <p className="gd-alert-what">
-          Possible physical conflict{route?.floor ? ` · ${route.floor.name}` : incoming.location ? ` · ${incoming.location}` : ''}
+          Possible physical conflict{incoming.location ? ` · ${incoming.location}` : ''}
         </p>
-        {distanceText && <p className="gd-alert-where">{distanceText}</p>}
         {incoming.note && <p className="gd-alert-note">“{incoming.note}”</p>}
         <p className="gd-alert-time">Alerted {formatElapsed(now - (incoming.alerted_at ?? now))} ago</p>
         {error && (
@@ -258,7 +284,7 @@ export default function GuardApp() {
             {error}
           </p>
         )}
-        <SlideToAcknowledge disabled={busy} onDone={() => void run(incoming, 'ack')} />
+        <SlideToAcknowledge key={incoming.id} disabled={busy} onDone={() => run(incoming, 'ack')} />
         <button type="button" className="gd-text-btn" disabled={busy} onClick={() => void run(incoming, 'decline')}>
           Can’t respond
         </button>
@@ -266,22 +292,6 @@ export default function GuardApp() {
     )
 
   if (responding && started) {
-    const cameras: WallCamera[] = route
-      ? [{ id: responding.camera_id, label: responding.camera_name, name: responding.camera_name, floorId: route.floor.id, slot: route.slot, status: 'live', fps: null, image: null, people: null, sample }]
-      : []
-    const incident = {
-      ...responding,
-      source_ms: 0,
-      evidence_ms: 0,
-      model: '',
-      updated_at: responding.received_at,
-      decision: 'confirmed',
-      guard: 'You',
-    } as Incident
-    const you: WallGuard[] =
-      view?.post && route
-        ? [{ id: 'You', name: view.name, floorId: route.floor.id, x: view.post.x, y: view.post.y, status: 'available', online: true, push: null }]
-        : []
     return (
       <main className="gd-app gd-dark gd-respond">
         <p className="gd-chip" role="status">
@@ -290,22 +300,10 @@ export default function GuardApp() {
             : `Acknowledged · ${formatElapsed(now - (responding.guard_ack_at ?? now))}`}
         </p>
         <h1>Go to {responding.camera_name}</h1>
-        {(distanceText || route?.floor) && (
-          <p className="gd-muted">{[route?.floor.name, distanceText].filter(Boolean).join(' · ')}</p>
-        )}
-        {route && (
-          <div className="gd-map">
-            <FloorMap
-              floor={route.floor}
-              cameras={cameras}
-              guards={you}
-              events={[incident]}
-              focus={incident}
-              view={view?.post ? routeView(view.post, route.target, route.floor) : undefined}
-              label={`Route from you to ${responding.camera_name}`}
-            />
-          </div>
-        )}
+        <p className="gd-muted">{responding.location}</p>
+        {ownLocation}
+        <div className="gd-map"><GoogleMap point={responding.gps} label={responding.camera_name} sample={sample} /></div>
+        {validGPS(responding.gps) && <a className="gd-btn gd-btn--light" href={googleMapsURL(responding.gps, true)} target="_blank" rel="noreferrer">Navigate with Google Maps ↗</a>}
         {responding.note && <p className="gd-note">{responding.note}</p>}
         {error && (
           <p className="gd-error" role="alert">
@@ -328,33 +326,33 @@ export default function GuardApp() {
             </button>
           )}
         </div>
-        <p className="gd-muted gd-small">Command sees every update instantly.</p>
+        <p className="gd-muted gd-small">Your team sees your updates.</p>
       </main>
     )
   }
 
   const shift = view?.shift ?? 'off'
   return (
-    <main className="gd-app gd-dark gd-idle">
-      <p className="gd-brand">NIVRA Guard</p>
+    <main className={`gd-app gd-dark gd-idle${started ? '' : ' gd-before-shift'}`}>
+      <div className="gd-brand"><Brand compact /><span>Guard</span></div>
       <time className="gd-time">
         {new Date(now).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
       </time>
       <p className="gd-who">
         {view?.callsign} · {view?.name}
-        {view?.floor ? ` · ${view.floor.name}` : ''}
       </p>
       <p className="gd-muted" role="status">
         <span className={`gd-dot ${connection === 'connected' ? 'is-on' : ''}`} />
-        {connection === 'connected' ? 'Connected to Command' : connection === 'connecting' ? 'Connecting…' : 'Connection lost · retrying'}
+        {connection === 'connected' ? 'Connected to your team' : connection === 'connecting' ? 'Connecting…' : 'Connection lost · retrying'}
       </p>
-      {!view?.post && <p className="gd-muted gd-small">No post set yet. Command can still alert you.</p>}
+      {ownLocation}
       {!started ? (
         <>
-          <button type="button" className="gd-btn gd-btn--light gd-start" onClick={() => void startShift()}>
-            Start shift
+          <section className="gd-phone-setup" aria-label="Guard phone setup"><p>Start your shift to receive alerts.</p></section>
+          <button type="button" className="gd-btn gd-btn--light gd-start" disabled={startingShift || connection !== 'connected'} onClick={() => void startShift()}>
+            {startingShift ? 'Starting shift…' : 'Start shift'}
           </button>
-          <p className="gd-muted gd-small">Turns on the alert ring and keeps the screen awake.</p>
+          <p className="gd-muted gd-small">Allow location when asked. Keep this screen open.</p>
         </>
       ) : (
         <>
@@ -378,16 +376,16 @@ export default function GuardApp() {
               </button>
             ))}
           </div>
-          <div className="gd-row">
+          <details className="gd-tools"><summary>Sound and notifications</summary><div className="gd-row">
             <button type="button" className="gd-btn gd-btn--outline" onClick={() => void testRing()}>
               Test ring
             </button>
-            {push !== 'on' && (
+            {!nativeApp && push !== 'on' && push !== 'unsupported' && (
               <button type="button" className="gd-btn gd-btn--outline" onClick={() => void turnOnAlerts()}>
                 Alerts when locked
               </button>
             )}
-          </div>
+          </div>{nativeApp && <p>Keep this screen open to hear alerts. Lock-screen alerts are unavailable in this app.</p>}</details>
         </>
       )}
       {push && push !== 'on' && (
@@ -432,6 +430,7 @@ export default function GuardApp() {
         </p>
       )}
       <footer className="gd-foot">
+        {!sample && <a href="/guard?connect=1">Scan a new QR or code</a>}
         <span>
           {started
             ? awake

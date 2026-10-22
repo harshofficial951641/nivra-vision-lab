@@ -61,6 +61,37 @@ def test_ttl_uses_elapsed_clock_when_wall_clock_moves_backwards():
     assert clips.summary('e')['status'] == 'expired'
 
 
+def test_large_snapshot_prunes_once_and_expires_clips_without_erasing_history(tmp_path, monkeypatch):
+    app = create_app(database=tmp_path/'snapshot.sqlite', relay_only=True)
+    service = app.state.classroom
+    clock = [1000.0]
+    service.clips = Clips(clock=lambda: clock[0])
+    cam = service.store.add_camera('Synthetic', 'QA', 'QA')
+    try:
+        service.clips.receive(cam['id'], b'jpeg')
+        for index in range(500):
+            service.store.record(cam['id'], 'QA', dict(id=str(index), occurredAtMs=index))
+        for event in service.store.events(): service.clips.capture(event['id'], cam['id'])
+        original = service.clips.prune
+        calls = []
+        def counted():
+            calls.append(True)
+            original()
+        monkeypatch.setattr(service.clips, 'prune', counted)
+        snapshot = service.snapshot()
+        assert len(snapshot['events']) == 500 and len(calls) == 1
+        assert all(event['clip'] == dict(status='recording', frames=1) for event in snapshot['events'])
+        clock[0] += 900
+        calls.clear()
+        snapshot = service.snapshot()
+        assert len(snapshot['events']) == 500 and len(calls) == 1
+        assert all(event['clip'] == dict(status='expired', frames=0) for event in snapshot['events'])
+        assert all(event['status'] == 'open' for event in snapshot['events'])
+        assert service.clips.bytes == 0
+    finally:
+        service.store.close()
+
+
 def test_signed_url_cannot_cross_events_or_change_expiry():
     path = '/api/v2/events/event/clip/frames/0'
     parsed = urlsplit(signed_frame_url(path))

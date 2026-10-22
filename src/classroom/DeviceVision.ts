@@ -1,56 +1,85 @@
 import { inferenceSize } from '../lib/inferenceSize'
-import type { VisionDelegate, VisionWorkerResponse } from '../types/vision'
-import { DeviceAnalysis, DEVICE_PEOPLE_LIMIT, type DeviceResult, type DeviceStatus } from './deviceAnalysis'
+import type { PoseLandmarks, VisionDelegate, VisionWorkerResponse } from '../types/vision'
+import { DeviceAnalysis, DEVICE_POSE_LIMIT, type DeviceResult, type DeviceMotion, type DeviceStatus } from './deviceAnalysis'
 import { analysisRegion, DeviceBudget, type AnalysisArea, type DeviceProfile } from './deviceBudget'
+import { PeopleVision, type PersonObservation } from './PeopleVision'
 
-/** One pose worker and one outstanding bitmap; models live on this camera device. */
+const RETRY_DELAYS = [500, 1500, 3000] as const
+
+/** Fresh pose frames use bounded proposal refreshes without queuing camera frames. */
 export class DeviceVision {
+  private motion: OriginalMotion | null = null
   private worker: Worker | null = null
+  private people: PeopleVision | null = null
   private analysis = new DeviceAnalysis()
   private disposed = false
   private ready = false
   private busy = false
   private generation = 0
   private lastCapture = -Infinity
-  private pending: { timestamp: number; aspect: number } | null = null
+  private lastPeopleCapture = -Infinity
+  private peopleBusy = false
+  private proposals: PersonObservation[] | null = null
+  private pending: { timestamp: number; aspect: number; startedAt: number; waitedForPeople: boolean; poses?: PoseLandmarks[]; people?: PersonObservation[]; poseMs?: number; peopleMs?: number; bitmap?: ImageBitmap } | null = null
   private timer: ReturnType<typeof setTimeout> | null = null
+  private retryTimer: ReturnType<typeof setTimeout> | null = null
+  private cpuRetries = 0
   private delegate: VisionDelegate = 'GPU'
   readonly budget = new DeviceBudget()
   private area: AnalysisArea
-  private profile: DeviceProfile
-
   private onStatus: (status: DeviceStatus) => void
   private onResult: (result: DeviceResult) => void
 
-  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile = 'balanced') {
+  constructor(onStatus: (status: DeviceStatus) => void, onResult: (result: DeviceResult) => void, area: AnalysisArea = 'full', profile: DeviceProfile = 'balanced', onMotion?: (result: DeviceMotion) => void, onMotionStatus?: (status: DeviceStatus) => void) {
     this.onStatus = onStatus
     this.onResult = onResult
     this.area = area
-    this.profile = profile
+    if (onMotion) this.motion = new OriginalMotion(onMotion, area, onMotionStatus)
+    void profile // Both profiles retain source detail for small person proposals.
   }
 
   start(preferred: VisionDelegate = 'GPU') {
     if (this.disposed) return
+    this.cpuRetries = 0
+    if (this.retryTimer) clearTimeout(this.retryTimer)
+    this.retryTimer = null
+    if (this.motion) { this.motion.start(preferred); preferred = 'CPU' }
+    this.initialize(preferred)
+  }
+
+  private initialize(preferred: VisionDelegate) {
+    if (this.disposed) return
     this.generation++
     const epoch = this.generation
     this.worker?.terminate()
+    this.people?.dispose()
     if (this.timer) clearTimeout(this.timer)
     this.ready = false
     this.busy = false
+    this.peopleBusy = false
+    this.proposals = null
+    this.lastPeopleCapture = -Infinity
+    this.pending?.bitmap?.close()
     this.pending = null
     this.analysis = new DeviceAnalysis()
-    this.onStatus({ state: 'loading', delegate: null, detail: preferred === 'GPU' ? 'Loading the original Nivra detector on this device…' : 'GPU unavailable. Starting device CPU fallback…' })
+    this.onStatus({ state: 'loading', delegate: null, detail: this.cpuRetries ? `Retrying detection (${this.cpuRetries}/3)` : preferred === 'GPU' ? 'Loading person and pose detection on this device…' : 'Starting pose CPU fallback and person detection…' })
     const fail = () => {
       if (this.disposed || this.generation !== epoch) return
-      if (preferred === 'GPU') this.start('CPU')
-      else {
-        this.dispose()
-        this.onStatus({ state: 'error', delegate: null, detail: 'Device analysis failed. Video can still stream; reconnect to retry detection.' })
-      }
+      if (preferred === 'GPU') this.initialize('CPU')
+      else this.fatal('Device analysis failed. Video can still stream; reconnect to retry detection.')
     }
     try {
       const worker = new Worker(new URL('../workers/vision.worker.ts', import.meta.url), { type: 'module' })
+      const people = new PeopleVision()
       this.worker = worker
+      this.people = people
+      let poseReady = false, peopleReady = false
+      const ready = () => {
+        if (this.disposed || this.generation !== epoch || !poseReady || !peopleReady) return
+        if (this.timer) clearTimeout(this.timer)
+        this.ready = true
+        this.onStatus({ state: 'ready', delegate: this.delegate, detail: `Pose ${this.delegate} + person CPU · observed boxes and motion coverage reported separately` })
+      }
       this.timer = setTimeout(fail, 30000)
       worker.onerror = fail
       worker.onmessageerror = fail
@@ -58,65 +87,270 @@ export class DeviceVision {
         if (this.disposed || this.worker !== worker) return
         if (data.type === 'error') { fail(); return }
         if (data.type === 'ready') {
-          if (this.timer) clearTimeout(this.timer)
           this.delegate = data.delegate
-          this.ready = true
-          this.onStatus({ state: 'ready', delegate: data.delegate, detail: data.delegate === 'GPU' ? 'Device GPU · original Nivra motion detector' : 'Device CPU fallback · GPU acceleration unavailable' })
+          poseReady = true
+          ready()
         }
-        if (data.type === 'pose-result' && data.timestampMs === this.pending?.timestamp) {
-          if (this.timer) clearTimeout(this.timer)
-          const aspect = this.pending.aspect
-          this.pending = null
-          this.busy = false
-          this.budget.observe(data.inferenceMs)
-          this.onResult(this.analysis.update(data.timestampMs, data.inferenceMs, data.poses, aspect, this.delegate, this.area))
+        if (data.type === 'pose-result' && data.timestampMs === this.pending?.timestamp && this.pending.bitmap === undefined) {
+          this.pending.poses = data.poses
+          this.pending.poseMs = data.inferenceMs
+          this.completeFrame()
         }
       }
+      void people.start().then(() => { peopleReady = true; ready() }).catch(reason => {
+        if (this.disposed || this.generation !== epoch) return
+        this.fatal(reason instanceof Error ? reason.message : 'Person detection could not start. Reconnect to retry.')
+      })
       worker.postMessage({
         type: 'init', task: 'pose', poseDelegate: preferred,
         modelPath: `${import.meta.env.BASE_URL}models/pose_landmarker_lite.task`,
         wasmRoot: import.meta.env.DEV ? `${import.meta.env.BASE_URL}__nivra_wasm` : `${import.meta.env.BASE_URL}mediapipe/wasm`,
-        maxPoses: DEVICE_PEOPLE_LIMIT, poseConfidence: 0.5, objectConfidence: 0.35,
+        maxPoses: DEVICE_POSE_LIMIT, poseConfidence: 0.5, objectConfidence: 0.35,
+        portraitMultiPerson: this.area === 'full', personProposalPose: true,
       })
     } catch { fail() }
   }
 
+  private completeFrame() {
+    const pending = this.pending
+    if (!pending || pending.poses === undefined) return
+    if (this.timer) clearTimeout(this.timer)
+    this.pending = null
+    this.busy = false
+    // Include elapsed capture/transfer/model work, while person refresh can run independently.
+    const elapsed = Math.max(pending.poseMs ?? 0, pending.waitedForPeople ? (pending.peopleMs ?? 0) + (pending.poseMs ?? 0) : pending.peopleMs ?? 0, performance.now() - pending.startedAt)
+    this.budget.observe(elapsed)
+    this.onResult(this.analysis.update(pending.timestamp, elapsed, pending.poses, pending.aspect, this.delegate, this.area, pending.people))
+  }
+
+  private fatal(_detail: string) {
+    this.ready = false; this.generation++
+    if (this.timer) clearTimeout(this.timer)
+    this.worker?.terminate(); this.people?.dispose()
+    this.pending?.bitmap?.close()
+    this.worker = null; this.people = null; this.pending = null
+    if (this.cpuRetries >= RETRY_DELAYS.length) {
+      this.onStatus({ state: 'error', delegate: null, detail: 'Detection unavailable. Retry detection.' })
+      return
+    }
+    const delay = RETRY_DELAYS[this.cpuRetries++]
+    const epoch = this.generation
+    this.onStatus({ state: 'loading', delegate: null, detail: `Retrying detection (${this.cpuRetries}/3)` })
+    this.retryTimer = setTimeout(() => {
+      this.retryTimer = null
+      if (!this.disposed && epoch === this.generation) this.initialize('CPU')
+    }, delay)
+  }
+
   async capture(video: HTMLVideoElement, timestamp: number) {
-    if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < this.budget.analysisInterval || video.readyState < 2 || !video.videoWidth) return
+    void this.motion?.capture(video, timestamp)
+    if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < 50 || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return
     this.busy = true
     this.lastCapture = timestamp
     const generation = this.generation
-    let bitmap: ImageBitmap | null = null
+    const startedAt = performance.now()
+    let full: ImageBitmap | null = null, pose: ImageBitmap | null = null
     try {
       const region = analysisRegion(this.area)
-      const width = Math.round(video.videoWidth * region.width), height = Math.round(video.videoHeight * region.height)
-      const size = inferenceSize({ width, height }, this.profile === 'detail' ? 960 : 640)
-      bitmap = await createImageBitmap(video, Math.round(video.videoWidth * region.x), Math.round(video.videoHeight * region.y), width, height,
+      const fullSize = inferenceSize({ width: video.videoWidth, height: video.videoHeight }, 1280)
+      full = await createImageBitmap(video, { resizeWidth: fullSize.width, resizeHeight: fullSize.height, resizeQuality: 'low' })
+      if (this.disposed || generation !== this.generation) { full.close(); return }
+      const width = Math.max(1, Math.round(full.width * region.width)), height = Math.max(1, Math.round(full.height * region.height))
+      const size = inferenceSize({ width, height }, 1280)
+      // Derive the pose crop from the SAME captured pixels used by person detection.
+      pose = await createImageBitmap(full, Math.round(full.width * region.x), Math.round(full.height * region.y), width, height,
         { resizeWidth: size.width, resizeHeight: size.height, resizeQuality: 'low' })
-      if (this.disposed || generation !== this.generation) { bitmap.close(); return }
-      this.pending = { timestamp, aspect: width / height }
+      if (this.disposed || generation !== this.generation) { full.close(); pose.close(); return }
+      this.pending = { timestamp, aspect: width / height, startedAt, waitedForPeople: this.proposals === null, bitmap: pose }
+      pose = null
       this.timer = setTimeout(() => {
-        if (this.delegate === 'GPU') this.start('CPU')
-        else {
-          this.dispose()
-          this.onStatus({ state: 'error', delegate: null, detail: 'Device too slow or analysis stalled. Video only; reconnect to retry detection.' })
-        }
-      }, this.delegate === 'GPU' ? 5000 : 10000)
-      this.worker!.postMessage({ type: 'frame', bitmap, timestampMs: timestamp }, [bitmap])
+        if (this.delegate === 'GPU') this.initialize('CPU')
+        else this.fatal('Device analysis stalled. Video only; reconnect to retry detection.')
+      }, this.delegate === 'GPU' ? 15000 : 30000)
+      const refresh = !this.peopleBusy && (this.proposals === null || timestamp - this.lastPeopleCapture >= 500)
+      if (this.proposals !== null) this.sendPose(this.proposals)
+      if (refresh) {
+        this.peopleBusy = true
+        this.lastPeopleCapture = timestamp
+        const personResult = this.people!.analyze(full, timestamp)
+        full = null // PeopleVision owns this bitmap on success and rejection.
+        void personResult.then(result => {
+          if (this.disposed || generation !== this.generation) return
+          this.peopleBusy = false
+          this.proposals = result.people
+          if (this.pending?.timestamp === result.timestampMs) {
+            this.pending.people = result.people
+            this.pending.peopleMs = result.inferenceMs
+          }
+          // A late detector updates crop proposals only. Its boxes never become
+          // observations on a different camera timestamp.
+          if (this.pending?.bitmap) this.sendPose(result.people)
+        }).catch(reason => {
+          if (this.disposed || generation !== this.generation) return
+          this.fatal(reason instanceof Error ? reason.message : 'Person detection failed. Reconnect to retry.')
+        })
+      } else { full.close(); full = null }
+
     } catch {
-      bitmap?.close()
+      full?.close()
+      pose?.close()
       if (this.disposed || generation !== this.generation) return
-      this.dispose()
-      this.onStatus({ state: 'error', delegate: null, detail: 'This browser cannot process camera frames. Video only; try a current browser.' })
+      this.fatal('This browser cannot process camera frames. Video only; try a current browser.')
     }
   }
 
+  private sendPose(people: PersonObservation[]) {
+    const pending = this.pending
+    if (!pending?.bitmap) return
+    const region = analysisRegion(this.area)
+    const personRegions = people.flatMap(person => {
+      const [x1, y1, x2, y2] = person.box
+      const center = (x1 + x2) / 2
+      if (center < region.x || center > region.x + region.width) return []
+      return [[Math.max(0, (x1 - region.x) / region.width), y1, Math.min(1, (x2 - region.x) / region.width), y2] as [number, number, number, number]]
+    })
+    const bitmap = pending.bitmap
+    this.worker!.postMessage({ type: 'frame', bitmap, timestampMs: pending.timestamp, personRegions }, [bitmap])
+    pending.bitmap = undefined
+  }
+
   dispose() {
+    this.motion?.dispose()
+    if (this.retryTimer) clearTimeout(this.retryTimer)
+    this.retryTimer = null
     this.disposed = true
+    this.ready = false
     this.generation++
     if (this.timer) clearTimeout(this.timer)
     this.worker?.terminate()
+    this.people?.dispose()
     this.worker = null
+    this.people = null
+    this.pending?.bitmap?.close()
     this.pending = null
+  }
+}
+
+
+/** Original full-model VIDEO tracking, independent of crowd detection and ROI work. */
+class OriginalMotion {
+  private worker: Worker | null = null
+  private ready = false
+  private busy = false
+  private disposed = false
+  private epoch = 0
+  private lastCapture = -Infinity
+  private delegate: VisionDelegate = 'GPU'
+  private analysis = new DeviceAnalysis()
+  private pending: { timestamp: number; aspect: number; startedAt: number } | null = null
+  private timer: ReturnType<typeof setTimeout> | null = null
+  private retryTimer: ReturnType<typeof setTimeout> | null = null
+  private cpuRetries = 0
+  private onResult: (result: DeviceMotion) => void
+  private area: AnalysisArea
+  private onStatus?: (status: DeviceStatus) => void
+  constructor(onResult: (result: DeviceMotion) => void, area: AnalysisArea, onStatus?: (status: DeviceStatus) => void) {
+    this.onResult = onResult; this.area = area; this.onStatus = onStatus
+  }
+
+  start(preferred: VisionDelegate) {
+    if (this.disposed) return
+    this.cpuRetries = 0
+    if (this.retryTimer) clearTimeout(this.retryTimer)
+    this.retryTimer = null
+    this.initialize(preferred)
+  }
+
+  private initialize(preferred: VisionDelegate) {
+    const epoch = ++this.epoch
+    this.onStatus?.({ state: 'loading', delegate: null, detail: this.cpuRetries ? `Retrying detection (${this.cpuRetries}/3)` : preferred === 'GPU' ? 'Loading original full-model motion tracking…' : 'Starting full-model motion CPU fallback…' })
+    this.worker?.terminate()
+    if (this.timer) clearTimeout(this.timer)
+    this.ready = false; this.busy = false; this.pending = null
+    this.analysis = new DeviceAnalysis()
+    const fail = () => {
+      if (this.disposed || epoch !== this.epoch) return
+      if (preferred === 'GPU') this.initialize('CPU')
+      else this.fatal('Motion tracking failed. Crowd analysis can continue; reconnect to retry motion.')
+    }
+    try {
+      const worker = new Worker(new URL('../workers/vision.worker.ts', import.meta.url), { type: 'module' })
+      this.worker = worker
+      worker.onerror = fail; worker.onmessageerror = fail
+      this.timer = setTimeout(fail, 30000)
+      worker.onmessage = ({ data }: MessageEvent<VisionWorkerResponse>) => {
+        if (this.disposed || epoch !== this.epoch) return
+        if (data.type === 'error') { fail(); return }
+        if (data.type === 'ready') {
+          if (this.timer) clearTimeout(this.timer)
+          this.delegate = data.delegate; this.ready = true
+          this.onStatus?.({ state: 'ready', delegate: data.delegate, detail: `Original full-model VIDEO motion tracking · ${data.delegate} · up to4 poses` })
+        }
+        if (data.type === 'pose-result' && data.timestampMs === this.pending?.timestamp) {
+          const pending = this.pending
+          if (this.timer) clearTimeout(this.timer)
+          this.pending = null; this.busy = false
+          const elapsed = Math.max(data.inferenceMs, performance.now() - pending.startedAt)
+          const result = this.analysis.update(pending.timestamp, elapsed, data.poses, pending.aspect, this.delegate, this.area)
+          this.onResult({ ...result, type: 'device-motion' })
+        }
+      }
+      worker.postMessage({ type: 'init', task: 'pose', poseDelegate: preferred,
+        modelPath: `${import.meta.env.BASE_URL}models/pose_landmarker_full.task`,
+        wasmRoot: import.meta.env.DEV ? `${import.meta.env.BASE_URL}__nivra_wasm` : `${import.meta.env.BASE_URL}mediapipe/wasm`,
+        maxPoses: 4, poseConfidence: .5, objectConfidence: .35,
+        personProposalPose: false, portraitMultiPerson: false })
+    } catch { fail() }
+  }
+
+  async capture(video: HTMLVideoElement, timestamp: number) {
+    if (this.disposed || !this.ready || this.busy || timestamp - this.lastCapture < 50 || video.readyState < 2 || !video.videoWidth || !video.videoHeight) return
+    this.busy = true; this.lastCapture = timestamp
+    const epoch = this.epoch, startedAt = performance.now(), region = analysisRegion(this.area)
+    const width = Math.max(1, Math.round(video.videoWidth * region.width))
+    const height = Math.max(1, Math.round(video.videoHeight * region.height))
+    const size = inferenceSize({ width, height }, 960)
+    let bitmap: ImageBitmap | null = null
+    try {
+      bitmap = await createImageBitmap(video, Math.round(video.videoWidth * region.x), Math.round(video.videoHeight * region.y), width, height,
+        { resizeWidth: size.width, resizeHeight: size.height, resizeQuality: 'medium' })
+      if (this.disposed || epoch !== this.epoch) { bitmap.close(); return }
+      this.pending = { timestamp, aspect: width / height, startedAt }
+      this.timer = setTimeout(() => {
+        if (this.disposed || epoch !== this.epoch) return
+        if (this.delegate === 'GPU') this.initialize('CPU')
+        else this.fatal('Motion tracking stalled. Crowd analysis can continue; reconnect to retry motion.')
+      }, this.delegate === 'GPU' ? 5000 : 10000)
+      this.worker!.postMessage({ type: 'frame', bitmap, timestampMs: timestamp }, [bitmap])
+      bitmap = null
+    } catch {
+      bitmap?.close()
+      if (!this.disposed && epoch === this.epoch) this.fatal('Camera frames could not reach motion tracking. Crowd analysis can continue.')
+    }
+  }
+
+  private fatal(_detail: string) {
+    this.ready = false; this.busy = false; this.epoch++
+    if (this.timer) clearTimeout(this.timer)
+    this.worker?.terminate(); this.worker = null; this.pending = null
+    if (this.cpuRetries >= RETRY_DELAYS.length) {
+      this.onStatus?.({ state: 'error', delegate: null, detail: 'Motion unavailable. Retry detection.' })
+      return
+    }
+    const delay = RETRY_DELAYS[this.cpuRetries++]
+    const epoch = this.epoch
+    this.onStatus?.({ state: 'loading', delegate: null, detail: `Retrying detection (${this.cpuRetries}/3)` })
+    this.retryTimer = setTimeout(() => {
+      this.retryTimer = null
+      if (!this.disposed && epoch === this.epoch) this.initialize('CPU')
+    }, delay)
+  }
+
+  dispose() {
+    this.disposed = true; this.ready = false; this.epoch++
+    if (this.retryTimer) clearTimeout(this.retryTimer)
+    this.retryTimer = null
+    if (this.timer) clearTimeout(this.timer)
+    this.worker?.terminate(); this.worker = null; this.pending = null
   }
 }

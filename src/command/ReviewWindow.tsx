@@ -3,9 +3,11 @@ import { CheckCircle, WarningCircle, X } from '@phosphor-icons/react'
 import { api, type Incident } from '../classroom/contracts'
 import type { ClipBuffer } from './clipBuffer'
 import { ClipPlayer, type PlayerFrame } from './ClipPlayer'
-import { FloorMap } from './FloorMap'
+import { GoogleMap } from '../location/GoogleMap'
 import {
   REASONS,
+  rankGPSGuards,
+  gpsStatus,
   formatClock,
   formatElapsed,
   incidentRef,
@@ -18,7 +20,6 @@ import {
   type ReviewPayload,
   type WallCamera,
 } from './model'
-import { incidentPoint, nearestGuards } from './siteMap'
 import type { MapFloor, WallGuard } from './types'
 
 interface Props {
@@ -128,21 +129,17 @@ function clipFor(
   }
 }
 
-export function ReviewWindow({ event, cameras, events, now, clips, floors, guards, siteName, sample, queue, act, close }: Props) {
+export function ReviewWindow({ event, cameras, now, clips, guards, siteName, sample, queue, act, close }: Props) {
   const dialog = useRef<HTMLDialogElement>(null)
   const titleId = useId()
   const [note, setNote] = useState('')
   const [reason, setReason] = useState<DismissReason | null>(null)
   const camera = cameras.find((c) => c.id === event.camera_id)
-  const floor = floors.find((f) => f.id === camera?.floorId) ?? null
-  const point = camera?.slot ? incidentPoint(camera.slot) : null
-  const floorGuards = guards.filter((g) => g.floorId === floor?.id)
-  const ranked = point && floor
-    ? nearestGuards(point, floorGuards, floor.metersPerUnit)
-    : guards.map((guard) => ({ guard, meters: null, seconds: null, units: 0 }))
-  const firstAvailable = ranked.find((r) => r.guard.status === 'available')?.guard.id ?? null
+  const ranked = rankGPSGuards(guards, event.gps, now)
+  const firstAvailable = ranked.find((r) => r.guard.status === 'available' && !(r.guard.id === event.guard && event.guard_declined_at))?.guard.id ?? null
   const [guard, setGuard] = useState<string | null>(firstAvailable)
   const [allGuards, setAllGuards] = useState(false)
+  const [showDismiss, setShowDismiss] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const reasonGroup = useRef<HTMLDivElement>(null)
@@ -218,14 +215,14 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
       <header className="cm-review-head">
         <div>
           <h2 id={titleId}>
-            {incidentRef(event)} · {event.model === 'test' ? 'Test alert' : event.decision === 'confirmed' ? 'Confirmed incident' : 'Possible physical conflict'}
+            {incidentRef(event)} · {event.model === 'test' ? 'Test alert' : event.decision === 'confirmed' ? 'Confirmed incident' : 'Check this moment'}
             {event.model === 'test' && <span className="cm-pill">Test · not a real incident</span>}
             <span className={`cm-pill cm-pill--${deciding ? 'amber' : stage === 'false_alarm' || stage === 'cleared' ? 'quiet' : 'red'}`}>
-              {deciding ? 'Awaiting decision' : stage === 'false_alarm' ? 'False alarm' : stage === 'cleared' ? 'Closed' : 'Response in progress'}
+              {deciding ? 'Needs your review' : stage === 'false_alarm' ? 'False alarm' : stage === 'cleared' ? 'Closed' : 'Response in progress'}
             </span>
           </h2>
           <p className="cm-muted">
-            {[siteName, floor?.name, camera?.name ?? event.camera_name].filter(Boolean).join(' / ')}
+            {[siteName, camera?.name ?? event.camera_name, event.location].filter(Boolean).join(' / ')}
             {queue > 1 ? ` · ${queue - 1} more waiting` : ''}
           </p>
         </div>
@@ -236,7 +233,7 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
           </strong>
         </div>
         <button type="button" className="cm-btn cm-btn--quiet cm-esc" onClick={close} aria-label="Close review window (Esc)">
-          <X aria-hidden /> Esc
+          <X aria-hidden /> Close
         </button>
       </header>
 
@@ -251,7 +248,7 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
             complete={clip.complete}
             note={clip.note}
           />
-          <h3>Observed signals</h3>
+          <details className="cm-review-details"><summary>Why this needs a look</summary>
           <ul className="cm-signals">
             {signals.map((signal) => (
               <li key={signal}>{signal}</li>
@@ -263,36 +260,20 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
               : camera?.fps != null
                 ? `Analysis ${camera.fps} fps${camera.people != null ? ` · ${camera.people} people in view` : ''}`
                 : 'Analysis rate unavailable'}
-            {' · '}Signals describe movement, not intent. You decide.
-          </p>
+            {' · '}Movement alone cannot show intent. Please review the video.
+          </p></details>
         </section>
 
         <section className="cm-review-map" aria-label="Location">
-          <h3>{floor ? `${floor.name} map` : 'Location'}</h3>
-          <div className="cm-review-mapbox">
-            {floor ? (
-              <FloorMap
-                floor={floor}
-                cameras={cameras}
-                guards={guards}
-                events={events}
-                focus={event}
-                chosenGuard={deciding ? guard : event.guard}
-                label={`${floor.name} map with the incident, ${camera?.label ?? 'camera'} and guard positions`}
-              />
-            ) : (
-              <p className="cm-empty-map cm-muted">
-                {camera?.label ?? event.camera_name} is not placed on a floor plan yet, so its location can’t be shown.
-              </p>
-            )}
-          </div>
-          <p className="cm-muted cm-small">
-            Incident position is approximate (centre of the camera’s view).{sample ? ' Guard positions are sample data.' : ' Guards are shown at their posts.'}
-          </p>
+          <h3>Location & guards</h3>
+          <details className="cm-review-details"><summary>View location on map</summary>
+          <GoogleMap point={event.gps} label={event.camera_name} sample={sample} />
+          <p className="cm-muted cm-small">This is the camera location when the alert started. Check the camera name and floor for indoor directions.</p></details>
           {(deciding || (isActiveResponse(event) && (!event.alerted_at || event.guard_declined_at))) && (
             <fieldset className="cm-guards">
-              <legend>Nearest guards</legend>
-              {(allGuards ? ranked : ranked.slice(0, 3)).map(({ guard: g, meters, seconds }) => {
+              <legend>Choose a guard</legend>
+              <details className="cm-review-details"><summary>How guards are ordered</summary><p className="cm-muted cm-small">Available guards with a location from the last 2 minutes appear nearest first, by straight-line distance. Floor names are set by staff.</p></details>
+              {(allGuards ? ranked : ranked.slice(0, 3)).map(({ guard: g, meters }) => {
                 const away = g.status !== 'available'
                 return (
                   <label key={g.id} className={away ? 'is-disabled' : ''}>
@@ -305,18 +286,17 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
                       onChange={() => setGuard(g.id)}
                     />
                     <span className="cm-guard-id">{g.id}</span>
-                    <span>{g.name}</span>
+                    <span>{g.name}<small className="cm-guard-detail">{g.floorName || 'Floor not set'} · {gpsStatus(g.gps, now)}</small><small className="cm-guard-detail">{meters == null ? 'Distance unavailable' : `${Math.round(meters)} m straight-line`}</small></span>
                     <span className="cm-muted">
-                      {meters} m · ~{seconds} s
+                      {g.online ? 'Online' : 'Offline'}
                     </span>
-                    <span className={away ? 'cm-muted' : ''}>{away ? 'On break' : 'Available'}</span>
-                    {g.id === firstAvailable && !away && <span className="cm-tag">Nearest</span>}
+                    <span className={away ? 'cm-muted' : ''}>{away ? g.status === 'off' ? 'Off shift' : 'On break' : 'Available'}</span>
                   </label>
                 )
               })}
               {ranked.length > 3 && (
                 <button type="button" className="cm-link" onClick={() => setAllGuards((v) => !v)}>
-                  {allGuards ? 'Show nearest 3' : `Show all ${ranked.length} guards`}
+                  {allGuards ? 'Show first 3' : `Show all ${ranked.length} guards`}
                 </button>
               )}
             </fieldset>
@@ -328,14 +308,14 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
                 {stage === 'on_scene'
                   ? `on scene for ${formatElapsed(now - (event.on_scene_at ?? now))}`
                   : stage === 'acknowledged'
-                    ? `acknowledged, on the way (${formatElapsed(now - (event.guard_ack_at ?? now))})`
+                    ? `on the way (${formatElapsed(now - (event.guard_ack_at ?? now))})`
                     : stage === 'declined'
-                      ? 'can’t respond — alert another guard'
-                      : `alerted ${formatElapsed(now - event.alerted_at)} ago, waiting for acknowledgement`}
+                      ? 'cannot respond. Choose another guard'
+                      : `alerted ${formatElapsed(now - event.alerted_at)} ago, waiting for a reply`}
               </strong>
               {stage === 'alerted' && (event.escalated_at || now - event.alerted_at > 30_000) && (
                 <span className="cm-warn">
-                  <WarningCircle aria-hidden /> No acknowledgement after 30 s. Call the guard or alert another.
+                  <WarningCircle aria-hidden /> No reply after 30 seconds. Call the guard or choose another.
                 </span>
               )}
             </div>
@@ -346,7 +326,7 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
               <strong>
                 {event.decision === 'false_alarm'
                   ? `Logged as false alarm · ${reasonLabel(event.reason)}`
-                  : `Situation clear · logged at ${formatClock(event.updated_at)}`}
+                  : !event.decision ? 'Alert closed without a decision' : `Situation clear · logged at ${formatClock(event.updated_at)}`}
               </strong>
             </div>
           )}
@@ -366,16 +346,16 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
             <input
               value={note}
               maxLength={280}
-              placeholder="Add a note for the log (optional)"
+              placeholder="Add a note (optional)"
               onChange={(e) => setNote(e.target.value)}
             />
           </label>
           <div className="cm-decide-row">
             <div className="cm-false">
-              <button type="button" className="cm-btn" disabled={busy} onClick={dismiss}>
+              <button type="button" className="cm-btn" disabled={busy} aria-expanded={showDismiss} onClick={() => setShowDismiss(value => !value)}>
                 False alarm
               </button>
-              <div ref={reasonGroup} role="radiogroup" aria-label="False alarm reason" className="cm-chips">
+              {showDismiss && <div className="cm-dismiss-panel"><p>What happened?</p><div ref={reasonGroup} role="radiogroup" aria-label="False alarm reason" className="cm-chips">
                 {REASONS.map((r) => (
                   <label key={r.id} className={`cm-chip ${reason === r.id ? 'is-on' : ''}`}>
                     <input
@@ -391,14 +371,17 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
                     {r.label}
                   </label>
                 ))}
-              </div>
+              </div><button type="button" className="cm-btn" disabled={busy} onClick={dismiss}>Save false alarm</button></div>}
             </div>
             <div className="cm-confirm">
+              <button type="button" className="cm-btn" disabled={busy} title="Close this alert without marking it confirmed or false alarm" onClick={() => void run('close', {}, close)}>
+                Close alert
+              </button>
               <button type="button" className="cm-btn" disabled={busy} onClick={keepWatching}>
                 Keep watching
               </button>
               <button type="button" className="cm-btn cm-btn--dark" disabled={busy} onClick={() => void run('confirm', { note })}>
-                Confirm incident
+                Confirm only
               </button>
               <button
                 type="button"
@@ -406,7 +389,7 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
                 disabled={busy || !guard}
                 onClick={() => void run('confirm', { note, guard: guard ?? undefined })}
               >
-                {guard ? `Confirm + alert ${guard}` : 'Confirm + alert guard'}
+                {guard ? `Confirm & send ${guard}` : 'Confirm & send guard'}
               </button>
             </div>
           </div>
@@ -417,8 +400,8 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
             <>
               <span className="cm-muted">
                 {chosen && (!event.alerted_at || event.guard_declined_at)
-                  ? `${chosen.guard.id} is ${chosen.meters} m away (~${chosen.seconds} s).`
-                  : 'Guard updates arrive from their phone. You can also update by radio.'}
+                  ? `${chosen.guard.id} will receive the camera location and directions.`
+                  : 'Updates arrive from the guard’s phone. You can also update them here.'}
               </span>
               <div className="cm-confirm">
                 {(!event.alerted_at || event.guard_declined_at) && (
@@ -428,7 +411,7 @@ export function ReviewWindow({ event, cameras, events, now, clips, floors, guard
                     disabled={busy || !guard}
                     onClick={() => void run('alert', { guard: guard ?? undefined })}
                   >
-                    {guard ? `Alert ${guard}` : 'Alert a guard'}
+                    {guard ? `Send ${guard}` : 'Send a guard'}
                   </button>
                 )}
                 {event.alerted_at && !event.on_scene_at && !event.guard_declined_at && (

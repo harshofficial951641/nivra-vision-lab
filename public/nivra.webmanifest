@@ -1,0 +1,14 @@
+{
+  "id": "/mobile",
+  "name": "NIVRA",
+  "short_name": "NIVRA",
+  "description": "Your cameras and safety team, together.",
+  "start_url": "/mobile",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    { "src": "/brand/nivra-mark.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any" }
+  ]
+}

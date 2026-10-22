@@ -234,9 +234,13 @@ function shoulderCalibration(body: Body): number | null {
 export class ConflictEngine {
   private minBodyScale: number
   private minShoulderWidth: number
-  constructor(options: { minBodyScale?: number; minShoulderWidth?: number } = {}) {
+  private maxGapMs: number
+  constructor(options: { minBodyScale?: number; minShoulderWidth?: number; maxGapMs?: number } = {}) {
     this.minBodyScale = options.minBodyScale ?? .07
     this.minShoulderWidth = options.minShoulderWidth ?? .055
+    // Camera-device inference can take longer than the lab's 600 ms window.
+    // Keep continuity bounded; elapsed-time speed and motion gates still apply.
+    this.maxGapMs = Math.min(3000, Math.max(MAX_GAP_MS, options.maxGapMs ?? MAX_GAP_MS))
   }
   private tracks = new Map<number, BodyTrack>()
   private pairs = new Map<string, PairState>()
@@ -247,7 +251,7 @@ export class ConflictEngine {
   private lastAspect = 16 / 9
   private events: ReviewEvent[] = []
   private current: ConflictSnapshot = { ...EMPTY_CONFLICT }
-  private lastAlertAtMs = Number.NEGATIVE_INFINITY
+  private recentAlerts: { time: number; bodies: { shoulder: Point; scale: number }[] }[] = []
   private sensitivity: ConflictSensitivity = 'standard'
 
   configureSensitivity(sensitivity: ConflictSensitivity): void {
@@ -269,7 +273,7 @@ export class ConflictEngine {
     const aspect = Number.isFinite(aspectRatio) && aspectRatio > 0 ? aspectRatio : 16 / 9
     const gap = timestampMs - this.lastUpdateMs
     if (gap < MIN_SAMPLE_MS) return this.snapshot(timestampMs)
-    if (gap > MAX_GAP_MS || Math.abs(aspect - this.lastAspect) > 0.05) {
+    if (gap > this.maxGapMs || Math.abs(aspect - this.lastAspect) > 0.05) {
       this.tracks.clear()
       this.pairs.clear()
     }
@@ -322,16 +326,26 @@ export class ConflictEngine {
         pair.requiredPulses = this.completePulseCount()
         if (!strongest || pair.pulses.length > strongest.pulses.length) strongest = pair
         const detected = pair.pulses.length >= pair.requiredPulses
-        if (detected && pairWarm && pair.lastPulseMs === timestampMs && !pair.alerted && timestampMs - pair.lastEventMs >= EVENT_COOLDOWN_MS &&
-          timestampMs - this.lastAlertAtMs >= EVENT_COOLDOWN_MS) {
+        this.recentAlerts = this.recentAlerts.filter(alert => timestampMs - alert.time < EVENT_COOLDOWN_MS)
+        const sameRecentPair = this.recentAlerts.some(alert => {
+          const matches = (body: Body, previous: { shoulder: Point; scale: number }) =>
+            distance(body.shoulder, previous.shoulder) < Math.min(body.scale, previous.scale) * .5 &&
+            Math.max(body.scale, previous.scale) / Math.min(body.scale, previous.scale) < 1.4
+          return (matches(a.body, alert.bodies[0]) && matches(b.body, alert.bodies[1])) ||
+            (matches(a.body, alert.bodies[1]) && matches(b.body, alert.bodies[0]))
+        })
+        if (detected && pairWarm && pair.lastPulseMs === timestampMs && !pair.alerted && timestampMs - pair.lastEventMs >= EVENT_COOLDOWN_MS && !sameRecentPair) {
           pair.alerted = true
           pair.lastEventMs = timestampMs
-          this.lastAlertAtMs = timestampMs
+          // Preserve same-pair cooldown through a short tracking reset without
+          // silencing a separate interaction elsewhere in the camera image.
+          this.recentAlerts.push({ time: timestampMs, bodies: [a.body, b.body].map(body => ({ shoulder: { ...body.shoulder }, scale: body.scale })) })
+          this.recentAlerts = this.recentAlerts.slice(-32)
           const event: ReviewEvent = { id: `conflict-${++this.eventSequence}`, type: 'physical-conflict',
             title: 'Possible physical conflict', objectName: 'Two-person interaction', occurredAtMs: timestampMs,
             detail: "A fast arm-motion episode toward another person's upper body was observed. A person must review the interaction before responding.",
           }
-          this.events = [event, ...this.events].slice(0, 6)
+          this.events = [event, ...this.events].slice(0, 32)
         }
       }
     }
@@ -407,7 +421,7 @@ export class ConflictEngine {
   snapshot(timestampMs: number): ConflictSnapshot {
     timestampMs = Math.max(Number.isFinite(timestampMs) ? timestampMs : 0, this.lastSnapshotMs)
     this.lastSnapshotMs = timestampMs
-    if (Number.isFinite(timestampMs) && timestampMs - this.lastUpdateMs > MAX_GAP_MS) {
+    if (Number.isFinite(timestampMs) && timestampMs - this.lastUpdateMs > this.maxGapMs) {
       return { status: 'limited', people: 0, progress: 0, signals: [],
         explanation: 'Waiting for fresh upper-body observations.', events: [...this.events], regions: [],
         diagnostics: { ...EMPTY_DIAGNOSTICS, requiredPulses: this.completePulseCount(), reason: 'stale' } }
@@ -423,7 +437,7 @@ export class ConflictEngine {
     this.sequence = 0
     this.lastUpdateMs = Number.NEGATIVE_INFINITY
     this.lastSnapshotMs = Number.NEGATIVE_INFINITY
-    this.lastAlertAtMs = Number.NEGATIVE_INFINITY
+    this.recentAlerts = []
     this.current = { ...EMPTY_CONFLICT, diagnostics: { ...EMPTY_DIAGNOSTICS, requiredPulses: this.completePulseCount() } }
   }
 
@@ -441,13 +455,13 @@ export class ConflictEngine {
     const candidates: Array<{ track: BodyTrack; index: number; cost: number; rejoining: boolean }> = []
     for (const track of this.tracks.values()) {
       const elapsed = timestampMs - track.lastSeenMs
-      if (elapsed > TRACK_RETENTION_MS) continue
+      if (elapsed > Math.max(TRACK_RETENTION_MS, this.maxGapMs)) continue
       bodies.forEach((body, index) => {
         const bothTorsosVisible = !body.inferredTorso && !track.body.inferredTorso
         const ratio = bothTorsosVisible ? body.scale / track.body.scale : body.shoulderWidth / track.body.shoulderWidth
         const scale = Math.max(body.scale, track.body.scale)
         const cost = distance(body.shoulder, track.body.shoulder) / scale
-        const rejoining = elapsed > MAX_GAP_MS
+        const rejoining = elapsed > this.maxGapMs
         const eligible = rejoining
           ? bothTorsosVisible && cost < 0.4 && distance(body.center, track.body.center) / scale < 0.4 && ratio >= 0.8 && ratio <= 1.25
           : cost <= 1.15 && ratio >= 0.65 && ratio <= 1.5
@@ -472,7 +486,7 @@ export class ConflictEngine {
     const used = new Set<number>()
     for (const { track, index } of candidates) {
       if (!this.tracks.has(track.id) || track.seen || used.has(index)) continue
-      const continuous = timestampMs - track.lastSeenMs <= MAX_GAP_MS
+      const continuous = timestampMs - track.lastSeenMs <= this.maxGapMs
       track.previous = continuous ? track.body : null
       track.previousMs = continuous ? track.lastSeenMs : timestampMs
       if (!continuous) {
@@ -498,7 +512,7 @@ export class ConflictEngine {
         previousMs: timestampMs, seen: true, samples: 1,
         scaleToShoulder: shoulderCalibration(body) })
     })
-    for (const [id, track] of this.tracks) if (timestampMs - track.lastSeenMs > TRACK_RETENTION_MS) this.tracks.delete(id)
+    for (const [id, track] of this.tracks) if (timestampMs - track.lastSeenMs > Math.max(TRACK_RETENTION_MS, this.maxGapMs)) this.tracks.delete(id)
   }
 
   private observeArms(pair: PairState, actor: BodyTrack, target: BodyTrack, timestampMs: number, warm: boolean): number {

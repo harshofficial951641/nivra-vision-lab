@@ -29,7 +29,7 @@ Calm, precise, humane, and operational. NIVRA should feel like trustworthy publi
 1. **Sequence over screenshot.** Describe observable state changes such as carried, separated, transferred, or unattended.
 2. **Camera first.** Attach information to the live scene and keep secondary evidence in a narrow observation rail.
 3. **Explain what changed.** Every review event names the visible signal and avoids claims about intent.
-4. **Quiet is healthy.** NIVRA Blue communicates normal analysis; Intervention Coral appears only when human review is useful.
+4. **Quiet is healthy.** Use black and white for normal operation. Color is reserved for warnings that need human attention.
 5. **Human authority.** The operator verifies every flagged observation and remains responsible for any response.
 6. **Local and minimal.** Process frames on-device, retain no video, and use only temporary in-session tracks.
 

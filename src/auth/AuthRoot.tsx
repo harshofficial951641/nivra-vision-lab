@@ -77,7 +77,8 @@ function DevBridge({ children }: { children: ReactNode }) {
       problem: problem === 'no-role' ? '' : problem,
       refresh,
       signOut: async () => {
-        await api('/auth/dev/logout', 'POST').catch(() => undefined)
+        if (me?.workspace || me?.userId === 'dev_legacy_operator') await api('/operator/logout', 'POST')
+        else await api('/auth/dev/logout', 'POST')
         await refresh()
       },
       devSignIn: async (role: Role, name: string, callsign?: string) => {

@@ -1,0 +1,31 @@
+.pp-panel { --pp-ink:#111; --pp-line:#d8d8d8; }
+.pp-panel .pp-qr { position:relative; display:grid; place-items:center; flex-shrink:0; width:244px; height:244px; background:#fff; padding:12px; box-sizing:border-box; animation:pp-enter 360ms cubic-bezier(.22,1,.36,1) both; }
+.st-app .pp-panel .pp-qr>svg { display:block; width:220px; height:220px; background:#fff; border:0; border-radius:0; padding:0; }
+.pp-corner { position:absolute; width:26px; height:26px; border-color:var(--pp-ink); border-style:solid; border-width:0; animation:pp-corners 480ms cubic-bezier(.22,1,.36,1) both; pointer-events:none; }
+.pp-corner--tl { top:0; left:0; border-top-width:2px; border-left-width:2px; }
+.pp-corner--tr { top:0; right:0; border-top-width:2px; border-right-width:2px; }
+.pp-corner--bl { bottom:0; left:0; border-bottom-width:2px; border-left-width:2px; }
+.pp-corner--br { bottom:0; right:0; border-bottom-width:2px; border-right-width:2px; }
+.pp-panel .pp-instructions { width:100%; max-width:370px; }
+.pp-code-block { display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:20px; }
+.pp-code-block>span { color:#555; font-size:12px; }
+.pp-panel .pp-code { font:600 28px/1.2 ui-monospace,SFMono-Regular,monospace; letter-spacing:.09em; color:var(--pp-ink); white-space:nowrap; user-select:all; }
+.pp-panel .pp-copy { min-width:124px; gap:8px; }
+.pp-copy[data-copied=true] svg { animation:pp-check 220ms ease-out both; }
+.pp-expiry { margin:20px auto 0; max-width:240px; }
+.pp-time-track { height:2px; overflow:hidden; background:#e5e5e5; }
+.pp-time-track>span { display:block; width:100%; height:100%; background:#111; transform-origin:left; transition:transform 1s linear; }
+.pp-panel .pp-link { margin-top:16px; }
+.pp-link>summary { color:#555; }
+.pp-panel .pp-link code { display:block; margin-top:12px; }
+.pp-panel .pp-connected { display:flex; flex-direction:column; align-items:center; gap:16px; padding:24px 12px; text-align:center; animation:pp-enter 320ms ease-out both; }
+.pp-success-mark { display:grid; place-items:center; width:76px; height:76px; border:1px solid #111; border-radius:50%; background:#111; color:#fff; animation:pp-check 400ms cubic-bezier(.22,1,.36,1) both; }
+.pp-success-mark svg { width:32px; height:32px; }
+.pp-connected h3 { font-size:22px; margin:0; font-weight:550; }
+.pp-connected p { color:#555; }
+.pp-panel .pp-empty { min-height:120px; justify-content:center; }
+@keyframes pp-enter { from { opacity:.4; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pp-corners { from { opacity:0; transform:scale(.85); } to { opacity:1; transform:scale(1); } }
+@keyframes pp-check { from { opacity:.3; transform:scale(.75); } to { opacity:1; transform:scale(1); } }
+@media(prefers-reduced-motion:reduce) { .pp-panel .pp-qr,.pp-corner,.pp-panel .pp-connected,.pp-success-mark,.pp-copy[data-copied=true] svg { animation:none; } .pp-time-track>span { transition:none; } }
+.pp-code-block > summary { cursor:pointer; min-height:44px; padding:12px 0; color:#555; font-size:14px; }

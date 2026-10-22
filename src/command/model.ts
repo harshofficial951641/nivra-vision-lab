@@ -1,8 +1,9 @@
+import { gpsDistance, validGPS, type GPSLocation } from '../location/gps'
 import type { CameraLocation, Incident } from '../classroom/contracts'
-import { CAMERA_SLOTS, incidentPoint, slotFromPlacement } from './siteMap'
+import { CAMERA_SLOTS, slotFromPlacement } from './siteMap'
 import type { CameraSlot, GuardRecord, MapFloor, WallGuard } from './types'
 
-export type ReviewAction = 'view' | 'confirm' | 'dismiss' | 'alert' | 'on_scene' | 'clear'
+export type ReviewAction = 'view' | 'confirm' | 'dismiss' | 'close' | 'alert' | 'on_scene' | 'clear'
 export type GuardAction = 'ack' | 'decline' | 'on_scene' | 'clear'
 export type DismissReason = NonNullable<Incident['reason']>
 export interface ReviewPayload {
@@ -47,6 +48,8 @@ export function applyReview(
     if (!payload.reason) throw new ReviewError('Pick a reason for the false alarm.')
     next = { decision: 'false_alarm', reason: payload.reason, status: 'resolved', decided_at: now, reviewed_at: reviewed }
     if (note) next.note = note
+  } else if (action === 'close' && event.status !== 'resolved' && !decision) {
+    next = { status: 'resolved' }
   } else if (action === 'alert' && decision === 'confirmed' && event.status === 'acknowledged') {
     if (!payload.guard) throw new ReviewError('Choose a guard to alert.')
     next = alertFields(payload.guard, now)
@@ -131,7 +134,9 @@ export function responseSteps(event: Incident, cameraLabel: string): ClockStep[]
     { key: 'detected', label: `Detected on ${cameraLabel}`, at: event.received_at },
     { key: 'viewed', label: 'Reviewer opened the clip', at: event.reviewed_at ?? null },
   ]
-  if (event.decision === 'false_alarm') {
+  if (event.status === 'resolved' && !event.decision) {
+    steps.push({ key: 'closed', label: 'Alert closed without a decision', at: event.updated_at })
+  } else if (event.decision === 'false_alarm') {
     steps.push({ key: 'decision', label: `Logged as false alarm · ${reasonLabel(event.reason)}`, at: event.decided_at ?? null })
   } else {
     steps.push(
@@ -152,6 +157,20 @@ export function responseSteps(event: Incident, cameraLabel: string): ClockStep[]
 }
 
 export interface WallCamera {
+  compute?: CameraLocation['compute']
+  analysis?: CameraLocation['analysis']
+  deviceStatus?: CameraLocation['deviceStatus']
+  result?: CameraLocation['result']
+  motionResult?: CameraLocation['motionResult']
+  motionStatus?: CameraLocation['motionStatus']
+  error?: string | null
+  generation?: string | null
+  analysisPreview?: { url: string; timestampMs?: number; received?: number; width?: number; height?: number; generation?: string; analysisFrame?: boolean }
+  preview?: { timestampMs?: number; received?: number; width?: number; height?: number; generation?: string; analysisFrame?: boolean }
+
+  building?: string
+  floor?: string
+  gps?: GPSLocation | null
   id: string
   /** Short label shown on tiles and the map, e.g. CAM-04. */
   label: string
@@ -169,22 +188,42 @@ export interface WallCamera {
 export function liveCameras(
   cameras: CameraLocation[],
   floors: Map<string, MapFloor>,
-  previews: Record<string, { url: string }>,
+  previews: Record<string, { url: string; timestampMs?: number; received?: number; width?: number; height?: number; generation?: string; analysisFrame?: boolean }>,
   fps: Record<string, number>,
+  analysisPreviews: Record<string, { url: string; timestampMs?: number; received?: number; width?: number; height?: number; generation?: string; analysisFrame?: boolean }> = {},
 ): WallCamera[] {
   return cameras.map((camera, index) => {
     const placement = camera.placement ?? null
     const floor = placement ? floors.get(placement.floorId) : undefined
     const label = camera.label || `CAM-${String(index + 1).padStart(2, '0')}`
+    const analyzed = analysisPreviews[camera.id]
+    // A slow detector must never pace the live camera image. Its source frame
+    // remains separate for an explicit review, with markings tied to that frame.
+    const preview = previews[camera.id]
+    const analysisPreview = analyzed?.analysisFrame && analyzed.generation === camera.generation && camera.result &&
+      Number.isFinite(analyzed.timestampMs) && Math.abs(analyzed.timestampMs! - camera.result.timestampMs) <= 180 ? analyzed : undefined
     return {
       id: camera.id,
+      compute: camera.compute,
+      analysis: camera.analysis,
+      deviceStatus: camera.deviceStatus,
+      result: camera.result,
+      motionResult: camera.motionResult,
+      motionStatus: camera.motionStatus,
+      error: camera.error,
+      generation: camera.generation,
+      preview,
+      analysisPreview,
+      gps: camera.gps ?? null,
+      building: camera.building,
+      floor: camera.floor,
       label,
       name: camera.name,
       floorId: floor?.id ?? null,
       slot: placement && floor ? slotFromPlacement({ ...camera, label }, placement, floor) : null,
       status: camera.feed === 'live' ? 'live' : camera.feed === 'waiting' ? 'connecting' : camera.feed === 'paused' ? 'paused' : 'offline',
       fps: camera.feed === 'live' ? fps[camera.id] ?? null : null,
-      image: previews[camera.id]?.url ?? null,
+      image: preview?.url ?? null,
       people: camera.result?.coverage?.observedPeople ?? null,
       sample: false,
     }
@@ -196,6 +235,8 @@ export function liveGuards(guards: GuardRecord[], floors: Map<string, MapFloor>)
     const floor = guard.floorId ? floors.get(guard.floorId) : undefined
     return {
       id: guard.callsign,
+      gps: guard.gps ?? null,
+      floorName: guard.floorName ?? floor?.name ?? null,
       name: guard.name,
       floorId: guard.floorId,
       x: guard.post && floor ? guard.post.x * floor.width : null,
@@ -217,6 +258,8 @@ export const sampleCameras = (): WallCamera[] =>
     label: slot.label,
     name: slot.name,
     floorId: 'sample',
+    building: 'Sample mall',
+    floor: 'Ground floor',
     slot,
     status: slot.id === 'cam-09' ? 'offline' : 'live',
     fps: slot.id === 'cam-09' ? null : 10,
@@ -247,9 +290,6 @@ export function orderCameras(
 ) {
   const focus = focusIncident(events, now)
   const focusCamera = focus ? cameras.find((c) => c.id === focus.camera_id) : undefined
-  const focusSlot = focusCamera?.slot
-  const focusFloor = focusCamera?.floorId
-  const point = focusSlot ? incidentPoint(focusSlot) : null
   const score = (camera: WallCamera) => {
     const level = alertLevel(camera.id, events)
     if (level === 'review') return 0
@@ -259,8 +299,8 @@ export function orderCameras(
     return 3
   }
   const nearness = (camera: WallCamera) =>
-    point && camera.slot && camera.floorId === focusFloor
-      ? Math.hypot(camera.slot.x - point.x, camera.slot.y - point.y)
+    validGPS(focusCamera?.gps) && validGPS(camera.gps)
+      ? gpsDistance(focusCamera.gps, camera.gps)
       : Number.MAX_SAFE_INTEGER
   return [...cameras].sort(
     (a, b) =>
@@ -314,3 +354,28 @@ export function formatElapsed(ms: number) {
 
 export const incidentRef = (event: Incident) =>
   `R-${event.id.replace(/[^a-z0-9]/gi, '').slice(-4).toUpperCase()}`
+
+/** Device coordinates age out quickly. Never infer an indoor floor from GPS. */
+export function recentGPS(point: GPSLocation | null | undefined, now: number): point is GPSLocation {
+  return validGPS(point) && point.capturedAt <= now + 5_000 && now - point.capturedAt < 120_000
+}
+
+export function gpsStatus(point: GPSLocation | null | undefined, now: number) {
+  if (!validGPS(point)) return 'GPS unavailable'
+  const age = Math.max(0, now - point.capturedAt)
+  return `${recentGPS(point, now) ? 'GPS' : 'Last GPS'} ${formatElapsed(age)} ago · ±${Math.round(point.accuracy)} m`
+}
+
+export function cameraPlace(camera: WallCamera) {
+  return [camera.building, camera.floor].filter(Boolean).join(' · ')
+}
+
+/** Straight-line comparison against the incident's saved position, never a route or ETA. */
+export function rankGPSGuards(guards: WallGuard[], destination: GPSLocation | null | undefined, now: number) {
+  return guards.map(guard => ({
+    guard,
+    meters: validGPS(destination) && recentGPS(guard.gps, now) ? gpsDistance(destination, guard.gps) : null,
+  })).sort((a, b) => Number(b.guard.status === 'available') - Number(a.guard.status === 'available') ||
+    (a.meters ?? Number.POSITIVE_INFINITY) - (b.meters ?? Number.POSITIVE_INFINITY) ||
+    a.guard.id.localeCompare(b.guard.id, undefined, { numeric: true }))
+}

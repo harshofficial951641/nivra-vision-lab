@@ -99,8 +99,8 @@ class Clips:
     def disconnect(self, camera):
         self.bytes -= sum(f.size for f in self.rings.pop(camera, ()))
 
-    def summary(self, event_id):
-        self.prune()
+    def summary(self, event_id, *, prune=True):
+        if prune: self.prune()
         clip = self.clips.get(event_id)
         status = ('recording' if self.clock() * 1000 < clip.peak + 8000 else 'ready') if clip else ('expired' if event_id in self.expired else 'none')
         return dict(status=status, frames=len(clip.frames) if clip else 0)

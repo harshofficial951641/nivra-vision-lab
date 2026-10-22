@@ -58,6 +58,37 @@ function run(engine: ConflictEngine, end: number, frames: (timestamp: number) =>
 }
 
 describe('ConflictEngine', () => {
+  it.each([4, 20])('emits separate simultaneous interaction reviews among %i people', count => {
+    const engine = new ConflictEngine({ minBodyScale: .035, minShoulderWidth: .0275 })
+    const frames = (time: number) => Array.from({ length: count / 2 }, (_, pair) => {
+      const active = time >= 700 && time < 900
+      return [person(.35, active ? 1 : 0), person(.65)].map(pose => pose.map(point => ({ ...point,
+        x: .03 + pair % 5 * .2 + (point.x - .35) * .22,
+        y: .1 + Math.floor(pair / 5) * .45 + point.y * .22,
+      })))
+    }).flat()
+    const result = run(engine, 1000, frames)
+    expect(result.people).toBe(count)
+    expect(result.events).toHaveLength(count / 2)
+    expect(result.events.every(event => event.occurredAtMs === 700)).toBe(true)
+    const quiet = run(new ConflictEngine({ minBodyScale: .035, minShoulderWidth: .0275 }), 1000, () => frames(0))
+    expect(quiet.people).toBe(count)
+    expect(quiet.events).toEqual([])
+  })
+  it.each([1800, 2500])('allows bounded %i ms device continuity without accepting sparse position changes as fast motion', interval => {
+    for (const maxGapMs of [1200, 3000]) {
+      const engine = new ConflictEngine({ maxGapMs })
+      for (const time of [0, interval, interval * 2]) engine.update(time, [person(.35), person(.65)], ASPECT)
+      const result = engine.update(interval * 2 + 100, [person(.35, 1), person(.65)], ASPECT)
+      // The old window reset warmup at every slow frame. The longer window
+      // preserves identity; a newly observed 100 ms thrust still supplies motion.
+      expect(result.events).toHaveLength(maxGapMs === 3000 ? 1 : 0)
+    }
+    const sparse = new ConflictEngine({ maxGapMs: 3000 })
+    for (let sample = 0; sample < 8; sample++) {
+      expect(sparse.update(sample * interval, [person(.35, sample % 2), person(.65)], ASPECT).events).toEqual([])
+    }
+  })
   it('keeps overlapping torsos distinct when reliable limb observations differ', () => {
     const engine = new ConflictEngine()
     const front = person(.5), behind = person(.512)
@@ -636,7 +667,9 @@ describe('ConflictEngine', () => {
     run(engine, 3_400, () => [person(.45), person(.65)], 100, 3_000)
     expect(engine.snapshot(3400).progress).toBe(0)
     const result = engine.update(3_500, [person(.45, 1), person(.65)])
-    expect(result.events).toHaveLength(1)
+    // The old event remains, and the newly observed distinct pair can produce
+    // its own review instead of inheriting a camera-wide cooldown.
+    expect(result.events).toHaveLength(2)
     expect(result.progress).toBeCloseTo(1)
   })
 
@@ -649,7 +682,7 @@ describe('ConflictEngine', () => {
     expect(engine.snapshot(3400).progress).toBe(0)
     const result = engine.update(3_500, crowd(1))
     expect(result.people).toBe(3)
-    expect(result.events).toHaveLength(1)
+    expect(result.events).toHaveLength(2)
     expect(result.progress).toBeLessThanOrEqual(1)
   })
 

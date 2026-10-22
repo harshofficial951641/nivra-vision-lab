@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode, type CSSProperties } from 'react'
 import {
-  ArrowLeft,
   ArrowsOut,
+  ArrowLeft,
+  ArrowRight,
   PlayCircle,
   PushPin,
   SpeakerHigh,
@@ -13,25 +14,27 @@ import {
   X,
 } from '@phosphor-icons/react'
 import type { Incident } from '../classroom/contracts'
-import { ReviewTonePlayer } from '../services/ReviewTonePlayer'
+import { AlertPing } from './AlertPing'
 import { CameraTile } from './CameraTile'
-import { FloorMap } from './FloorMap'
+import { Brand } from '../ui/Brand'
+import { GoogleMap } from '../location/GoogleMap'
+import { coordinates, googleMapsURL, validGPS } from '../location/gps'
 import { ResponseClock } from './ResponseClock'
 import { ReviewWindow } from './ReviewWindow'
 import {
   focusIncident,
+  cameraPlace,
+  gpsStatus,
   formatClock,
   incidentRef,
   isActiveResponse,
   needsDecision,
-  orderCameras,
-  wallStats,
   type ReviewAction,
   type ReviewPayload,
   type WallCamera,
 } from './model'
 import { useOptionalSession } from '../auth/context'
-import type { MapFloor, WallGuard } from './types'
+import type { WallGuard } from './types'
 import { useCommand } from './useCommand'
 import './command.css'
 
@@ -54,7 +57,7 @@ function useNow(interval = 1000) {
   return now
 }
 
-function Modal({ title, close, children, wide }: { title: string; close: () => void; children: ReactNode; wide?: boolean }) {
+function Modal({ title, close, children, full, navigate }: { title: string; close: () => void; children: ReactNode; full?: boolean; navigate?: (direction: number) => void }) {
   const ref = useRef<HTMLDialogElement>(null)
   useEffect(() => {
     const element = ref.current
@@ -64,8 +67,15 @@ function Modal({ title, close, children, wide }: { title: string; close: () => v
   return (
     <dialog
       ref={ref}
-      className={`cm-modal ${wide ? 'cm-modal--wide' : ''}`}
+      className={`cm-modal ${full ? 'cm-modal--camera' : ''}`}
       aria-label={title}
+      onKeyDown={(event) => {
+        if (!navigate || event.altKey || event.metaKey || event.ctrlKey || event.shiftKey || (event.target instanceof HTMLElement && event.target.matches('input, textarea, select, [contenteditable="true"]'))) return
+        if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+          event.preventDefault()
+          navigate(event.key === 'ArrowLeft' ? -1 : 1)
+        }
+      }}
       onCancel={(e) => {
         e.preventDefault()
         close()
@@ -82,12 +92,70 @@ function Modal({ title, close, children, wide }: { title: string; close: () => v
   )
 }
 
-function GuardRoster({ guards, floors, sample, admin }: { guards: WallGuard[]; floors: MapFloor[]; sample: boolean; admin: boolean }) {
-  const floorName = (id: string | null) => floors.find((f) => f.id === id)?.name ?? 'No floor'
+interface CameraFocusProps {
+  cameras: WallCamera[]
+  cameraId: string
+  events: Incident[]
+  now: number
+  pinned: string[]
+  change: (id: string) => void
+  togglePin: (id: string) => void
+  openMap: (id: string) => void
+  close: () => void
+}
+
+export function CameraFocus({ cameras, cameraId, events, now, pinned, change, togglePin, openMap, close }: CameraFocusProps) {
+  const start = useRef<{ x: number; y: number } | null>(null)
+  const frame = useRef<HTMLDivElement>(null)
+  const index = cameras.findIndex(camera => camera.id === cameraId)
+  const camera = cameras[index]
+  const navigate = (direction: number) => {
+    if (cameras.length > 1 && index >= 0) change(cameras[(index + direction + cameras.length) % cameras.length].id)
+  }
+  const resetDrag = () => { frame.current?.style.setProperty('--swipe-x', '0px') }
+  if (!camera) return null
+  return <Modal title={camera.name} close={close} full navigate={navigate}>
+    <div className="cm-focus-stage" role="group" aria-label="Camera footage"
+      onTouchStart={event => { start.current = event.touches.length === 1 ? { x: event.touches[0].clientX, y: event.touches[0].clientY } : null }}
+      onTouchMove={event => {
+        if (!start.current || event.touches.length !== 1) { start.current = null; resetDrag(); return }
+        const dx = event.touches[0].clientX - start.current.x, dy = event.touches[0].clientY - start.current.y
+        if (Math.abs(dx) > Math.abs(dy) * 1.5) frame.current?.style.setProperty('--swipe-x', `${Math.max(-32, Math.min(32, dx * .2))}px`)
+      }}
+      onTouchCancel={() => { start.current = null; resetDrag() }}
+      onTouchEnd={event => {
+        const origin = start.current
+        start.current = null; resetDrag()
+        if (!origin || event.changedTouches.length !== 1) return
+        const dx = event.changedTouches[0].clientX - origin.x, dy = event.changedTouches[0].clientY - origin.y
+        if (Math.abs(dx) >= 64 && Math.abs(dx) > Math.abs(dy) * 1.5) navigate(dx < 0 ? 1 : -1)
+      }}>
+      <div className="cm-focus-frame" key={camera.id} ref={frame}>
+        <CameraTile camera={camera} events={events} now={now} size="hero" pinned={pinned.includes(camera.id)} />
+      </div>
+    </div>
+    <footer className="cm-full-actions">
+      <div className="cm-camera-pager" aria-label="Browse cameras">
+        <button type="button" className="cm-btn" aria-label="Previous camera" disabled={cameras.length < 2} onClick={() => navigate(-1)}><ArrowLeft aria-hidden /> Previous</button>
+        <span aria-live="polite">{index + 1} / {cameras.length}</span>
+        <button type="button" className="cm-btn" aria-label="Next camera" disabled={cameras.length < 2} onClick={() => navigate(1)}>Next <ArrowRight aria-hidden /></button>
+      </div>
+      {cameras.length > 1 && <span className="cm-swipe-hint">Swipe to change camera</span>}
+      <button type="button" className="cm-btn" onClick={() => openMap(camera.id)}>Map</button>
+      <details className="cm-camera-info"><summary>Details</summary><div>
+        <p>{cameraPlace(camera) || 'Location not set'}</p>
+        <p>{gpsStatus(camera.gps, now)}{validGPS(camera.gps) && ` · ${coordinates(camera.gps)}`}</p>
+        <button type="button" className="cm-btn" aria-pressed={pinned.includes(camera.id)} onClick={() => togglePin(camera.id)}><PushPin aria-hidden /> {pinned.includes(camera.id) ? 'Unpin camera' : 'Pin camera'}</button>
+      </div></details>
+    </footer>
+  </Modal>
+}
+
+function GuardRoster({ guards, sample, admin, now }: { guards: WallGuard[]; sample: boolean; admin: boolean; now: number }) {
   return (
     <div className="cm-pairing">
       {!guards.length ? (
-        <p className="cm-muted">No guards yet. {admin ? 'Invite them in Setup → Guards.' : 'Ask an admin to invite guards.'}</p>
+        <p className="cm-muted">No guards yet. {admin ? 'Add a guard in Setup.' : 'Ask the owner to add a guard.'}</p>
       ) : (
         <ul>
           {guards.map((guard) => (
@@ -95,7 +163,8 @@ function GuardRoster({ guards, floors, sample, admin }: { guards: WallGuard[]; f
               <span className="cm-guard-id">{guard.id}</span>
               <span>
                 {guard.name}
-                <small className="cm-muted"> · {floorName(guard.floorId)}{guard.x == null ? ' · no post' : ''}</small>
+                <small className="cm-guard-detail">{guard.floorName || 'Floor not set'} · {gpsStatus(guard.gps, now)}</small>
+                {validGPS(guard.gps) && <a className="cm-guard-detail" href={googleMapsURL(guard.gps)} target="_blank" rel="noreferrer">View last location in Google Maps</a>}
               </span>
               <span className="cm-muted">
                 {guard.status === 'available' ? 'On shift' : guard.status === 'break' ? 'On break' : 'Off shift'}
@@ -116,11 +185,11 @@ function GuardRoster({ guards, floors, sample, admin }: { guards: WallGuard[]; f
       <p className="cm-muted">
         {sample
           ? 'Sample guard links open the guard app in another tab on this computer.'
-          : 'Guards sign in at /guard on their own phones. Alerts ring while the app is open and arrive as notifications when it is installed.'}
+          : 'Guards use their paired phones to receive alerts and update their status.'}
       </p>
       {admin && !sample && (
         <a className="cm-btn cm-btn--dark" href="/setup#guards">
-          Manage guards in Setup
+          Manage guards
         </a>
       )}
     </div>
@@ -133,17 +202,35 @@ export default function CommandWall() {
   const { cameras, events, guards, floors } = data
   const session = useOptionalSession()
   const admin = session?.me?.role === 'admin'
-  const [floorChoice, setFloorChoice] = useState<string | null>(null)
   const now = useNow()
-  const [mode, setMode] = useState<'map' | 'all'>('map')
+  const [mode, setMode] = useState<'map' | 'all'>('all')
   const [selected, setSelected] = useState<string | null>(null)
+  const [selectedGuard, setSelectedGuard] = useState<string | null>(null)
   const [pinned, setPinned] = useState<string[]>(readPins)
   const [reviewing, setReviewing] = useState<string | null>(null)
-  const deferred = useRef(new Set<string>())
   const [modal, setModal] = useState<'guards' | { full: string } | null>(null)
   const [sound, setSound] = useState(false)
-  const tone = useRef<ReviewTonePlayer | null>(null)
+  const [fullscreen, setFullscreen] = useState(false)
+  const [fullscreenError, setFullscreenError] = useState('')
+  const appRef = useRef<HTMLDivElement>(null)
+  const tone = useRef<AlertPing | null>(null)
   const seen = useRef<Set<string> | null>(null)
+
+  useEffect(() => {
+    const onFullscreen = () => setFullscreen(Boolean(document.fullscreenElement))
+    document.addEventListener('fullscreenchange', onFullscreen)
+    return () => document.removeEventListener('fullscreenchange', onFullscreen)
+  }, [])
+  const toggleFullscreen = async () => {
+    setFullscreenError('')
+    try {
+      if (document.fullscreenElement) await document.exitFullscreen()
+      else if (appRef.current?.requestFullscreen) await appRef.current.requestFullscreen()
+      else setFullscreenError('Browser fullscreen is unavailable here. The wall still fills this window.')
+    } catch {
+      setFullscreenError('This browser could not enter fullscreen. The wall still fills this window.')
+    }
+  }
 
   useEffect(() => {
     localStorage.setItem(PIN_KEY, JSON.stringify(pinned))
@@ -155,20 +242,22 @@ export default function CommandWall() {
   )
   const active = useMemo(() => events.filter(isActiveResponse), [events])
   const reviewEvent = events.find((e) => e.id === reviewing) ?? null
-
-  // Auto-open the oldest incident that still needs a decision.
   useEffect(() => {
-    if (reviewing && events.some((e) => e.id === reviewing)) return
-    const next = queue.find((e) => !deferred.current.has(e.id))
-    setReviewing(next?.id ?? null)
-  }, [queue, reviewing, events])
+    if (reviewing) setModal(null)
+  }, [reviewing])
 
-  // Tone for incidents that arrive while this screen is open.
+  // Never open a review or move focus until the operator chooses it.
   useEffect(() => {
-    const ids = new Set(events.map((e) => e.id))
-    if (seen.current && sound && events.some((e) => needsDecision(e) && !seen.current!.has(e.id)))
-      void tone.current?.play('physical-conflict')
-    seen.current = ids
+    if (reviewing && !events.some(event => event.id === reviewing)) setReviewing(null)
+  }, [events, reviewing])
+
+  // Keep IDs across snapshot removal/reappearance so reconnects cannot ring twice.
+  useEffect(() => {
+    if (!seen.current) { seen.current = new Set(events.map(event => event.id)); return }
+    for (const event of events) {
+      if (!seen.current.has(event.id) && needsDecision(event) && sound) void tone.current?.play()
+      seen.current.add(event.id)
+    }
   }, [events, sound])
   useEffect(() => () => tone.current?.dispose(), [])
   const toggleSound = async () => {
@@ -177,47 +266,52 @@ export default function CommandWall() {
       tone.current?.stop()
       return
     }
-    tone.current ??= new ReviewTonePlayer()
+    tone.current ??= new AlertPing()
     setSound(await tone.current.prime())
   }
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || document.querySelector('dialog[open]')) return
-      if (mode === 'all') setMode('map')
-      else setSelected(null)
+      if (mode === 'map') setMode('all')
+      setSelected(null)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [mode])
 
-  const ordered = useMemo(() => orderCameras(cameras, events, pinned, now), [cameras, events, pinned, now])
-  const stats = wallStats(cameras, events, now)
+  // Preserve the operator's spatial memory as alerts and people counts change.
+  const cameraOrder = useRef<string[]>([])
+  const ordered = useMemo(() => {
+    const present = new Set(cameras.map(camera => camera.id))
+    cameraOrder.current = cameraOrder.current.filter(id => present.has(id))
+    for (const camera of cameras) if (!cameraOrder.current.includes(camera.id)) cameraOrder.current.push(camera.id)
+    const positions = new Map(cameraOrder.current.map((id, index) => [id, index]))
+    return [...cameras].sort((a, b) => positions.get(a.id)! - positions.get(b.id)!)
+  }, [cameras])
   const focus = focusIncident(events, now)
   const selectedCamera = cameras.find((c) => c.id === selected) ?? null
-  const focusFloorId = focus ? cameras.find((c) => c.id === focus.camera_id)?.floorId : null
-  const activeFloor =
-    floors.find((f) => f.id === (selectedCamera?.floorId ?? floorChoice ?? focusFloorId)) ?? floors[0] ?? null
-  const unplaced = cameras.filter((c) => !c.slot).length
-  const onShift = guards.filter((g) => g.status === 'available')
+  const mapCamera = selectedCamera ?? cameras.find(c => c.id === focus?.camera_id) ?? cameras.find(c => c.gps) ?? cameras[0]
+  const mapGuard = guards.find(g => g.id === selectedGuard) ?? null
+  const mapPoint = mapGuard ? mapGuard.gps : mapCamera?.gps
+  const mapLabel = mapGuard ? `${mapGuard.id} · ${mapGuard.name}` : mapCamera?.name ?? 'Camera'
+  const mapDetails = mapGuard ? mapGuard.floorName || 'Floor not set' : mapCamera ? cameraPlace(mapCamera) || 'Location not set' : ''
+  const unlocated = cameras.filter(c => !c.gps).length
   const selectCamera = useCallback((id: string) => {
-    setSelected((current) => (current === id ? null : id))
-    setMode('map')
-  }, [])
-  const chooseFloor = (id: string) => {
-    setFloorChoice(id)
-    setSelected(null)
-  }
+    const incident = events.find(event => event.camera_id === id && needsDecision(event))
+      ?? events.find(event => event.camera_id === id && isActiveResponse(event))
+    if (incident) { setReviewing(incident.id); return }
+    setSelected(id)
+    setModal({ full: id })
+  }, [events])
   const act = useCallback(
     (event: Incident) => (action: ReviewAction, payload?: ReviewPayload) => data.review(event, action, payload),
     [data],
   )
   const closeReview = () => {
-    if (reviewEvent && needsDecision(reviewEvent)) deferred.current.add(reviewEvent.id)
     setReviewing(null)
   }
   const openReview = (id: string) => {
-    deferred.current.delete(id)
     setReviewing(id)
   }
   const togglePin = (id: string) =>
@@ -232,22 +326,29 @@ export default function CommandWall() {
         : 'Disconnected'
 
   return (
-    <div className="cm-app">
+    <div className="cm-app" ref={appRef}>
       <a className="cm-skip" href="#cm-main">
         Skip to cameras
       </a>
       <header className="cm-top">
         <a className="cm-brand" href={sample ? '/wall?demo=1' : '/wall'}>
-          NIVRA
+          <Brand compact />
         </a>
-        <span className="cm-site">
+        <span className="cm-site" title={data.siteName}>
           {data.siteName}
-          {activeFloor ? ` / ${activeFloor.name}` : ''}
         </span>
         <span className={`cm-pill ${!sample && data.connection !== 'connected' ? 'cm-pill--amber' : ''}`} role="status">
           {connectionLabel}
         </span>
+        <nav className="cm-view-switch" aria-label="Wall view">
+          <button className="cm-btn" aria-pressed={mode === 'all'} onClick={() => setMode('all')}>Cameras <span>{cameras.length}</span></button>
+          <button className="cm-btn" aria-pressed={mode === 'map'} onClick={() => setMode('map')}>Map</button>
+        </nav>
         <div className="cm-top-actions">
+          {(queue.length > 0 || active.length > 0) && <button className="cm-btn cm-pill--red" onClick={() => openReview((queue[0] ?? active[0]).id)}>{queue.length + active.length} open alert{queue.length + active.length === 1 ? '' : 's'}</button>}
+          <details className="cm-more" onClick={event => { if ((event.target as HTMLElement).closest('button, a')) event.currentTarget.open = false }} onKeyDown={event => { if (event.key === 'Escape' && event.currentTarget.open) { event.stopPropagation(); event.preventDefault(); event.currentTarget.open = false; event.currentTarget.querySelector('summary')?.focus() } }}>
+            <summary>More</summary><div className="cm-more-menu">
+          <button className="cm-icon-btn" aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'} title={fullscreen ? 'Exit fullscreen' : 'Fullscreen wall'} onClick={() => void toggleFullscreen()}><ArrowsOut aria-hidden /> {fullscreen ? 'Exit fullscreen' : 'Fullscreen'}</button>
           {sample && (
             <>
               <button type="button" className="cm-btn cm-btn--dark" onClick={data.runSample}>
@@ -266,7 +367,7 @@ export default function CommandWall() {
               <GearSix aria-hidden /> Setup
             </a>
           )}
-          {session?.me && (
+          {session?.me && session.me.workspace?.ownerVerification !== 'unverified' && (
             <button
               type="button"
               className="cm-icon-btn"
@@ -274,7 +375,7 @@ export default function CommandWall() {
               title={`${session.me.name ?? session.me.email ?? 'Signed in'} · sign out`}
               onClick={() => void session.signOut()}
             >
-              <SignOut aria-hidden />
+              <SignOut aria-hidden /> Sign out
             </button>
           )}
           <button
@@ -284,135 +385,50 @@ export default function CommandWall() {
             aria-pressed={sound}
             onClick={() => void toggleSound()}
           >
-            {sound ? <SpeakerHigh aria-hidden /> : <SpeakerSlash aria-hidden />}
+            {sound ? <SpeakerHigh aria-hidden /> : <SpeakerSlash aria-hidden />} {sound ? 'Mute alerts' : 'Alert sound'}
           </button>
+            </div>
+          </details>
           <time className="cm-clock-now">{formatClock(now)}</time>
         </div>
       </header>
 
       {sample && (
         <p className="cm-banner">
-          <strong>Sample workspace.</strong> Generated mall imagery and illustrative records. No live detection. Open a guard tab from
-          Guards to hear the phone ring.
+          <strong>Sample workspace.</strong> Example footage only. No live cameras.
         </p>
       )}
       {!sample && (data.connection !== 'connected' || data.error) && (
         <p className="cm-banner cm-banner--warn" role="alert">
-          <WarningCircle aria-hidden /> {data.error || 'Connecting to the local NIVRA service.'} Feeds and incidents are unavailable until
-          it reconnects.
+          <WarningCircle aria-hidden /> {data.error || 'Reconnecting. Live cameras and alerts will return shortly.'}
         </p>
       )}
       {!sample && data.connection === 'connected' && !cameras.length && (
         <p className="cm-banner">
-          No cameras yet. Add and pair phones from the <a href="/">camera dashboard</a>. Name a camera after a map spot (for example
-          “Atrium East”) to place it there; otherwise it takes the next free spot.
+          No cameras yet. <a href="/setup#cameras">Connect your first camera</a>.
         </p>
       )}
 
-      <section className="cm-stats" aria-label="Today at a glance">
-        <div>
-          <span>Cameras live</span>
-          <strong>
-            {stats.live} / {stats.total}
-          </strong>
-          <small>{stats.offline ? `${stats.offline} offline` : 'All connected'}</small>
-        </div>
-        <div>
-          <span>Detection → review</span>
-          <strong>{stats.reviewSeconds == null ? '—' : `${stats.reviewSeconds.toFixed(1)} s`}</strong>
-          <small>median today</small>
-        </div>
-        <div>
-          <span>Reviews today</span>
-          <strong>{stats.reviews}</strong>
-          <small>
-            {stats.confirmed} confirmed · {stats.falseAlarms} false alarm · {stats.open} open
-          </small>
-        </div>
-        <div>
-          <span>Guards on shift</span>
-          <strong>{onShift.length}</strong>
-          <small>
-            {sample
-              ? `${guards.length} on roster · sample`
-              : `${guards.filter((g) => g.online).length} online · ${guards.filter((g) => g.push).length} with alerts on`}
-          </small>
-        </div>
-        <div>
-          <span>Analysis</span>
-          <strong>{stats.fps == null ? '—' : `${stats.fps.toFixed(1)} fps`}</strong>
-          <small>
-            {data.runtime?.device
-              ? `avg per camera · ${data.runtime.device === 'camera-device' ? 'on the phones' : `on this computer (${data.runtime.device.toUpperCase()})`}`
-              : 'avg per camera'}
-          </small>
-        </div>
-      </section>
-
+      {fullscreenError && <p className="cm-banner cm-banner--warn" role="status">{fullscreenError}</p>}
       <main id="cm-main" className={`cm-main cm-main--${mode}`} inert={reviewEvent ? true : undefined}>
         {mode === 'map' ? (
           <>
             <section className="cm-map-panel" aria-labelledby="map-heading">
               <header>
-                <h2 id="map-heading">{activeFloor?.name ?? 'Floor plan'}</h2>
-                {floors.length > 1 && (
-                  <div className="cm-floor-tabs" role="tablist" aria-label="Floors">
-                    {floors.map((floor) => (
-                      <button
-                        key={floor.id}
-                        type="button"
-                        role="tab"
-                        aria-selected={floor.id === activeFloor?.id}
-                        className={floor.id === activeFloor?.id ? 'is-on' : ''}
-                        onClick={() => chooseFloor(floor.id)}
-                      >
-                        {floor.name}
-                        {events.some((e) => (needsDecision(e) || isActiveResponse(e)) && cameras.find((c) => c.id === e.camera_id)?.floorId === floor.id) && (
-                          <i className="cm-floor-alert" aria-label="incident on this floor" />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
-                <ul className="cm-legend" aria-label="Map legend">
-                  <li><i className="cm-key cm-key--camera" /> Camera</li>
-                  <li><i className="cm-key cm-key--guard" /> {sample ? 'Guard (sample)' : 'Guard post'}</li>
-                  <li><i className="cm-key cm-key--incident" /> Incident</li>
-                  <li><i className="cm-key cm-key--exit" /> Exit</li>
-                </ul>
+                <h2 id="map-heading">Locations</h2>
               </header>
-              <div className="cm-map-scroll">
-                {activeFloor ? (
-                <FloorMap
-                  floor={activeFloor}
-                  guards={guards}
-                  cameras={cameras}
-                  events={events}
-                  selected={selected}
-                  onSelect={selectCamera}
-                  focus={focus && (needsDecision(focus) || isActiveResponse(focus)) ? focus : null}
-                  label={`${activeFloor.name} map. Select a camera to see its view.`}
-                />
-                ) : (
-                  <div className="cm-empty-map">
-                    <strong>No floors yet</strong>
-                    <span className="cm-muted">
-                      {admin ? 'Add a floor and upload its plan in Setup to see cameras and guards on a map.' : 'An admin needs to add a floor plan in Setup.'}
-                    </span>
-                    {admin && (
-                      <a className="cm-btn cm-btn--dark" href="/setup">
-                        Open Setup
-                      </a>
-                    )}
-                  </div>
-                )}
+              <div className="gps-picker" aria-label="Choose camera location">
+                {cameras.map(camera => <button key={camera.id} className="cm-btn" aria-pressed={!mapGuard && mapCamera?.id === camera.id} onClick={() => { setSelected(camera.id); setSelectedGuard(null) }}>
+                  {camera.label} · {camera.gps ? camera.name : 'Location waiting'}
+                </button>)}
               </div>
+              <div className="gps-picker" aria-label="Choose guard location">
+                {guards.map(guard => <button key={guard.id} className="cm-btn" aria-pressed={mapGuard?.id === guard.id} onClick={() => { setSelectedGuard(guard.id); setSelected(null) }}>{guard.id} · {guard.name}</button>)}
+              </div>
+              <p className="cm-map-person"><strong>{mapLabel}</strong><span>{mapDetails}</span><small>{gpsStatus(mapPoint, now)}</small></p>
+              <GoogleMap point={mapPoint} label={mapLabel} kind={mapGuard ? 'guard' : 'camera'} sample={sample} />
               <p className="cm-hint" aria-live="polite">
-                {selectedCamera
-                  ? `${selectedCamera.label} selected · Esc to close`
-                  : unplaced
-                    ? `Click a camera to see its view · ${unplaced} camera${unplaced === 1 ? '' : 's'} not placed on a map yet`
-                    : 'Click a camera to see its view'}
+                {unlocated ? `${unlocated} camera${unlocated === 1 ? '' : 's'} waiting for location. Allow location on the camera phone.` : 'Choose a camera or guard to see their location.'}
               </p>
             </section>
 
@@ -430,16 +446,12 @@ export default function CommandWall() {
                   <CameraTile camera={selectedCamera} events={events} now={now} size="hero" pinned={pinned.includes(selectedCamera.id)} />
                   <div className="cm-selected-foot">
                     <span className="cm-muted">
-                      {selectedCamera.slot?.covers
-                        ? `Covers: ${selectedCamera.slot.covers}`
-                        : selectedCamera.slot
-                          ? `${floors.find((f) => f.id === selectedCamera.floorId)?.name ?? ''}`
-                          : 'Not placed on a map'}
+                      {cameraPlace(selectedCamera)} · {gpsStatus(selectedCamera.gps, now)}
                     </span>
                     <button type="button" className="cm-btn" aria-pressed={pinned.includes(selectedCamera.id)} onClick={() => togglePin(selectedCamera.id)}>
                       <PushPin aria-hidden /> {pinned.includes(selectedCamera.id) ? 'Unpin' : 'Pin to wall'}
                     </button>
-                    <button type="button" className="cm-btn cm-btn--dark" onClick={() => setModal({ full: selectedCamera.id })}>
+                    <button type="button" className="cm-btn cm-btn--dark" onClick={() => selectCamera(selectedCamera.id)}>
                       <ArrowsOut aria-hidden /> Open full view
                     </button>
                   </div>
@@ -452,7 +464,7 @@ export default function CommandWall() {
                           now={now}
                           size="thumb"
                           selected={camera.id === selected}
-                          onOpen={() => setSelected(camera.id)}
+                          onOpen={() => selectCamera(camera.id)}
                         />
                       </div>
                     ))}
@@ -495,16 +507,8 @@ export default function CommandWall() {
           </>
         ) : (
           <section className="cm-all" aria-labelledby="all-heading">
-            <header>
-              <h2 id="all-heading">All cameras · {cameras.length}</h2>
-              <span className="cm-muted">
-                {stats.live} live · {stats.offline} offline
-              </span>
-              <button type="button" className="cm-btn" onClick={() => setMode('map')}>
-                <ArrowLeft aria-hidden /> Back to map <kbd>Esc</kbd>
-              </button>
-            </header>
-            <div className="cm-grid-all">
+            <h2 id="all-heading" className="cm-sr-only">Security camera wall</h2>
+            <div className="cm-grid-all" style={{ '--camera-columns': ordered.length <= 1 ? 1 : ordered.length <= 4 ? 2 : ordered.length <= 9 ? 3 : 4, '--camera-rows': Math.ceil(ordered.length / (ordered.length <= 1 ? 1 : ordered.length <= 4 ? 2 : ordered.length <= 9 ? 3 : 4)) || 1 } as CSSProperties}>
               {ordered.map((camera: WallCamera) => (
                 <CameraTile
                   key={camera.id}
@@ -512,27 +516,10 @@ export default function CommandWall() {
                   events={events}
                   now={now}
                   pinned={pinned.includes(camera.id)}
-                  onOpen={() => {
-                    setSelected(camera.id)
-                    setMode('map')
-                  }}
+                  onOpen={() => selectCamera(camera.id)}
                 />
               ))}
-              <div className="cm-mini">
-                <h3>{activeFloor?.name ?? 'Floor plan'}</h3>
-                {activeFloor && (
-                  <FloorMap
-                    floor={activeFloor}
-                    guards={guards}
-                    cameras={cameras}
-                    events={events}
-                    compact
-                    onSelect={selectCamera}
-                    label="Mini map. Select a camera to open it on the map."
-                  />
-                )}
-                <p className="cm-muted">Click a camera to open it on the map</p>
-              </div>
+              {!ordered.length && <div className="cm-wall-empty"><h3>Your cameras go here</h3><p>Connect a phone, then watch it here.</p><a className="cm-btn" href="/setup#cameras">Connect a camera</a></div>}
             </div>
           </section>
         )}
@@ -557,17 +544,13 @@ export default function CommandWall() {
       )}
       {modal === 'guards' && (
         <Modal title="Guard phones" close={() => setModal(null)}>
-          <GuardRoster guards={guards} floors={floors} sample={sample} admin={admin} />
+          <GuardRoster guards={guards} sample={sample} admin={admin} now={now} />
         </Modal>
       )}
-      {modal && typeof modal === 'object' && (() => {
-        const camera = cameras.find((c) => c.id === modal.full)
-        return camera ? (
-          <Modal title={`${camera.label} · ${camera.name}`} close={() => setModal(null)} wide>
-            <CameraTile camera={camera} events={events} now={now} size="hero" />
-          </Modal>
-        ) : null
-      })()}
+      {modal && typeof modal === 'object' && <CameraFocus cameras={ordered} cameraId={modal.full} events={events} now={now} pinned={pinned}
+        change={id => { setSelected(id); setModal({ full: id }) }} togglePin={togglePin}
+        openMap={id => { setModal(null); setSelected(id); setSelectedGuard(null); setMode('map') }} close={() => setModal(null)} />}
+
     </div>
   )
 }

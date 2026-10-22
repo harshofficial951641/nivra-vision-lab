@@ -7,7 +7,9 @@ public endpoint is provisioned here. All model execution stays on this computer.
 import asyncio
 from collections import deque
 import hashlib
+from http.cookies import SimpleCookie, CookieError
 import json
+import math
 import os
 import secrets
 import struct
@@ -16,13 +18,14 @@ from urllib.parse import urlsplit
 from pathlib import Path
 from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException, Path as PathParam, Request, Response, WebSocket, WebSocketDisconnect
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 from .classroom_store import Store
+from .socket_tickets import SocketTickets
 from .auth import AuthService, Principal, SocketAuth, allowed_origins, install_routes
-from .sites import CameraPatch, Name, camera_payload, floor_payload, guard_payload, role_dependency, store_call
+from .sites import CameraPatch, GPS, GuardProfile, Name, camera_payload, floor_payload, guard_payload, role_dependency, store_call
 from .preview_relay import PreviewRelay
 from .push import GuardPush, register_routes as register_push_routes
-from .device_analysis import DeviceStatus, DeviceResult, result_payload, MODEL as DEVICE_MODEL
+from .device_analysis import DeviceStatus, DeviceMotionStatus, DeviceResult, DeviceMotion, result_payload, MODEL as DEVICE_MODEL, MAX_PEOPLE as DEVICE_MAX_PEOPLE, MAX_REPORT_BYTES
 from .clips import Clips, signed_frame_url, valid_frame_signature
 from .auth import require_role
 
@@ -30,6 +33,30 @@ ADMIN_COOKIE = 'nivra_operator'
 CAMERA_COOKIE = 'nivra_publisher'
 GUARD_COOKIE = 'nivra_guard'
 GUARD_SNAPSHOT_SECONDS = 10
+
+
+def pc_pose_payload(poses):
+    """Convert the pipeline's existing MediaPipe topology to observed wire joints.
+
+    drawable_pose already maps COCO-17 into 33 slots. Its zero-visibility
+    placeholders are absent joints, never measured coordinates.
+    """
+    if not isinstance(poses, (list, tuple)):
+        return []
+    result = []
+    for pose in poses[:DEVICE_MAX_PEOPLE]:
+        if not isinstance(pose, (list, tuple)) or len(pose) != 33:
+            continue
+        joints = []
+        for point in pose:
+            values = [point.get(key) for key in ('x', 'y', 'visibility')] if isinstance(point, dict) else []
+            valid = len(values) == 3 and all(
+                isinstance(value, (int, float)) and not isinstance(value, bool)
+                and math.isfinite(value) and 0 <= value <= 1 for value in values)
+            joints.append([round(float(value), 4) for value in values] if valid and values[2] > 0 else None)
+        if any(point is not None for point in joints):
+            result.append(joints)
+    return result
 
 
 class CameraInput(BaseModel):
@@ -50,6 +77,37 @@ class CameraInput(BaseModel):
 class PairInput(BaseModel):
     model_config = ConfigDict(extra='forbid')
     token: str = Field(min_length=30, max_length=100)
+
+
+PAIR_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+
+class DevicePairInput(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    token: str | None = Field(default=None, min_length=30, max_length=100)
+    code: str | None = Field(default=None, pattern=r'^[A-HJ-NP-Z2-9]{8}$')
+
+    @field_validator('code', mode='before')
+    @classmethod
+    def clean_code(cls, value):
+        return value.strip().replace(' ', '').replace('-', '').upper() if isinstance(value, str) else value
+
+    @model_validator(mode='after')
+    def one_capability(self):
+        if (self.token is None) == (self.code is None): raise ValueError('Use one pairing link or code.')
+        return self
+
+
+class PairCodeAttempts:
+    """Bound guesses before any cross-workspace scan, without unbounded IP keys."""
+    def __init__(self): self.recent = deque()
+
+    def check(self, request):
+        now = time.monotonic()
+        while self.recent and now-self.recent[0][1] >= 60: self.recent.popleft()
+        ip = request.client.host if request.client else 'unknown'
+        if len(self.recent) >= 100 or sum(peer == ip for peer, _ in self.recent) >= 20:
+            raise HTTPException(429, 'Wait one minute before trying another pairing code.')
+        self.recent.append((ip, now))
 
 
 class EventInput(BaseModel):
@@ -105,10 +163,18 @@ class Classroom:
         self.public = public_origin()
         self.origins = allowed_origins(self.public)
         self.auth = AuthService(self.origins)
+        self.socket_tickets = SocketTickets(os.environ.get('NIVRA_SOCKET_ORIGIN', ''))
         self.admin_token = secrets.token_urlsafe(32)
         self.operator_invites, self.operator_sessions = {}, {}
         self.pairs, self.credentials, self.attempts = {}, {}, {}
+        self.pair_codes = {'camera': {}, 'guard': {}}
+        self.code_attempts = PairCodeAttempts()
         self.guard_pairs, self.guard_credentials, self.guard_attempts = {}, {}, {}
+        for session in self.store.device_sessions():
+            if session['kind'] == 'camera': self.credentials[session['token_hash']] = session['subject_id']
+            else:
+                guard = self.store.guard(session['subject_id'])
+                self.guard_credentials[session['token_hash']] = (guard['callsign'],time.monotonic()+session['expires']-time.time())
         self.guard_sockets = {}
         self.live, self.pending, self.viewers = {}, {}, set()
         self.relays = {}
@@ -127,6 +193,38 @@ class Classroom:
         self.push = GuardPush(self)
         self.routes()
         register_push_routes(self)
+
+    def prune_device_pairs(self, kind):
+        attribute = 'pairs' if kind == 'camera' else 'guard_pairs'
+        now = time.monotonic()
+        pairs = {key: value for key, value in getattr(self, attribute).items() if value[1] > now}
+        setattr(self, attribute, pairs)
+        self.pair_codes[kind] = {key: target for key, target in self.pair_codes[kind].items() if target in pairs}
+        return pairs
+
+    def mint_device_pair(self, kind, subject):
+        pairs = self.prune_device_pairs(kind)
+        # Only hashes persist in memory. Codes and QR tokens share one record.
+        token = secrets.token_urlsafe(32)
+        for _ in range(8):
+            code = ''.join(secrets.choice(PAIR_CODE_ALPHABET) for _ in range(8))
+            key = digest(code)
+            if all(key not in aliases for aliases in self.pair_codes.values()): break
+        else: raise HTTPException(503, 'Could not create a pairing code. Try again.')
+        pair_key = digest(token)
+        pairs[pair_key] = (subject, time.monotonic()+300)
+        self.pair_codes[kind][key] = pair_key
+        return token, code
+
+    def device_pair(self, kind, data):
+        pairs = self.prune_device_pairs(kind)
+        key = self.pair_codes[kind].get(digest(data.code)) if data.code is not None else digest(data.token)
+        return key, pairs.get(key)
+
+    def consume_device_pair(self, kind, key):
+        pairs = self.pairs if kind == 'camera' else self.guard_pairs
+        pairs.pop(key, None)
+        self.prune_device_pairs(kind)
 
     async def start(self):
         self.auth.log_mode()
@@ -231,24 +329,35 @@ class Classroom:
 
     def snapshot(self):
         now = time.monotonic()
+        paired_cameras = {row['subject_id'] for row in self.store.db.execute('''
+            SELECT DISTINCT session.subject_id FROM device_sessions session
+            JOIN cameras camera ON camera.id=session.subject_id
+            WHERE session.kind='camera' AND session.expires>? AND camera.enabled=1
+            ''', (time.time(),))}
         cameras = []
         for camera in self.store.cameras():
             live = self.live.get(camera['id'])
             fresh = bool(live and now-live['received'] < 6)
-            analysis_fresh = bool(fresh and live.get('analyzed') and now-live['analyzed'] < 5)
+            analysis_window = 6 if live and live.get('compute') == 'device' else 5
+            analysis_fresh = bool(fresh and live.get('analyzed') and now-live['analyzed'] < analysis_window)
+            motion_fresh = bool(fresh and now-live['received'] < 3 and live.get('motionAnalyzed') and now-live['motionAnalyzed'] < 3)
             cameras.append({**camera_payload(camera),
+                'paired': camera['id'] in paired_cameras,
                 'feed': 'paused' if not camera['enabled'] else 'live' if fresh else 'waiting' if live else 'offline',
                 'analysis': 'paused' if not camera['enabled'] else 'current' if analysis_fresh else 'waiting' if fresh and (self.state['models'] or live.get('deviceStatus',{}).get('state') in ('loading','ready')) else 'unavailable',
                 'compute': live.get('compute','pc') if live else None,
                 'deviceStatus': live.get('deviceStatus') if live else None,
                 'generation': live['generation'] if live else None,
                 'result': live.get('result') if analysis_fresh else None,
+                'motionResult': live.get('motionResult') if motion_fresh else None,
+                'motionStatus': live.get('motionStatus') if live else None,
                 'framesReceived': live['frames'] if live else 0,
                 'framesAnalyzed': live.get('analyzedCount',0) if live else 0,
                 'framesReplaced': live['replaced'] if live else 0,
                 'error': live.get('error') if live else None})
         events = self.store.events()
-        for event in events: event['clip'] = self.clips.summary(event['id'])
+        self.clips.prune()
+        for event in events: event['clip'] = self.clips.summary(event['id'], prune=False)
         return {'type':'snapshot', 'version':3, 'serverTime':time.time()*1000, 'me':{'role':'reviewer'},
                 'site':self.store.site(), 'floors':[floor_payload(floor) for floor in self.store.floors()],
                 'guards':[self.guard_payload(guard) for guard in self.store.guards()], 'cameras':cameras, 'events':events,
@@ -288,7 +397,8 @@ class Classroom:
         principal = authentication.principal
         if principal.user_id.startswith('dev_legacy_guard_'):
             credential = self.guard_credentials.get(key)
-            return credential is not None and credential[1] > time.monotonic()
+            session = self.store.device_session(key,'guard')
+            return credential is not None and credential[1] > time.monotonic() and session is not None and session['subject_id'] == authentication.guard_id
         if self.auth.mode == 'dev':
             try: current = self.auth.dev_principal(socket)
             except HTTPException: return False
@@ -307,8 +417,16 @@ class Classroom:
         if self.auth.mode != 'dev': return None
         key = digest(request.cookies.get(GUARD_COOKIE, ''))
         credential = self.guard_credentials.get(key)
-        if credential and credential[1] > time.monotonic(): return credential[0]
+        session = self.store.device_session(key,'guard')
+        guard = self.store.guard(session['subject_id']) if session else None
+        if credential and credential[1] > time.monotonic() and guard and guard['callsign'] == credential[0]: return credential[0]
         return None
+
+    def camera_identity(self, request):
+        key = digest(request.cookies.get(CAMERA_COOKIE,''))
+        session = self.store.device_session(key,'camera')
+        camera_id = self.credentials.get(key)
+        return camera_id if session and session['subject_id'] == camera_id else None
 
     def require_guard(self, request):
         self.auth.origin_check(request)
@@ -351,10 +469,17 @@ class Classroom:
             except Exception: pass
 
     async def revoke_guard(self, guard=None, key=None):
+        if key is not None: self.store.revoke_device_sessions(kind='guard',token_hash=key)
+        for credential_key, value in tuple(self.guard_credentials.items()):
+            if value[0] == guard or credential_key == key:
+                self.store.revoke_device_sessions(kind='guard',token_hash=credential_key)
+        record = self.store.guard_by_callsign(guard) if guard is not None else None
+        if record: self.store.revoke_device_sessions(kind='guard',subject_id=record['id'])
         self.guard_credentials = {k:v for k,v in self.guard_credentials.items()
                                   if not (v[0] == guard or k == key)}
         if guard is not None:
             self.guard_pairs = {k:v for k,v in self.guard_pairs.items() if v[0] != guard}
+            self.prune_device_pairs('guard')
         for socket, (assigned, credential_key, _) in tuple(self.guard_sockets.items()):
             if assigned == guard or credential_key == key: await self.close_guard_socket(socket)
 
@@ -376,7 +501,7 @@ class Classroom:
     def runtime(self):
         if self.state.get('relayOnly'):
             return dict(device='camera-device', compute='camera-device', personModel='MediaPipe Pose Lite',
-                        fightModel=DEVICE_MODEL, maxPeople=10, fallbackReason=self.state.get('fallbackReason'))
+                        fightModel=DEVICE_MODEL, maxPeople=DEVICE_MAX_PEOPLE, fallbackReason=self.state.get('fallbackReason'))
         models = self.state.get('models')
         if not models: return None
         cameras = max(1, sum(live['compute'] == 'pc' for live in self.live.values()))
@@ -437,6 +562,7 @@ class Classroom:
                 live['analyzed'], live['analyzedCount'] = time.monotonic(), live.get('analyzedCount',0)+1
                 # Large poses/frames are never persisted. Results stay bounded in RAM.
                 live['result'] = {k:result.get(k) for k in ('timestampMs','evidenceTimestampMs','inferenceMs','coverage','tracks','conflict','fightEvidence')}
+                live['result']['poses'] = pc_pose_payload(result.get('poses'))
                 live['error'] = None
                 for event in result.get('conflict',{}).get('events',[]): self.record_event(camera_id,f"{generation}-p{live['pipelineEpoch']}",event)
                 if (self.state['models'].runtime.get('device') in ('cpu', 'mps') and self.analysis_samples >= 12
@@ -452,15 +578,25 @@ class Classroom:
                 live['pipeline'] = None
                 await self.broadcast(self.snapshot())
 
-    async def disconnect_camera(self, camera_id):
+    async def disconnect_camera(self, camera_id, *, revoke=True):
         self.clips.disconnect(camera_id)
-        self.credentials = {k:v for k,v in self.credentials.items() if v != camera_id}
+        if revoke:
+            keys = {key for key, subject in self.credentials.items() if subject == camera_id}
+            def keep_ticket(entry):
+                if entry.get('path') != '/api/v2/camera/stream': return True
+                try: credential = SimpleCookie(entry.get('cookie', '')).get(CAMERA_COOKIE)
+                except CookieError: return False
+                return credential is None or digest(credential.value) not in keys
+            self.socket_tickets.pending = {key: entry for key, entry in self.socket_tickets.pending.items() if keep_ticket(entry)}
+            self.store.revoke_device_sessions(kind='camera',subject_id=camera_id)
+            self.credentials = {k:v for k,v in self.credentials.items() if v != camera_id}
         self.pairs = {k:v for k,v in self.pairs.items() if v[0] != camera_id}
+        self.prune_device_pairs('camera')
         self.pending.pop(camera_id,None)
         self.order = deque(c for c in self.order if c != camera_id)
         live = self.live.pop(camera_id,None)
         if live:
-            try: await live['socket'].close(code=1000, reason='Camera disconnected by operator')
+            try: await asyncio.wait_for(live['socket'].close(code=1000, reason='Camera disconnected by operator'), .5)
             except Exception: pass
 
     def routes(self):
@@ -485,7 +621,7 @@ class Classroom:
             token = secrets.token_urlsafe(32)
             # Only the newest invitation remains valid; never persist credentials.
             self.operator_invites = {digest(token): time.monotonic()+300}
-            return {'url': self.public+'/#operator='+token, 'expiresInSeconds': 300}
+            return {'url': self.public+'/wall#operator='+token, 'expiresInSeconds': 300}
 
         @router.post('/operator/redeem')
         async def redeem_operator(data: PairInput, request: Request):
@@ -518,6 +654,25 @@ class Classroom:
             response.delete_cookie(ADMIN_COOKIE, path='/api/v2')
             return response
 
+        @router.post('/operator/socket-ticket')
+        async def operator_socket_ticket(request: Request):
+            self.require_reviewer(request)
+            return self.socket_tickets.mint('operator', request)
+
+        @router.post('/guard/socket-ticket')
+        async def guard_socket_ticket(request: Request):
+            self.require_guard(request)
+            return self.socket_tickets.mint('guard', request)
+
+        @router.post('/camera/socket-ticket')
+        async def camera_socket_ticket(request: Request):
+            self.auth.origin_check(request)
+            camera_id = self.camera_identity(request)
+            camera = self.store.camera(camera_id) if camera_id else None
+            if not camera or not camera['enabled']:
+                raise HTTPException(403, 'Pair this device from the dashboard.')
+            return self.socket_tickets.mint('camera', request)
+
         @router.get('/state')
         async def get_state(request: Request):
             principal = self.require_reviewer(request)
@@ -530,6 +685,16 @@ class Classroom:
             except ValueError as error: raise HTTPException(409,str(error)) from error
             await self.broadcast(self.snapshot())
             return camera_payload(camera)
+
+        @router.delete('/cameras/{camera_id}', status_code=204)
+        async def delete_camera(camera_id: str, request: Request):
+            self.require_admin(request)
+            # Remove the DB identity before awaiting a socket close. No new
+            # credential can be redeemed while that close is in progress.
+            store_call(self.store.delete_camera, camera_id)
+            await self.disconnect_camera(camera_id)
+            await self.broadcast(self.snapshot())
+            return Response(status_code=204)
 
         @router.patch('/cameras/{camera_id}', dependencies=[Depends(role_dependency(self, 'admin'))])
         async def update_camera(camera_id: str, data: CameraPatch, request: Request):
@@ -544,61 +709,101 @@ class Classroom:
             camera = self.store.camera(camera_id)
             if not camera or not camera['enabled']: raise HTTPException(409,'Enable the camera before pairing.')
             await self.disconnect_camera(camera_id)
-            token = secrets.token_urlsafe(32)
-            self.pairs[digest(token)] = (camera_id,time.monotonic()+300)
+            camera = self.store.camera(camera_id)
+            if not camera or not camera['enabled']: raise HTTPException(409, 'Camera is no longer available.')
+            token, code = self.mint_device_pair('camera', camera_id)
             origin = self.public or request.headers['origin']
             await self.broadcast(self.snapshot())
-            return {'url':origin+'/camera#pair='+token,'expiresInSeconds':300,'remoteReady':bool(self.public)}
+            return {'url':origin+'/camera#pair='+token,'pairingCode':code,'expiresInSeconds':300,'remoteReady':bool(self.public)}
 
         @router.post('/camera/pair')
-        async def redeem(data: PairInput, request: Request):
+        async def redeem(data: DevicePairInput, request: Request):
             if request.headers.get('origin') not in self.origins: raise HTTPException(403,'Origin rejected')
+            if data.code is not None: self.code_attempts.check(request)
             # Global bounded redemption rate also covers proxy clients sharing one IP.
             now = time.monotonic()
             self.attempts = {k:v for k,v in self.attempts.items() if now-v < 60}
             if len(self.attempts) >= 20: raise HTTPException(429,'Wait one minute before pairing again.')
             self.attempts[secrets.token_hex(8)] = now
-            pair = self.pairs.pop(digest(data.token),None)
-            if not pair or pair[1] < now: raise HTTPException(403,'Pairing link expired or already used. Create another link on the dashboard.')
+            pair_key, pair = self.device_pair('camera', data)
+            if not pair or pair[1] <= now: raise HTTPException(403,'Pairing link expired or already used. Create another link on the dashboard.')
+            camera = self.store.camera(pair[0])
+            if not camera or not camera['enabled']: raise HTTPException(403, 'Camera is no longer available')
+            self.consume_device_pair('camera', pair_key)
             credential = secrets.token_urlsafe(32)
+            self.store.save_device_session(digest(credential),'camera',pair[0],time.time()+30*86400)
             self.credentials[digest(credential)] = pair[0]
-            response = Response(content=json.dumps(self.store.camera(pair[0])),media_type='application/json')
-            response.set_cookie(CAMERA_COOKIE,credential,httponly=True,samesite='strict',secure=request.headers.get('origin','').startswith('https:'),path='/api/v2/camera')
+            self.store.patch_camera(pair[0], gps=None)
+            await self.broadcast(self.snapshot())
+            response = Response(content=json.dumps(camera_payload(self.store.camera(pair[0]))),media_type='application/json')
+            response.set_cookie(CAMERA_COOKIE,credential,httponly=True,samesite='strict',secure=request.headers.get('origin','').startswith('https:'),path='/api/v2/camera',max_age=30*86400)
             return response
 
         @router.get('/camera/session')
         async def camera_session(request: Request):
-            camera_id = self.credentials.get(digest(request.cookies.get(CAMERA_COOKIE,'')))
+            camera_id = self.camera_identity(request)
             if not camera_id: raise HTTPException(403,'Pair this device from the dashboard.')
-            return self.store.camera(camera_id)
+            return camera_payload(self.store.camera(camera_id))
+
+        @router.post('/camera/logout', status_code=204)
+        async def camera_logout(request: Request):
+            if request.headers.get('origin') not in self.origins: raise HTTPException(403,'Origin rejected')
+            camera_id = self.camera_identity(request)
+            if camera_id: await self.disconnect_camera(camera_id)
+            response = Response(status_code=204)
+            response.delete_cookie(CAMERA_COOKIE,path='/api/v2/camera')
+            return response
+
+        @router.post('/camera/location')
+        async def camera_location(data: GPS, request: Request):
+            if request.headers.get('origin') not in self.origins:
+                raise HTTPException(403, 'Origin rejected')
+            camera_id = self.camera_identity(request)
+            camera = self.store.camera(camera_id) if camera_id else None
+            if not camera or not camera['enabled']:
+                raise HTTPException(403, 'Pair this device from the dashboard.')
+            camera = self.store.patch_camera(camera_id, gps=data.model_dump())
+            await self.broadcast(self.snapshot())
+            return camera_payload(camera)
 
         @router.post('/guards/{guard}/pair')
         async def pair_guard(request: Request, guard: str = PathParam(pattern=r'^G[0-9]{1,2}$')):
-            self.auth.dev_only()
             self.require_admin(request)
+            if not self.store.guard_by_callsign(guard):
+                raise HTTPException(404, 'Guard not found')
             await self.revoke_guard(guard=guard)
-            now = time.monotonic()
-            self.guard_pairs = {k:v for k,v in self.guard_pairs.items() if v[1] > now}
-            token = secrets.token_urlsafe(32)
-            self.guard_pairs[digest(token)] = (guard, now+300)
+            token, code = self.mint_device_pair('guard', guard)
             origin = self.public or request.headers['origin']
-            return dict(url=origin+'/guard#pair='+token, expiresInSeconds=300, remoteReady=bool(self.public))
+            return dict(url=origin+'/guard#pair='+token, pairingCode=code, expiresInSeconds=300, remoteReady=bool(self.public))
 
         @router.post('/guard/pair')
-        async def redeem_guard(data: PairInput, request: Request):
-            self.auth.dev_only()
+        async def redeem_guard(data: DevicePairInput, request: Request):
             if request.headers.get('origin') not in self.origins: raise HTTPException(403, 'Origin rejected')
+            if data.code is not None: self.code_attempts.check(request)
+            principal = self.auth.require(request, ('guard',)) if self.auth.mode == 'clerk' else None
             now = time.monotonic()
             self.guard_attempts = {k:v for k,v in self.guard_attempts.items() if now-v < 60}
             if len(self.guard_attempts) >= 20: raise HTTPException(429, 'Wait one minute before pairing again.')
             self.guard_attempts[secrets.token_hex(8)] = now
-            pair = self.guard_pairs.pop(digest(data.token), None)
+            pair_key, pair = self.device_pair('guard', data)
             if pair is None or pair[1] <= now:
                 raise HTTPException(403, 'Pairing link expired or already used. Create another link on the dashboard.')
+            if not self.store.guard_by_callsign(pair[0]):
+                raise HTTPException(403, 'Guard is no longer available')
+            if principal is not None:
+                if self.guard_for_principal(principal) != pair[0]:
+                    raise HTTPException(403, 'This pairing link belongs to another guard')
+                self.consume_device_pair('guard', pair_key)
+                # Clerk remains the authority for HTTP and socket access. A QR
+                # link confirms the assigned guard; it never grants cookie access.
+                return {'guard': pair[0]}
+            self.consume_device_pair('guard', pair_key)
             self.guard_credentials = {k:v for k,v in self.guard_credentials.items() if v[1] > now}
             if len(self.guard_credentials) >= 10 or sum(v[0] == pair[0] for v in self.guard_credentials.values()) >= 2:
                 raise HTTPException(429, 'Guard session limit reached.')
             credential = secrets.token_urlsafe(32)
+            record = self.store.guard_by_callsign(pair[0])
+            self.store.save_device_session(digest(credential),'guard',record['id'],time.time()+12*3600)
             self.guard_credentials[digest(credential)] = (pair[0], now+12*3600)
             response = Response(content=json.dumps({'guard': pair[0]}), media_type='application/json')
             response.set_cookie(GUARD_COOKIE, credential, httponly=True, samesite='strict',
@@ -608,6 +813,24 @@ class Classroom:
         @router.get('/guard/session')
         async def guard_session(request: Request):
             return {'guard': self.require_guard(request)}
+
+        @router.post('/guard/location')
+        async def guard_location(data: GPS, request: Request):
+            callsign = self.require_guard(request)
+            guard = self.store.guard_by_callsign(callsign)
+            if not guard: raise HTTPException(403, 'Guard is no longer available')
+            updated = self.store.update_guard(guard['id'], gps=data.model_dump())
+            await self.broadcast(self.snapshot())
+            return self.guard_payload(updated)
+
+        @router.patch('/guard/profile')
+        async def guard_profile(data: GuardProfile, request: Request):
+            callsign = self.require_guard(request)
+            guard = self.store.guard_by_callsign(callsign)
+            if not guard: raise HTTPException(403, 'Guard is no longer available')
+            updated = self.store.update_guard(guard['id'], floor_name=data.floorName)
+            await self.broadcast(self.snapshot())
+            return self.guard_payload(updated)
 
         @router.post('/guard/logout')
         async def guard_logout(request: Request):
@@ -767,14 +990,14 @@ class Classroom:
 
         @router.websocket('/camera/stream')
         async def camera_stream(socket: WebSocket):
-            camera_id = self.credentials.get(digest(socket.cookies.get(CAMERA_COOKIE,'')))
+            camera_id = self.camera_identity(socket)
             camera = self.store.camera(camera_id) if camera_id else None
             if socket.headers.get('origin') not in self.origins or not camera or not camera['enabled'] or camera_id in self.live:
                 await socket.close(code=1008)
                 return
             await socket.accept()
             generation = secrets.token_hex(12)
-            live = dict(socket=socket,generation=generation,received=-1e10,frames=0,replaced=0,pipeline=None,video=deque(maxlen=64),compute='device' if self.state.get('relayOnly') else 'pc',lastDeviceTimestamp=-1,lastDeviceEvent=-1e10)
+            live = dict(socket=socket,generation=generation,received=-1e10,frames=0,replaced=0,pipeline=None,video=deque(maxlen=64),compute='device' if self.state.get('relayOnly') else 'pc',lastDeviceTimestamp=-1,lastMotionTimestamp=-1)
             self.live[camera_id] = live
             last_timestamp = -1
             recent_frames = deque()
@@ -784,39 +1007,48 @@ class Classroom:
                 while True:
                     message = await asyncio.wait_for(socket.receive(),15)
                     if message['type'] == 'websocket.disconnect': break
+                    if self.camera_identity(socket) != camera_id: raise ValueError('Camera session expired or revoked')
                     if message.get('text') is not None:
                         text = message['text']
                         now = time.monotonic()
                         while recent_reports and now-recent_reports[0] > 1: recent_reports.popleft()
-                        if len(text) > 16384 or len(recent_reports) >= 24: raise ValueError('Invalid device report rate or size')
+                        if len(text.encode('utf-8')) > MAX_REPORT_BYTES or len(recent_reports) >= 24: raise ValueError('Invalid device report rate or size')
                         recent_reports.append(now)
                         data = json.loads(text)
-                        if data.get('type') == 'device-status':
-                            status = DeviceStatus.model_validate(data)
-                            live['deviceStatus'] = status.model_dump(exclude={'type'})
+                        if data.get('type') in ('device-status', 'device-motion-status'):
+                            motion = data['type'] == 'device-motion-status'
+                            status = (DeviceMotionStatus if motion else DeviceStatus).model_validate(data)
+                            live['motionStatus' if motion else 'deviceStatus'] = status.model_dump(exclude={'type'})
                             if live['compute'] != 'device': continue  # Browser detector remains standby.
                             if status.state != 'ready':
-                                live['analyzed'], live['result'] = None, None
-                            live['error'] = status.detail if status.state == 'error' else None
+                                if motion: live['motionAnalyzed'], live['motionResult'] = None, None
+                                else: live['analyzed'], live['result'] = None, None
+                            if not motion: live['error'] = status.detail if status.state == 'error' else None
                             await self.broadcast(self.snapshot())
-                        elif data.get('type') == 'device-result':
+                        elif data.get('type') in ('device-result', 'device-motion'):
                             if live['compute'] != 'device': continue
-                            if live['compute'] != 'device' or live.get('deviceStatus',{}).get('state') != 'ready': raise ValueError('Device analysis not ready')
-                            report = DeviceResult.model_validate(data)
-                            if report.delegate != live['deviceStatus']['delegate']: raise ValueError('Unexpected compute delegate')
+                            motion = data['type'] == 'device-motion'
+                            ready_status = live.get('motionStatus' if motion else 'deviceStatus',{})
+                            if ready_status.get('state') != 'ready': raise ValueError('Device analysis not ready')
+                            report = (DeviceMotion if motion else DeviceResult).model_validate(data)
+                            if report.delegate != ready_status['delegate']: raise ValueError('Unexpected compute delegate')
                             # Source clocks are device-local; compare only to this stream.
-                            if report.timestampMs <= live['lastDeviceTimestamp']: raise ValueError('Device timestamps must increase')
-                            if not live['frames'] or now-live['received'] > 6 or not -2000 <= last_timestamp-report.timestampMs <= 2000:
+                            timestamp_key = 'lastMotionTimestamp' if motion else 'lastDeviceTimestamp'
+                            if report.timestampMs <= live[timestamp_key]: raise ValueError('Device timestamps must increase')
+                            window = 3000 if motion else 6000
+                            if not live['frames'] or now-live['received'] > window / 1000 or not -2000 <= last_timestamp-report.timestampMs <= window:
                                 continue
-                            live['lastDeviceTimestamp'] = report.timestampMs
-                            live['analyzed'], live['analyzedCount'] = now, live.get('analyzedCount',0)+1
-                            live['result'] = result_payload(report)
+                            live[timestamp_key] = report.timestampMs
+                            if motion:
+                                live['motionAnalyzed'] = now
+                                live['motionResult'] = result_payload(report)
+                            else:
+                                live['analyzed'], live['analyzedCount'] = now, live.get('analyzedCount',0)+1
+                                live['result'] = result_payload(report)
                             new_event = False
                             for event in report.events:
-                                if event.occurredAtMs-live['lastDeviceEvent'] < 8000: continue
                                 payload = dict(id=event.id,occurredAtMs=event.occurredAtMs,evidenceTimestampMs=event.occurredAtMs,detail=event.detail,evidenceModel=DEVICE_MODEL)
                                 if self.record_event(camera_id,generation,payload):
-                                    live['lastDeviceEvent'] = event.occurredAtMs
                                     new_event = True
                             if new_event: await self.broadcast(self.snapshot())
                             else: self.schedule_snapshot()

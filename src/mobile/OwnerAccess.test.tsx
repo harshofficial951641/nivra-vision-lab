@@ -1,0 +1,72 @@
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import OwnerAccess from './OwnerAccess'
+const { api } = vi.hoisted(() => ({ api: vi.fn() }))
+vi.mock('../classroom/contracts', () => ({ api }))
+const url = 'https://nivra.tanishq.work/#operator=owner-one-use-012345678901234567890'
+afterEach(() => { cleanup(); vi.clearAllMocks(); vi.unstubAllGlobals(); vi.useRealTimers() })
+const host = (hostname: string) => vi.stubGlobal('location', { hostname })
+
+describe('owner access bootstrap', () => {
+  it.each(['nivra.tanishq.work', '192.168.1.10', 'localhost.attacker.example'])('never offers owner creation or calls bootstrap APIs on %s', hostname => {
+    host(hostname)
+    render(<OwnerAccess />)
+    expect(screen.getByRole('heading', { name: 'Ask your owner for a QR.' })).toBeInTheDocument()
+    expect(screen.getByText('http://127.0.0.1:8765/owner')).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Create owner QR' })).not.toBeInTheDocument()
+    expect(api).not.toHaveBeenCalled()
+  })
+  it.each(['localhost', '127.0.0.1'])('creates a private one-use QR on %s only after a user action and local session bootstrap', async hostname => {
+    host(hostname)
+    let establish!: (value: unknown) => void
+    api.mockReturnValueOnce(new Promise(resolve => { establish = resolve })).mockResolvedValueOnce({ url, expiresInSeconds: 300 })
+    render(<OwnerAccess />)
+    expect(api).not.toHaveBeenCalled()
+    act(() => fireEvent.click(screen.getByRole('button', { name: 'Create owner QR' })))
+    expect(api).toHaveBeenCalledExactlyOnceWith('/session', 'POST')
+    expect(screen.getByRole('button', { name: 'Creating…' })).toBeDisabled()
+    await act(async () => { establish({}) })
+    expect(api).toHaveBeenNthCalledWith(2, '/operator/invite', 'POST')
+    expect(screen.getByTitle('Private one-use NIVRA owner QR')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Open public owner console' })).toHaveAttribute('href', url)
+    expect(screen.getByRole('status')).toHaveTextContent('Expires in 5:00')
+  })
+  it('does not mint an invite if local session bootstrap is denied', async () => {
+    host('localhost')
+    api.mockRejectedValueOnce(new Error('Local host access required.'))
+    render(<OwnerAccess />)
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Create owner QR' })))
+    expect(screen.getByRole('alert')).toHaveTextContent('Local host access required.')
+    expect(api).toHaveBeenCalledExactlyOnceWith('/session', 'POST')
+    expect(screen.queryByTitle('Private one-use NIVRA owner QR')).not.toBeInTheDocument()
+  })
+  it('removes expired QR and link instead of leaving a dead owner invite visible', async () => {
+    vi.useFakeTimers()
+    host('127.0.0.1')
+    api.mockResolvedValueOnce({}).mockResolvedValueOnce({ url, expiresInSeconds: 2 })
+    render(<OwnerAccess />)
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Create owner QR' })))
+    act(() => vi.advanceTimersByTime(2000))
+    expect(screen.getByRole('status')).toHaveTextContent('This owner QR expired.')
+    expect(screen.queryByTitle('Private one-use NIVRA owner QR')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'Open public owner console' })).not.toBeInTheDocument()
+  })
+  it('handles browsers without a clipboard instead of throwing', async () => {
+    host('localhost')
+    api.mockResolvedValueOnce({}).mockResolvedValueOnce({ url, expiresInSeconds: 300 })
+    vi.stubGlobal('navigator', {})
+    render(<OwnerAccess />)
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Create owner QR' })))
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Copy private owner link' })))
+    expect(screen.getByRole('alert')).toHaveTextContent('Copy was unavailable.')
+    expect(screen.getByRole('link', { name: 'Open public owner console' })).toBeInTheDocument()
+  })
+  it('rejects a malformed owner link instead of making a QR or clickable link', async () => {
+    host('localhost')
+    api.mockResolvedValueOnce({}).mockResolvedValueOnce({ url: 'javascript:alert(1)', expiresInSeconds: 300 })
+    render(<OwnerAccess />)
+    await act(async () => fireEvent.click(screen.getByRole('button', { name: 'Create owner QR' })))
+    expect(screen.getByRole('alert')).toHaveTextContent('invalid owner link')
+    expect(screen.queryByTitle('Private one-use NIVRA owner QR')).not.toBeInTheDocument()
+  })
+})

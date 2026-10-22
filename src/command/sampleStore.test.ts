@@ -32,6 +32,17 @@ describe('SampleStore', () => {
     expect(operator.getState().events.find((e) => e.id === event.id)?.guard_ack_at).toBeTypeOf('number')
   })
 
+  it('keeps a closed undecided sample alert in history without inventing a judgment', () => {
+    const store=make(localStorage)
+    const event=store.runIncident('cam-04')
+    store.review(event.id,'close',{})
+    const closed=make(localStorage).getState().events.find(record=>record.id===event.id)!
+    expect(closed.status).toBe('resolved')
+    expect(closed.decision ?? null).toBeNull()
+    expect(closed.reason ?? null).toBeNull()
+    expect(closed.detail).toBe(event.detail)
+  })
+
   it('restores from storage and resets', () => {
     const first = make(localStorage)
     first.runIncident()

@@ -60,3 +60,14 @@ service/research/runs/
 service/research/venvs/
 nivra-sites.tar.gz
 output/
+
+.netlify/
+.vercel/
+
+# Generated native binaries (kept locally and staged for deployment).
+mobile/artifacts/
+public/downloads/
+.vercel
+.env*
+dist-usb/
+!.env.usb

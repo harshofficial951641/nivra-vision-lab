@@ -52,7 +52,8 @@ def unpack_frame(packet):
     return header, frame
 
 
-def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False, enable_fight_demo=False):
+def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False, enable_fight_demo=False, static_dir=None):
+    assets = Path(static_dir) if static_dir is not None else ROOT / 'dist'
     if enable_fight_demo and not relay_only:
         raise ValueError('The public fight demo requires the relay-only host.')
     if model_factory is None and not relay_only:
@@ -188,9 +189,11 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     @app.get('/guard')
     @app.get('/setup')
     @app.get('/login')
+    @app.get('/owner')
+    @app.get('/mobile')
     @app.get('/guard/login')
     async def application_route():
-        return FileResponse(ROOT / 'dist' / 'index.html',headers={'Cache-Control':'no-store'})
+        return FileResponse(assets / 'index.html',headers={'Cache-Control':'no-store'})
 
     @app.get('/fight-samples/{name}')
     async def fight_sample(name: str):
@@ -199,7 +202,7 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
         return FileResponse(ROOT / 'service' / 'evaluation' / 'media' / name,
                             media_type='video/webm', headers={'Cache-Control': 'public, max-age=3600'})
 
-    app.mount('/', StaticFiles(directory=str(ROOT / 'dist'), html=True, check_dir=False), name='app')
+    app.mount('/', StaticFiles(directory=str(assets), html=True, check_dir=False), name='app')
     return app
 
 

@@ -3,6 +3,7 @@ import asyncio
 import copy
 import json
 import time
+from urllib.parse import parse_qs, urlsplit
 
 from cryptography.hazmat.primitives.asymmetric import rsa
 from fastapi import HTTPException
@@ -13,6 +14,7 @@ import pytest
 from starlette.websockets import WebSocketDisconnect
 
 from nivra.auth import AuthService, ClerkClient, Principal, SocketAuth, allowed_origins
+from nivra.classroom import GUARD_COOKIE, digest
 from nivra.public_gateway import PublicGateway
 from nivra.server import create_app
 
@@ -148,7 +150,7 @@ def test_http_roles_me_actor_and_camera_pairing(clerk_app):
     assert response.status_code == 200 and response.json()['reviewer_id'] == 'user_1'
 
 
-@pytest.mark.parametrize('path', ['/auth/dev', '/auth/dev/logout', '/session', '/operator/invite', '/operator/redeem', '/guard/pair', '/guards/G1/pair'])
+@pytest.mark.parametrize('path', ['/auth/dev', '/auth/dev/logout', '/session', '/operator/invite', '/operator/redeem'])
 def test_dev_routes_disabled_in_clerk(clerk_app, path):
     _, client, _ = clerk_app
     response = client.post('/api/v2'+path, headers={'Origin': ORIGIN}, json={'token': 'x'*40})
@@ -159,6 +161,47 @@ def test_legacy_cookie_cannot_unlock_clerk(clerk_app):
     app, client, _ = clerk_app
     client.cookies.set('nivra_operator', app.state.classroom.admin_token)
     assert client.get('/api/v2/state').status_code == 401
+
+
+def test_clerk_guard_qr_requires_matching_identity_and_preserves_token_on_denial(clerk_app):
+    app, client, mint = clerk_app
+    service = app.state.classroom
+    service.store.add_guard('G1', 'First guard')
+    service.store.add_guard('G2', 'Second guard')
+    assert client.post('/api/v2/guards/G1/pair', headers=headers(mint)).status_code == 403
+    response = client.post('/api/v2/guards/G1/pair', headers=headers(mint, 'admin'))
+    assert response.status_code == 200
+    token = parse_qs(urlsplit(response.json()['url']).fragment)['pair'][0]
+    request = {'json': {'token': token}}
+    assert client.post('/api/v2/guard/pair', headers={'Origin': ORIGIN}, **request).status_code == 401
+    for role in ('reviewer', 'admin'):
+        assert client.post('/api/v2/guard/pair', headers=headers(mint, role), **request).status_code == 403
+    wrong_guard = {'Origin': ORIGIN, 'Authorization': 'Bearer '+mint(sub='user_other',
+        email='other@example.test', metadata={'role': 'guard', 'callsign': 'G2'})}
+    assert client.post('/api/v2/guard/pair', headers=wrong_guard, **request).status_code == 403
+    assert digest(token) in service.guard_pairs
+    matching_guard = {'Origin': ORIGIN, 'Authorization': 'Bearer '+mint(metadata={'role': 'guard', 'callsign': 'G1'})}
+    response = client.post('/api/v2/guard/pair', headers=matching_guard, **request)
+    assert response.status_code == 200 and response.json() == {'guard': 'G1'}
+    assert 'set-cookie' not in response.headers
+    assert not service.guard_credentials
+    assert client.get('/api/v2/guard/session', headers=matching_guard).json() == {'guard': 'G1'}
+    assert client.get('/api/v2/guard/session').status_code == 403
+    assert client.post('/api/v2/guard/pair', headers=matching_guard, **request).status_code == 403
+    # Even a valid developer pairing cookie cannot authorize Clerk mode.
+    service.guard_credentials[digest('legacy')] = ('G1', time.monotonic()+60)
+    client.cookies.set(GUARD_COOKIE, 'legacy', path='/api/v2/guard')
+    assert client.get('/api/v2/guard/session').status_code == 403
+
+
+def test_guard_qr_missing_record_cannot_revoke_or_create_pair(clerk_app):
+    app, client, mint = clerk_app
+    service = app.state.classroom
+    service.guard_credentials['existing'] = ('G9', time.monotonic()+60)
+    response = client.post('/api/v2/guards/G9/pair', headers=headers(mint, 'admin'))
+    assert response.status_code == 404
+    assert 'existing' in service.guard_credentials
+    assert not service.guard_pairs
 
 
 def test_dev_login_logout_tamper_and_role_isolation(monkeypatch, tmp_path):
@@ -376,3 +419,19 @@ def test_dev_guard_websocket_uses_signed_cookie(monkeypatch, tmp_path):
             message = socket.receive()
             while message['type'] == 'websocket.send': message = socket.receive()
             assert message['code'] == 4401
+
+
+def test_clerk_guard_location_and_floor_are_scoped_to_authenticated_guard(clerk_app):
+    app, client, mint = clerk_app
+    service = app.state.classroom
+    own = service.store.add_guard('G1', 'Asha')
+    other = service.store.add_guard('G2', 'Other')
+    gps = dict(latitude=28.6, longitude=77.2, accuracy=10, capturedAt=time.time()*1000)
+    guard_headers = {'Origin': ORIGIN, 'Authorization': 'Bearer '+mint(metadata={'role': 'guard', 'callsign': 'G1'})}
+    assert client.post('/api/v2/guard/location', headers={'Origin': ORIGIN}, json=gps).status_code == 403
+    assert client.post('/api/v2/guard/location', headers=headers(mint, 'admin'), json=gps).status_code == 403
+    assert client.post('/api/v2/guard/location', headers=guard_headers, json=gps).json()['gps'] == gps
+    assert client.patch('/api/v2/guard/profile', headers=guard_headers, json={'floorName': 'Third'}).json()['floorName'] == 'Third'
+    assert service.store.guard(own['id'])['gps'] == gps
+    assert service.store.guard(other['id'])['gps'] is None
+    assert service.store.guard(other['id'])['floor_name'] is None

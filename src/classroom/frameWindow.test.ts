@@ -28,7 +28,8 @@ describe('bounded camera transport', () => {
     expect(flow.canSend(10, 0, 160000)).toBe(false)
     expect(flow.canSend(10, 0, 60000)).toBe(true)
     expect(flow.canSend(751, 0)).toBe(false)
-    expect(flow.timedOut(10002)).toBe(true)
+    expect(flow.timedOut(2500)).toBe(false)
+    expect(flow.timedOut(3002)).toBe(true)
   })
 
   it('ignores duplicate/old acknowledgements and starts clean on reconnect', () => {

@@ -1,0 +1,16 @@
+.gps-map { min-width: 0; width: 100%; }
+.gps-map iframe { display: block; width: 100%; height: clamp(250px, 42vh, 520px); border: 0; border-radius: 8px; background: #e8e8e8; }
+.gps-map-footer { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 12px 0; font-size: 13px; }
+.gps-map a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.gps-note { font-size: 12px; line-height: 1.5; opacity: .7; margin: 0; }
+.gps-empty { min-height: 240px; align-content: center; }
+.gps-empty p { margin: 0; max-width: 48ch; line-height: 1.6; }
+.gps-picker { display: flex; gap: 8px; flex-wrap: wrap; padding: 12px 0; }
+.gps-picker button { max-width: 100%; white-space: normal; }
+.gps-setup-cameras { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); gap: 20px; }
+.gps-camera-list { display: grid; gap: 12px; align-content: start; }
+.gps-camera-row { display: grid; gap: 10px; padding: 16px; border: 1px solid #ddd; border-radius: 10px; }
+.gps-camera-row h3, .gps-camera-row p { margin: 0; }
+.gps-camera-row.is-selected { border-color: #222; }
+.gd-map .gps-map-footer { font-size: 14px; }
+@media (max-width: 760px) { .gps-setup-cameras { grid-template-columns: 1fr; } .gps-map iframe { height: 280px; } }

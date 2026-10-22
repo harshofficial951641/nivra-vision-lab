@@ -1147,7 +1147,7 @@
 }
 .nv-publisher-video {
   aspect-ratio: 16/9;
-  background: #1c3025;
+  background: #000000;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
@@ -2500,3 +2500,79 @@
 .nv-access-panel { width: min(100%, 540px); padding: 32px; }
 .nv-access-panel img { filter: grayscale(1); object-fit: contain; }
 .nv-access-panel p { line-height: 1.6; }
+.nv-phone-setup { padding: 18px 20px; margin: 18px 0; border: 1px solid var(--line, #cbd5e1); border-radius: 8px; text-align: left; }
+.nv-phone-setup h2 { margin: 0 0 10px; font-size: 16px; }
+.nv-phone-setup ol { margin: 0; padding-left: 18px; display: grid; gap: 8px; font-size: 12px; line-height: 1.6; }
+
+.nv-publisher--simple main { max-width: 620px; padding-top: 4px; }
+.nv-publisher--simple .nv-publisher-brand { max-width: 660px; padding-bottom: 12px; }
+.nv-publisher--simple h1 { font-size: 26px; margin-top: 0; letter-spacing: -.5px; }
+.nv-publisher--simple .nv-publisher-video { max-height: 50dvh; margin: 18px 0; background: #09090b; border-radius: 4px; }
+.nv-camera-prompt { position: absolute; inset: 0; display: grid; place-content: center; padding: 32px; text-align: center; color: #fafafa; font-size: 14px; }
+.nv-detection-summary { margin: 12px 0 16px; }
+.nv-detection-summary > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.nv-publisher--simple .nv-detection-summary [role='status'], .nv-publisher--simple .nv-detection-summary [role='alert'] { margin: 0; font-size: 16px; color: #18181b; }
+.nv-detection-summary > div > span { color: #52525b; font-size: 12px; }
+.nv-detection-summary > p { margin-top: 4px; color: #52525b; font-size: 13px; }
+.nv-publisher--simple .nv-detection-summary[data-state='review'] [role='alert'] { color: #b42318; }
+.nv-publisher--simple .nv-detection-summary[data-state='limited'] [role='status'] { color: #795300; }
+.nv-camera-primary .nv-primary { width: 100%; min-height: 50px; justify-content: center; }
+.nv-camera-hint { margin: 10px 0 24px !important; font-size: 12px; color: #52525b; }
+.nv-camera-details { border-top: 1px solid #d4d4d8; padding: 16px 0; }
+.nv-camera-details > summary { cursor: pointer; font-size: 13px; font-weight: 600; }
+.nv-camera-details > summary:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }
+.nv-camera-details[open] > summary { margin-bottom: 14px; }
+.nv-camera-details section > p + p { margin-top: 8px; }
+.nv-camera-details .nv-lens-select { display: block; margin-bottom: 12px; }
+.nv-camera-details select { display: block; width: 100%; margin-top: 6px; }
+.nv-camera-details [role='status'] { margin: 8px 0; }
+.nv-camera-details a { text-decoration: underline; text-underline-offset: 3px; }
+.nv-camera-privacy { display: flex; gap: 7px; align-items: center; color: #52525b; font-size: 12px; margin-top: 16px !important; }
+.nv-camera-privacy > svg { width: 18px; height: 18px; }
+
+/* The camera phone is a viewfinder. Controls stay separate from the footage. */
+.nv-camera-fullscreen.nv-app { background: #000000; color: #ffffff; padding: 0; min-height: 100dvh; position: relative; isolation: isolate; }
+.nv-camera-fullscreen .nv-publisher-brand { position: relative; z-index: 2; max-width: none; padding: max(18px, env(safe-area-inset-top)) 24px 12px; margin: 0; color: #ffffff; }
+.nv-camera-fullscreen .nv-publisher-brand > span { color: #ffffff; margin-left: auto; }
+.nv-camera-fullscreen main { position: static; display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: none; min-height: calc(100dvh - 72px); padding: 10px 24px max(18px, env(safe-area-inset-bottom)); margin: 0; }
+.nv-camera-fullscreen main > * { position: relative; z-index: 1; }
+.nv-camera-fullscreen main > h1 { font-size: 26px; color: #ffffff; margin: 0; }
+.nv-camera-fullscreen main > .nv-muted { color: #dddddd; margin: 0; font-size: 13px; }
+.nv-camera-fullscreen main > .nv-publisher-video { position: absolute; z-index: -1; inset: 0; width: 100%; height: 100%; max-height: none; margin: 0; border: 0; border-radius: 0; background: #000000; aspect-ratio: auto !important; }
+.nv-camera-fullscreen .nv-publisher-video::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(#000000dd, transparent 32%, transparent 48%, #000000f5); }
+.nv-camera-fullscreen .nv-publisher-video video { width: 100%; height: 100%; object-fit: contain; }
+.nv-camera-fullscreen .nv-video-label { top: 130px; left: 24px; color: #000000; background: #ffffff; border-radius: 30px; padding: 7px 12px; font-size: 12px; }
+.nv-camera-fullscreen .nv-camera-prompt { color: #dddddd; font-size: 22px; }
+.nv-camera-fullscreen .nv-detection-summary { margin-top: auto; border: 0; background: #000000cc; color: #ffffff; padding: 12px 14px; border-radius: 14px; }
+.nv-camera-fullscreen .nv-detection-summary [role], .nv-camera-fullscreen .nv-detection-summary p, .nv-camera-fullscreen .nv-detection-summary span { color: #dddddd; }
+.nv-camera-fullscreen .nv-detection-summary[data-state='review'] { background: #000000; }
+.nv-camera-fullscreen .nv-detection-summary[data-state='review'] [role='alert'] { color: #ffffff; }
+.nv-camera-fullscreen .nv-camera-primary { margin: auto 0 0; justify-content: center; }
+.nv-camera-fullscreen .nv-detection-summary + .nv-camera-primary { margin-top: 0; }
+.nv-camera-fullscreen .nv-primary { background: #ffffff; color: #000000; border: 1px solid #ffffff; border-radius: 999px; width: min(420px,100%); min-height: 58px; font-size: 17px; font-weight: 650; }
+.nv-camera-fullscreen .nv-secondary { color: #ffffff; border-color: #bcbcbc; background: #000000; border-radius: 12px; }
+.nv-camera-fullscreen .nv-camera-hint, .nv-camera-fullscreen .nv-camera-privacy { color: #dddddd; text-align: center; font-size: 12px; margin: 0; }
+.nv-phone-options { align-self: center; width: min(480px,100%); }
+.nv-phone-options > summary { list-style: none; text-align: center; cursor: pointer; padding: 12px; color: #ffffff; text-decoration: underline; text-underline-offset: 4px; }
+.nv-phone-options > summary::-webkit-details-marker { display: none; }
+.nv-phone-options[open] { position: fixed; z-index: 6; bottom: 0; left: 50%; transform: translateX(-50%); background: #ffffff; color: #000000; border-radius: 24px 24px 0 0; max-height: 80dvh; width: min(620px,100%); overflow-y: auto; padding: 4px 22px max(24px,env(safe-area-inset-bottom)); box-shadow: 0 -20px 80px #0006; }
+.nv-phone-options[open] > summary { color: #000000; touch-action: none; text-decoration: none; }
+.nv-phone-options[open] > summary::before { content: ''; display: block; height: 4px; width: 40px; border-radius: 8px; background: #bcbcbc; margin: 6px auto 12px; }
+.nv-camera-fullscreen .nv-phone-options .nv-camera-details { color: #000000; border-color: #bcbcbc; }
+.nv-camera-fullscreen .nv-phone-options .nv-muted { color: #555555; }
+.nv-phone-options-body { padding-bottom: 8px; }
+.nv-camera-fullscreen .nv-close-options { margin: 0 0 14px auto; display: block; }
+.nv-camera-fullscreen button { transition: transform 140ms ease-out, background-color 140ms ease-out; }
+.nv-camera-fullscreen button:active:not(:disabled) { transform: scale(.97); }
+@media (min-width: 900px) { .nv-camera-fullscreen main { padding-left: 40px; padding-right: 40px; } .nv-camera-fullscreen .nv-detection-summary { align-self: center; width: min(520px,100%); } }
+@media (prefers-reduced-motion: reduce) { .nv-camera-fullscreen button { transition: none; } .nv-camera-fullscreen button:active:not(:disabled) { transform: none; } }
+.nv-camera-fullscreen .nv-publisher-brand > .nv-identity { margin-left: 0; }
+.nv-camera-fullscreen .nv-detection-summary[data-state='limited'] [role='status'] { color: #ffffff; }
+.nv-camera-fullscreen .nv-camera-hint { margin: 0 !important; }
+.nv-camera-fullscreen .nv-notice { background: #000000; color: #ffffff; border-color: #bcbcbc; }
+.nv-phone-options[open] .nv-phone-options-body { animation: nv-phone-options-reveal 180ms ease-out; }
+@keyframes nv-phone-options-reveal { from { opacity: .4; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .nv-phone-options[open] .nv-phone-options-body { animation: none; } }
+/* Keep connection state in the header, clear of names and floor labels. */
+.nv-camera-fullscreen .nv-publisher-brand .nv-video-label { position: static; margin-left: auto; background: #fff; color: #000; letter-spacing: 0; }
+.nv-camera-fullscreen .nv-publisher-brand .nv-identity--compact > img { width: 34px; height: 34px; }

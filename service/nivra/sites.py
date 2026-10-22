@@ -89,6 +89,13 @@ def reject_null(model, *fields):
         raise ValueError('This field cannot be null.')
 
 
+class GPS(Input):
+    latitude: float = Field(ge=-90, le=90)
+    longitude: float = Field(ge=-180, le=180)
+    accuracy: float = Field(ge=0, le=10000000)
+    capturedAt: float = Field(ge=0)
+
+
 class CameraPatch(Input):
     name: Name | None = None
     building: Name | None = None
@@ -96,6 +103,7 @@ class CameraPatch(Input):
     enabled: bool | None = None
     label: Name | None = None
     placement: Placement | None = None
+    gps: GPS | None = None
 
     @model_validator(mode='after')
     def required_values(self):
@@ -108,6 +116,7 @@ class GuardInput(Input):
     name: Name
     email: Email | None = None
     floorId: str | None = Field(default=None, min_length=1, max_length=100)
+    floorName: Name | None = None
     post: Post | None = None
 
 
@@ -116,6 +125,7 @@ class GuardPatch(Input):
     name: Name | None = None
     email: Email | None = None
     floorId: str | None = Field(default=None, min_length=1, max_length=100)
+    floorName: Name | None = None
     post: Post | None = None
     shift: Literal['on_shift', 'break', 'off'] | None = None
 
@@ -123,6 +133,10 @@ class GuardPatch(Input):
     def required_values(self):
         reject_null(self, 'callsign', 'name', 'shift')
         return self
+
+
+class GuardProfile(Input):
+    floorName: Name | None
 
 
 def camera_payload(camera):
@@ -145,7 +159,7 @@ def floor_payload(floor):
 
 def guard_payload(guard):
     return dict(id=guard['id'], callsign=guard['callsign'], name=guard['name'], userId=guard['user_id'],
-                email=guard['email'], floorId=guard['floor_id'],
+                email=guard['email'], floorId=guard['floor_id'], floorName=guard['floor_name'], gps=guard['gps'],
                 post=None if guard['post_x'] is None else dict(x=guard['post_x'], y=guard['post_y']),
                 shift=guard['shift'], presence=dict(online=False, lastSeen=None), push=False)
 
@@ -364,7 +378,7 @@ def create_router(classroom):
     @router.post('/guards', dependencies=admin, status_code=201)
     async def add_guard(data: GuardInput, request: Request):
         guard = store_call(store.add_guard, data.callsign, data.name, email=data.email,
-                           floor_id=data.floorId, post=data.post.model_dump() if data.post else None)
+                           floor_id=data.floorId, post=data.post.model_dump() if data.post else None, floor_name=data.floorName)
         await changed()
         try:
             await invite_guard(classroom, guard, origin=request.headers.get('origin'))
@@ -382,6 +396,7 @@ def create_router(classroom):
     async def patch_guard(guard_id: str, data: GuardPatch):
         changes = data.model_dump(exclude_unset=True)
         if 'floorId' in changes: changes['floor_id'] = changes.pop('floorId')
+        if 'floorName' in changes: changes['floor_name'] = changes.pop('floorName')
         old = store.guard(guard_id)
         guard = store_call(store.update_guard, guard_id, **changes)
         if old['callsign'] != guard['callsign']: await classroom.revoke_guard(guard=old['callsign'])

@@ -2,34 +2,35 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { SignIn } from '@clerk/clerk-react'
 import { useSession } from './context'
 import { roleLabel, type Role } from './session'
+import { Brand } from '../ui/Brand'
 import './auth.css'
 
 type Variant = 'reviewer' | 'guard'
 
 const copy = {
   reviewer: {
-    eyebrow: 'Command',
-    title: 'Reviewer sign-in',
-    lead: 'Watch the cameras, review incidents and alert guards.',
+    eyebrow: 'Your cameras',
+    title: 'Welcome back.',
+    lead: 'Sign in to watch cameras and help your team.',
     other: { href: '/guard', label: 'Are you a guard? Open the guard app' },
   },
   guard: {
     eyebrow: 'Guard',
-    title: 'Guard sign-in',
+    title: 'Ready for your shift?',
     lead: 'Sign in on your own phone to receive alerts during your shift.',
-    other: { href: '/login', label: 'Reviewer? Sign in to Command' },
+    other: { href: '/login', label: 'Watching the cameras? Sign in here' },
   },
 }
 
 const clerkAppearance = (dark: boolean) => ({
   variables: {
-    colorPrimary: dark ? '#fafafa' : '#09090b',
-    colorText: dark ? '#fafafa' : '#09090b',
-    colorTextOnPrimaryBackground: dark ? '#09090b' : '#ffffff',
-    colorBackground: dark ? '#18181b' : '#ffffff',
-    colorInputBackground: dark ? '#27272a' : '#ffffff',
-    colorInputText: dark ? '#fafafa' : '#09090b',
-    borderRadius: '8px',
+    colorPrimary: dark ? '#ffffff' : '#000000',
+    colorText: dark ? '#ffffff' : '#000000',
+    colorTextOnPrimaryBackground: dark ? '#000000' : '#ffffff',
+    colorBackground: dark ? '#000000' : '#ffffff',
+    colorInputBackground: dark ? '#000000' : '#ffffff',
+    colorInputText: dark ? '#ffffff' : '#000000',
+    borderRadius: '14px',
     fontFamily: "Inter, 'Segoe UI', system-ui, sans-serif",
   },
   elements: {
@@ -112,7 +113,7 @@ export function LoginPage({ variant }: { variant: Variant }) {
   return (
     <main className={`au-page ${dark ? 'au-page--dark' : ''}`}>
       <section className="au-panel" aria-labelledby="login-title">
-        <p className="au-brand">NIVRA</p>
+        <div className="au-brand"><Brand /></div>
         <p className="au-eyebrow">{text.eyebrow}</p>
         <h1 id="login-title">{text.title}</h1>
         <p className="au-lead">{text.lead}</p>
@@ -143,7 +144,7 @@ export function AccessMessage({
   return (
     <main className={`au-page ${dark ? 'au-page--dark' : ''}`}>
       <section className="au-panel" role="alert">
-        <p className="au-brand">NIVRA</p>
+        <div className="au-brand"><Brand /></div>
         <h1>{title}</h1>
         <div className="au-lead">{children}</div>
         {action}

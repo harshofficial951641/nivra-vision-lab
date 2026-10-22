@@ -312,7 +312,7 @@ def test_v4_migration_preserves_all_rows_and_reopens(tmp_path, version):
         db.row_factory = sqlite3.Row
         old = {table: [dict(row) for row in db.execute(f'SELECT * FROM {table}')] for table in ('events', 'cameras', 'event_audit')}
     store = Store(path)
-    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 4
+    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 7
     for table, rows in old.items():
         new = [dict(row) for row in store.db.execute(f'SELECT * FROM {table}')]
         assert len(new) == len(rows)

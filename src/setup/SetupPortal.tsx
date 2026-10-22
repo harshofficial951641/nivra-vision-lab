@@ -1,24 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react'
-import { QRCodeSVG } from 'qrcode.react'
-import { ArrowRight, Check, Copy, MapPin, Plus, Trash, UploadSimple, VideoCamera } from '@phosphor-icons/react'
+import { ArrowRight, Camera, Check, Plus, ShieldCheck } from '@phosphor-icons/react'
 import { api, type CameraLocation, type Incident } from '../classroom/contracts'
 import { useClassroom } from '../classroom/useClassroom'
 import { useSession } from '../auth/context'
 import { roleLabel, type Role } from '../auth/session'
-import { liveCameras, liveGuards, stageOf, type WallCamera } from '../command/model'
+import { liveCameras, stageOf, type WallCamera } from '../command/model'
 import { mapFloor } from '../command/siteMap'
-import type { FloorRecord, GuardRecord, MapFloor, Placement } from '../command/types'
-import { PlanEditor, type CameraGeometry } from './PlanEditor'
+import type { GuardRecord } from '../command/types'
+import { GoogleMap } from '../location/GoogleMap'
 import '../command/command.css'
 import './setup.css'
+import { PairingPanel } from './PairingPanel'
+import { Brand } from '../ui/Brand'
 
-type StepId = 'site' | 'floors' | 'cameras' | 'guards' | 'test'
+type StepId = 'site' | 'cameras' | 'guards' | 'test'
 const STEPS: { id: StepId; title: string; lead: string }[] = [
   { id: 'site', title: 'Site', lead: 'Name the place NIVRA protects.' },
-  { id: 'floors', title: 'Floors and plans', lead: 'Add each floor and upload its floor plan image.' },
-  { id: 'cameras', title: 'Cameras', lead: 'Pair each phone, then drag it to where it is mounted and turn its view cone.' },
-  { id: 'guards', title: 'Guards', lead: 'Invite guards and reviewers, then drag each guard to their post.' },
-  { id: 'test', title: 'Test alert', lead: 'Send a labelled test incident and ring a guard’s phone end to end.' },
+  { id: 'cameras', title: 'Cameras', lead: 'Add a camera, then scan its QR with your phone.' },
+  { id: 'guards', title: 'Guards', lead: 'Add your team now, or do it later.' },
+  { id: 'test', title: 'Test alert', lead: 'Check that an alert reaches a guard.' },
 ]
 interface Member {
   userId: string
@@ -29,9 +29,9 @@ interface Member {
   lastActiveAt: number | null
 }
 
-const stepFromHash = (): StepId => {
+const stepFromHash = (named = false): StepId => {
   const value = location.hash.slice(1)
-  return (STEPS.find((s) => s.id === value)?.id ?? 'site') as StepId
+  return (STEPS.find((s) => s.id === value)?.id ?? (value === 'launch' ? 'test' : named ? 'cameras' : 'site')) as StepId
 }
 const messageOf = (reason: unknown) => (reason instanceof Error ? reason.message : 'Something went wrong. Try again.')
 
@@ -51,14 +51,23 @@ export default function SetupPortal() {
   const session = useSession()
   const live = useClassroom(true, undefined, true)
   const snapshot = live.snapshot
-  const [step, setStep] = useState<StepId>(stepFromHash)
+  const [step, setStep] = useState<StepId>(() => stepFromHash(!!snapshot?.site?.name))
+  const choseSection = useRef(!!location.hash)
+  useEffect(() => { if (!choseSection.current && snapshot?.site?.name) setStep('cameras') }, [snapshot?.site?.name])
+  const heading = useRef<HTMLHeadingElement>(null)
+  useEffect(() => { heading.current?.focus({ preventScroll: true }) }, [step])
   const { toast, ok, fail } = useToast()
   useEffect(() => {
-    const onHash = () => setStep(stepFromHash())
+    const onHash = () => {
+      if (location.hash === '#st-main') return
+      choseSection.current = !!location.hash
+      setStep(stepFromHash(!!live.snapshot?.site?.name))
+    }
     window.addEventListener('hashchange', onHash)
     return () => window.removeEventListener('hashchange', onHash)
-  }, [])
+  }, [live.snapshot?.site?.name])
   const go = (id: StepId) => {
+    choseSection.current = true
     history.replaceState(null, '', `#${id}`)
     setStep(id)
     window.scrollTo({ top: 0 })
@@ -70,53 +79,22 @@ export default function SetupPortal() {
   const cameraRecords = useMemo(() => snapshot?.cameras ?? [], [snapshot?.cameras])
   const cameras = useMemo(() => liveCameras(cameraRecords, floorMap, live.previews, {}), [cameraRecords, floorMap, live.previews])
   const guardRecords = useMemo(() => snapshot?.guards ?? [], [snapshot?.guards])
-  const guards = useMemo(() => liveGuards(guardRecords, floorMap), [guardRecords, floorMap])
   const events = useMemo(() => snapshot?.events ?? [], [snapshot?.events])
   const siteName = snapshot?.site?.name ?? ''
 
-  const done: Record<StepId, boolean> = {
-    site: Boolean(siteName),
-    floors: floors.some((f) => f.sample || f.planUrl),
-    cameras: cameras.some((c) => c.slot),
-    guards: guards.some((g) => g.x != null),
-    test: events.some((e) => e.model === 'test' && (e.guard_ack_at || e.on_scene_at)),
-  }
-  const ready = Math.round((Object.values(done).filter(Boolean).length / STEPS.length) * 100)
   const index = STEPS.findIndex((s) => s.id === step)
   const current = STEPS[index]
-  const stepSummary: Record<StepId, string> = {
-    site: siteName || 'Not named yet',
-    floors: floors.length ? `${floors.length} floor${floors.length === 1 ? '' : 's'}` : 'No floors yet',
-    cameras: `${cameras.filter((c) => c.slot).length} of ${cameras.length} placed`,
-    guards: guards.length ? `${guards.length} guard${guards.length === 1 ? '' : 's'}` : 'Invite and set posts',
-    test: done.test ? 'Guard phone rang' : 'Ring a guard phone',
-  }
+
 
   return (
-    <div className="st-app">
+    <div className="st-app st-simple">
       <a className="cm-skip" href="#st-main">
         Skip to setup
       </a>
       <header className="st-top">
-        <a className="st-brand" href="/wall">
-          NIVRA
-        </a>
-        <span className="st-title">Set up {siteName || 'your site'}</span>
-        {session.mode === 'dev' && <span className="cm-pill cm-pill--amber">Developer sign-in</span>}
-        {live.connection !== 'connected' && (
-          <span className="cm-pill cm-pill--amber" role="status">
-            {live.connection === 'connecting' ? 'Connecting…' : 'Disconnected'}
-          </span>
-        )}
-        <span className="st-user">
-          {session.me?.name ?? session.me?.email} · {roleLabel(session.me?.role ?? 'admin')}
-        </span>
-        <a className="cm-btn" href="/wall">
-          Open Command
-        </a>
-        <button type="button" className="cm-btn cm-btn--quiet" onClick={() => void session.signOut()}>
-          Sign out
-        </button>
+        <a className="st-brand" href="/mobile" aria-label="NIVRA home"><Brand /></a>
+        <span className="st-title">{siteName || 'Your place'}</span>
+        <a className="st-wall-link" href="/wall">Watch cameras <ArrowRight aria-hidden /></a>
       </header>
       {live.error && (
         <p className="cm-banner cm-banner--warn" role="alert">
@@ -126,40 +104,13 @@ export default function SetupPortal() {
 
       <div className="st-body">
         <nav className="st-rail" aria-label="Setup steps">
-          <ol>
-            {STEPS.map((s, i) => (
-              <li key={s.id}>
-                <button
-                  type="button"
-                  className={`${s.id === step ? 'is-current' : ''} ${done[s.id] ? 'is-done' : ''}`}
-                  aria-current={s.id === step ? 'step' : undefined}
-                  onClick={() => go(s.id)}
-                >
-                  <span className="st-num" aria-hidden>
-                    {done[s.id] && s.id !== step ? <Check weight="bold" /> : i + 1}
-                  </span>
-                  <span>
-                    <strong>{s.title}</strong>
-                    <small>{stepSummary[s.id]}</small>
-                  </span>
-                  {done[s.id] && <span className="cm-sr-only">(done)</span>}
-                </button>
-              </li>
-            ))}
-          </ol>
-          <div className="st-progress">
-            <span>{ready}% ready</span>
-            <div aria-hidden>
-              <i style={{ width: `${ready}%` }} />
-            </div>
-          </div>
+          <button type="button" className={step === 'cameras' ? 'is-current' : ''} aria-current={step === 'cameras' ? 'page' : undefined} onClick={() => go('cameras')}>Cameras</button>
+          <details className="st-more-sections" open={step !== 'cameras' || undefined}><summary>More options</summary><ol>{STEPS.filter(s => s.id !== 'cameras').map(s => <li key={s.id}><button type="button" className={s.id === step ? 'is-current' : ''} aria-current={s.id === step ? 'page' : undefined} onClick={() => go(s.id)}>{s.id === 'guards' ? 'Guards (optional)' : s.title}</button></li>)}</ol></details>
         </nav>
 
         <main id="st-main" className="st-main">
-          <header className="st-head">
-            <h1>
-              {index + 1} · {current.title}
-            </h1>
+          <header className="st-head" key={step}>
+            <h1 ref={heading} tabIndex={-1}>{current.title}</h1>
             <p className="cm-muted">{current.lead}</p>
           </header>
           {!snapshot ? (
@@ -167,30 +118,16 @@ export default function SetupPortal() {
               {live.connection === 'connected' ? 'Loading site…' : 'Connecting to the NIVRA service…'}
             </p>
           ) : step === 'site' ? (
-            <SiteStep name={siteName} ok={ok} fail={fail} mode={session.mode} />
-          ) : step === 'floors' ? (
-            <FloorsStep floors={floorRecords} siteName={siteName} ok={ok} fail={fail} />
+            <SiteStep name={siteName} ok={ok} fail={fail} mode={session.mode} privateWorkspace={!!session.me?.workspace} />
+
           ) : step === 'cameras' ? (
-            <CamerasStep floors={floors} cameras={cameras} records={cameraRecords} guards={guards} siteName={siteName} ok={ok} fail={fail} />
+            <CamerasStep cameras={cameras} records={cameraRecords} siteName={siteName} ok={ok} fail={fail} />
           ) : step === 'guards' ? (
-            <GuardsStep floors={floors} guards={guards} records={guardRecords} cameras={cameras} ok={ok} fail={fail} />
+            <GuardsStep records={guardRecords} ok={ok} fail={fail} />
           ) : (
             <TestStep cameras={cameras} events={events} guards={guardRecords} ok={ok} fail={fail} />
           )}
-          <footer className="st-foot">
-            <button type="button" className="cm-btn" disabled={index === 0} onClick={() => go(STEPS[index - 1].id)}>
-              Back
-            </button>
-            {index < STEPS.length - 1 ? (
-              <button type="button" className="cm-btn cm-btn--dark" onClick={() => go(STEPS[index + 1].id)}>
-                Continue to {STEPS[index + 1].title} <ArrowRight aria-hidden />
-              </button>
-            ) : (
-              <a className="cm-btn cm-btn--dark" href="/wall">
-                Finish and open Command <ArrowRight aria-hidden />
-              </a>
-            )}
-          </footer>
+
         </main>
       </div>
       {toast && (
@@ -218,7 +155,7 @@ function Card({ title, children, actions }: { title: string; children: ReactNode
 
 /* ---------------- 1 · Site ---------------- */
 
-function SiteStep({ name, ok, fail, mode }: Notify & { name: string; mode: 'clerk' | 'dev' }) {
+function SiteStep({ name, ok, fail, mode, privateWorkspace }: Notify & { name: string; mode: 'clerk' | 'dev'; privateWorkspace: boolean }) {
   const [value, setValue] = useState(name)
   const [busy, setBusy] = useState(false)
   const save = async (event: FormEvent) => {
@@ -246,9 +183,13 @@ function SiteStep({ name, ok, fail, mode }: Notify & { name: string; mode: 'cler
           </button>
         </form>
       </Card>
-      <Card title="Sign-in">
+      <details className="st-maintenance"><summary>Owner access & sign-in</summary><Card title="Sign-in">
         {mode === 'clerk' ? (
-          <p>Reviewers sign in at <code>/login</code>, guards at <code>/guard</code>. Invite people in step 4.</p>
+          <p>Reviewers sign in at <code>/login</code>, guards at <code>/guard</code>. Invite people in Guards.</p>
+        ) : privateWorkspace ? (
+          <p>Your private workspace is saved in this browser. Pair each phone with its own QR. Owner verification can be added later.</p>
+        ) : import.meta.env.VITE_NIVRA_DIRECT_SOCKET_RELAY === '1' ? (
+          <p>This site uses private owner links and device QR codes. Create owner access on the NIVRA computer. Pair each camera and guard phone with its own QR.</p>
         ) : (
           <p>
             <strong>Developer sign-in is on</strong> because Clerk keys are not set. Anyone who can open this computer’s address can pick a
@@ -256,706 +197,206 @@ function SiteStep({ name, ok, fail, mode }: Notify & { name: string; mode: 'cler
             deployment.
           </p>
         )}
-      </Card>
+      </Card></details>
     </div>
   )
 }
 
-/* ---------------- 2 · Floors ---------------- */
-
-function FloorsStep({ floors, siteName, ok, fail }: Notify & { floors: FloorRecord[]; siteName: string }) {
-  const [name, setName] = useState('')
-  const [busy, setBusy] = useState<string | null>(null)
-  const add = async (event: FormEvent) => {
-    event.preventDefault()
-    setBusy('add')
-    try {
-      await api('/floors', 'POST', { name: name.trim() })
-      setName('')
-      ok('Floor added. Upload its plan next.')
-    } catch (reason) {
-      fail(reason)
-    } finally {
-      setBusy(null)
-    }
-  }
-  return (
-    <div className="st-floors">
-      {floors.map((floor) => (
-        <FloorCard key={floor.id} floor={floor} siteName={siteName} ok={ok} fail={fail} />
-      ))}
-      <form className="st-card st-add" onSubmit={(e) => void add(e)}>
-        <h2>Add a floor</h2>
-        <label className="st-form">
-          <span>Floor name</span>
-          <input value={name} maxLength={60} placeholder={floors.length ? `Floor ${floors.length + 1}` : 'Ground floor'} onChange={(e) => setName(e.target.value)} required />
-        </label>
-        <button className="cm-btn cm-btn--dark" disabled={busy === 'add' || !name.trim()}>
-          <Plus aria-hidden /> Add floor
-        </button>
-      </form>
-    </div>
-  )
-}
-
-function FloorCard({ floor, ok, fail }: Notify & { floor: FloorRecord; siteName: string }) {
-  const map = mapFloor(floor)
-  const widthMeters = floor.metersPerUnit && floor.plan ? Math.round(floor.metersPerUnit * floor.plan.width) : ''
-  const [name, setName] = useState(floor.name)
-  const [width, setWidth] = useState(String(widthMeters))
+function CamerasStep({ cameras, records, siteName, ok, fail }: Notify & { cameras: WallCamera[]; records: CameraLocation[]; siteName: string }) {
+  const [locationId, setLocationId] = useState<string | null>(null)
+  const [pairing, setPairing] = useState<CameraLocation | null>(null)
+  const [created, setCreated] = useState<CameraLocation | null>(null)
   const [busy, setBusy] = useState(false)
-  const run = async (action: () => Promise<unknown>, message: string) => {
+  const [removed, setRemoved] = useState<Set<string>>(() => new Set())
+  const observedIds = useRef(new Set(records.map(record => record.id)))
+  useEffect(() => {
+    if (created && records.some(record => record.id === created.id)) setCreated(null)
+    if (pairing && ((observedIds.current.has(pairing.id) && !records.some(record => record.id === pairing.id)) || records.some(record => record.id === pairing.id && !record.enabled))) {
+      setPairing(null)
+      fail(new Error('This camera was removed or paused. Choose another camera or add one below.'))
+    }
+    observedIds.current = new Set(records.map(record => record.id))
+  }, [records, created, pairing, fail])
+  const listed = records.filter(record => !removed.has(record.id))
+  if (created && !removed.has(created.id) && !listed.some(record => record.id === created.id)) listed.push(created)
+  const add = async () => {
+    if (busy) return
+    let number = 1
+    const names = new Set(listed.map(record => record.name.toLowerCase()))
+    while (names.has(`camera ${number}`)) number++
     setBusy(true)
     try {
-      await action()
-      ok(message)
-    } catch (reason) {
-      fail(reason)
-    } finally {
-      setBusy(false)
-    }
+      const result = await api<CameraLocation>('/cameras', 'POST', { name: `Camera ${number}`, building: siteName || 'NIVRA', floor: 'Not set' })
+      setCreated(result)
+      setPairing(result)
+    } catch (reason) { fail(reason) } finally { setBusy(false) }
   }
-  const upload = (file: File | undefined) => {
-    if (!file) return
-    if (!/^image\/(png|jpeg|webp)$/.test(file.type)) return fail(new Error('Use a PNG, JPEG or WebP image.'))
-    if (file.size > 8 * 1024 * 1024) return fail(new Error('Floor plans must be 8 MB or smaller.'))
-    const form = new FormData()
-    form.append('file', file)
-    void run(() => api(`/floors/${floor.id}/plan`, 'PUT', form), 'Floor plan uploaded.')
-  }
-  const saveDetails = (event: FormEvent) => {
-    event.preventDefault()
-    const meters = Number(width)
-    const metersPerUnit = floor.plan && meters > 0 ? meters / floor.plan.width : null
-    void run(() => api(`/floors/${floor.id}`, 'PATCH', { name: name.trim(), order: floor.order, metersPerUnit }), 'Floor saved.')
-  }
-  return (
-    <section className="st-card st-floor">
-      <div className="st-floor-preview">
-        {floor.plan || floor.sample ? (
-          <FloorThumb floor={map} />
-        ) : (
-          <label className="st-drop">
-            <UploadSimple aria-hidden />
-            <span>Upload a floor plan</span>
-            <small>PNG, JPEG or WebP · up to 8 MB</small>
-            <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => upload(e.target.files?.[0])} />
-          </label>
-        )}
-      </div>
-      <form className="st-form" onSubmit={saveDetails}>
-        <label>
-          <span>Name</span>
-          <input value={name} maxLength={60} required onChange={(e) => setName(e.target.value)} />
-        </label>
-        <label>
-          <span>Floor width in metres (for walking distances)</span>
-          <input
-            type="number"
-            min={5}
-            max={2000}
-            step={1}
-            inputMode="numeric"
-            value={width}
-            disabled={!floor.plan || floor.sample}
-            placeholder={floor.sample ? '96 (sample)' : floor.plan ? 'e.g. 80' : 'Upload a plan first'}
-            onChange={(e) => setWidth(e.target.value)}
-          />
-        </label>
-        <div className="cm-row">
-          <button className="cm-btn cm-btn--dark" disabled={busy}>
-            Save
-          </button>
-          {(floor.plan || floor.sample) && (
-            <label className="cm-btn st-file">
-              <UploadSimple aria-hidden /> Replace plan
-              <input type="file" accept="image/png,image/jpeg,image/webp" onChange={(e) => upload(e.target.files?.[0])} />
-            </label>
-          )}
-          {!floor.sample && (
-            <button type="button" className="cm-btn" disabled={busy} onClick={() => void run(() => api(`/floors/${floor.id}/sample`, 'POST'), 'Using the sample mall plan.')}>
-              Use sample mall
-            </button>
-          )}
-          <button
-            type="button"
-            className="cm-btn st-danger"
-            disabled={busy}
-            onClick={() => {
-              if (confirm(`Delete ${floor.name}? Cameras and guard posts on it become unplaced.`))
-                void run(() => api(`/floors/${floor.id}`, 'DELETE'), 'Floor deleted.')
-            }}
-          >
-            <Trash aria-hidden /> Delete
-          </button>
-        </div>
-      </form>
-    </section>
-  )
-}
-
-function FloorThumb({ floor }: { floor: MapFloor }) {
-  return (
-    <div className="st-thumb">
-      {floor.sample || !floor.planUrl ? (
-        <svg viewBox={`0 0 ${floor.width} ${floor.height}`} aria-hidden>
-          <rect width={floor.width} height={floor.height} fill="#f4f4f5" />
-          <text x={floor.width / 2} y={floor.height / 2} textAnchor="middle" fontSize={floor.width / 18} fill="#52525b">
-            Sample mall plan
-          </text>
-        </svg>
-      ) : (
-        <img src={floor.planUrl} alt={`${floor.name} floor plan`} />
-      )}
-    </div>
-  )
-}
-
-/* ---------------- 3 · Cameras ---------------- */
-
-function FloorTabs({ floors, value, onChange }: { floors: MapFloor[]; value: string | null; onChange: (id: string) => void }) {
-  if (floors.length < 2) return null
-  return (
-    <div className="cm-floor-tabs" role="tablist" aria-label="Floors">
-      {floors.map((floor) => (
-        <button key={floor.id} type="button" role="tab" aria-selected={floor.id === value} className={floor.id === value ? 'is-on' : ''} onClick={() => onChange(floor.id)}>
-          {floor.name}
-        </button>
-      ))}
-    </div>
-  )
-}
-
-function PairingPanel({ camera, onClose, fail }: { camera: CameraLocation; onClose: () => void; fail: (reason: unknown) => void }) {
-  const [link, setLink] = useState<{ url: string; remoteReady: boolean; expires: number } | null>(null)
-  const [now, setNow] = useState(() => Date.now())
-  const [copied, setCopied] = useState(false)
-  const failRef = useRef(fail)
-  useEffect(() => {
-    failRef.current = fail
-  })
-  // One code per camera; a new one only when the admin asks (pairing again revokes the old phone).
-  const create = useCallback(async () => {
+  const toggle = async (record: CameraLocation) => {
+    if (busy) return
+    setBusy(true)
     try {
-      const result = await api<{ url: string; remoteReady: boolean; expiresInSeconds: number }>(`/cameras/${camera.id}/pair`, 'POST')
-      setLink({ url: result.url, remoteReady: result.remoteReady, expires: Date.now() + result.expiresInSeconds * 1000 })
-      setCopied(false)
-    } catch (reason) {
-      failRef.current(reason)
-    }
-  }, [camera.id])
-  useEffect(() => {
-    void create()
-  }, [create])
-  useEffect(() => {
-    const timer = window.setInterval(() => setNow(Date.now()), 1000)
-    return () => clearInterval(timer)
-  }, [])
-  const seconds = link ? Math.max(0, Math.ceil((link.expires - now) / 1000)) : 0
-  return (
-    <div className="st-pair">
-      <header>
-        <strong>Pair a phone as {camera.label ?? camera.name}</strong>
-        <button type="button" className="cm-link" onClick={onClose}>
-          Close
-        </button>
-      </header>
-      {link && seconds > 0 ? (
-        <div className="st-pair-body">
-          <QRCodeSVG value={link.url} size={148} marginSize={2} title={`Pairing code for ${camera.name}`} />
-          <div>
-            <p>Scan with the phone’s camera, open the link, allow camera access and tap Start camera.</p>
-            <p className="cm-muted">
-              Expires in {Math.floor(seconds / 60)}:{String(seconds % 60).padStart(2, '0')} · one phone only
-            </p>
-            {!link.remoteReady && location.protocol !== 'https:' && (
-              <p className="cm-warn">Phones need HTTPS to open the camera. Use the showcase HTTPS address (see docs/mac-showcase.md).</p>
-            )}
-            <code className="st-link">{link.url}</code>
-            <button type="button" className="cm-btn" onClick={() => void navigator.clipboard?.writeText(link.url).then(() => setCopied(true))}>
-              <Copy aria-hidden /> {copied ? 'Copied' : 'Copy link'}
-            </button>
-          </div>
-        </div>
-      ) : (
-        <div className="st-pair-body">
-          <p className="cm-muted">{link ? 'This code expired.' : 'Creating a pairing code…'}</p>
-          {link && (
-            <button type="button" className="cm-btn cm-btn--dark" onClick={() => void create()}>
-              New code
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function placementFor(camera: WallCamera, floor: MapFloor, patch: Partial<CameraGeometry> = {}): Placement | null {
-  if (!camera.slot) return null
-  return {
-    floorId: floor.id,
-    x: (patch.x ?? camera.slot.x) / floor.width,
-    y: (patch.y ?? camera.slot.y) / floor.height,
-    angle: patch.angle ?? camera.slot.angle,
-    fov: camera.slot.fov,
-    range: camera.slot.range / floor.width,
+      await api(`/cameras/${record.id}`, 'PATCH', { enabled: !record.enabled })
+      ok(record.enabled ? 'Camera paused.' : 'Camera is on. Connect its phone to start.')
+    } catch (reason) { fail(reason) } finally { setBusy(false) }
   }
-}
-
-function CamerasStep({
-  floors,
-  cameras,
-  records,
-  guards,
-  siteName,
-  ok,
-  fail,
-}: Notify & { floors: MapFloor[]; cameras: WallCamera[]; records: CameraLocation[]; guards: ReturnType<typeof liveGuards>; siteName: string }) {
-  const [floorId, setFloorId] = useState<string | null>(null)
-  const floor = floors.find((f) => f.id === floorId) ?? floors[0] ?? null
-  const [selected, setSelected] = useState<string | null>(null)
-  const [placing, setPlacing] = useState<string | null>(null)
-  const [pairing, setPairing] = useState<string | null>(null)
-  const [preview, setPreview] = useState<Record<string, Partial<CameraGeometry>>>({})
-  const [newName, setNewName] = useState('')
-  useEffect(() => setPreview({}), [records])
-
-  const shown = cameras.map((camera) =>
-    camera.slot && preview[camera.id] ? { ...camera, slot: { ...camera.slot, ...preview[camera.id] } } : camera,
-  )
-  const camera = shown.find((c) => c.id === selected) ?? null
-  const record = records.find((r) => r.id === selected) ?? null
-
-  const patch = async (id: string, body: Record<string, unknown>, message?: string) => {
+  const remove = async (record: CameraLocation) => {
+    if (busy || !window.confirm(`Remove ${record.name}? Its phone will disconnect.`)) return
+    setBusy(true)
     try {
-      await api(`/cameras/${id}`, 'PATCH', body)
-      if (message) ok(message)
-    } catch (reason) {
-      setPreview({})
-      fail(reason)
-    }
+      await api(`/cameras/${record.id}`, 'DELETE')
+      setRemoved(previous => new Set(previous).add(record.id))
+      if (created?.id === record.id) setCreated(null)
+      if (locationId === record.id) setLocationId(null)
+      ok(`${record.name} removed.`)
+    } catch (reason) { fail(reason) }
+    finally { setBusy(false) }
   }
-  const commit = (id: string, geometry: Partial<CameraGeometry>) => {
-    const target = shown.find((c) => c.id === id)
-    if (!target || !floor) return
-    setPreview((old) => ({ ...old, [id]: { ...old[id], ...geometry } }))
-    const placement = placementFor(target, floor, geometry)
-    if (placement) void patch(id, { placement })
-  }
-  const place = (id: string, point: { x: number; y: number }) => {
-    if (!floor) return
-    setPlacing(null)
-    setSelected(id)
-    void patch(id, { placement: { floorId: floor.id, x: point.x / floor.width, y: point.y / floor.height, angle: 90, fov: 70, range: 0.15 } }, 'Camera placed. Drag the round handle to turn it.')
-  }
-  const addCamera = async (event: FormEvent) => {
-    event.preventDefault()
-    try {
-      const created = await api<CameraLocation>('/cameras', 'POST', { name: newName.trim(), building: siteName || 'Site', floor: floor?.name ?? 'Floor' })
-      setNewName('')
-      setPairing(created.id)
-      ok(`${created.label ?? created.name} added. Scan the code with the phone.`)
-    } catch (reason) {
-      fail(reason)
-    }
-  }
-  const unplaced = shown.filter((c) => !c.slot)
-  const meters = floor?.metersPerUnit ?? null
-  const rangeValue = camera?.slot && floor ? (meters ? Math.round(camera.slot.range * meters) : Math.round((camera.slot.range / floor.width) * 100)) : 0
-
-  return (
-    <div className="st-cams">
-      <div className="st-cams-side">
-        <Card title="Camera phones" actions={<span className="cm-muted">{cameras.filter((c) => c.status === 'live').length} live</span>}>
-          {!cameras.length && <p className="cm-muted">No cameras yet. Add one below, then scan its code with a phone.</p>}
-          <ul className="st-list">
-            {shown.map((c) => (
-              <li key={c.id} className={c.id === selected ? 'is-selected' : ''}>
-                <button type="button" className="st-list-main" onClick={() => setSelected(c.id)}>
-                  <span className="st-mini">{c.image ? <img src={c.image} alt="" /> : <VideoCamera aria-hidden />}</span>
-                  <span>
-                    <strong>
-                      {c.label} {c.name}
-                    </strong>
-                    <small>
-                      <i className={`st-dot is-${c.status}`} aria-hidden /> {c.slot ? 'Placed' : 'Not placed'} ·{' '}
-                      {c.status === 'live' ? 'Live' : c.status === 'connecting' ? 'Connecting' : c.status === 'paused' ? 'Paused' : 'Not connected'}
-                    </small>
-                  </span>
-                </button>
-                {!c.slot && floor && (
-                  <button type="button" className="cm-btn cm-btn--dark cm-btn--quiet" aria-pressed={placing === c.id} onClick={() => setPlacing(placing === c.id ? null : c.id)}>
-                    {placing === c.id ? 'Cancel' : 'Place on map'}
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
-          <form className="st-inline" onSubmit={(e) => void addCamera(e)}>
-            <label>
-              <span className="cm-sr-only">New camera name</span>
-              <input value={newName} maxLength={50} required placeholder="Camera name, e.g. Atrium East" onChange={(e) => setNewName(e.target.value)} />
-            </label>
-            <button className="cm-btn" disabled={!newName.trim()}>
-              <Plus aria-hidden /> Add camera
-            </button>
-          </form>
-        </Card>
-        {pairing && records.find((r) => r.id === pairing) && (
-          <PairingPanel camera={records.find((r) => r.id === pairing)!} onClose={() => setPairing(null)} fail={fail} />
-        )}
-      </div>
-
-      <div className="st-cams-main">
-        {!floor ? (
-          <div className="cm-empty-map">
-            <strong>Add a floor first</strong>
-            <span className="cm-muted">Cameras are placed on a floor plan.</span>
-            <a className="cm-btn cm-btn--dark" href="#floors">
-              Go to Floors
-            </a>
+  if (pairing) return <section className="st-connect-view" aria-label="Connect camera phone">
+    {!['Not set', 'GPS location'].includes(pairing.floor) && <p className="st-device-place">{pairing.floor}</p>}
+    <PairingPanel key={pairing.id} endpoint={`/cameras/${pairing.id}/pair`} label={pairing.name} kind="camera" paired={records.find(record => record.id === pairing.id)?.paired ?? pairing.paired ?? false} connected={records.some(record => record.id === pairing.id && record.feed === 'live' && record.generation !== pairing.generation)} onClose={() => setPairing(null)} fail={fail} /><a className="cm-btn cm-btn--dark st-pair-done" href="/wall">Done, watch cameras <ArrowRight aria-hidden /></a>
+  </section>
+  return <section className="st-devices" aria-label="Your cameras">
+    {!listed.length && <div className="st-camera-empty"><span className="st-device-icon"><Camera aria-hidden size={30} /></span><h2>Use your phone as a camera.</h2><p className="cm-muted">No app to install. Keep NIVRA open in your phone's browser.</p></div>}
+    <button type="button" className="cm-btn cm-btn--dark st-add-trigger" disabled={busy} onClick={() => void add()}><Plus aria-hidden /> {busy ? 'Getting ready…' : 'Add camera'}</button>
+    <div className="st-device-list">
+      {listed.map(record => {
+        const camera = cameras.find(item => item.id === record.id)
+        const floor = ['GPS location', 'Not set'].includes(record.floor) ? 'Floor not set' : record.floor
+        const state = !record.enabled ? 'Paused' : record.feed === 'live' ? 'Live camera' : record.paired ? 'Phone linked' : camera?.status === 'offline' ? 'Phone offline' : 'Waiting for phone'
+        return <article className="st-device-row" key={record.id}>
+          <div className="st-device-heading"><span className="st-device-icon"><Camera aria-hidden size={24} /></span><div><h2>{record.name}</h2><p>{floor} · {state}</p></div>
+            {record.enabled && record.feed === 'live' ? <a className="cm-btn" href="/wall">Watch</a> : record.enabled ? <button type="button" className="cm-btn" disabled={busy} onClick={() => setPairing(record)}>Connect phone</button>
+              : <button type="button" className="cm-btn" disabled={busy} onClick={() => void toggle(record)}>Turn on camera</button>}
+            <button type="button" className="cm-btn st-remove-camera" disabled={busy} aria-label={`Remove ${record.name}`} onClick={() => void remove(record)}>Remove</button>
           </div>
-        ) : (
-          <section className="st-card st-editor-card">
-            <header>
-              <h2>{floor.name}</h2>
-              <FloorTabs floors={floors} value={floor.id} onChange={(id) => { setFloorId(id); setSelected(null) }} />
-            </header>
-            <PlanEditor
-              floor={floor}
-              cameras={shown}
-              guards={guards}
-              mode="camera"
-              selected={selected}
-              placing={placing}
-              onSelect={setSelected}
-              onPreview={(id, g) => setPreview((old) => ({ ...old, [id]: { ...old[id], ...g } }))}
-              onCommit={commit}
-              onPlace={place}
-              label={`${floor.name} camera layout`}
-            />
-            <p className="st-hint" aria-live="polite">
-              {placing
-                ? `Click where ${shown.find((c) => c.id === placing)?.label ?? 'the camera'} is mounted.`
-                : unplaced.length
-                  ? `Drag to move · drag the round handle to turn · ${unplaced.length} camera${unplaced.length === 1 ? '' : 's'} not placed`
-                  : 'Drag to move · drag the round handle to turn · arrow keys and [ ] also work'}
-            </p>
-          </section>
-        )}
-      </div>
-
-      {camera && record && floor && (
-        <aside className="st-inspector" aria-label={`${camera.label} settings`}>
-          <h2>
-            {camera.label} · {camera.name}
-          </h2>
-          <p className="cm-muted">
-            <i className={`st-dot is-${camera.status}`} aria-hidden /> {camera.status === 'live' ? 'Live' : 'Not streaming'}
-            {record.compute ? ` · analysis on ${record.compute === 'device' ? 'the phone' : 'this computer'}` : ''}
-          </p>
-          <form
-            className="st-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              const value = new FormData(e.currentTarget).get('name')
-              if (typeof value === 'string' && value.trim()) void patch(camera.id, { name: value.trim() }, 'Name saved.')
-            }}
-          >
-            <label>
-              <span>Name</span>
-              <input name="name" defaultValue={camera.name} key={camera.name} maxLength={50} required />
-            </label>
-            <button className="cm-btn">Save name</button>
-          </form>
-          {camera.slot ? (
-            <div className="st-form">
-              <label>
-                <span>Direction · {Math.round(camera.slot.angle)}°</span>
-                <input type="range" min={0} max={359} value={Math.round(camera.slot.angle)} onChange={(e) => setPreview((old) => ({ ...old, [camera.id]: { ...old[camera.id], angle: Number(e.target.value) } }))} onPointerUp={(e) => commit(camera.id, { angle: Number((e.target as HTMLInputElement).value) })} onKeyUp={(e) => commit(camera.id, { angle: Number((e.target as HTMLInputElement).value) })} />
-              </label>
-              <label>
-                <span>Field of view · {Math.round(camera.slot.fov)}°</span>
-                <input
-                  type="range"
-                  min={10}
-                  max={170}
-                  defaultValue={Math.round(camera.slot.fov)}
-                  key={`fov-${camera.id}-${camera.slot.fov}`}
-                  onChange={(e) => {
-                    const placement = placementFor(camera, floor)
-                    if (placement) void patch(camera.id, { placement: { ...placement, fov: Number(e.target.value) } })
-                  }}
-                />
-              </label>
-              <label>
-                <span>
-                  Range · {rangeValue} {meters ? 'm' : '% of plan width'}
-                </span>
-                <input
-                  type="range"
-                  min={meters ? 2 : 2}
-                  max={meters ? Math.max(10, Math.round(floor.width * meters)) : 100}
-                  defaultValue={rangeValue}
-                  key={`range-${camera.id}-${camera.slot.range}`}
-                  onChange={(e) => {
-                    const value = Number(e.target.value)
-                    const range = meters ? value / meters / floor.width : value / 100
-                    const placement = placementFor(camera, floor)
-                    if (placement) void patch(camera.id, { placement: { ...placement, range: Math.min(1, Math.max(0.02, range)) } })
-                  }}
-                />
-              </label>
-            </div>
-          ) : (
-            <p className="cm-muted">
-              <MapPin aria-hidden /> Not on the map yet. Use “Place on map”, then click where it is mounted.
-            </p>
-          )}
-          {camera.image && <img className="st-live" src={camera.image} alt={`Live view from ${camera.name}`} />}
-          <div className="cm-row">
-            <button type="button" className="cm-btn" onClick={() => setPairing(camera.id)}>
-              Pair a phone
-            </button>
-            {camera.slot && (
-              <button type="button" className="cm-btn st-danger" onClick={() => void patch(camera.id, { placement: null }, 'Removed from the map.')}>
-                Remove from map
-              </button>
-            )}
-          </div>
-        </aside>
-      )}
+          <details className="st-device-details" onToggle={event => { if (!event.currentTarget.open && locationId === record.id) setLocationId(null) }}>
+            <summary>Details</summary>
+            <form className="st-form" onSubmit={event => {
+              event.preventDefault()
+              if (busy) return
+              const data = new FormData(event.currentTarget)
+              const name = String(data.get('name') ?? '').trim()
+              const building = String(data.get('building') ?? '').trim()
+              const floor = String(data.get('floor') ?? '').trim() || 'Not set'
+              if (name && building) {
+                setBusy(true)
+                void api(`/cameras/${record.id}`, 'PATCH', { name, building, floor }).then(() => ok('Camera details saved.'), fail).finally(() => setBusy(false))
+              }
+            }}>
+              <label><span>Camera name</span><input name="name" defaultValue={record.name} key={record.name} required maxLength={60} /></label>
+              <label><span>Floor / area</span><input name="floor" defaultValue={floor === 'Floor not set' ? '' : floor} key={record.floor} maxLength={60} /></label>
+              <details className="st-building"><summary>Change building</summary><label><span>Building / site</span><input name="building" defaultValue={record.building} key={record.building} required maxLength={60} /></label></details>
+              <button className="cm-btn" disabled={busy}>Save camera details</button>
+            </form>
+            <div className="st-device-tools"><button type="button" className="cm-btn" onClick={() => setLocationId(locationId === record.id ? null : record.id)}>{locationId === record.id ? 'Hide location' : 'View location'}</button><button type="button" className="cm-btn" disabled={busy} onClick={() => void toggle(record)}>{record.enabled ? 'Pause camera' : 'Turn on camera'}</button></div>
+            {locationId === record.id && <GoogleMap point={record.gps} label={record.name} />}
+          </details>
+        </article>
+      })}
     </div>
-  )
+    <p className="st-quiet-note">Each phone uses its own QR. Names and floors can be changed in Details.</p>
+  </section>
 }
 
 /* ---------------- 4 · Guards ---------------- */
 
-function GuardsStep({
-  floors,
-  guards,
-  records,
-  cameras,
-  ok,
-  fail,
-}: Notify & { floors: MapFloor[]; guards: ReturnType<typeof liveGuards>; records: GuardRecord[]; cameras: WallCamera[] }) {
+function GuardsStep({ records, ok, fail }: Notify & { records: GuardRecord[] }) {
   const { mode } = useSession()
   const [members, setMembers] = useState<Member[]>([])
-  const [selected, setSelected] = useState<string | null>(location.hash === '#guards' ? null : null)
-  const [preview, setPreview] = useState<Record<string, { x: number; y: number }>>({})
-  const [form, setForm] = useState({ name: '', email: '', callsign: '' })
+  const [adding, setAdding] = useState(false)
+  const [pairing, setPairing] = useState<GuardRecord | null>(null)
+  const [created, setCreated] = useState<GuardRecord | null>(null)
+  const [removed, setRemoved] = useState<Set<string>>(() => new Set())
+  const [busy, setBusy] = useState(false)
+  const [form, setForm] = useState({ name: '', email: '', callsign: '', floorName: '' })
   const [invite, setInvite] = useState({ email: '', role: 'reviewer' as Role })
-  const loadMembers = useCallback(async () => {
-    try {
-      setMembers(await api<Member[]>('/members'))
-    } catch {
-      setMembers([])
-    }
-  }, [])
-  useEffect(() => {
-    void loadMembers()
-  }, [loadMembers, records])
-  useEffect(() => setPreview({}), [records])
-
-  const nextCallsign = useMemo(() => {
-    const used = new Set(records.map((r) => r.callsign))
-    for (let i = 1; i < 100; i++) if (!used.has(`G${i}`)) return `G${i}`
-    return 'G99'
-  }, [records])
-  const record = records.find((r) => r.callsign === selected) ?? null
-  const floor = floors.find((f) => f.id === record?.floorId) ?? floors[0] ?? null
-  const shown = guards.map((g) => (preview[g.id] ? { ...g, ...preview[g.id] } : g))
-
-  const patchGuard = async (id: string, body: Record<string, unknown>, message?: string) => {
-    try {
-      await api(`/guards/${id}`, 'PATCH', body)
-      if (message) ok(message)
-    } catch (reason) {
-      setPreview({})
-      fail(reason)
-    }
+  const listed = records.filter(record => !removed.has(record.id))
+  if (created && !removed.has(created.id) && !listed.some(record => record.id === created.id)) listed.push(created)
+  const nextCallsign = Array.from({ length: 99 }, (_, index) => `G${index + 1}`).find(id => !listed.some(record => record.callsign === id))
+  const loadMembers = async () => {
+    try { setMembers(await api<Member[]>('/members')) } catch { setMembers([]) }
   }
   const addGuard = async (event: FormEvent) => {
     event.preventDefault()
-    const callsign = (form.callsign.trim() || nextCallsign).toUpperCase()
+    if (busy || !form.name.trim() || !nextCallsign) return
+    setBusy(true)
     try {
-      await api('/guards', 'POST', {
-        callsign,
-        name: form.name.trim(),
+      const result = await api<GuardRecord>('/guards', 'POST', {
+        callsign: (form.callsign.trim() || nextCallsign).toUpperCase(),
+        name: form.name.trim(), floorName: form.floorName.trim() || null,
         ...(form.email.trim() ? { email: form.email.trim().toLowerCase() } : {}),
-        ...(floors[0] ? { floorId: floors[0].id } : {}),
       })
-      setForm({ name: '', email: '', callsign: '' })
-      setSelected(callsign)
-      ok(form.email.trim() ? `${callsign} added and invited. Drag them to their post.` : `${callsign} added. Drag them to their post.`)
-    } catch (reason) {
-      fail(reason)
-    }
+      setCreated(result)
+      setPairing(result)
+      setAdding(false)
+      setForm({ name: '', email: '', callsign: '', floorName: '' })
+    } catch (reason) { fail(reason) } finally { setBusy(false) }
+  }
+  const removeGuard = async (record: GuardRecord) => {
+    if (busy || !confirm(`Remove ${record.name}? Their phone will stop receiving alerts.`)) return
+    setBusy(true)
+    try {
+      await api(`/guards/${record.id}`, 'DELETE')
+      setRemoved(previous => new Set(previous).add(record.id))
+      if (created?.id === record.id) setCreated(null)
+      ok('Guard removed.')
+    } catch (reason) { fail(reason) }
+    finally { setBusy(false) }
   }
   const sendInvite = async (event: FormEvent) => {
     event.preventDefault()
+    if (busy) return
+    setBusy(true)
     try {
       await api('/members/invite', 'POST', { email: invite.email.trim().toLowerCase(), role: invite.role })
+      ok(`Invite sent to ${invite.email.trim()}.`)
       setInvite({ email: '', role: 'reviewer' })
       void loadMembers()
-      ok(`Invite sent to ${invite.email.trim()}.`)
-    } catch (reason) {
-      fail(reason)
-    }
+    } catch (reason) { fail(reason) } finally { setBusy(false) }
   }
-  const setPost = (callsign: string, point: { x: number; y: number }) => {
-    const target = records.find((r) => r.callsign === callsign)
-    if (!target || !floor) return
-    setPreview((old) => ({ ...old, [callsign]: point }))
-    void patchGuard(target.id, { floorId: floor.id, post: { x: point.x / floor.width, y: point.y / floor.height } })
-  }
-  const staff = members.filter((m) => m.role !== 'guard')
-
-  return (
-    <div className="st-people">
-      <section className="st-card st-table-card">
-        <header>
-          <h2>Guards · {records.length}</h2>
-        </header>
-        <div className="st-table-wrap">
-          <table className="st-table">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Call sign</th>
-                <th scope="col">Post</th>
-                <th scope="col">Shift</th>
-                <th scope="col">Phone</th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((g) => (
-                <tr key={g.id} className={g.callsign === selected ? 'is-selected' : ''}>
-                  <th scope="row">
-                    <button type="button" className="st-row-btn" onClick={() => setSelected(g.callsign)} aria-pressed={g.callsign === selected}>
-                      {g.name}
-                      <small>{g.email ?? 'No email'}</small>
-                    </button>
-                  </th>
-                  <td>{g.callsign}</td>
-                  <td>{g.post ? floors.find((f) => f.id === g.floorId)?.name ?? 'Placed' : 'Not set'}</td>
-                  <td>{g.shift === 'on_shift' ? 'On shift' : g.shift === 'break' ? 'Break' : 'Off'}</td>
-                  <td>
-                    <i className={`st-dot ${g.presence?.online ? 'is-live' : ''}`} aria-hidden />{' '}
-                    {g.presence?.online ? 'Online' : g.userId ? 'Signed up' : 'Invited'}
-                    {g.push ? ' · alerts on' : ''}
-                  </td>
-                </tr>
-              ))}
-              {!records.length && (
-                <tr>
-                  <td colSpan={5} className="cm-muted">
-                    No guards yet.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-        <form className="st-inline st-inline--wrap" onSubmit={(e) => void addGuard(e)}>
-          <label>
-            <span>Name</span>
-            <input value={form.name} maxLength={60} required onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          </label>
-          <label>
-            <span>Email {mode === 'clerk' ? '(sends an invite)' : '(optional)'}</span>
-            <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
-          </label>
-          <label className="st-short">
-            <span>Call sign</span>
-            <input value={form.callsign} placeholder={nextCallsign} pattern="[Gg][0-9]{1,2}" maxLength={3} onChange={(e) => setForm({ ...form, callsign: e.target.value })} />
-          </label>
-          <button className="cm-btn cm-btn--dark" disabled={!form.name.trim()}>
-            <Plus aria-hidden /> Add guard
-          </button>
-        </form>
-        {mode === 'dev' && <p className="cm-muted st-small">Developer sign-in: a guard opens /guard and signs in with their call sign, e.g. G2.</p>}
-
-        <h2 className="st-sub">Reviewers and admins</h2>
-        <ul className="st-staff">
-          {staff.map((m) => (
-            <li key={m.userId}>
-              <span>
-                <strong>{m.name ?? m.email}</strong>
-                <small>{m.email}</small>
-              </span>
-              <span className="cm-tag">{roleLabel(m.role)}</span>
-            </li>
-          ))}
-          {!staff.length && <li className="cm-muted">Only you so far.</li>}
-        </ul>
-        <form className="st-inline st-inline--wrap" onSubmit={(e) => void sendInvite(e)}>
-          <label>
-            <span>Invite by email</span>
-            <input type="email" required value={invite.email} onChange={(e) => setInvite({ ...invite, email: e.target.value })} />
-          </label>
-          <label className="st-short">
-            <span>Role</span>
-            <select value={invite.role} onChange={(e) => setInvite({ ...invite, role: e.target.value as Role })}>
-              <option value="reviewer">Reviewer</option>
-              <option value="admin">Admin</option>
-            </select>
-          </label>
-          <button className="cm-btn">Send invite</button>
-        </form>
-      </section>
-
-      <section className="st-card st-editor-card">
-        <header>
-          <h2>{record ? `${record.name} · ${record.callsign}` : 'Guard posts'}</h2>
-          {record && <span className="cm-muted">Post on {floor?.name ?? 'no floor'}</span>}
-        </header>
-        {!floor ? (
-          <p className="cm-muted">Add a floor plan first.</p>
-        ) : (
-          <>
-            <PlanEditor
-              floor={floor}
-              cameras={cameras}
-              guards={shown.filter((g) => !record || g.floorId === floor.id)}
-              mode="guard"
-              selected={selected}
-              placing={record && (record.floorId !== floor.id || !record.post) ? record.callsign : null}
-              onSelect={(id) => id && setSelected(id)}
-              onPreview={(id, g) => g.x != null && g.y != null && setPreview((old) => ({ ...old, [id]: { x: g.x!, y: g.y! } }))}
-              onCommit={(id, g) => {
-                const current = shown.find((s) => s.id === id)
-                setPost(id, { x: g.x ?? current?.x ?? 0, y: g.y ?? current?.y ?? 0 })
-              }}
-              onPlace={(id, point) => setPost(id, point)}
-              label={`${floor.name} guard posts`}
-            />
-            <p className="st-hint">
-              {record && !record.post ? `Click where ${record.callsign} stands.` : `Drag a guard to their post. Command uses posts to suggest the nearest guard.`}
-            </p>
-            {record && (
-              <div className="cm-row">
-                <button
-                  type="button"
-                  className="cm-btn st-danger"
-                  onClick={() => {
-                    if (confirm(`Remove ${record.name} (${record.callsign})? Their phone stops receiving alerts.`))
-                      void api(`/guards/${record.id}`, 'DELETE').then(() => {
-                        setSelected(null)
-                        ok(`${record.callsign} removed.`)
-                      }, fail)
-                  }}
-                >
-                  Remove guard
-                </button>
-              </div>
-            )}
-          </>
-        )}
-      </section>
-    </div>
+  const teamAccess = (
+    <details className="st-device-details st-team-access" onToggle={event => { if (event.currentTarget.open) void loadMembers() }}><summary>Who can watch the cameras?</summary>
+      <ul className="st-staff">{members.filter(member => member.role !== 'guard').map(member => <li key={member.userId}><span><strong>{member.name ?? member.email}</strong><small>{member.email}</small></span><span>{roleLabel(member.role)}</span></li>)}</ul>
+      <form className="st-form" onSubmit={event => void sendInvite(event)}><label><span>Invite by email</span><input type="email" required value={invite.email} onChange={event => setInvite({ ...invite, email: event.target.value })} /></label><label><span>Access</span><select value={invite.role} onChange={event => setInvite({ ...invite, role: event.target.value as Role })}><option value="reviewer">Watch and review</option><option value="admin">Manage this place</option></select></label><button className="cm-btn" disabled={busy}>Send invite</button></form>
+    </details>
   )
+  if (pairing) return <section className="st-connect-view" aria-label="Connect guard phone">{pairing.floorName && <p className="st-device-place">{pairing.floorName}</p>}<PairingPanel key={pairing.id} endpoint={`/guards/${pairing.callsign}/pair`} label={pairing.name} kind="guard" connected={!pairing.presence?.online && records.some(record => record.id === pairing.id && record.presence?.online)} onClose={() => setPairing(null)} fail={fail} /></section>
+  if (adding || !listed.length) return <section className="st-add-device" aria-label="Add a guard">
+    <span className="st-device-icon"><ShieldCheck aria-hidden size={30} /></span><h2>{listed.length ? 'Add a guard' : 'Connect your team.'}</h2><p className="cm-muted">Enter their name, then scan the QR with their phone.</p>
+    <form className="st-form" onSubmit={event => void addGuard(event)} onInvalidCapture={event => { const details = (event.target as HTMLElement).closest('details'); if (details) details.open = true }}>
+      <label><span>Guard name</span><input value={form.name} maxLength={60} required onChange={event => setForm({ ...form, name: event.target.value })} autoComplete="name" /></label>
+      {mode === 'clerk' && <label><span>Guard email</span><input type="email" required value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} /></label>}
+      <details className="st-building"><summary>More details</summary>
+        <label><span>Floor / area (optional)</span><input value={form.floorName} maxLength={60} onChange={event => setForm({ ...form, floorName: event.target.value })} placeholder="e.g. Ground floor" /></label>
+        {mode === 'dev' && <label><span>Email (optional)</span><input type="email" value={form.email} onChange={event => setForm({ ...form, email: event.target.value })} /></label>}
+        <label><span>Guard reference</span><input value={form.callsign} placeholder={nextCallsign} pattern="[Gg][0-9]{1,2}" maxLength={3} onChange={event => setForm({ ...form, callsign: event.target.value })} /></label>
+      </details>
+      <button className="cm-btn cm-btn--dark" disabled={busy || !nextCallsign || !form.name.trim() || (mode === 'clerk' && !form.email.trim())}>{busy ? 'Getting ready…' : 'Connect phone'}<ArrowRight aria-hidden /></button>
+      {listed.length > 0 && <button type="button" className="cm-btn" onClick={() => setAdding(false)}>Cancel</button>}
+    </form>
+    <p className="st-quiet-note">Adding guards is optional. You can continue and do this later.</p>
+    {teamAccess}
+  </section>
+  return <section className="st-devices" aria-label="Your guards">
+    <button type="button" className="cm-btn cm-btn--dark st-add-trigger" onClick={() => setAdding(true)}><Plus aria-hidden /> Add guard</button>
+    <div className="st-device-list">{listed.map(record => <article key={record.id} className="st-device-row">
+      <div className="st-device-heading"><span className="st-device-icon"><ShieldCheck aria-hidden size={24} /></span><div><h2>{record.name}</h2><p>{record.floorName || 'Floor not set'} · {record.presence?.online && record.shift === 'on_shift' ? 'On shift' : record.shift === 'break' ? 'On break' : 'Off shift'}</p></div><button type="button" className="cm-btn" disabled={busy} onClick={() => setPairing(record)}>Connect phone</button><button type="button" className="cm-btn st-remove-camera" disabled={busy} aria-label={`Remove ${record.name}`} onClick={() => void removeGuard(record)}>Remove</button></div>
+      <details className="st-device-details"><summary>Details</summary>
+        <form key={`${record.id}-${record.name}-${record.floorName}`} className="st-form" onSubmit={event => {
+          event.preventDefault()
+          if (busy) return
+          setBusy(true)
+          const data = new FormData(event.currentTarget)
+          void api(`/guards/${record.id}`, 'PATCH', { name: String(data.get('name')).trim(), floorName: String(data.get('floorName') ?? '').trim() || null }).then(() => ok('Guard details saved.'), fail).finally(() => setBusy(false))
+        }}>
+          <label><span>Guard name</span><input name="name" defaultValue={record.name} required maxLength={60} /></label><label><span>Floor / area</span><input name="floorName" defaultValue={record.floorName ?? ''} maxLength={60} /></label><button className="cm-btn" disabled={busy}>Save guard details</button>
+        </form>
+        <p className="st-quiet-note">Reference: {record.callsign}{record.email ? ` · ${record.email}` : ''}</p>
+        <p className="st-quiet-note">Their location is shared while they are on shift.</p>
+      </details>
+    </article>)}</div>
+    {teamAccess}
+  </section>
 }
 
 /* ---------------- 5 · Test alert ---------------- */
@@ -969,7 +410,7 @@ function TestStep({ cameras, events, guards, ok, fail }: Notify & { cameras: Wal
     setBusy(true)
     try {
       await api('/events/test', 'POST', { cameraId })
-      ok('Test incident sent. Open Command to review it.')
+      ok('Test incident sent. Camera wall to review it.')
     } catch (reason) {
       fail(reason)
     } finally {
@@ -1003,7 +444,7 @@ function TestStep({ cameras, events, guards, ok, fail }: Notify & { cameras: Wal
               Send test incident
             </button>
             <a className="cm-btn" href="/wall" target="_blank" rel="noreferrer">
-              Open Command
+              Camera wall
             </a>
           </div>
         </div>

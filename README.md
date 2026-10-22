@@ -1,5 +1,15 @@
 # NIVRA Classroom Command + Vision Lab
 
+For **offline Wi-Fi cameras**, join the same Wi-Fi router on the Mac and iPhones, then open **Start NIVRA.command** on this Mac. Click **Add camera** to show a QR. On the iPhone, open the installed NIVRA app, tap **Scan to connect**, and scan the Mac's QR. Allow Camera and Local Network. The app starts the camera and connects it directly. Internet, cables, code entry, and the Mac's camera are not needed for this flow. See [offline Wi-Fi setup](docs/offline-wireless.md).
+
+The public website **https://nivra.tanishq.work** supports internet-connected Camera and Guard phones. On the Mac, add the camera or guard and show its QR. Scan it with the phone's Camera app to open Safari or Chrome. For a camera, tap **Allow camera & start**; for a guard, tap **Start shift**. These website roles need internet. They use a separate workspace from local offline cameras.
+
+Place names, camera names, floors and guard setup are optional details. The public owner screen distinguishes **Phone linked** from **Live camera** and keeps **Remove** visible. Guard setup needs a name; floor is optional. Each owner browser gets its own private workspace and can manage the phones it pairs.
+
+The wall always shows the latest video. Detection marks appear only when their source frame still matches it. Alerts give a steady camera highlight and one short ping after sound is enabled; click the camera to review. **Close alert** closes an undecided alert without declaring a false alarm and retains its event history.
+
+The public frontend is on Vercel; its live backend runs on this Mac through an authenticated relay. Keep the Mac powered, online and logged in. This is a pilot deployment, not an independent cloud backend. See [deployment and recovery](docs/public-deployment.md) and [Android/iPhone builds](mobile/README.md).
+
 An optional **local AI service (experimental)** adds person detection, tracking, and
 video action analysis for cropped/overlapping bodies. See [setup and measured limits](service/README.md).
 The documentation below describes the original Browser engine unless stated otherwise.
@@ -23,16 +33,28 @@ npm run dev:classroom-ai
 - **NIVRA Command system** (full guide: [docs/command-system-contract.md](docs/command-system-contract.md)):
   - `/login` reviewer/admin sign-in, `/guard` guard sign-in (Clerk; a clearly labelled
     *Developer sign-in* is used when no Clerk keys are set, local/LAN only).
-  - `/setup` (admin): guided setup — site name → floors with uploaded plan images and
-    scale → camera phones (pair by QR, drag onto the plan, turn the view cone) →
-    guards (add/invite, drag to their post) and reviewer invites → test alert.
-  - `/wall` (reviewer + judges screen): live feeds on the real floor plans, red edge
-    glow on a flagged camera, review window with the 18 s clip recorded on the
-    service (RAM only), nearest guards by post, confirm/false alarm/alert guard,
-    response clock, escalation when a guard does not acknowledge.
-  - `/guard` (guard phone): loud 4 s ring + vibration, slide to acknowledge, route on
-    the floor plan, on scene / situation clear, shift status, lock-screen push alerts
-    (Android; iPhone needs iOS 16.4+ and Add to Home Screen — [docs/guard-alerts.md](docs/guard-alerts.md)).
+  - `/setup` (admin): name the site, add camera names/buildings/floors, and
+    pair camera phones by QR. Add guard names and floor labels and pair each
+    guard phone by QR. No uploaded floor plan or map placement is required.
+  - `/wall`: full-screen CCTV-style camera grid. Click a camera to expand it;
+    use the fullscreen button for the browser display. Google Maps is a separate
+    view with camera and guard locations, GPS age and accuracy. Every sample feed
+    is labelled; samples do not have invented GPS coordinates.
+  - `/camera`: allow camera and location access. GPS is refreshed while this
+    paired phone page is open; the latest readings are sent at most once every
+    10 seconds. Location failures have a retry action and do not block video.
+  - `/guard`: scan the assigned guard QR, then Start shift. On-shift guard
+    phones share GPS while the page is open, and can edit their current floor.
+    Break/end shift stops tracking. Alerts retain ring, acknowledgement, on-scene,
+    clear and escalation actions. Incident destinations keep the camera GPS from
+    detection time. Google Maps supplies walking directions from the phone.
+  - Floors are staff-entered labels. GPS cannot reliably infer an indoor floor;
+    reported accuracy and reading age remain visible. Browser background or
+    locked-screen GPS updates are not guaranteed. Push alerts are documented in
+    [docs/guard-alerts.md](docs/guard-alerts.md).
+  - QR links expire after five minutes and can be used once. Clerk-configured
+    guard phones must sign in as the assigned guard. Developer mode uses a scoped
+    guard cookie. Camera and guard QR codes are separate.
   - MacBook showcase setup, HTTPS for phones and measured model speed:
     [docs/mac-showcase.md](docs/mac-showcase.md), [docs/mac-runtime-verification.md](docs/mac-runtime-verification.md).
   - Clerk: copy `.env.example` to `.env.local`, set `VITE_CLERK_PUBLISHABLE_KEY`
@@ -41,12 +63,25 @@ npm run dev:classroom-ai
     token claim `{"metadata": "{{user.public_metadata}}"}` in the Clerk dashboard.
 - Sample versions: `/wall?demo=1` and `/guard?demo=1&guard=G2` in two tabs of the
   same browser stay in sync. **Run sample incident** starts the story. Generated
-  imagery and the Orbit Mall sample plan; no live detection.
+  imagery and illustrative records; no live detection or sample GPS.
 
-Phone frames travel to this PC for analysis; they are retained only in bounded RAM
-windows. SQLite saves camera locations and event metadata, never footage. Remote
-phones on mobile data need an explicitly configured HTTPS gateway; none has been
-provisioned. The service remains bound to loopback. See [remote setup boundaries](docs/remote-camera-setup.md).
+
+For actual phones, open the dashboard through its HTTPS LAN/showcase address
+before creating QR codes. A `localhost` or `127.0.0.1` QR points at the scanning
+phone itself. Camera/GPS access needs a secure browser context and device
+permission; see the Mac HTTPS setup below. Google Maps also needs internet.
+An optional `VITE_GOOGLE_MAPS_EMBED_KEY` selects the Maps Embed API; without it,
+the app uses Google's standard embedded map and keeps external map/direction links.
+
+The published pilot runs detection on the camera phone and relays camera previews and incident evidence to the Mac. Local AI mode can instead analyze frames on the PC. SQLite saves locations and event metadata; incident evidence has a bounded retention lifecycle. Public phones use the configured HTTPS relay, while the Python listeners remain on loopback. See [public deployment](docs/public-deployment.md) for the active deployment and [remote setup boundaries](docs/remote-camera-setup.md) for alternative hosting.
+
+Camera phones run the original full pose model in VIDEO mode for fast motion checks on up to four poses, independently of the crowd pass. A person-only EfficientDet worker refreshes up to 32 crop proposals; the crowd pose worker checks fresh pixels without waiting for every person-detector refresh. Both lanes can produce review events. Different pairs have separate cooldowns, and bounded queues deliver simultaneous interactions in two-event batches instead of suppressing the rest of the camera. Fast motion uses its own status, delegate and source clock, and never replaces the crowd skeleton frame. Combined result delivery is capped at 15 reports per second while motion sampling runs independently.
+
+Reports carry actual visible joints, separate person and usable-pose counts, and motion-review events. Slow analysis uses a matching buffered source frame on the wall, labelled with its age; it does not draw those joints over newer footage. History is bounded to 32 JPEGs per camera and six seconds. Very slow motion sampling is labelled as limited.
+
+Verification found both students and both skeletons in the supplied two-person frame. A private synthetic 20-person image produced 20 tracks and 17 usable skeletons, with roughly 1.7 seconds per analysis on the tested CPU fallback. This checks the expanded pipeline, not real-classroom or fight-classification accuracy. New camera and guard pairings survive backend restarts until their expiry or revocation. Phones paired before durable sessions were introduced need one fresh QR.
+
+After separating the workers, the supplied static frame produced two usable crop poses in roughly 195–286 ms while the full-model GPU lane ran at 29–101 ms after warmup. The full-frame model found only one student in that particular frame, so the crop lane remains necessary. Synthetic landmark tests exercise ten simultaneous independent interactions among 20 poses and verify that all ten reach the event queue. These tests do not establish live crowded-classroom fight accuracy.
 
 A local camera and video workspace with body skeletons, temporal interaction analysis, and audible review alerts. MediaPipe runs inside the browser. Frames are not uploaded or recorded.
 

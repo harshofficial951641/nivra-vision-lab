@@ -13,7 +13,7 @@ describe('device workload budget', () => {
     expect(budget.inferenceMs).toBe(500)
     for (let i = 0; i < 25; i++) budget.observe(20)
     expect(budget.previewSide).toBe(960)
-    expect(budget.analysisInterval).toBe(100)
+    expect(budget.analysisInterval).toBe(50)
   })
   it('keeps every focus region within the source image', () => {
     for (const area of ['full', 'left', 'center', 'right'] as const) {

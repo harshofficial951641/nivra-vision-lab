@@ -1,3 +1,4 @@
+import { DEVICE_PEOPLE_LIMIT, DEVICE_POSE_LIMIT } from './capacity'
 import {
   useEffect,
   useRef,
@@ -719,6 +720,7 @@ export default function Dashboard() {
                       camera.analysis === 'current' && (
                         <TrackOverlay
                           tracks={camera.result?.tracks}
+                          poses={camera.result?.poses}
                           width={preview.width}
                           height={preview.height}
                         />
@@ -728,7 +730,9 @@ export default function Dashboard() {
                         {demo
                           ? 'Generated image · not analyzed'
                           : camera.compute === 'device'
-                            ? `Device ${camera.deviceStatus?.delegate || 'analysis'} · up to 10 pose candidates · limited coverage`
+                            ? camera.result?.coverage
+                              ? `${camera.result.coverage.observedPeople} people detected · ${camera.result.coverage.analyzedPeople} motion poses · Device ${camera.deviceStatus?.delegate || 'analysis'}`
+                              : 'Waiting for person and motion analysis'
                           : camera.result?.coverage
                             ? `${camera.result.coverage.observedPeople} people tracked · ${camera.result.coverage.actionPeople} in latest action view`
                             : 'Waiting for analysis'}
@@ -994,7 +998,7 @@ export default function Dashboard() {
               <dd>{data?.runtime?.fightModel || 'Unavailable'}</dd>
               {data?.runtime?.compute === 'camera-device' && <>
                 <dt>Device coverage</dt>
-                <dd>Original Nivra motion rules · up to 10 pose candidates per frame. GPU preferred; explicit CPU fallback. Whole-classroom accuracy is unverified.</dd>
+                <dd>Person detection reports up to {DEVICE_PEOPLE_LIMIT} visible boxes. Motion review checks up to {DEVICE_POSE_LIMIT} person pose proposals. Skeletons show only visible, usable joints. Person detection runs on the CPU; poses use the GPU when available. Whole-classroom accuracy is unverified.</dd>
               </>}
               <dt>Remote phone access</dt>
               <dd>

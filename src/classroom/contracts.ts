@@ -1,7 +1,11 @@
+import type { CameraPose } from './skeletonGeometry'
+import { DEVICE_PEOPLE_LIMIT } from './capacity'
+import type { GPSLocation } from '../location/gps'
 import { sessionToken } from '../auth/session'
 import type { FloorRecord, GuardRecord, Placement } from '../command/types'
 export const isLocalDashboard = ['localhost', '127.0.0.1'].includes(location.hostname)
 export interface CameraLocation {
+  gps?: GPSLocation | null
   id: string
   name: string
   label?: string | null
@@ -9,6 +13,7 @@ export interface CameraLocation {
   building: string
   floor: string
   enabled: boolean
+  paired?: boolean
   feed: 'live' | 'waiting' | 'offline' | 'paused'
   analysis: 'current' | 'waiting' | 'unavailable' | 'paused'
   generation: string | null
@@ -18,6 +23,8 @@ export interface CameraLocation {
   compute?: 'device' | 'pc' | null
   deviceStatus?: { state: 'loading' | 'ready' | 'error'; delegate: 'GPU' | 'CPU' | null; detail: string } | null
   error?: string | null
+  motionResult?: CameraLocation['result']
+  motionStatus?: CameraLocation['deviceStatus']
   result?: {
     backend?: 'camera-device' | 'local-ai'
     delegate?: 'GPU' | 'CPU'
@@ -31,6 +38,7 @@ export interface CameraLocation {
       status: string
       actionPeople: number
     }
+    poses?: CameraPose[]
     tracks?: {
       id: number
       box: number[]
@@ -41,6 +49,7 @@ export interface CameraLocation {
   } | null
 }
 export interface Incident {
+  gps?: GPSLocation | null
   id: string
   camera_id: string
   camera_name: string
@@ -94,25 +103,38 @@ export interface Snapshot {
 }
 export class ApiError extends Error {
   status: number
-  constructor(message: string, status: number) {
+  detail?: unknown
+  constructor(message: string, status: number, detail?: unknown) {
     super(message)
     this.status = status
+    this.detail = detail
   }
 }
 export async function api<T>(
   path: string,
   method = 'GET',
   body?: unknown,
+  options: { signal?: AbortSignal; timeoutMs?: number } = {},
 ): Promise<T> {
   const token = await sessionToken()
   const headers: Record<string, string> = {}
   if (token) headers.Authorization = `Bearer ${token}`
   const isForm = typeof FormData !== 'undefined' && body instanceof FormData
   if (body && !isForm) headers['Content-Type'] = 'application/json'
+  const controller = new AbortController()
+  const timeoutMs = options.timeoutMs ?? (method === 'GET' || path.endsWith('/socket-ticket') ? 12000 : 0)
+  let timedOut = false
+  const cancel = () => controller.abort(options.signal?.reason)
+  if (options.signal?.aborted) cancel()
+  else options.signal?.addEventListener('abort', cancel, { once: true })
+  const deadline = timeoutMs > 0 ? setTimeout(() => { timedOut = true; controller.abort() }, timeoutMs) : undefined
+  try {
   const response = await fetch(`/api/v2${path}`, {
     method,
     credentials: 'same-origin',
     headers,
+    signal: controller.signal,
+    ...(method === 'GET' ? { cache: 'no-store' as const } : {}),
     body: body ? (isForm ? (body as FormData) : JSON.stringify(body)) : undefined,
   })
   if (!response.ok) {
@@ -120,15 +142,42 @@ export async function api<T>(
     throw new ApiError(
       typeof payload?.detail === 'string'
         ? payload.detail
-        : `Request failed (${response.status}).`,
+        : typeof payload?.detail?.message === 'string' ? payload.detail.message : `Request failed (${response.status}).`,
       response.status,
+      payload?.detail,
     )
   }
-  return response.status === 204 ? (undefined as T) : response.json()
+  return response.status === 204 ? (undefined as T) : await response.json()
+  } catch (reason) {
+    if (timedOut) throw new Error('Connection is taking too long. Please try again.')
+    throw reason
+  } finally {
+    clearTimeout(deadline)
+    options.signal?.removeEventListener('abort', cancel)
+  }
 }
 export function socketUrl(path: string) {
   return `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/api/v2${path}`
 }
+/** Public static hosting uses one-use socket tickets. Cookies remain on the API origin. */
+export async function openSocket(path: string): Promise<WebSocket> {
+  if (import.meta.env.VITE_NIVRA_DIRECT_SOCKET_RELAY !== '1') return new WebSocket(socketUrl(path))
+  const endpoints: Record<string, string> = {
+    '/operator': '/operator/socket-ticket',
+    '/camera/stream': '/camera/socket-ticket',
+    '/guard/stream': '/guard/socket-ticket',
+  }
+  const endpoint = endpoints[path]
+  if (!endpoint) throw new Error('Unsupported socket destination.')
+  const result = await api<{ url: string; ticket: string }>(endpoint, 'POST', {})
+  let url: URL
+  try { url = new URL(result.url) } catch { throw new Error('Invalid socket relay response.') }
+  if (url.protocol !== 'wss:' || url.pathname !== `/api/v2${path}` || url.search || url.hash ||
+    url.username || url.password || typeof result.ticket !== 'string' || !/^[A-Za-z0-9_-]{16,256}$/.test(result.ticket))
+    throw new Error('Invalid socket relay response.')
+  return new WebSocket(url.href, [`nivra-ticket.${result.ticket}`])
+}
+
 export async function framePacket(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
@@ -152,7 +201,7 @@ export async function framePacket(
       version: 1,
       timestampMs: timestamp,
       streamId: 0,
-      maxPeople: 10,
+      maxPeople: DEVICE_PEOPLE_LIMIT,
     }),
   )
   const packet = new Uint8Array(4 + header.length + jpeg.size)

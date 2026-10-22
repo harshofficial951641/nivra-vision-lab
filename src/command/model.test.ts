@@ -32,6 +32,17 @@ const event = (patch: Partial<Incident> = {}): Incident => ({
 })
 
 describe('review state machine', () => {
+  it('closes an undecided alert without assigning a judgment or erasing its evidence', () => {
+    const before=event({status:'acknowledged',reviewed_at:now-1000,detail:'Original observed movement',note:'Existing note'})
+    const closed=applyReview(before,'close',{},now)
+    expect(closed).toEqual({...before,status:'resolved',revision:before.revision+1,updated_at:now})
+    expect(closed.decision).toBeUndefined()
+    expect(closed.reason).toBeUndefined()
+    expect(responseSteps(closed,'CAM-04').at(-1)).toMatchObject({label:'Alert closed without a decision',at:now})
+    expect(()=>applyReview(event({decision:'confirmed',status:'acknowledged'}),'close',{},now)).toThrow(ReviewError)
+    expect(()=>applyReview(closed,'close',{},now)).toThrow(ReviewError)
+  })
+
   it('walks view → confirm with guard → guard ack → on scene → clear', () => {
     let e = applyReview(event(), 'view', {}, now)
     expect(e).toMatchObject({ status: 'acknowledged', reviewed_at: now, revision: 1 })

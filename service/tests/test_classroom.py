@@ -33,6 +33,30 @@ def pair(client, camera_id):
     return token
 
 
+def test_distinct_device_interactions_are_saved_without_camera_global_cooldown(tmp_path):
+    app=create_app(database=tmp_path/'multi.sqlite',relay_only=True)
+    with TestClient(app,base_url=ORIGIN['origin']) as client:
+        operator(client);cam=camera(client);pair(client,cam['id'])
+        with client.websocket_connect('ws://127.0.0.1:8765/api/v2/camera/stream',headers=ORIGIN) as ws:
+            ws.receive_json()
+            ws.send_json(dict(type='device-status',state='ready',delegate='GPU',detail='Device GPU'))
+            ws.send_bytes(packet(1000));ws.receive_json()
+            def report(timestamp, ids):
+                return dict(type='device-result',model='nivra-browser-motion-v1',delegate='GPU',
+                    timestampMs=timestamp,inferenceMs=25,observedPeople=4,usablePeople=4,tracks=[],
+                    conflict=dict(status='alert',explanation='Distinct interactions need review'),
+                    events=[dict(id=identity,occurredAtMs=1000 if identity!='pair-three' else 1100,
+                        detail='Review the scene') for identity in ids])
+            ws.send_json(report(1000,['pair-two','pair-one']))
+            ws.send_bytes(packet(1100));ws.receive_json()
+            ws.send_json(report(1100,['pair-three','pair-two']))
+            ws.send_bytes(packet(1200));ws.receive_json()
+            state=client.get('/api/v2/state').json()
+            assert state['analytics']['total']==3
+            assert {event['source_id'] for event in app.state.classroom.store.events()}=={'pair-one','pair-two','pair-three'}
+            assert all(event['status']=='open' for event in state['events'])
+
+
 def test_metadata_idempotency_and_concurrent_acknowledgement(tmp_path):
     path = tmp_path/'metadata.sqlite'
     store = Store(path)
@@ -215,12 +239,12 @@ def test_migrate_v1_database_preserves_rows_and_reopens(tmp_path):
         old_event = dict(db.execute('SELECT * FROM events').fetchone())
         old_camera = dict(db.execute('SELECT * FROM cameras').fetchone())
     store = Store(path)
-    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 4
+    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 7
     event = store.events()[0]
     assert {key: event[key] for key in old_event} == old_event
     assert {key: store.camera('camera')[key] for key in old_camera} == old_camera
     assert store.camera('camera')['label'] == 'CAM-01'
-    added = {'reviewed_at','decision','reason','note','guard','decided_at','alerted_at','on_scene_at','guard_ack_at','guard_declined_at','floor_id','reviewer_id','escalated_at'}
+    added = {'reviewed_at','decision','reason','note','guard','decided_at','alerted_at','on_scene_at','guard_ack_at','guard_declined_at','floor_id','reviewer_id','escalated_at','gps'}
     assert event.keys() - old_event.keys() == added
     assert all(event[key] is None for key in added)
     assert dict(store.db.execute('SELECT * FROM event_audit').fetchone()) == dict(
@@ -246,16 +270,16 @@ def test_migration_rolls_back_all_ddl_on_failure(tmp_path):
         assert db.execute('SELECT id FROM events').fetchone()[0] == 'event'
 
 
-def test_fresh_v4_and_unknown_future_schema(tmp_path):
+def test_fresh_v7_and_unknown_future_schema(tmp_path):
     path = tmp_path/'schema.sqlite'
     store = Store(path)
-    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 4
+    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 7
     assert store.analytics() == dict(total=0,pending=0,resolved=0,confirmed=0,falseAlarms=0)
-    with store.db: store.db.execute('UPDATE schema_version SET version=5')
+    with store.db: store.db.execute('UPDATE schema_version SET version=8')
     store.close()
     with pytest.raises(ValueError, match='Unsupported classroom metadata schema'): Store(path)
     with sqlite3.connect(path) as db:
-        assert db.execute('SELECT version FROM schema_version').fetchone()[0] == 5
+        assert db.execute('SELECT version FROM schema_version').fetchone()[0] == 8
 
 
 def test_concurrent_reviews_have_only_one_winner(tmp_path):
@@ -297,7 +321,7 @@ def test_review_audit_failure_rolls_back_event(review_client):
 
 GUARD_FIELDS = {'id', 'camera_id', 'camera_name', 'location', 'detail', 'note',
                 'received_at', 'alerted_at', 'guard_ack_at', 'guard_declined_at',
-                'on_scene_at', 'status', 'revision'}
+                'on_scene_at', 'status', 'revision', 'gps'}
 
 
 def guard_pair_token(client, guard='G2'):
@@ -581,7 +605,7 @@ def test_migrate_v2_to_v4_preserves_review_data(tmp_path):
         db.execute("UPDATE event_audit SET action='confirm'")
     store = Store(path)
     event = store.events()[0]
-    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 4
+    assert store.db.execute('SELECT version FROM schema_version').fetchone()[0] == 7
     assert event['decision'] == 'confirmed' and event['guard'] == 'G2' and event['note'] == 'Attend'
     assert event['guard_ack_at'] is None and event['guard_declined_at'] is None
     assert store.db.execute('SELECT action FROM event_audit').fetchone()[0] == 'confirm'
@@ -694,3 +718,110 @@ def test_remote_publisher_is_scoped_and_malformed_frame_closes(tmp_path,monkeypa
             publisher.send_text('invalid frame')
             with pytest.raises(WebSocketDisconnect): publisher.receive_json()
 
+@pytest.mark.parametrize('kind', ['camera', 'guard'])
+@pytest.mark.parametrize('first', ['code', 'token'])
+def test_device_pair_code_and_qr_are_one_capability(review_client, kind, first):
+    import re
+    client, store, _ = review_client
+    service = client.app.state.classroom
+    if kind == 'camera':
+        subject = camera(client)['id']; path = f'/api/v2/cameras/{subject}/pair'
+    else:
+        store.add_guard('G2', 'Asha'); path = '/api/v2/guards/G2/pair'
+    response = client.post(path, headers=ORIGIN).json()
+    code = response['pairingCode']; token = parse_qs(urlsplit(response['url']).fragment)['pair'][0]
+    assert re.fullmatch(r'[A-HJ-NP-Z2-9]{8}', code) and response['expiresInSeconds'] == 300
+    aliases = service.pair_codes[kind]
+    assert code not in aliases and aliases[digest(code)] == digest(token)
+    phone = TestClient(client.app, base_url=ORIGIN['origin']); phone.portal = client.portal
+    try:
+        other = 'guard' if kind == 'camera' else 'camera'
+        assert phone.post(f'/api/v2/{other}/pair', headers=ORIGIN, json={'code': code}).status_code == 403
+        value = code[:4].lower()+' '+code[4:].lower() if first == 'code' else token
+        assert phone.post(f'/api/v2/{kind}/pair', headers=ORIGIN, json={first:value}).status_code == 200
+        second = {'token':token} if first == 'code' else {'code':code}
+        assert phone.post(f'/api/v2/{kind}/pair', headers=ORIGIN, json=second).status_code == 403
+        assert digest(code) not in service.pair_codes[kind]
+        assert phone.get('/api/v2/state', headers=ORIGIN).status_code == 403
+        assert phone.post('/api/v2/operator/redeem', headers=ORIGIN, json={'code':code}).status_code == 422
+    finally: phone.close()
+
+@pytest.mark.parametrize('kind', ['camera', 'guard'])
+def test_pair_codes_expire_rotate_and_are_invalid_after_device_removal(review_client, kind):
+    client, store, _ = review_client
+    service = client.app.state.classroom
+    if kind == 'camera':
+        record = camera(client); subject = record['id']; path = f'/api/v2/cameras/{subject}/pair'; delete = '/api/v2/cameras/'+subject
+    else:
+        record = store.add_guard('G2', 'Asha'); subject = 'G2'; path = '/api/v2/guards/G2/pair'; delete = '/api/v2/guards/'+record['id']
+    first = client.post(path, headers=ORIGIN).json()
+    second = client.post(path, headers=ORIGIN).json()
+    assert client.post(f'/api/v2/{kind}/pair', headers=ORIGIN, json={'code':first['pairingCode']}).status_code == 403
+    key = service.pair_codes[kind][digest(second['pairingCode'])]
+    pairs = service.pairs if kind == 'camera' else service.guard_pairs
+    pairs[key] = (subject, time.monotonic()-1)
+    assert client.post(f'/api/v2/{kind}/pair', headers=ORIGIN, json={'code':second['pairingCode']}).status_code == 403
+    assert not service.pair_codes[kind]
+    third = client.post(path, headers=ORIGIN).json()
+    if kind == 'camera':
+        assert client.patch(delete, headers=ORIGIN, json={'name':record['name'],'building':record['building'],'floor':record['floor'],'enabled':False}).status_code == 200
+    else:
+        assert client.delete(delete, headers=ORIGIN).status_code == 204
+    assert client.post(f'/api/v2/{kind}/pair', headers=ORIGIN, json={'code':third['pairingCode']}).status_code == 403
+    assert not service.pair_codes[kind]
+
+@pytest.mark.parametrize('payload', [{}, {'code':'ABCD1234'}, {'code':'AAAAAAAA','token':'x'*32}, {'code':'AAAAAAAA','owner':True}])
+def test_device_code_input_cannot_be_ambiguous_or_grant_owner(review_client, payload):
+    client, _, _ = review_client
+    assert client.post('/api/v2/camera/pair', headers=ORIGIN, json=payload).status_code == 422
+
+
+def test_pair_code_attempts_are_bounded_per_ip_and_globally_and_expire(monkeypatch):
+    from types import SimpleNamespace
+    from fastapi import HTTPException
+    from nivra.classroom import PairCodeAttempts
+    now = [100.0]
+    monkeypatch.setattr(time, 'monotonic', lambda:now[0])
+    limiter = PairCodeAttempts()
+    request = lambda ip:SimpleNamespace(client=SimpleNamespace(host=ip))
+    for _ in range(20): limiter.check(request('one'))
+    with pytest.raises(HTTPException) as error: limiter.check(request('one'))
+    assert error.value.status_code == 429
+    for i in range(80): limiter.check(request(str(i)))
+    with pytest.raises(HTTPException) as error: limiter.check(request('new-ip'))
+    assert error.value.status_code == 429 and len(limiter.recent) == 100
+    now[0] += 60
+    limiter.check(request('one'))
+    assert len(limiter.recent) == 1
+
+
+def test_owner_removes_camera_without_losing_event_or_audit_and_label_can_be_reused(review_client):
+    client, store, event = review_client
+    subject = event['camera_id']
+    old_label = store.camera(subject)['label']
+    viewed = post_review(client, event, 'view').json()
+    events = store.events()
+    audit = [dict(row) for row in store.db.execute('SELECT * FROM event_audit')]
+    link = client.post('/api/v2/cameras/'+subject+'/pair', headers=ORIGIN).json()
+    assert client.delete('/api/v2/cameras/'+subject, headers=ORIGIN).status_code == 204
+    assert store.camera(subject) is None
+    assert store.events() == events
+    assert [dict(row) for row in store.db.execute('SELECT * FROM event_audit')] == audit
+    assert client.get('/api/v2/state', headers=ORIGIN).json()['events'][0]['id'] == viewed['id']
+    assert client.post('/api/v2/camera/pair', headers=ORIGIN, json={'code':link['pairingCode']}).status_code == 403
+    token = parse_qs(urlsplit(link['url']).fragment)['pair'][0]
+    assert client.post('/api/v2/camera/pair', headers=ORIGIN, json={'token':token}).status_code == 403
+    assert client.delete('/api/v2/cameras/'+subject, headers=ORIGIN).status_code == 404
+    replacement = camera(client)
+    assert replacement['id'] != subject and replacement['label'] == old_label
+    assert store.events()[0]['camera_id'] == subject
+
+
+def test_reviewer_cannot_remove_cameras(review_client):
+    client, store, event = review_client
+    reviewer = TestClient(client.app, base_url=ORIGIN['origin']); reviewer.portal = client.portal
+    try:
+        assert reviewer.post('/api/v2/auth/dev', headers=ORIGIN, json={'name':'Reviewer','role':'reviewer'}).status_code == 200
+        assert reviewer.delete('/api/v2/cameras/'+event['camera_id'], headers=ORIGIN).status_code == 403
+        assert store.camera(event['camera_id']) is not None
+    finally: reviewer.close()

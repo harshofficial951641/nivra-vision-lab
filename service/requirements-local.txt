@@ -1,0 +1,3 @@
+# Additional dependency for LAN phone discovery in the existing Mac environment.
+# Install after the Mac service environment, not instead of its requirements.
+zeroconf==0.150.5

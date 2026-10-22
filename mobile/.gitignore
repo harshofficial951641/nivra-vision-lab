@@ -1,0 +1,7 @@
+build/
+android/.gradle/
+android/app/build/
+android/local.properties
+**/xcuserdata/
+.DS_Store
+__pycache__/
