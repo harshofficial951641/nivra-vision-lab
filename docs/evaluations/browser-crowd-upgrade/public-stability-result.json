@@ -1,0 +1,37 @@
+{
+  "scope": "Public nivra.tanishq.work, Mac system Chrome, isolated synthetic camera and actual browser workers. No physical iPhone or real people.",
+  "deployment": "dpl_7fe4Geb8PJbM6STTuxddFefKAQ1G",
+  "status": "failed",
+  "sampleSeconds": 92.606,
+  "reason": "Camera stream was not open at the end of the steady sample",
+  "policyRejections": [
+    {
+      "atMs": 41027,
+      "code": 1008,
+      "reason": "Camera metadata rate exceeded"
+    },
+    {
+      "atMs": 61432,
+      "code": 1008,
+      "reason": "Camera metadata rate exceeded"
+    },
+    {
+      "atMs": 83088,
+      "code": 1008,
+      "reason": "Camera metadata rate exceeded"
+    },
+    {
+      "atMs": 126456,
+      "code": 1008,
+      "reason": "Camera metadata rate exceeded"
+    }
+  ],
+  "encodedFramesPerWallSecond": 13.184890827808134,
+  "displayedFPS": null,
+  "displayedFPSNote": "The decoder draw counter reset across reconnect generations. Subtracting endpoints gives an invalid negative rate; no stable displayed-FPS claim is made for this run.",
+  "bothModelLanesReady": true,
+  "encoderColdRetryRecovered": true,
+  "modelWorkerErrors": 0,
+  "temporaryWorkspaceDeleted": true,
+  "followUp": "Replace strict rolling metadata window with a bounded token bucket, then publicly recheck. Current source patch allows24/s sustained with48-message burst; it is not a public validation result."
+}

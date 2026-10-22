@@ -1,0 +1,29 @@
+{
+  "scope": "Public nivra.tanishq.work on Mac system Chrome, isolated synthetic 640x360 canvas source. Actual production workers and remote video path; no physical iPhone or people.",
+  "deployment": "dpl_9Givy5PLamxCcvqRbV9yVHPvTWNa",
+  "status": "passed",
+  "sampleSeconds": 30.883,
+  "encodedFPS": 39.34203283359777,
+  "displayedFPS": 39.27727228572354,
+  "modelReportsPerSecond": {
+    "nivra-browser-motion-v1": 9.195997798141372,
+    "nivra-browser-rtmo-t-motion-v1": 2.881844380403458
+  },
+  "delegates": {
+    "nivra-browser-motion-v1": "GPU",
+    "nivra-browser-rtmo-t-motion-v1": "CPU"
+  },
+  "steadySocketOpens": 0,
+  "steadySocketCloses": 0,
+  "decoderErrors": 0,
+  "displayDrops": 1,
+  "recoveryMilliseconds": [
+    3374,
+    2571,
+    2715
+  ],
+  "modelAssetResponsesStableAcrossReconnect": true,
+  "guardHealthyResumePreserved": true,
+  "temporaryWorkspaceDeleted": true,
+  "knownLimitation": "One generic server policy rejection occurred before steady warmup. Earlier cold-run crowd fallback and stalled stream were observed. This passing run is not long-duration reliability or fight-accuracy proof."
+}

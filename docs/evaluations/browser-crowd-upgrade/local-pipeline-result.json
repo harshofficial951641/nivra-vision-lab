@@ -1,0 +1,19 @@
+{
+  "scope": "Mac T3 browser, production CPU crowd and Full motion workers plus encoder/decoder; local synthetic moving rectangles, no real people or public transport",
+  "sourceSize": [
+    640,
+    360
+  ],
+  "sampleSeconds": 10.00041,
+  "encodedFPS": 39.7983682669,
+  "displayedFPS": 39.7983682669,
+  "crowdReportsPerSecond": 2.8998811049,
+  "crowdDelegate": "CPU",
+  "fastMotionReportsPerSecond": 16.8993071284,
+  "fastMotionDelegate": "GPU",
+  "decoderErrors": 0,
+  "displayDrops": 0,
+  "sequenceGaps": 0,
+  "encoderDrops": 0,
+  "physicalIPhone": false
+}
