@@ -62,3 +62,10 @@ Then build on a Mac and verify on a physical iPhone. The dialer and Messages com
 Run the JUnit cases in `mobile/android/app/src/test/java/work/tanishq/nivra/UrlPolicyTest.java` and an Android Studio build.
 `UrlPolicy.externalScheme` routes `tel:` to `ACTION_DIAL` and `sms:` to `ACTION_SENDTO` with `sms_body`.
 Neither was compiled here: this PC has no JDK or Android SDK.
+
+## 7. Android: possible lost police log (suspected, review finding)
+
+`src/classroom/contracts.ts` waits for a token before starting the keepalive logging request.
+`MainActivity.java` may unload the WebView as soon as the dialer opens, which could drop that request before it starts.
+On a real Android phone, check that tapping Call 112 still records "Police contacted" on the wall.
+If it doesn't, start the logging request before the external intent fires, or log it from native code.

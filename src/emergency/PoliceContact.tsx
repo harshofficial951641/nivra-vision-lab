@@ -3,7 +3,7 @@ import { api, type PoliceContactRecord } from '../classroom/contracts'
 import './police.css'
 
 function policeNumber(value: unknown): string {
-  return typeof value === 'string' && value.length > 0 && !/[^0-9+*]/.test(value) ? value : '112'
+  return typeof value === 'string' && /^(?:\+|\*)?[0-9]{1,15}$/.test(value) ? value : '112'
 }
 
 export function PoliceContactStatus({ police }: { police?: PoliceContactRecord | null }) {

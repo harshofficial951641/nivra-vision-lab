@@ -173,3 +173,42 @@ def test_other_workspace_owner_and_guard_cannot_log(workspace_env):
     assert sa.events()[0]['police'] is None and not sb.events()
     assert guard_a.post(f'/api/v2/guard/events/{event["id"]}/police', json={'method': 'text'}).status_code == 200
     assert a.get('/api/v2/state').json()['events'][0]['police']['by'] == 'guard:G2'
+
+
+def test_police_queries_are_batched_and_search_only_relevant_audit_rows(tmp_path):
+    store = Store(tmp_path / 'police-index.sqlite')
+    try:
+        camera = store.add_camera('Entrance', 'Main', '1')
+        for i in range(500):
+            store.record(camera['id'], 'query-cost', dict(id=str(i), occurredAtMs=i))
+        event_id = store.events()[0]['id']
+        with store.db:
+            store.db.executemany("""INSERT INTO event_audit(event_id,status,revision,changed_at,action,actor)
+                VALUES(?,?,?,?,?,?)""", [('unrelated-'+str(i), 'resolved', 0, i, 'confirm', 'qa') for i in range(2000)])
+        queries = []
+        store.db.set_trace_callback(queries.append)
+        police = store.contact_police(event_id, 'call', 'qa')
+        events = store.events()
+        store.db.set_trace_callback(None)
+        assert len(events) == 500
+        assert next(e for e in events if e['id'] == event_id)['police'] == police
+        summaries = [q for q in queries if 'COUNT(*) OVER' in q]
+        lookups = [q for q in queries if 'SELECT 1 FROM event_audit' in q]
+        assert len(summaries) == 2 and len(lookups) == 1
+        for query in summaries + lookups:
+            plan = [row['detail'] for row in store.db.execute('EXPLAIN QUERY PLAN '+query)]
+            assert any('SEARCH event_audit ' in detail for detail in plan), plan
+        with store.db:
+            store.db.execute('DROP INDEX event_audit_police_lookup')
+    finally:
+        store.close()
+    # Existing v7 stores must also get the lookup index on reopen.
+    reopened = Store(tmp_path / 'police-index.sqlite')
+    try:
+        assert reopened.events()[0]['police'] == police
+        assert reopened.contact_police(event_id, 'text', 'qa')['count'] == 2
+        for query in summaries + lookups:
+            plan = [row['detail'] for row in reopened.db.execute('EXPLAIN QUERY PLAN '+query)]
+            assert any('SEARCH event_audit ' in detail for detail in plan), plan
+    finally:
+        reopened.close()

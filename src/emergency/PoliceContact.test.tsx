@@ -39,7 +39,7 @@ describe('police contact confirmation', () => {
     expect(screen.getByRole('link', { name: `Call ${number}` })).toHaveAttribute('href', `tel:${number}`)
     expect(screen.getByRole('link', { name: 'Text police' }).getAttribute('href')).toMatch(`sms:${number}?&body=`)
   })
-  it.each(['', '112#', '112;ext=9', ' 112 ', 'javascript:112', '112\n', undefined, null])('falls back for invalid number %s', number => {
+  it.each(['', '+', '*', '***', '++123', '12+34', '1234567890123456', '112#', '112;ext=9', ' 112 ', 'javascript:112', '112\n', undefined, null])('falls back for invalid number %s', number => {
     vi.stubEnv('VITE_NIVRA_POLICE_NUMBER', number as string)
     render(<PoliceContact {...props} />)
     fireEvent.click(screen.getByRole('button', { name: 'Police' }))

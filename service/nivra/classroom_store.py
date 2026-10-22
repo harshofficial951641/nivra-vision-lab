@@ -97,6 +97,9 @@ class Store:
                     token_hash TEXT PRIMARY KEY, kind TEXT NOT NULL CHECK(kind IN ('camera','guard')),
                     subject_id TEXT NOT NULL, expires REAL NOT NULL)''')
                 self.db.execute('CREATE INDEX IF NOT EXISTS device_session_subject ON device_sessions(kind,subject_id)')
+                # Scope summary and duplicate checks to this event/action, not all retained history.
+                self.db.execute('''CREATE INDEX IF NOT EXISTS event_audit_police_lookup
+                    ON event_audit(event_id,action,changed_at DESC,actor)''')
                 self.db.execute('UPDATE schema_version SET version=7')
                 # H2 owns all DDL. H4 push storage participates in the same v4
                 # transaction; IF NOT EXISTS also supports early v4 dev databases.
