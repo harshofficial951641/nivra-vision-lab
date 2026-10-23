@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "model": {
+    "architecture": "MoViNet A0, causal port, clip-reset epoch-3 fine-tune",
+    "sha256": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+    "checkpointSha256": "e4bef8ee36c3685a20abfa1af4c9d206d386dbbe5de413b41c1e3e5c8402188a",
+    "inputShape": [
+      "batch",
+      8,
+      3,
+      172,
+      172
+    ],
+    "output": "two logits; softmax(dim=1)[:,1] is the fight-class score",
+    "codeLicense": "MIT",
+    "pretrainedWeightsLicense": "Apache-2.0"
+  },
+  "preprocessing": {
+    "color": "RGB",
+    "dtype": "float32",
+    "layout": "B,T,C,H,W",
+    "range": [
+      0,
+      1
+    ],
+    "resize": [
+      224,
+      172
+    ],
+    "interpolation": "OpenCV INTER_LINEAR, square full-frame at both stages",
+    "normalization": "divide by 255 only; no channel mean/std",
+    "baseTargets": 16,
+    "baseEndpoint": false,
+    "selectedIndices": [
+      0,
+      2,
+      4,
+      6,
+      8,
+      10,
+      12,
+      15
+    ],
+    "targetOffsetsMs": [
+      0,
+      500,
+      1000,
+      1500,
+      2000,
+      2500,
+      3000,
+      3750
+    ],
+    "nearest": "actual source PTS inside half-open window; earlier timestamp wins ties",
+    "windowMs": 4000,
+    "strideMs": 1000,
+    "clipReset": true
+  },
+  "windowMs": 4000,
+  "strideMs": 1000,
+  "windowAnchor": "first actual decoded source PTS",
+  "windowAdmission": "end = first actual PTS + 4000 + k*1000; score only when last actual decoded PTS >= end; no container-duration/EOF flush",
+  "qualifyingThreshold": 0.999,
+  "strongThreshold": 1.0,
+  "thresholdComparison": ">=",
+  "confirmation": {
+    "consecutiveWindows": 2,
+    "maxGapMs": 1000,
+    "strongBypassesConfirmation": true,
+    "nonqualifyingResets": true
+  },
+  "cooldownMs": 8000,
+  "mergeGapMs": 2000,
+  "incidentMerging": "one incident per episode; qualifying windows separated by <=mergeGapMs remain one episode; a longer gap rearms; camera cooldown remains in force",
+  "requireTwoPeople": false,
+  "peopleCountRule": "dropped: unavailable offline; do not silently enable at integration",
+  "resetOn": "camera/source generation change; never carry activation buffers or policy state across recordings",
+  "splitSha256": "50e8ba7fa09e6c26e28651096fc82d3439c6751548a8c67630c0616d0fbbf568",
+  "selectedPolicySha256": "f8aef4628b2ab8bddba9f492c9d5665726d47cdc79c78797a2ea102444ead3f2",
+  "gate": {
+    "passed": true,
+    "criterion": "test false alerts per actionable explicit normal camera-hour <=2 (point estimate)",
+    "limitFalseAlertsPerHour": 2,
+    "observedFalseAlertsPerHour": 0.0,
+    "normalHours": 0.22379364124056783,
+    "ci95": {
+      "low": 0.0,
+      "high": 0.0,
+      "eligibleGroups": 189,
+      "validReplicates": 5000,
+      "iterations": 5000
+    },
+    "poissonUpper97_5PerHour": 16.483397087000167,
+    "selectionRule": "point_estimate_fallback_insufficient_exposure"
+  },
+  "defaultEnabled": true,
+  "humanReviewRequired": true,
+  "macM5Verified": false,
+  "torchscriptDeviceNote": "Export pins 27 tensor-factory Device constants to CPU; CUDA replay remaps them in RAM after loading. Original model file/weights unchanged; CPU/CUDA parity passed. MPS is unverified.",
+  "integration": "Runtime scene decisions must reproduce the simulator, including episode merging, selected thresholds and confirmation, through Decisions.scene_update or an equivalent scene policy path; legacy hard-coded .4/.7 + people>=2 is not this policy"
+}

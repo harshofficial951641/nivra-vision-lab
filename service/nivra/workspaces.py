@@ -99,7 +99,8 @@ class Workspaces:
             from .server import create_app
             factory = create_app
         else: factory = self.app_factory
-        app = factory(database=self.directory/(workspace_id+'.sqlite'), relay_only=True)
+        options = {} if self.app_factory is not None else {'video_classifier': self.primary.state.classroom.state['videoClassifier']}
+        app = factory(database=self.directory/(workspace_id+'.sqlite'), relay_only=True, **options)
         # Guest apps use scoped capability sessions, never public developer login.
         app.state.classroom.auth.mode = 'dev'
         app.state.classroom.clips.max_bytes = 8*1024*1024

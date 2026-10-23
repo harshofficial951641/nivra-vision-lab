@@ -1,0 +1,68 @@
+{
+  "torch": "2.5.1+cu124",
+  "opencv": "4.11.0",
+  "python": "3.11.15",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "cpu": "Intel64 Family 6 Model 165 Stepping 3, GenuineIntel",
+  "cpuThreads": 2,
+  "cudaDevice": "NVIDIA GeForce GTX 1660 Ti",
+  "scope": "FP32 preallocated tensor to logits, synchronized wall time; excludes decode, resize, host/device transfers; each forward is a reset clip",
+  "batches": {
+    "cpu": {
+      "1": {
+        "p50Ms": 53.07069997070357,
+        "p95Ms": 62.41691503673792,
+        "meanMs": 53.60962666066674,
+        "p50PerWindowMs": 53.07069997070357,
+        "repeats": 30
+      },
+      "4": {
+        "p50Ms": 202.91999998153187,
+        "p95Ms": 263.237945002038,
+        "meanMs": 205.624153338916,
+        "p50PerWindowMs": 50.72999999538297,
+        "repeats": 30
+      }
+    },
+    "cuda": {
+      "1": {
+        "p50Ms": 18.83195000118576,
+        "p95Ms": 22.535679998691194,
+        "meanMs": 19.2245050042402,
+        "p50PerWindowMs": 18.83195000118576,
+        "repeats": 60
+      },
+      "4": {
+        "p50Ms": 17.8155500034336,
+        "p95Ms": 24.365560014848594,
+        "meanMs": 19.021681668042827,
+        "p50PerWindowMs": 4.4538875008584,
+        "repeats": 60
+      }
+    }
+  },
+  "cpuFactoryDeviceConstantsRemapped": 0,
+  "cpuBatchIndependenceMaxAbsProbability": 5.960464477539063e-08,
+  "cudaFactoryDeviceConstantsRemapped": 27,
+  "cudaBatchIndependenceMaxAbsProbability": 2.384185791015625e-07,
+  "cpuCudaParity": {
+    "windows": 4,
+    "maxAbsProbability": 2.384185791015625e-07,
+    "tolerance": 0.0001,
+    "passed": true
+  },
+  "executionTransform": "Original artifact unchanged; trace-pinned CPU factory-device constants remapped to CUDA in memory. Weights/operators otherwise unchanged; probability parity checked.",
+  "preprocessingParity": {
+    "reference": "frozen round-1 dev training-input cache",
+    "maxAbsPixelDifference": 0,
+    "comparedFrames": 8,
+    "tensorShape": [
+      1,
+      8,
+      3,
+      172,
+      172
+    ],
+    "inputCacheReceiptSha256": "1a2d0a1aad75d4e9da31bee95de1679bd39a900829c14532831a558501346941"
+  }
+}

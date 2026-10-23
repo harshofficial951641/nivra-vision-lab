@@ -52,7 +52,7 @@ def unpack_frame(packet):
     return header, frame
 
 
-def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False, enable_fight_demo=False, static_dir=None):
+def create_app(model_factory=None, pipeline_factory=None, database=None, *, relay_only=False, enable_fight_demo=False, static_dir=None, video_classifier=None):
     assets = Path(static_dir) if static_dir is not None else ROOT / 'dist'
     if enable_fight_demo and not relay_only:
         raise ValueError('The public fight demo requires the relay-only host.')
@@ -65,6 +65,8 @@ def create_app(model_factory=None, pipeline_factory=None, database=None, *, rela
     token = secrets.token_urlsafe(32)
     state = {'models': None, 'error': None, 'busy': False, 'relayOnly': relay_only}
     inference_lock = asyncio.Lock()
+    from .video_classifier import VideoClassifier
+    state['videoClassifier'] = video_classifier if video_classifier is not None else VideoClassifier()
     from .classroom import Classroom
     classroom = Classroom(state, pipeline_factory, unpack_frame, inference_lock, database)
     fight_demo = None

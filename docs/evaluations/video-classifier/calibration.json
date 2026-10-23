@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 1,
+  "selectedAtUtc": "2026-10-23T01:53:37.485021+00:00",
+  "splitSha256": "50e8ba7fa09e6c26e28651096fc82d3439c6751548a8c67630c0616d0fbbf568",
+  "modelSha256": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+  "policy": {
+    "qualifying_threshold": 0.999,
+    "strong_threshold": 1.0,
+    "consecutive_windows": 2,
+    "stride_ms": 1000,
+    "cooldown_ms": 8000,
+    "merge_gap_ms": 2000,
+    "require_two_people": false
+  },
+  "selectionRule": "point_estimate_fallback_insufficient_exposure",
+  "calibrationFeasible": true,
+  "conservativeMinimumPossibleUpperPerHour": 13.331360209262723,
+  "candidateCount": 219,
+  "feasibleCandidateCount": 8,
+  "calibration": {
+    "recordings": 425,
+    "groups": 219,
+    "positiveGroups": 15,
+    "normalGroups": 204,
+    "eventCount": 62,
+    "hits": 4,
+    "eventRecall": 0.06451612903225806,
+    "falseAlerts": 0,
+    "normalHours": 0.2767069073379982,
+    "totalExplicitNormalHours": 0.687291849559457,
+    "falseAlertsPerHour": 0.0,
+    "medianTimeToAlertMs": 5000.0,
+    "p90TimeToAlertMs": 5700.0,
+    "alertCount": 4,
+    "unknownAlerts": 0,
+    "ci95": {
+      "eventRecall": {
+        "low": 0.0,
+        "high": 0.17501096491228052,
+        "eligibleGroups": 15,
+        "validReplicates": 5000,
+        "iterations": 5000
+      },
+      "falseAlertsPerHour": {
+        "low": 0.0,
+        "high": 0.0,
+        "eligibleGroups": 204,
+        "validReplicates": 5000,
+        "iterations": 5000
+      },
+      "medianTimeToAlertMs": {
+        "low": 5000.0,
+        "high": 6000.0,
+        "eligibleGroups": 2,
+        "validReplicates": 4293,
+        "iterations": 5000
+      },
+      "p90TimeToAlertMs": {
+        "low": 5000.0,
+        "high": 6000.0,
+        "eligibleGroups": 2,
+        "validReplicates": 4293,
+        "iterations": 5000
+      }
+    },
+    "poissonUpper97_5PerHour": 13.331360209262723,
+    "contexts": {
+      "classroom": {
+        "recordings": 18,
+        "groups": 12,
+        "positiveGroups": 8,
+        "normalGroups": 7,
+        "eventCount": 11,
+        "hits": 0,
+        "eventRecall": 0.0,
+        "falseAlerts": 0,
+        "normalHours": 0.00729688957769929,
+        "totalExplicitNormalHours": 0.016046889670301143,
+        "falseAlertsPerHour": 0.0,
+        "medianTimeToAlertMs": null,
+        "p90TimeToAlertMs": null,
+        "alertCount": 0,
+        "unknownAlerts": 0,
+        "ci95": {
+          "eventRecall": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 8,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "falseAlertsPerHour": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 7,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "medianTimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          },
+          "p90TimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          }
+        },
+        "poissonUpper97_5PerHour": 505.54135633186326
+      },
+      "corridor": {
+        "recordings": 118,
+        "groups": 71,
+        "positiveGroups": 2,
+        "normalGroups": 61,
+        "eventCount": 8,
+        "hits": 0,
+        "eventRecall": 0.0,
+        "falseAlerts": 0,
+        "normalHours": 0.06388905415177552,
+        "totalExplicitNormalHours": 0.18600016713033704,
+        "falseAlertsPerHour": 0.0,
+        "medianTimeToAlertMs": null,
+        "p90TimeToAlertMs": null,
+        "alertCount": 0,
+        "unknownAlerts": 0,
+        "ci95": {
+          "eventRecall": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 2,
+            "validReplicates": 4362,
+            "iterations": 5000
+          },
+          "falseAlertsPerHour": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 61,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "medianTimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          },
+          "p90TimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          }
+        },
+        "poissonUpper97_5PerHour": 57.738833405650276
+      },
+      "domestic": {
+        "recordings": 185,
+        "groups": 102,
+        "positiveGroups": 1,
+        "normalGroups": 101,
+        "eventCount": 14,
+        "hits": 0,
+        "eventRecall": 0.0,
+        "falseAlerts": 0,
+        "normalHours": 0.15672947652830285,
+        "totalExplicitNormalHours": 0.347004471333529,
+        "falseAlertsPerHour": 0.0,
+        "medianTimeToAlertMs": null,
+        "p90TimeToAlertMs": null,
+        "alertCount": 0,
+        "unknownAlerts": 0,
+        "ci95": {
+          "eventRecall": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 1,
+            "validReplicates": 3148,
+            "iterations": 5000
+          },
+          "falseAlertsPerHour": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 101,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "medianTimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          },
+          "p90TimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          }
+        },
+        "poissonUpper97_5PerHour": 23.536602914945508
+      },
+      "other": {
+        "recordings": 90,
+        "groups": 39,
+        "positiveGroups": 6,
+        "normalGroups": 33,
+        "eventCount": 23,
+        "hits": 1,
+        "eventRecall": 0.043478260869565216,
+        "falseAlerts": 0,
+        "normalHours": 0.044869272475138375,
+        "totalExplicitNormalHours": 0.12521625487576268,
+        "falseAlertsPerHour": 0.0,
+        "medianTimeToAlertMs": 6000.0,
+        "p90TimeToAlertMs": 6000.0,
+        "alertCount": 1,
+        "unknownAlerts": 0,
+        "ci95": {
+          "eventRecall": {
+            "low": 0.0,
+            "high": 0.07407407407407407,
+            "eligibleGroups": 6,
+            "validReplicates": 4992,
+            "iterations": 5000
+          },
+          "falseAlertsPerHour": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 33,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "medianTimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 1,
+            "validReplicates": 3247,
+            "iterations": 5000
+          },
+          "p90TimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 1,
+            "validReplicates": 3247,
+            "iterations": 5000
+          }
+        },
+        "poissonUpper97_5PerHour": 82.21393507456374
+      },
+      "sports": {
+        "recordings": 3,
+        "groups": 2,
+        "positiveGroups": 0,
+        "normalGroups": 2,
+        "eventCount": 0,
+        "hits": 0,
+        "eventRecall": null,
+        "falseAlerts": 0,
+        "normalHours": 0.0014629629629629628,
+        "totalExplicitNormalHours": 0.004796296296296297,
+        "falseAlertsPerHour": 0.0,
+        "medianTimeToAlertMs": null,
+        "p90TimeToAlertMs": null,
+        "alertCount": 0,
+        "unknownAlerts": 0,
+        "ci95": {
+          "eventRecall": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          },
+          "falseAlertsPerHour": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 2,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "medianTimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          },
+          "p90TimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 0,
+            "validReplicates": 0,
+            "iterations": 5000
+          }
+        },
+        "poissonUpper97_5PerHour": 2521.512538255096
+      },
+      "street": {
+        "recordings": 11,
+        "groups": 4,
+        "positiveGroups": 1,
+        "normalGroups": 4,
+        "eventCount": 6,
+        "hits": 3,
+        "eventRecall": 0.5,
+        "falseAlerts": 0,
+        "normalHours": 0.002459251642119149,
+        "totalExplicitNormalHours": 0.00822777025323026,
+        "falseAlertsPerHour": 0.0,
+        "medianTimeToAlertMs": 5000.0,
+        "p90TimeToAlertMs": 5000.0,
+        "alertCount": 3,
+        "unknownAlerts": 0,
+        "ci95": {
+          "eventRecall": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 1,
+            "validReplicates": 3419,
+            "iterations": 5000
+          },
+          "falseAlertsPerHour": {
+            "low": 0.0,
+            "high": 0.0,
+            "eligibleGroups": 4,
+            "validReplicates": 5000,
+            "iterations": 5000
+          },
+          "medianTimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 1,
+            "validReplicates": 3419,
+            "iterations": 5000
+          },
+          "p90TimeToAlertMs": {
+            "low": null,
+            "high": null,
+            "eligibleGroups": 1,
+            "validReplicates": 3419,
+            "iterations": 5000
+          }
+        },
+        "poissonUpper97_5PerHour": 1500.0008095695368
+      }
+    }
+  },
+  "replayReceipt": {
+    "split": "calibration",
+    "splitSha256": "50e8ba7fa09e6c26e28651096fc82d3439c6751548a8c67630c0616d0fbbf568",
+    "modelSha256": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+    "recordings": 425,
+    "windows": 1356,
+    "elapsedSeconds": 374.87419129995396,
+    "clockAdmission": "actual-frame-clock-v2",
+    "containerEndWindowsRemoved": 39,
+    "maximumActualFrameGapMs": 37.03703703703741,
+    "firstActualPtsRangeMs": [
+      0.0,
+      0.0
+    ],
+    "cacheContentSha256": "04e0cf5a987c9ba0988d480706da78e1ee3d26463ae32e4ce798e07d1a9eff4d"
+  }
+}

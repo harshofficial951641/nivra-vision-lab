@@ -1,0 +1,17 @@
+{
+  "unitTestsPassed": 22,
+  "sourceAstAndWhitespacePassed": true,
+  "publicJsonAggregateOnly": true,
+  "splitPolicyModelAndResultSealsVerified": true,
+  "selectedSourceFilesUnchangedThroughTest": true,
+  "backendContract": {
+    "sourceSha256": "0654bf756d7b09c5a8540f30b4ce4a5b5d57839832bd36c6ecd580bbf0f09d06",
+    "policyLoaderStatus": "c2",
+    "syntheticEpisodeComparisons": 10000,
+    "episodeParityPassed": true,
+    "ringSamplingAndPreprocessingMaxAbsDifference": 0.0,
+    "lateGridPhaseMs": 777.7777777777774
+  },
+  "fullBackendEndToEndVerified": false,
+  "macM5Verified": false
+}

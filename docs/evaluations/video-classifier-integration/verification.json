@@ -1,0 +1,102 @@
+{
+  "recordedAt": "2026-10-23T02:09:36.944338+00:00",
+  "branch": "harsh/police-and-detector",
+  "modelSha256": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+  "modelBytes": 11169076,
+  "policyPresent": true,
+  "policySha256": "51212064d1dbcc29aea1cdd9689fd6fefceeae4417873e92de4fedf56b845f14",
+  "policyDefaultEnabled": true,
+  "validation": {
+    "pytest": {
+      "passed": 1204,
+      "skipped": 6,
+      "cudaTrainingEnabled": false,
+      "excluded": [
+        "tests/test_public_host_tools.py",
+        "tests/test_local_host_tools.py"
+      ],
+      "legacyClassifierEnv": "off",
+      "finalRunSeconds": 115.07
+    },
+    "webTests": {
+      "files": 77,
+      "passed": 711
+    },
+    "lint": "passed",
+    "productionBuild": "passed",
+    "cudaNumericalParity": {
+      "passed": 1,
+      "batches": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "atol": 1e-05,
+      "rtol": 1e-05
+    }
+  },
+  "browser": {
+    "origin": "http://127.0.0.1:43193",
+    "disposableRamDatabase": true,
+    "stopped": true,
+    "fixture": "visibly synthetic classifier event; model/transport exercised separately in tests/benchmark",
+    "viewports": [
+      [
+        1280,
+        800
+      ],
+      [
+        390,
+        844
+      ]
+    ],
+    "checked": [
+      "wall review count",
+      "review explanation",
+      "RAM clip",
+      "explicit confirmation",
+      "guard dispatch",
+      "keyboard acknowledgement",
+      "on scene",
+      "clear",
+      "clip expiry after clear",
+      "no horizontal overflow",
+      "no unlabelled buttons on guard screen",
+      "console inspection; initial 401 and rejected duplicate confirm 409, no uncaught JS errors",
+      "no external resource origins on guard screen"
+    ]
+  },
+  "files": {
+    "service/nivra/video_classifier.py": "7f0abbfcef2e0d5286efacdf5dd3fad3b43e4c3c14a4c2e585441d63e5bc0157",
+    "service/nivra/classroom.py": "e2e508b85fb5764d26b200bf9ea4fc37c09bc9dec595cc38b81707fb75a2e15f",
+    "service/nivra/server.py": "426268e26ac3ab331e6dcd0f3d6c6ed57ca0cc201204a2b2e5482c9fb602f036",
+    "service/nivra/workspaces.py": "339c688c8c8e35f1d295ca8ac65d61f5ae1c58e34c1d61c9a1ca0f862050e009",
+    "service/nivra/assets/movinet_a0_fight.pt": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+    "service/model-manifest.json": "dcf140d7a96f8cde01766a527043db8756073b6d04922106d09dcd2cf7ef96ba",
+    "service/prepare_models.py": "1f5e2024274f81f60e3c139431ea39bf6defb8e98b1627c9da24bf231489ee06",
+    "service/requirements.txt": "7fe83ea1c9ed6f8aa5c81053d229bfbc5dac45411704e5d9f7f096d6e5c4473c",
+    "service/THIRD_PARTY.md": "0e20e9cb0bafd445c3265af2182b43744a2814e2a4cc9c0b4735d04b76df8e56",
+    "THIRD_PARTY_NOTICES.md": "f9e57bc6c5f712a40de2ec27df404b2e0451d07a5d760ff97d84210d07c9b898",
+    "licenses/MOVINET-APACHE-2.0.txt": "5b17814bf0de8cf65069bc6d7cc38cff19fcaa864d243423ad3ef3db01b52385",
+    "licenses/MOVINET-PORT-MIT.txt": "862c9a22cac4c9dc606f218c4c4b6e19cd57b00a64e90c5eebc7832bcc37066b",
+    "service/benchmark_video_classifier.py": "bdc2ff7e645ae59145aaa8a1ba224b8d27e29dd2a364c23341cfecae61427054",
+    "service/tests/test_video_classifier.py": "f20fb8fc3d72deae19f1bd57f047521e9afda2d4add80f82c2f7166d5392ce9e",
+    "service/tests/video_classifier_fixtures.py": "58e07196441e3951437264abbe2658581157e8290f1feda350a84866020b10c8",
+    "service/tests/fixtures/movinet_probe_preprocessing.py": "05d4b93244bbd9a89b8298f1e8b198914165d577ae7ff159893dd20c66ff889a",
+    "service/tests/test_guard_auth.py": "b13318c513844bd47f117426206831980e070e4030bd12b503b07fe6ff01fb1f",
+    "src/command/CommandWall.test.tsx": "78db68065d32dd6a8ecabb67915f561af1458a0f6289582cc7b93b3851b533bf",
+    "src/command/ReviewWindow.test.tsx": "278dfce7871fb183564dd54467b5abead4f2fe67e3d082c7756dd69c073f79b2",
+    "src/guard/GuardApp.police.test.tsx": "7ed61f1d30ef1437fecac61c308297e0319a3e963a510bf1f2c0ee2b4c62f947"
+  },
+  "finalVerifiedAt": "2026-10-23T02:13:01.767670+00:00",
+  "c2Evaluation": {
+    "eventCount": 53,
+    "hits": 11,
+    "eventRecall": 0.20754716981132076,
+    "falseAlerts": 0,
+    "normalHours": 0.22379364124056783,
+    "falseAlertsPerHour": 0.0,
+    "poissonUpper97_5PerHour": 16.483397087000167
+  }
+}

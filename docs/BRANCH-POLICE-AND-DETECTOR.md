@@ -19,7 +19,12 @@ Based on Tanishq's `main` at `f145b61`. Nothing on `main` or the live host was c
    - A conservative profile reached 4.3% with no observed false alerts. It was not train-selected, so it stays off pending fresh confirmation.
    - In 88–93% of samples inside labelled fights, two usable bodies were not visible. Skeleton rules alone cannot reach high recall on this footage.
    - `DEFAULT_DETECTOR_EXPERIMENT = null`: production behaviour is unchanged.
-3. **Test-only fixes.**
+3. **Video fight classifier on the Mac backend (MoViNet A0).** It decodes the existing browser H264 stream, scores 4 s windows about once a second, and creates human-review events (`movinet-a0-vid-v1`). These are de-duplicated against browser-rule alerts within 8 s.
+   - Held-out test: **11/53 fights (21%, CI 6–35%)** with **0 false alerts in 13.4 normal minutes**. That passes the owner's ≤2/h rule on the point estimate only; the upper bound is about 16/h. Calibration half: 4/62.
+   - It is ON by default through `NIVRA_VIDEO_CLASSIFIER=auto` and `policy.json`. `off` restores previous behaviour.
+   - Weights are bundled (11 MB; Apache-2.0 MoViNet weights, MIT port, fine-tuned on CC0 VID).
+   - See `docs/evaluations/video-classifier/` and `docs/evaluations/video-classifier-integration/`.
+4. **Test-only fixes.**
    - GPS test guard ordering tie.
    - LAN interface stub (no `ifaddr`).
    - Guard-stream snapshot draining.
@@ -27,8 +32,8 @@ Based on Tanishq's `main` at `f145b61`. Nothing on `main` or the live host was c
 
 ## Verification on Windows (i5-10400F, GTX 1660 Ti)
 
-- **Frontend:** lint passes, build passes, and Vitest **708/708** (77 files) on the final commit. Repeated runs at `0a8c51f`: 4 full runs, plus police/guard/wall files 10×.
-- **Python:** **1,171 passed, 5 skipped, 0 failed** on the final commit. The Mac-only `test_public_host_tools.py` and `test_local_host_tools.py` were excluded. At `0a8c51f`: 3 full runs, and police/classroom/GPS 15× each.
+- **Frontend:** lint passes, build passes, and Vitest **711/711** (77 files) on the final commit. Repeated runs at `0a8c51f`: 4 full runs, plus police/guard/wall files 10×.
+- **Python:** **1,204 passed, 6 skipped, 0 failed** on the final commit, classifier included. Classifier evaluation unit tests: 22/22 (`python -m unittest`). The Mac-only `test_public_host_tools.py` and `test_local_host_tools.py` were excluded. At `0a8c51f`: 3 full runs, and police/classroom/GPS 15× each.
 - **Known non-regressions:**
   - `test_usb.py` sustained-pump throughput can dip below 16 fps under heavy CPU load.
   - `tests/classroom.spec.ts` sample-wall test (`/?demo=1`) fails on `main` too.

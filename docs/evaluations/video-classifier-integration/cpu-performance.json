@@ -1,0 +1,113 @@
+{
+  "device": "cpu",
+  "requestedDevice": "cpu",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.11.15",
+  "synthetic": {
+    "cameras": 4,
+    "width": 1280,
+    "height": 720,
+    "fps": 40,
+    "seconds": 30
+  },
+  "status": "ready",
+  "detail": null,
+  "droppedPackets": 0,
+  "previews": 400,
+  "decodedFrames": 4804,
+  "workerMetrics": {
+    "decodeCpuMs": 6140.625,
+    "decodedFrames": 4804,
+    "computedWindows": 108,
+    "stalePackets": 0,
+    "inferenceMs": [
+      193.73100000666454,
+      190.90260000666603,
+      191.46219996036962,
+      231.35030001867563,
+      234.43070001667365,
+      190.22960000438616,
+      196.75929995719343,
+      202.9387000366114,
+      226.14959999918938,
+      234.89299998618662,
+      199.79560002684593,
+      195.01830002991483,
+      211.0734999878332,
+      228.95210003480315,
+      202.13539997348562,
+      239.95020001893863,
+      287.1642999816686,
+      305.1937999553047,
+      267.8330999915488,
+      216.27239999361336,
+      248.23260004632175,
+      233.47760003525764,
+      204.3394999927841,
+      201.9326000008732,
+      210.5388999916613,
+      220.48419999191537,
+      191.36459997389466
+    ],
+    "cameras": {
+      "('benchmark', '0')": {
+        "decodedFrames": 1201,
+        "buffered": 45,
+        "sourceMs": 30000.0,
+        "anchorMs": 0.0
+      },
+      "('benchmark', '1')": {
+        "decodedFrames": 1201,
+        "buffered": 45,
+        "sourceMs": 30000.0,
+        "anchorMs": 0.0
+      },
+      "('benchmark', '2')": {
+        "decodedFrames": 1201,
+        "buffered": 45,
+        "sourceMs": 30000.0,
+        "anchorMs": 0.0
+      },
+      "('benchmark', '3')": {
+        "decodedFrames": 1201,
+        "buffered": 45,
+        "sourceMs": 30000.0,
+        "anchorMs": 0.0
+      }
+    }
+  },
+  "decodeCpuPercentOneCore": 20.46875,
+  "decodeCpuPercentMachine": 1.7057291666666667,
+  "inferenceMs": {
+    "p50": 211.0734999878332,
+    "p95": 287.1642999816686,
+    "samples": 27
+  },
+  "batchSizes": [
+    4
+  ],
+  "perCamera": {
+    "0": {
+      "windows": 27,
+      "windowsPerSecond": 0.9981955695465715
+    },
+    "1": {
+      "windows": 27,
+      "windowsPerSecond": 0.9981955695465715
+    },
+    "2": {
+      "windows": 27,
+      "windowsPerSecond": 0.9981955695465715
+    },
+    "3": {
+      "windows": 27,
+      "windowsPerSecond": 0.9981955695465715
+    }
+  },
+  "loopLagMs": {
+    "p50": 6.000000003259629,
+    "p95": 6.000000003259629,
+    "max": 22.000000006519254
+  },
+  "scope": "Real-time synthetic transport/decode/resize/model/preview IPC; excludes browser, network, rules and accuracy. Decode CPU includes ring resize, excludes model/JPEG. One-core CPU is 100% per core. Short PC run, not Mac capacity."
+}

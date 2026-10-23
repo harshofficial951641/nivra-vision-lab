@@ -28,3 +28,11 @@ describe('guard police integration', () => {
     expect(screen.getByRole('link', { name: 'Text police' }).getAttribute('href')).toContain(encodeURIComponent('Entrance, Floor 2'))
   })
 })
+
+it('shows a dispatched classifier incident through the existing guard contract',async()=>{
+  state.alerts=[{id:'video-event',camera_id:'c1',camera_name:'Synthetic camera',location:'Floor 2',detail:'Video classifier: possible physical conflict. Review the clip.',received_at:1000,alerted_at:1100,status:'acknowledged',revision:1}]
+  render(<GuardApp />)
+  await act(async()=>fireEvent.click(screen.getByRole('button',{name:'Start shift'})))
+  expect(screen.getByRole('heading',{name:'Go to Synthetic camera'})).toBeVisible()
+  expect(screen.getByText('Possible physical conflict · Floor 2')).toBeVisible()
+})

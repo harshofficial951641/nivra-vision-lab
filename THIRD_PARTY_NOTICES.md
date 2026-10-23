@@ -31,3 +31,21 @@ is explicitly labelled. It is not a recording or an accuracy dataset.
 QR generation uses qrcode.react 4.2.0 (ISC), https://github.com/zpao/qrcode.react.
 The optional local tunnel uses official cloudflared 2026.9.3 (Apache-2.0); its
 checksum and operating limits are documented in docs/remote-camera-setup.md.
+
+
+## Bundled MoViNet A0 VID candidate
+
+`service/nivra/assets/movinet_a0_fight.pt` is the fixed epoch-3 T7 eight-frame
+fine-tune, model id `movinet-a0-vid-v1`. SHA-256, input contract and provenance
+are recorded in `service/model-manifest.json` (paths relative to service).
+Original Google MoViNet weights: Apache-2.0, [publisher model licence](https://www.kaggle.com/models/google/movinet).
+The [A0 stream model card](https://github.com/tensorflow/tfhub.dev/blob/81fdea8ffa53b5acbd66a012d17fb8f9602c714b/assets/docs/tensorflow/models/movinet/a0/stream/kinetics-600/classification/3.md)
+identifies the upstream model. The PyTorch port is by Atze00, MIT, pinned to
+`c2d1edf48fc6c5259707f9d833f22171b4f63493`:
+[source and licence](https://github.com/Atze00/MoViNet-pytorch/blob/c2d1edf48fc6c5259707f9d833f22171b4f63493/LICENSE).
+The bundled derivative uses VID V2 CC0-1.0 fine-tuning data; no training footage
+is redistributed. Preserve Google Apache-2.0 and port MIT obligations. Full
+licence texts are in `licenses/MOVINET-APACHE-2.0.txt` and
+`licenses/MOVINET-PORT-MIT.txt` at repository root.
+This is a review aid, not a calibrated violence probability or a claim of
+classroom accuracy, deployment clearance, or Apple hardware validation.

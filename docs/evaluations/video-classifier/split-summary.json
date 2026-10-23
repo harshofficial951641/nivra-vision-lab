@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "frozenAtUtc": "2026-10-23T01:27:37.290902+00:00",
+  "modelSha256": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+  "trainingManifestSha256": "bf2942793bbdfc51281c8e9c47afe1a4c566c1b0beba0fb34b5cccd8b6d4fec7",
+  "round1DevManifestSha256": "dd215f1a8569ab7e78ae27cf94b3d6165ec21d1aef461405c1ddf4e58cc9c00e",
+  "splitMethod": {
+    "seed": 20261023,
+    "trials": 8192,
+    "objective": "sum squared relative imbalance: recordings, events, actionable normal ms, per-context events and actionable normal ms",
+    "objectiveValue": 0.12440006123102046
+  },
+  "exclusions": {
+    "round1-dev:no_explicit_labels": 8,
+    "post-round1-normal:duplicate_sha": 14,
+    "post-round1-normal:train_component": 145
+  },
+  "policyGrid": {
+    "qualifying": [
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6,
+      0.7,
+      0.8,
+      0.85,
+      0.9,
+      0.95,
+      0.975,
+      0.99,
+      0.995,
+      0.999,
+      0.9999,
+      1.0
+    ],
+    "strong": [
+      0.7,
+      0.9,
+      0.95,
+      0.99,
+      0.999,
+      1.0
+    ],
+    "confirmation": [
+      1,
+      2,
+      3
+    ],
+    "cooldownMs": 8000,
+    "mergeGapMs": 2000
+  },
+  "calibrationSelection": "maximize event recall subject to max(group-bootstrap upper95, exact Poisson upper97.5) <=2/h if any nonzero-recall policy qualifies; otherwise point estimate <=2/h. Ties: fewer false alerts, lower median delay, stricter thresholds, more confirmations.",
+  "summary": {
+    "calibration": {
+      "recordings": 425,
+      "groups": 219,
+      "eventCount": 62,
+      "positiveRecordings": 60,
+      "positiveGroups": 15,
+      "normalGroups": 217,
+      "totalExplicitNormalHours": 0.687291849559457,
+      "actionableNormalHours": 0.27670691215955695,
+      "sourceCounts": {
+        "post-round1-normal": 297,
+        "round1-dev": 128
+      },
+      "contexts": {
+        "classroom": {
+          "recordings": 18,
+          "events": 11,
+          "normalHours": 0.007296889670301141
+        },
+        "corridor": {
+          "recordings": 118,
+          "events": 8,
+          "normalHours": 0.06388905574145749
+        },
+        "domestic": {
+          "recordings": 185,
+          "events": 14,
+          "normalHours": 0.1567294788410275
+        },
+        "other": {
+          "recordings": 90,
+          "events": 23,
+          "normalHours": 0.04486927330168859
+        },
+        "sports": {
+          "recordings": 3,
+          "events": 0,
+          "normalHours": 0.0014629629629629628
+        },
+        "street": {
+          "recordings": 11,
+          "events": 6,
+          "normalHours": 0.002459251642119149
+        }
+      }
+    },
+    "test": {
+      "recordings": 421,
+      "groups": 220,
+      "eventCount": 53,
+      "positiveRecordings": 52,
+      "positiveGroups": 14,
+      "normalGroups": 217,
+      "totalExplicitNormalHours": 0.6277749417578544,
+      "actionableNormalHours": 0.22379364481341,
+      "sourceCounts": {
+        "post-round1-normal": 326,
+        "round1-dev": 95
+      },
+      "contexts": {
+        "classroom": {
+          "recordings": 22,
+          "events": 12,
+          "normalHours": 0.00576249787037037
+        },
+        "corridor": {
+          "recordings": 141,
+          "events": 8,
+          "normalHours": 0.05140303861816877
+        },
+        "domestic": {
+          "recordings": 183,
+          "events": 12,
+          "normalHours": 0.12741622894051188
+        },
+        "other": {
+          "recordings": 54,
+          "events": 15,
+          "normalHours": 0.03539768164780225
+        },
+        "sports": {
+          "recordings": 13,
+          "events": 0,
+          "normalHours": 0.001601851851851852
+        },
+        "street": {
+          "recordings": 8,
+          "events": 6,
+          "normalHours": 0.0022123458847050984
+        }
+      }
+    }
+  },
+  "splitSha256": "50e8ba7fa09e6c26e28651096fc82d3439c6751548a8c67630c0616d0fbbf568",
+  "sourceInputSha256s": [
+    "bf2942793bbdfc51281c8e9c47afe1a4c566c1b0beba0fb34b5cccd8b6d4fec7",
+    "dd215f1a8569ab7e78ae27cf94b3d6165ec21d1aef461405c1ddf4e58cc9c00e",
+    "1d296754b0ffb20e6ccda3604747851a415386608be451a5aa0820f10e243d89",
+    "165eea81bdb01ef386b42dd27690161b0ad745e4615f38bc5d082a4a4e7fe909",
+    "233b55f7002be7975b9d9f81b8270407e19d35261857dfba2ab89c4c1f27fc56",
+    "54baa1808a1d199d0a6d75725a1d9bfc859c0cf365a597e2de5df4c602682c9d",
+    "d1b74583f61d1a39e3ee105e780be4d7f308fb613f6755409e52cacb734dcf52",
+    "0121301d05b0aef4750efd23e33a771762728f7293fbc17bca1545cf5f517cbc",
+    "da62b8430d26413b52038100dd6739afb7868cdf2eb65a0eb2bfd1332928d79d",
+    "c41691c84d7cb54c175bf62fa999e981c265e536a5fd85ec07cd7f44cac505c4",
+    "299cbbf04532d952b1336329d7829659b6f685282e6b29c2a2feb1d3d6626ce2",
+    "394bf1abab7b285387b3ca7795d299c597154683d73cbc2008a3898354728142",
+    "0f1480f8099d8f20aa0fc4a1a9b0bcca90ceb7d113a51db94229bd89e1333a32",
+    "fb63e4b3543489c3a88a805a2fb4f0b8529234841a8bee1b8cefa5cef0b8f0c6",
+    "b7a69c1ee2d7be8542605f679bdbe66d01e60e7dc13b6acbcbeda777a0a74898"
+  ],
+  "mediaSha256Verified": 846,
+  "trainLeakageByIdHashOrGroup": 0
+}

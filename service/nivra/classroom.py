@@ -30,6 +30,7 @@ from .clips import Clips, signed_frame_url, valid_frame_signature
 from .auth import require_role
 from .native_camera import NativeAnalysis, FIGHT_MODEL as NATIVE_FIGHT_MODEL, payload as native_payload, video_packet
 from .decision import Decisions
+from .video_classifier import BROWSER_MODELS, MODEL_ID as VIDEO_MODEL, Episode
 
 ADMIN_COOKIE = 'nivra_operator'
 CAMERA_COOKIE = 'nivra_publisher'
@@ -234,6 +235,9 @@ class Classroom:
         self.last_test_event_at = float('-inf')
         self.clips = Clips()
         self.clip_task = None
+        self.video_classifier = state.get('videoClassifier')
+        self.video_scope = secrets.token_hex(16)
+        self.video_episodes = {}
         self.analysis_ms = 0.0
         self.analysis_samples = 0
         self.router = APIRouter(prefix='/api/v2')
@@ -276,6 +280,8 @@ class Classroom:
 
     async def start(self):
         self.auth.log_mode()
+        if self.video_classifier:
+            await self.video_classifier.attach(self.video_scope, self.video_classifier_result)
         self.task = asyncio.create_task(self.work())
         await self.push.start()
         async def expire_clips():
@@ -285,6 +291,8 @@ class Classroom:
         self.clip_task = asyncio.create_task(expire_clips())
 
     async def stop(self):
+        if self.video_classifier:
+            await self.video_classifier.detach(self.video_scope)
         await self.push.stop()
         if self.clip_task:
             self.clip_task.cancel()
@@ -551,6 +559,13 @@ class Classroom:
         self.wake.set()
 
     def runtime(self):
+        runtime = self.base_runtime()
+        classifier = self.video_classifier
+        if classifier and classifier.mode != 'off':
+            return dict(runtime or {}, videoClassifier=classifier.snapshot(self.video_scope))
+        return runtime
+
+    def base_runtime(self):
         if self.state.get('nativeCamera'):
             return dict(device='camera-device',compute='camera-device',personModel='Apple Vision (observed joints)',
                         fightModel=NATIVE_FIGHT_MODEL,maxPeople=DEVICE_MAX_PEOPLE)
@@ -563,7 +578,36 @@ class Classroom:
         return dict(models.runtime, analysisMs=round(self.analysis_ms, 2),
                     targetFpsPerCamera=round(min(6, 800 / max(1, self.analysis_ms) / cameras), 2))
 
+    def video_classifier_result(self, camera_id, message):
+        live = self.live.get(camera_id)
+        if (not live or live.get('compute') != 'device' or not live.get('browserVideo')
+                or (live['generation'], live.get('nativeVideoGeneration')) != message['token']
+                or time.monotonic()-live['received'] > 3):
+            return
+        if message['type'] == 'preview':
+            self.clips.receive(camera_id, message['jpeg'])
+            return
+        if message['type'] != 'score' or not 0 <= live.get('nativeVideoTimestamp', -1)-message['endMs'] <= 2000:
+            return
+        episode = self.video_episodes.setdefault(camera_id, Episode(self.video_classifier.policy))
+        epoch = (*message['token'], message.get('revision', 0), message['epoch'])
+        if episode.update(message['endMs'], message['score'], epoch, time.monotonic()):
+            event = dict(id=f"video-{message['token'][1]}-{message.get('revision', 0)}-{message['epoch']}-{message['endMs']}",
+                         occurredAtMs=message['endMs'], evidenceTimestampMs=message['endMs'],
+                         evidenceStartMs=message['endMs']-4000, evidenceModel=VIDEO_MODEL,
+                         detail='Video classifier: possible physical conflict. Review the clip.')
+            self.record_event(camera_id, live['generation'], event)
+        self.schedule_snapshot()
+
     def record_event(self, camera_id, generation, event):
+        classifier = self.video_classifier
+        if classifier and classifier.enabled:
+            model = event.get('evidenceModel')
+            if model == VIDEO_MODEL or model in BROWSER_MODELS:
+                recent = self.store.db.execute('SELECT model FROM events WHERE camera_id=? AND received_at>?',
+                    (camera_id, time.time()*1000-classifier.policy.cooldown_ms)).fetchall()
+                if any(row['model'] == VIDEO_MODEL or (model == VIDEO_MODEL and row['model'] in BROWSER_MODELS) for row in recent):
+                    return False
         if not self.store.record(camera_id, generation, event): return False
         # Store.record returns a bool; resolve the inserted row without changing H2's schema/API.
         row = self.store.db.execute('SELECT id FROM events WHERE camera_id=? AND generation=? AND source_id=?',
@@ -635,7 +679,9 @@ class Classroom:
 
     async def disconnect_camera(self, camera_id, *, revoke=True):
         self.clips.disconnect(camera_id)
+        if self.video_classifier: self.video_classifier.forget(self.video_scope, camera_id)
         if revoke:
+            self.video_episodes.pop(camera_id, None)
             keys = {key for key, subject in self.credentials.items() if subject == camera_id}
             def keep_ticket(entry):
                 if entry.get('path') != '/api/v2/camera/stream': return True
@@ -1135,6 +1181,9 @@ class Classroom:
                                 bootstrap.append(bootstrap_packet)
                             elif bootstrap: bootstrap.append(packet)
                             if sum(map(len,bootstrap)) > 2_000_000: bootstrap.clear()
+                            if browser_video and self.video_classifier:
+                                self.video_classifier.submit(self.video_scope, camera_id, generation, packet,
+                                    video_generation=data['generation'], keyframe=bool(keyframes))
                             self.broadcast_video(camera_id,packet)
                             self.schedule_snapshot()
                             await socket.send_json({'type':'video-accepted','sequence':sequence, **({'timestampMs':timestamp} if browser_video else {})})
@@ -1248,6 +1297,7 @@ class Classroom:
             finally:
                 if self.live.get(camera_id) is live:
                     self.clips.disconnect(camera_id)
+                    if self.video_classifier: self.video_classifier.forget(self.video_scope, camera_id)
                     self.live.pop(camera_id,None)
                     self.pending.pop(camera_id,None)
                     self.order = deque(c for c in self.order if c != camera_id)

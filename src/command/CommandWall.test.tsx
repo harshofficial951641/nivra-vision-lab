@@ -193,3 +193,11 @@ describe('direct owner camera removal',()=>{
     expect(apiMock).not.toHaveBeenCalled()
   })
 })
+
+it('keeps a video classifier incident in the existing wall review flow',()=>{
+  state.data={...state.data,events:[{...alert(),model:'movinet-a0-vid-v1',detail:'Video classifier: possible physical conflict. Review the clip.'}]}
+  render(<CommandWall />)
+  expect(screen.getByRole('button',{name:'1 open alert'})).toBeVisible()
+  fireEvent.click(screen.getByRole('button',{name:'1 open alert'}))
+  expect(screen.getByRole('dialog',{name:'Review e1'})).toBeVisible()
+})

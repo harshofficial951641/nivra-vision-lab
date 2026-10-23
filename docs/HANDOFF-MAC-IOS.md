@@ -69,3 +69,16 @@ Neither was compiled here: this PC has no JDK or Android SDK.
 `MainActivity.java` may unload the WebView as soon as the dialer opens, which could drop that request before it starts.
 On a real Android phone, check that tapping Call 112 still records "Police contacted" on the wall.
 If it doesn't, start the logging request before the external intent fires, or log it from native code.
+
+## 8. Video fight classifier on the Mac backend (new)
+
+`service/nivra/video_classifier.py` decodes the existing browser H264 camera stream on the backend with PyAV.
+It scores a 4 s window per camera about once a second with MoViNet A0 (`service/nivra/assets/movinet_a0_fight.pt`, checksum in `model-manifest.json`).
+It records "Video classifier: possible physical conflict" events for human review.
+`NIVRA_VIDEO_CLASSIFIER=auto` (the default) follows `docs/evaluations/video-classifier/policy.json`, which has `defaultEnabled: true`. `off` loads nothing and restores the previous behaviour.
+
+Before relying on it, check on the Mac:
+- The device is reported honestly in the health/runtime snapshot (MPS or CPU) and the four-camera load stays acceptable. Run `service/benchmark_video_classifier.py`; instructions are in `docs/evaluations/video-classifier-integration/README.md`. On Windows: CPU batch-4 ≈ 211 ms p50, CUDA ≈ 84 ms, decode about 20% of one core for four 720p/40 fps cameras.
+- 10+ minutes of four cameras without watchdog restarts, loop lag or thermal slowdown on the fanless Air.
+- **False alarms on real cameras.** The held-out test had 0 false alerts in only 13.4 minutes of usable normal footage (Poisson upper bound about 16/h), and caught 11/53 = 21% of labelled fights. The threshold is extreme (0.999), so real-camera compression and lighting can shift scores. Watch the alert rate for the first days; if it exceeds ~2 per camera-hour, set `NIVRA_VIDEO_CLASSIFIER=off` or raise the thresholds in `policy.json`.
+- The native iPhone camera path and JPEG-only fallback cameras are not analysed by this classifier.

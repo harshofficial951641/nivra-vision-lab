@@ -50,6 +50,41 @@
       "source": "https://github.com/facebookresearch/pytorchvideo",
       "downloadSha256": "9bd6584a8212f91e4c7d96ec7d6bff31250e1c810fcee968471614a1b9658ac8",
       "sha256": "9bd6584a8212f91e4c7d96ec7d6bff31250e1c810fcee968471614a1b9658ac8"
+    },
+    {
+      "id": "movinet-a0-vid-v1",
+      "file": "nivra/assets/movinet_a0_fight.pt",
+      "optional": true,
+      "bundled": true,
+      "sha256": "78e372a5ec6ad97925c3cdac2e0de0f5e9315ebd38fb151fa429d69304aaef87",
+      "bytes": 11169076,
+      "license": "Google original weights Apache-2.0; Atze00 port MIT; VID V2 fine-tuning data CC0-1.0",
+      "source": "https://github.com/Atze00/MoViNet-pytorch/tree/c2d1edf48fc6c5259707f9d833f22171b4f63493",
+      "input": {
+        "shape": [
+          "batch",
+          8,
+          3,
+          172,
+          172
+        ],
+        "color": "RGB",
+        "dtype": "float32",
+        "range": [
+          0,
+          1
+        ],
+        "windowMs": 4000,
+        "sampling": "16 half-open nearest actual PTS targets, earlier ties; indices 0,2,4,6,8,10,12,15; BGR resize224 then RGB resize172; no crop/mean/std; independent clip state"
+      },
+      "provenance": {
+        "probe": "probe-c93e6cc85e1d8739",
+        "epoch": 3,
+        "checkpointSha256": "e4bef8ee36c3685a20abfa1af4c9d206d386dbbe5de413b41c1e3e5c8402188a",
+        "preprocessingSourceSha256": "233b55f7002be7975b9d9f81b8270407e19d35261857dfba2ab89c4c1f27fc56",
+        "exportReportSourceSha256": "23df9e7f211895cfb4abb8c557dc9442a910bb5195b5353107f1a9a7b63f19a8"
+      },
+      "status": "Experimental; source export parity only; C2 policy controls default admission; Mac runtime unverified"
     }
   ]
 }

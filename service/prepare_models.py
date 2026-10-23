@@ -21,6 +21,11 @@ def prepare(experimental=False):
     for model in manifest['models']:
         if model.get('optional') and not experimental:
             continue
+        if model.get('bundled'):
+            output = ROOT / model['file']
+            if not output.is_file() or digest(output) != model['sha256']:
+                raise RuntimeError(f"Bundled model checksum mismatch: {model['id']}")
+            continue
         output = directory / model['file']
         if output.exists():
             if digest(output) != model['sha256']:

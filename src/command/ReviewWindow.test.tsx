@@ -85,3 +85,12 @@ describe('clear and explicit review decisions', () => {
     await waitFor(() => expect(act).toHaveBeenCalledExactlyOnceWith('confirm', { note: '', guard: 'G1' }))
   })
 })
+
+it('explains a video classifier incident and retains explicit human confirmation',()=>{
+  const incident:Incident={...event,model:'movinet-a0-vid-v1',detail:'Video classifier: possible physical conflict. Review the clip.'}
+  render(<ReviewWindow event={incident} events={[incident]} cameras={[]} now={2000} clips={null} floors={[]} guards={guards} sample={false} queue={1} act={vi.fn()} close={vi.fn()} />)
+  fireEvent.click(screen.getByText('Why this needs a look'))
+  expect(screen.getByText(incident.detail)).toBeVisible()
+  expect(screen.getByRole('button',{name:'Confirm & send G1'})).toBeVisible()
+  expect(screen.queryByText('Test · not a real incident')).not.toBeInTheDocument()
+})

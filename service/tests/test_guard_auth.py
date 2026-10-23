@@ -21,10 +21,14 @@ def seed(app):
     return guard, store.events()[0]
 
 
-def test_clerk_guard_handshake_broadcast_reauth_and_http(clerk_app, tmp_path):
+def test_clerk_guard_handshake_broadcast_reauth_and_http(clerk_app, tmp_path, monkeypatch):
     app, client, mint = clerk_app
     service = app.state.classroom
     service.push.key_path = tmp_path / 'vapid.json'
+    # Windows wall time can repeat within a clock tick. Advance the injected
+    # presence clock explicitly; the assertion still requires the reauth handler.
+    clock = [time.time()]
+    monkeypatch.setattr(service.push, 'clock', lambda: clock[0])
     guard, event = seed(app)
     token = guard_token(mint)
     headers = {'origin': ORIGIN, 'Authorization': 'Bearer '+token}
@@ -40,6 +44,7 @@ def test_clerk_guard_handshake_broadcast_reauth_and_http(clerk_app, tmp_path):
         assert snapshot['guard']['userId'] == 'user_1'
         assert not service.guard_credentials
         before = service.push.last_seen['G2']
+        clock[0] += 1
         socket.send_json({'type': 'auth', 'token': guard_token(mint)})
         for _ in range(100):
             if service.push.last_seen['G2'] > before: break
